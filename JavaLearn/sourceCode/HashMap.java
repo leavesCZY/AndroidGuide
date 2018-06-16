@@ -16,21 +16,21 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     //序列化ID
     private static final long serialVersionUID = 362498820763181265L;
 
-    //Map的默认容量
+    //数组的默认容量
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
 
-    //网上很多文章都说这个值是 Map 能够达到的最大容量，其实不是的
-    //从 resize() 方法的扩容机制可以看出来，HashMap 每次扩容都是将现有容量增大一倍
+    //网上很多文章都说这个值是数组能够达到的最大容量，其实这样说并不准确
+    //从 resize() 方法的扩容机制可以看出来，HashMap 每次扩容都是将数组的现有容量增大一倍
     //如果现有容量已大于或等于 MAXIMUM_CAPACITY ，则不允许再次扩容
     //否则即使此次扩容会导致容量超出 MAXIMUM_CAPACITY ，那也是允许的
     static final int MAXIMUM_CAPACITY = 1 << 30;
 
     //装载因子的默认值
-    //装载因子用于标记哈希表在自动扩容之前可以占有其容量的最高比例，即当数据量占有Map的容量达到这个比例后，Map将自动扩容
+    //装载因子用于规定数组在自动扩容之前可以数据占有其容量的最高比例，即当数据量占有数组的容量达到这个比例后，数组将自动扩容
     //装载因子衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小
     //对于使用链表的散列表来说，查找一个元素的平均时间是O(1+a)，因此如果负载因子越大，则对空间的利用程度更高，相对应的是查找效率的降低
-    //如果负载因子太小，那么散列表的数据将过于稀疏，对空间的利用率低
-    //系统默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
+    //如果负载因子太小，那么数组的数据将过于稀疏，对空间的利用率低
+    //官方默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
     //当用 resize() 进行扩容操作时, 当将红黑树根据 hash 值拆分成两条链表后
@@ -40,6 +40,31 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
     //当红黑树的深度小于 UNTREEIFY_THRESHOLD 时则将之转换为链表
     static final int UNTREEIFY_THRESHOLD = 6;
+
+    //链表数组，在第一次使用时才初始化
+    //容量值应是2的整数倍
+    transient Node<K, V>[] table;
+
+    /**
+     * Holds cached entrySet(). Note that AbstractMap fields are used
+     * for keySet() and values().
+     */
+    transient Set<Map.Entry<K, V>> entrySet;
+
+    //Map的大小
+    transient int size;
+
+    //每当Map的结构发生变化时，此参数就会递增
+    //当在对Map进行迭代操作时，迭代器会检查此参数值
+    //如果检查到此参数的值发生变化，就说明在迭代的过程中Map的结构发生了变化，因此会直接抛出异常
+    transient int modCount;
+
+    //数组的扩容临界点，当数组的数据量达到这个值时就会进行扩容操作
+    //计算方法：当前容量 x 装载因子
+    int threshold;
+
+    //使用的装载因子值
+    final float loadFactor;
 
     /**
      * The smallest table capacity for which bins may be treeified.
@@ -148,7 +173,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
                 ((Comparable) k).compareTo(x));
     }
 
-    //根据参数 cap 获取与之相近的2的幂次方数, 因为 HashMap 要求容量必须为2的幂次方
+    //根据参数 cap 获取与之相近的2的幂次方数, 因为 HashMap 要求数组的容量必须为2的幂次方
     //返回值不一定会是与 cap 最近的偶数值
     static final int tableSizeFor(int cap) {
         int n = cap - 1;
@@ -159,31 +184,6 @@ public class HashMap<K, V> extends AbstractMap<K, V>
         n |= n >>> 16;
         return (n < 0) ? 1 : (n >= MAXIMUM_CAPACITY) ? MAXIMUM_CAPACITY : n + 1;
     }
-
-    //结点数组，当在第一次使用时初始化
-    //容量值应是2的整数倍
-    transient Node<K, V>[] table;
-
-    /**
-     * Holds cached entrySet(). Note that AbstractMap fields are used
-     * for keySet() and values().
-     */
-    transient Set<Map.Entry<K, V>> entrySet;
-
-    //Map的大小
-    transient int size;
-
-    //每当Map的结构发生变化时，此参数就会递增
-    //当在对Map进行迭代操作时，迭代器会检查此参数值
-    //如果检查到此参数的值发生变化，就说明在迭代的过程中Map的结构发生了变化，因此会直接抛出异常
-    transient int modCount;
-
-    //Map的扩容临界点，当Map的数据量达到这个值时就会进行扩容操作
-    //计算方法：当前容量 x 装载因子
-    int threshold;
-
-    //Map使用的装载因子值
-    final float loadFactor;
 
     //设置Map的初始化大小和装载因子
     public HashMap(int initialCapacity, float loadFactor) {
@@ -276,8 +276,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
                     return ((TreeNode<K, V>) first).getTreeNode(hash, key);
                 //遍历链表
                 do {
-                    if (e.hash == hash &&
-                            ((k = e.key) == key || (key != null && key.equals(k))))
+                    if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k))))
                         return e;
                 } while ((e = e.next) != null);
             }
@@ -316,7 +315,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
         if ((p = tab[i = (n - 1) & hash]) == null)
             //直接在索引 i 处构建包含待存入元素的结点
             tab[i] = newNode(hash, key, value, null);
-        else { //走入以下结点，说明代存入的 key 存在哈希冲突
+        else { //走入本分支，说明待存入的 key 存在哈希冲突
             Node<K, V> e;
             K k;
             //p 值已在上一个 if 语句中赋值了，此处就直接来判断 key 值之间的相等性
@@ -364,29 +363,29 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     }
 
     //用于初始化 table 或者对之进行扩容
-    //并返回新的哈希表
+    //并返回新的数组
     final Node<K, V>[] resize() {
-        //扩容前的哈希表
+        //扩容前的数组
         Node<K, V>[] oldTab = table;
-        //扩容前Map的容量
+        //扩容前数组的容量
         int oldCap = (oldTab == null) ? 0 : oldTab.length;
         //扩容前Map的扩容临界值
         int oldThr = threshold;
-        //扩容后Map的容量和扩容临界值
+        //扩容后数组的容量和扩容临界值
         int newCap, newThr = 0;
         if (oldCap > 0) { 
             //oldCap > 0 对应的是 table 已被初始化的情况，此时是来判断是否需要进行扩容
-            //如果哈希表已达到最大容量，则不再进行扩容，并将扩容临界点 threshold 提升到 Integer.MAX_VALUE，结束
+            //如果数组已达到最大容量，则不再进行扩容，并将扩容临界点 threshold 提升到 Integer.MAX_VALUE，结束
             if (oldCap >= MAXIMUM_CAPACITY) {
                 threshold = Integer.MAX_VALUE;
                 return oldTab;
             } else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY && oldCap >= DEFAULT_INITIAL_CAPACITY) {
-                //如果将哈希表的现有容量提升到现在的两倍依然小于允许的最大容量，而且现有容量大于或等于默认容量
-                //则将哈希表的容量和扩容临界值均提升为原先的两倍
+                //如果将数组的现有容量提升到现在的两倍依然小于允许的最大容量，而且现有容量大于或等于默认容量
+                //则将数组的容量和扩容临界值均提升为原先的两倍
                 newThr = oldThr << 1;
             } 
             //此处应该还有一种情况
-            //即将哈希表的现有容量提升到现在的两倍后大于 MAXIMUM_CAPACITY 的情况
+            //即将数组的现有容量提升到现在的两倍后大于 MAXIMUM_CAPACITY 的情况
             //此时 newThr 等于 0，newCap 等于 oldCap 的两倍值
             //此处并没有对 newCap 的数值进行还原，说明 HashMap 是允许扩容后容量超出 MAXIMUM_CAPACITY 的
             //只是在现有容量超出 MAXIMUM_CAPACITY 后，不允许再次进行扩容

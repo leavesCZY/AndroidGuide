@@ -2,7 +2,7 @@
 
 这是我的一份 Java 学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
 
-此外在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
+在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
 
 * [基础](JavaLearn/recollect)
   	* [重拾Java（0）-基础知识点](JavaLearn/recollect/重拾Java（0）-基础知识点.md)
@@ -17,8 +17,10 @@
     * [重拾Java（9）-Lambda表达式](JavaLearn/recollect/重拾Java（9）-Lambda表达式.md)
    
 * [集合框架](JavaLearn/collections)
-	* [Java集合框架源码解析之ArrayList](JavaLearn/collections/ArrayList.md)
-	* [Java集合框架源码解析之LinkedList](JavaLearn/collections/LinkedList.md)
+	* [Java集合框架源码解析之数组与链表](JavaLearn/collections/Java集合框架源码解析之数组与链表.md)
+	* [Java集合框架源码解析之ArrayList](JavaLearn/collections/Java集合框架源码解析之ArrayList.md)
+	* [Java集合框架源码解析之LinkedList](JavaLearn/collections/Java集合框架源码解析之LinkedList.md)
+	* [Java集合框架源码解析之HashMap](JavaLearn/collections/Java集合框架源码解析之HashMap.md)
 
 * [源码](JavaLearn/sourceCode)
   	* [ArrayList](JavaLearn/sourceCode/ArrayList.java)
