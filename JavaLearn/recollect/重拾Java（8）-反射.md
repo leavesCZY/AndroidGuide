@@ -1,6 +1,6 @@
 Java 在需要使用到某个类时会载入 .class 文档，在 JVM 产生 Java.lang.Class 实例代表该文档，从 Class 实例开始，就可以获得类的许多类型。 .class 文档反映了类基本信息，因而从 Class 等API取得类信息的方法就称为反射
 
-##**一、Class与.class文档**
+## **一、Class与.class文档**
 Java 在真正需要某个类时才会加载对应的 .class 文档，而非在程序启动时就加载所有类，因为大部分时候我们只需要用到应用程序部分资源，有选择地加载可以节省系统资源
 java.lang.Class 的实例代表 Java 应用程序运行时加载的 .class 文档，类、接口、Enum等编译过后，都会生成 .class 文档，所以 Class可以用来包含类、接口、Enum等信息
 Class 类没有公开的构造函数，实例是由 JVM 自动产生，每个 .class 文档加载时， JVM 会自动生成对应的 Class 对象
@@ -77,7 +77,7 @@ public class Main {
 ```
 
 
-##**二、使用Class.forName()**
+## **二、使用Class.forName()**
 在某些情况下，会存在事先不知道类名称，需要事后指定类名称来动态加载类的情况
 可以使用 Class.forName() 方法实现动态加载类，用字符串指定类名称来获得类相关信息
 
@@ -174,7 +174,7 @@ public class Main {
 即默认加载静态区域块，使用当前类的类加载器来载入类
 
 
-##**三、从Class获得信息**
+## **三、从Class获得信息**
 Class对象代表加载的.class文档，取得Class对象后，就可以取得.class文档中记载的信息，如包、构造函数、数据成员、方法成员等
 每一种信息都对有对应的类型，如包对应的类型是 java.lang.Package，构造函数对应的类型是 java.lang.reflect.Constructor
 
@@ -294,7 +294,7 @@ public class Main {
 
 ```
 
-##**四、利用Class建立对象**
+## **四、利用Class建立对象**
 如果已有确切的类，那么就可以使用new关键字建立实例。如果不知道类名称，那么可以利用Class.forName() 动态加载.class文档，取得Class对象之后，利用其newInstance()方法建立实例
 
 ```
@@ -359,7 +359,7 @@ public static void main(String[] args) {
 	}
 ```
 
-##**五、操作成员方法**
+## **五、操作成员方法**
 java.lang.reflect.Method 实例是方法的代表对象，可以使用 invoke() 方法来动态调用指定的方法
 
 例如，修改Student类，将get方法都指定为公有的，将set方法指定为私有的
