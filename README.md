@@ -1,8 +1,9 @@
 # JavaLearn
 
-这是我的一份 Java 学习笔记
+这是我的一份 Java 学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
 
-## 文档目录
+此外在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
+
 * [基础](JavaLearn/recollect)
   	* [重拾Java（0）-基础知识点](JavaLearn/recollect/重拾Java（0）-基础知识点.md)
     * [重拾Java（1）-基本数据类型与字面值](JavaLearn/recollect/重拾Java（1）-基本数据类型与字面值.md)
@@ -14,7 +15,7 @@
     * [重拾Java（7）-泛型](JavaLearn/recollect/重拾Java（7）-泛型.md)
     * [重拾Java（8）-反射](JavaLearn/recollect/重拾Java（8）-反射.md)
     * [重拾Java（9）-Lambda表达式](JavaLearn/recollect/重拾Java（9）-Lambda表达式.md)
-    
+   
 * [集合框架](JavaLearn/collections)
 	* [Java集合框架源码解析之ArrayList](JavaLearn/collections/ArrayList.md)
 
