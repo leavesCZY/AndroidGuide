@@ -14,6 +14,9 @@
     * [重拾Java（7）-泛型](JavaLearn/recollect/重拾Java（7）-泛型.md)
     * [重拾Java（8）-反射](JavaLearn/recollect/重拾Java（8）-反射.md)
     * [重拾Java（9）-Lambda表达式](JavaLearn/recollect/重拾Java（9）-Lambda表达式.md)
+    
+* [集合框架](JavaLearn/collections)
+	* [Java集合框架源码解析之ArrayList](JavaLearn/collections/ArrayList.md)
 
 * [源码](JavaLearn/sourceCode)
   	* [ArrayList](JavaLearn/sourceCode/ArrayList.java)

@@ -6,7 +6,7 @@ ArrayList 可能是很多人使用得最为频繁的容器类了，ArrayList 实
 
 ArrayList 的类声明
 
-```
+```java
 public class ArrayList<E> extends AbstractList<E>
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
 ```
@@ -14,7 +14,7 @@ public class ArrayList<E> extends AbstractList<E>
 
 包含的成员变量
 
-```
+```java
 
     //序列化ID
     private static final long serialVersionUID = 8683452581122892189L;
@@ -38,7 +38,7 @@ public class ArrayList<E> extends AbstractList<E>
 
 包含的构造函数
 
-```
+```java
 	//指定集合的初始容量，以此来进行数组的初始化操作
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
@@ -73,7 +73,7 @@ public class ArrayList<E> extends AbstractList<E>
 
 在获取指定索引处的元素时，都是直接通过坐标指向该元素 `(E) elementData[index]`，而无需从头开始遍历集合，所以说 ArrayList 的遍历效率较高
 
-```
+```java
 	//通过索引直接访问数组
     @SuppressWarnings("unchecked")
     E elementData(int index) {
@@ -100,7 +100,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 如果是向集合非尾端位置添加数据 `add(int index, E element)`，一样需要先检查是否需要扩容，然后将数组中索引 index 后的所有元素向后推移一位，然后将 element 插入到空出的位置上
 由此看出来，向集合添加元素由于可能会导致数组扩容，从而导致数组元素的大量移动，所以说 ArrayList 存入数据的效率并不高
 
-```
+```java
     //向集合添加数据
     public boolean add(E e) {
         //检查是否需要扩容
@@ -125,7 +125,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 ```
 以上说的是存入单个元素，此外还有存入整个集合的情况
 
-```
+```java
 	//向集合添加数据
     //如果待添加的数据不为空则返回 true，否则返回 false
     public boolean addAll(Collection<? extends E> c) {
@@ -161,7 +161,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 ```
 再看下移除元素的方法
 因为数组是一种内存地址连续的数据结构，所以移除某个元素同样可能导致大量元素的移动
-```
+```java
 	//移除指定索引处的元素值，并返回该值
     public E remove(int index) {
         rangeCheck(index);
@@ -202,7 +202,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 以上多处说到了数组的扩容，这里就来看下数组的扩容机制
 实际进行扩容操作的是  `grow(int grow(int minCapacity))`  方法，参数 minCapacity 用于指定要求的最小空间，在扩容前，会先判断如果将当前容量提升到当前的 1.5 倍是否能达到 minCapacity 的要求 ，如果符合要求则直接将数据扩充到当前的 1.5 倍容量，否则则扩充到 minCapacity ，构建一个新的符合大小的数组后，就将原数组中的元素复制到新数组中
 由此可想到，如果在初始化 ArrayList 前已知目标数据的数据量，则最好使用 `ArrayList(int initialCapacity)`来进行初始化，直接让底层数组扩充到目标大小，避免之后赋值过程中多次扩容
-```
+```java
 	//触发集合进行扩容操作，参数 minCapacity 表示集合扩容后的最小空间
     //如果在向集合进行赋值操作前已知数据量大小，则直接调用此方法让集合直接扩容到该大小有助于提高集合的运行效率
     //如果是让集合在赋值的过程中自动扩容，则可能会需要进行多次扩容操作，而每次扩容都需要复制原有数据到新数组，这会导致运行效率降低
@@ -261,7 +261,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 ```
 遍历集合的方法
 
-```
+```java
 	//遍历集合元素
     @Override
     public void forEach(Consumer<? super E> action) {
@@ -282,7 +282,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 ```
 遍历并过滤集合的方法
 
-```
+```java
 	//按照给定规则对集合元素进行过滤，如果元素符合过滤规则 filter 则将之移除
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
@@ -351,7 +351,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 ```
 以及我们常用的迭代器
 在这里有个小细节，ArrayList 里多处使用到了 modCount 这个参数，每当集合的结构发生变化时，modCount 就会递增，当在对集合进行迭代操作时，迭代器会检查此参数值，如果检查到此参数的值发生变化，就说明在迭代的过程中集合的结构发生了变化，此时迭代的元素可能就并不是最新的了，因此会直接抛出异常
-```
+```java
 	 //返回集合迭代器
     public Iterator<E> iterator() {
         return new Itr();
@@ -443,7 +443,7 @@ ArrayList 在存入数据时相对来说就不是那么理想了
 
 最后来测试下 ArrayList 扩容次数的高低对其运行效率的影响
 对三个 ArrayList 存入相同数据量的数据，但分别为 ArrayList 指定不同的初始化大小
-```
+```java
 public static void main(String[] args) {
         //开始时间
         long startTime = System.currentTimeMillis();
@@ -483,5 +483,5 @@ public static void main(String[] args) {
 
 关于 ArrayList 的内容就讲到这里了，一方面是篇幅所限，一方面我是觉得很多知识点其实也不需要怎么讲，直接看源码的话认知会更为深刻一点，因此我也把对 ArrayList 的详细源码注释开源到了 GitHub 上，欢迎关注
 
-#### 源码地址：[JavaLearn](https://github.com/leavesC/JavaLearn)
+### 源码地址：[JavaLearn](https://github.com/leavesC/JavaLearn)
 
