@@ -1,8 +1,8 @@
-HashMap 是基于哈希表的 Map 接口的非同步实现，允许放入`key`为`null`的元素，也允许插入`value`为`null`的元素。此外，HashMap 不保证元素顺序，根据需要该容器可能会对元素重新哈希，元素的顺序也会被重新打散，因此在不同时间段迭代同一个 HashMap 的顺序可能会不同
+HashMap 是用于映射(键值对)处理的数据类型，基于哈希表的 Map 接口的非同步实现，允许插入最多一条`key`为`null`的记录，允许插入多条`value`为`null`的记录。此外，HashMap 不保证元素顺序，根据需要该容器可能会对元素重新哈希，元素的顺序也会被重新打散，因此在不同时间段迭代同一个 HashMap 的顺序可能会不同。HashMap 非线程安全，即任一时刻有多个线程同时写 HashMap 的话可能会导致数据的不一致
 
-HashMap 实际上是一个“链表散列”的数据结构，即数组和链表的结合体，底层包含一个数组结构，数组中的每一项是一个链表或者是红黑树（JDK1.8 开始 HashMap 通过使用红黑树来提高元素查找效率）
+HashMap 实际上是**数组+链表+红黑树**的结合体，其底层包含一个数组，数组中的每一项元素的可能值有四种：null、单独一个结点、链表、红黑树（JDK1.8 开始 HashMap 通过使用红黑树来提高元素查找效率）。当往 HashMap 中 put 元素的时候，需要先根据 key 的哈希值得到该元素在数组中的位置（即下标），如果该位置上已经存放有其他元素了，那么在这个位置上的元素将以链表或者红黑树的形式来存放，如果该位置上没有元素，就直接向该位置存放元素
 
-当往 HashMap 中 put 元素的时候，需要先通过计算 key 的哈希值得到该元素在数组中的位置（即下标），如果该位置上已经存放有其他元素了，那么在这个位置上的元素将以链表或者红黑树的形式来存放，如果该位置上没有元素，就直接向该位置存放元素
+HashMap 要求映射中的 key 是不可变对象，即要求该对象在创建后它的哈希值不会被改变，否则 Map 对象很可能就定位不到映射的位置了
 
 #### 类声明
 
@@ -13,9 +13,11 @@ public class HashMap<K, V> extends AbstractMap<K, V>
 
 #### 常量
 
-HashMap 中声明的常量有以下几个，其中需要特别关注的是装载因子 **DEFAULT_LOAD_FACTOR**
+HashMap 中声明的常量有以下几个，其中需要特别关注的是装载因子 **DEFAULT_LOAD_FACTOR** 和 **TREEIFY_THRESHOLD**
 
-装载因子用于规定数组在自动扩容之前可以数据占有其容量的最高比例，即当数据量占有数组的容量达到这个比例后，数组将自动扩容。装载因子衡量的是一个散列表的空间的使用程度，负载因子越大表示散列表的装填程度越高，反之愈小。对于使用链表的散列表来说，查找一个元素的平均时间是O(1+a)，因此如果负载因子越大，则对空间的利用程度更高，相对应的是查找效率的降低。如果负载因子太小，那么数组的数据将过于稀疏，对空间的利用率低，官方默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
+装载因子用于规定数组在自动扩容之前可以数据占有其容量的最高比例，即当数据量占有数组的容量达到这个比例后，数组将自动扩容。装载因子衡量的是一个散列表的空间的使用程度，装载因子越大表示散列表的装填程度越高，反之愈小。因此如果装载因子越大，则对空间的利用程度更高，相对应的是查找效率的降低。如果装载因子太小，那么数组的数据将过于稀疏，对空间的利用率低，官方默认的装载因子为0.75，是平衡空间利用率和运行效率两者之后的结果。如果在实际情况中，内存空间较多而对时间效率要求很高，可以选择降低装载因子的值；如果内存空间紧张而对时间效率要求不高，则可以选择提高装载因子的值
+
+此外，即使装载因子和哈希算法设计得再合理，也不免会出现由于哈希冲突导致链表长度过长的情况，这将严重影响 HashMap 的性能。为了优化性能，从 JDK1.8 开始引入了红黑树，当链表长度超出 TREEIFY_THRESHOLD 规定的值时，链表就会被转换为红黑树，利用红黑树快速增删改查的特点以提高 HashMap 的性能
 
 ```java
     //数组的默认容量
@@ -35,9 +37,7 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
     //官方默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
-    //当用 resize() 进行扩容操作时, 当将红黑树根据 hash 值拆分成两条链表后
-    //如果拆分后的链表长度 <= UNTREEIFY_THRESHOLD, 那么就采用链表形式管理 hash 值冲突
-    //否则采用红黑树管理 hash 值冲突
+	//为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
     static final int TREEIFY_THRESHOLD = 8;
 
     //当红黑树的深度小于 UNTREEIFY_THRESHOLD 时则将之转换为链表
@@ -130,46 +130,50 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
             this.value = value;
             this.next = next;
         }
-
-        public final K getKey() {
-            return key;
-        }
-
-        public final V getValue() {
-            return value;
-        }
-
-        public final String toString() {
-            return key + "=" + value;
-        }
-
-        public final int hashCode() {
-            return Objects.hashCode(key) ^ Objects.hashCode(value);
-        }
-
-        public final V setValue(V newValue) {
-            V oldValue = value;
-            value = newValue;
-            return oldValue;
-        }
-
-        public final boolean equals(Object o) {
-            if (o == this)
-                return true;
-            if (o instanceof Map.Entry) {
-                Map.Entry<?, ?> e = (Map.Entry<?, ?>) o;
-                if (Objects.equals(key, e.getKey()) &&
-                        Objects.equals(value, e.getValue()))
-                    return true;
-            }
-            return false;
-        }
+        
+	    ···     
+    
     }
 ```
 
+#### 哈希算法
+
+在查询、添加和移除键值对时，定位到哈希桶数组的指定位置都是很关键的第一步，只有 HashMap 中的元素尽量分布均匀，才能在定位键值对时快速地查找到相应位置，避免频繁地去遍历链表或者红黑树，这就需要依靠于一个比较好的哈希算法了
+
+以下是 HashMap 中计算 key 值的哈希值以及根据哈希值获取其在哈希桶数组中位置的算法
+
+```java
+    //计算哈希值
+    static final int hash(Object key) {
+        int h;
+        //高位参与运算
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
+    }
+
+    //根据 key 值获取 Value
+    public V get(Object key) {
+        Node<K, V> e;
+        return (e = getNode(hash(key), key)) == null ? null : e.value;
+    }
+
+	//查找指定结点
+    final Node<K, V> getNode(int hash, Object key) {
+		···
+        //只有当 table 不为空且 hash 对应的位置不为 null 才有可获取的元素值
+        if ((tab = table) != null && (n = tab.length) > 0 && (first = tab[(n - 1) & hash]) != null) {
+           ···
+        }
+        return null;
+    }
+```
+
+确定键值对在哈希桶数组的位置的步骤分为三步：计算 key 的 hashCode（**h = key.hashCode()**）、高位运算（**h >>> 16**）、取模运算（**(n - 1) & hash**）
+
+我也不懂这么取值的优点在于哪里，就不多说了
+
 #### 插入数据
 
-在上边说过，HashMap 是数组+链表+红黑树的结合，数组包含的元素分为四种类型：null、单个结点、链表、红黑树。在插入结点时（每一个待存数据都会被包装为结点对象），会根据待插入 Key 的哈希值来决定结点在数组中的位置，如果计算得出的位置此时包含的元素为 null ，则直接将结点存入该位置，如果不为 null ，则说明发生了哈希冲突，此时就需要将结点插入到链表或者是红黑树中
+在上边说过，HashMap 是数组+链表+红黑树的结合，数组包含的元素的可能值分为四种类型：null、单个结点、链表、红黑树。在插入结点时（每一个待存数据都会被包装为结点对象），会根据待插入 Key 的哈希值来决定结点在数组中的位置，如果计算得出的位置此时包含的元素为 null ，则直接将结点存入该位置，如果不为 null ，则说明发生了哈希碰撞，此时就需要将结点插入到链表或者是红黑树中。当哈希算法的计算结果越分散均匀，哈希碰撞的概率就越小，map 的存取效率就会越高
 
 如果待插入结点的 key 与链表或红黑树中某个已有结点的 key 相等（hash 值相等且两者 equals 成立），则新添加的结点将覆盖原有数据
 
@@ -297,7 +301,9 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
 
 #### 扩容
 
-当 HashMap 中的元素越来越多时，因为数组的长度是固定的，所以哈希冲突的几率也就越来越高，为了提高查询效率，此时就需要对 HashMap 中的数组进行扩容，而扩容操作最消耗性能的地方就在于：原数组中的数据必须重新计算其在新数组中的位置并存放到新数组中
+如果哈希桶数组很大，即使用的是较差的哈希算法元素也会比较分散，如果哈希桶数组很小，即使用的是好的哈希算法也会出现较多哈希碰撞的情况，所以就需要在空间成本和时间成本之间权衡，除了设计较好的哈希算法以减少哈希冲突外，也需要在合适的的时机对哈希桶数组进行必要的扩容
+
+当 HashMap 中的元素越来越多时，因为数组的长度是固定的，所以哈希冲突的几率也就越来越高，为了提高效率，此时就需要对 HashMap 中的数组进行扩容，而扩容操作最消耗性能的地方就在于：原数组中的数据必须重新计算其在新数组中的位置并存放到新数组中
 
 那么 HashMap 扩容操作的触发时机是什么时候呢？当 HashMap 中的元素个数超出 threshold 时（**数组容量 与 loadFactor 的乘积**），就会进行数组扩容。默认情况下，**数组的默认值为 16，loadFactor 的默认值为 0.75**，这是**平衡空间利用率和运行效率两者**之后的结果。也就是说，假设数组当前大小为16，loadFactor 值为0.75，那么当 HashMap 中的元素个数达到12个时，就会自动触发扩容操作，把数组的大小扩充到 **2 * 16 = 32**，即扩大一倍，然后重新计算每个元素在新数组中的位置，而这是一个非常消耗性能的操作，所以如果已经预知到待存入 HashMap 的数据量，那么在初始化 HashMap 时直接指定初始化大小会是一种更为高效的做法
 
@@ -402,3 +408,69 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
     }
 ```
 
+#### 效率测试
+
+这里来测试下不同的初始化大小以及 key 值的 HashCode 值的分布情况的不同对 HashMap 效率的影响
+
+首先来定义作为 Key 的类，hashCode() 方法直接返回其包含的属性 value
+
+```java
+public class Key {
+
+    private int value;
+
+    public Key(int value) {
+        this.value = value;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Key key = (Key) o;
+        return value == key.value;
+    }
+
+    @Override
+    public int hashCode() {
+        return value;
+    }
+
+}
+```
+
+初始化大小从 100 到 100000 之间以 10 倍的倍数递增，向 HashMap 存入同等数据量的数据，观察不同 HashMap 存入数据消耗的总时间
+
+```java
+public class KeyMain {
+
+    private static final int MAX_KEY = 100000;
+
+    private static final Key[] KEYS = new Key[MAX_KEY];
+
+    static {
+        for (int i = 0; i < MAX_KEY; i++) {
+            KEYS[i] = new Key(i);
+        }
+    }
+
+    private static void test(int size) {
+        long startTime = System.currentTimeMillis();
+        Map<Key, Integer> map = new HashMap<>(size);
+        for (int i = 0; i < MAX_KEY; i++) {
+            map.put(KEYS[i], i);
+        }
+        long endTime = System.currentTimeMillis();
+        System.out.println("初始化大小是：" + size + " , 所用时间：" + (endTime - startTime) + "毫秒");
+    }
+
+    public static void main(String[] args) {
+        for (int i = 100; i <= MAX_KEY; i *= 10) {
+            test(i);
+        }
+    }
+
+}
+```
+
+![](C:\Users\CZY\Desktop\JavaLearn\JavaLearn\images\20180617112856.png)

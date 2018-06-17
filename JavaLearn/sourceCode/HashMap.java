@@ -16,10 +16,10 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     //序列化ID
     private static final long serialVersionUID = 362498820763181265L;
 
-    //数组的默认容量
+    //哈希桶数组的默认容量
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
 
-    //网上很多文章都说这个值是数组能够达到的最大容量，其实这样说并不准确
+    //网上很多文章都说这个值是哈希桶数组能够达到的最大容量，其实这样说并不准确
     //从 resize() 方法的扩容机制可以看出来，HashMap 每次扩容都是将数组的现有容量增大一倍
     //如果现有容量已大于或等于 MAXIMUM_CAPACITY ，则不允许再次扩容
     //否则即使此次扩容会导致容量超出 MAXIMUM_CAPACITY ，那也是允许的
@@ -33,15 +33,13 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     //官方默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
-    //当用 resize() 进行扩容操作时, 当将红黑树根据 hash 值拆分成两条链表后
-    //如果拆分后的链表长度 <= UNTREEIFY_THRESHOLD, 那么就采用链表形式管理 hash 值冲突
-    //否则采用红黑树管理 hash 值冲突
+    //为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
     static final int TREEIFY_THRESHOLD = 8;
 
     //当红黑树的深度小于 UNTREEIFY_THRESHOLD 时则将之转换为链表
     static final int UNTREEIFY_THRESHOLD = 6;
 
-    //链表数组，在第一次使用时才初始化
+    //哈希桶数组，在第一次使用时才初始化
     //容量值应是2的整数倍
     transient Node<K, V>[] table;
 
