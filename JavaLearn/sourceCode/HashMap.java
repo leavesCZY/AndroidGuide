@@ -36,7 +36,6 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     //为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
     static final int TREEIFY_THRESHOLD = 8;
 
-    //当红黑树的深度小于 UNTREEIFY_THRESHOLD 时则将之转换为链表
     static final int UNTREEIFY_THRESHOLD = 6;
 
     //哈希桶数组，在第一次使用时才初始化
@@ -540,9 +539,7 @@ public class HashMap<K, V> extends AbstractMap<K, V>
                     node = ((TreeNode<K, V>) p).getTreeNode(hash, key);
                 else { //用链表来处理哈希冲突
                     do {
-                        if (e.hash == hash &&
-                                ((k = e.key) == key ||
-                                        (key != null && key.equals(k)))) {
+                        if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k)))) {
                             node = e;
                             break;
                         }

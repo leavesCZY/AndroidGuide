@@ -20,10 +20,13 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
 此外，即使装载因子和哈希算法设计得再合理，也不免会出现由于哈希冲突导致链表长度过长的情况，这将严重影响 HashMap 的性能。为了优化性能，从 JDK1.8 开始引入了红黑树，当链表长度超出 TREEIFY_THRESHOLD 规定的值时，链表就会被转换为红黑树，利用红黑树快速增删改查的特点以提高 HashMap 的性能
 
 ```java
-    //数组的默认容量
+    //序列化ID
+    private static final long serialVersionUID = 362498820763181265L;
+
+    //哈希桶数组的默认容量
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
 
-    //网上很多文章都说这个值是数组能够达到的最大容量，其实这样说并不准确
+    //网上很多文章都说这个值是哈希桶数组能够达到的最大容量，其实这样说并不准确
     //从 resize() 方法的扩容机制可以看出来，HashMap 每次扩容都是将数组的现有容量增大一倍
     //如果现有容量已大于或等于 MAXIMUM_CAPACITY ，则不允许再次扩容
     //否则即使此次扩容会导致容量超出 MAXIMUM_CAPACITY ，那也是允许的
@@ -37,17 +40,15 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
     //官方默认的负载因子为0.75，是平衡空间利用率和运行效率两者之后的结果
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
-	//为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
+    //为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
     static final int TREEIFY_THRESHOLD = 8;
 
-    //当红黑树的深度小于 UNTREEIFY_THRESHOLD 时则将之转换为链表
-    static final int UNTREEIFY_THRESHOLD = 6;
 ```
 
 #### 成员变量
 
 ```java
-	//链表数组，在第一次使用时才初始化
+    //哈希桶数组，在第一次使用时才初始化
     //容量值应是2的整数倍
     transient Node<K, V>[] table;
 
@@ -297,6 +298,76 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
         return null;
     }
 
+```
+
+#### 移除结点
+
+从 Map 中移除键值对的操作，在底层数据结构的体现就是移除对某个结点对象的引用，可能是从数组中、也可能是链表或者红黑树
+
+```java
+	public V remove(Object key) {
+        Node<K, V> e;
+        return (e = removeNode(hash(key), key, null, false, true)) == null ?
+                null : e.value;
+    }
+
+    /**
+     * Implements Map.remove and related methods
+     *
+     * @param hash       key 的哈希值
+     * @param key        the key
+     * @param value      key对应的值，只有当 matchValue 为 true 时才需要使用到，否则忽略该值
+     * @param matchValue 如果为 true ，则只有当 Map 中存在某个键 equals key 且 value 相等时才会移除该元素，否则只要 key 的 hash 值相等就直接移除该元素
+     * @param movable    if false do not move other nodes while removing
+     * @return the node, or null if none
+     */
+    final Node<K, V> removeNode(int hash, Object key, Object value,
+                                boolean matchValue, boolean movable) {
+        Node<K, V>[] tab;
+        Node<K, V> p;
+        int n, index;
+        //只有当 table 不为空且 hash 对应的索引位置存在值时才有可移除的对象
+        if ((tab = table) != null && (n = tab.length) > 0 && (p = tab[index = (n - 1) & hash]) != null) {
+            Node<K, V> node = null, e;
+            K k;
+            V v;
+            //如果与头结点的 key 相等
+            if (p.hash == hash && ((k = p.key) == key || (key != null && key.equals(k))))
+                node = p;
+            else if ((e = p.next) != null) { //存在哈希冲突
+                //用红黑树来处理哈希冲突
+                if (p instanceof TreeNode)
+                    //查找对应结点
+                    node = ((TreeNode<K, V>) p).getTreeNode(hash, key);
+                else { //用链表来处理哈希冲突
+                    do {
+                        if (e.hash == hash && ((k = e.key) == key || (key != null && key.equals(k)))) {
+                            node = e;
+                            break;
+                        }
+                        p = e;
+                    } while ((e = e.next) != null);
+                }
+            }
+            //node != null 说明存在相应结点
+            //如果 matchValue 为 false ，则通过之前的判断可知查找到的结点的 key 与 参数 key 的哈希值一定相等，此处就可以直接移除结点 node
+            //如果 matchValue 为 true ，则当 value 相等时才需要移除该结点
+            if (node != null && (!matchValue || (v = node.value) == value || (value != null && value.equals(v)))) {
+                if (node instanceof TreeNode) //对应红黑树
+                    ((TreeNode<K, V>) node).removeTreeNode(this, tab, movable);
+                else if (node == p) //对应 key 与头结点相等的情况，此时直接将指针移向下一位即可
+                    tab[index] = node.next;
+                else //对应的是链表的情况
+                    p.next = node.next;
+                ++modCount;
+                --size;
+                //用于 LinkedHashMap ，在 HashMap 中是空实现
+                afterNodeRemoval(node);
+                return node;
+            }
+        }
+        return null;
+    }
 ```
 
 #### 扩容
