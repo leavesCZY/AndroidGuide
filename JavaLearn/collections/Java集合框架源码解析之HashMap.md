@@ -412,7 +412,7 @@ HashMap 中声明的常量有以下几个，其中需要特别关注的是装载
 
 这里来测试下不同的初始化大小以及 key 值的 HashCode 值的分布情况的不同对 HashMap 效率的影响
 
-首先来定义作为 Key 的类，hashCode() 方法直接返回其包含的属性 value
+首先来定义作为 Key 的类，`hashCode()` 方法直接返回其包含的属性 value
 
 ```java
 public class Key {
@@ -444,7 +444,7 @@ public class Key {
 ```java
 public class KeyMain {
 
-    private static final int MAX_KEY = 100000;
+    private static final int MAX_KEY = 20000;
 
     private static final Key[] KEYS = new Key[MAX_KEY];
 
@@ -465,12 +465,31 @@ public class KeyMain {
     }
 
     public static void main(String[] args) {
-        for (int i = 100; i <= MAX_KEY; i *= 10) {
+        for (int i = 20; i <= MAX_KEY; i *= 10) {
             test(i);
         }
     }
 
 }
 ```
+![](https://upload-images.jianshu.io/upload_images/2552605-2d42fd640b81bd65.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-![](..\images\20180617112856.png)
+在上述使用的例子中，各个 Key 对象之间的哈希码值各不相同，所以键值对在哈希桶数组中的分布可以说是很均匀的了，此时主要影响性能的就是扩容机制了，由上图可以看出各个初始化大小对 HashMap 的性能影响还是很大的
+
+接下来再看看各个 Key 对象之间频繁发生哈希冲突时 HashMap 的性能
+
+令 Key 类的 `hashCode()` 方法固定返回 100，则每个键值对在存入 HashMap 时，一定会发生哈希冲突
+
+```java
+    @Override
+    public int hashCode() {
+        return 100;
+    }
+```
+![](https://upload-images.jianshu.io/upload_images/2552605-6f6197285752727e.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+
+
+可以看到此时存入同等数据量的数据所用时间呈几何数增长了，此时主要影响性能的点就在于对哈希冲突的处理了
+
+#### 更详细的源码解析可以看这里：[JavaLearn](https://github.com/leavesC/JavaLearn)
