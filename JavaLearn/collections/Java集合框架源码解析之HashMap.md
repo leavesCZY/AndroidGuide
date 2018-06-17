@@ -473,4 +473,4 @@ public class KeyMain {
 }
 ```
 
-![](C:\Users\CZY\Desktop\JavaLearn\JavaLearn\images\20180617112856.png)
+![](..\images\20180617112856.png)
