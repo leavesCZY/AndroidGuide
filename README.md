@@ -21,10 +21,12 @@
   * [Java集合框架源码解析之ArrayList](JavaLearn/collections/Java集合框架源码解析之ArrayList.md)
   * [Java集合框架源码解析之LinkedList](JavaLearn/collections/Java集合框架源码解析之LinkedList.md)
   * [Java集合框架源码解析之HashMap](JavaLearn/collections/Java集合框架源码解析之HashMap.md)
+  * [Java集合框架源码解析之LinkedHashMap](JavaLearn/collections/Java集合框架源码解析之LinkedHashMap.md)
   * [Java集合框架源码解析之HashSet](JavaLearn/collections/Java集合框架源码解析之HashSet.md)
 
 * [源码](JavaLearn/sourceCode)
    * [ArrayList](JavaLearn/sourceCode/ArrayList.java)
     * [LinkedList](JavaLearn/sourceCode/LinkedList.java)
     * [HashMap](JavaLearn/sourceCode/HashMap.java)
+    * [LinkedHashMap](JavaLearn/sourceCode/LinkedHashMap.java)
     * [HashSet](JavaLearn/sourceCode/HashSet.java)
