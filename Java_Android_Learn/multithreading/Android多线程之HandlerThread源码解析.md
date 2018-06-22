@@ -1,4 +1,4 @@
-> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](https://github.com/leavesC/Java_Android_Learn/multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](./Android多线程之Handler、Looper与MessageQueue源码解析.md)
 
 #### 一、概述
 
@@ -162,7 +162,7 @@ Thread 的子类
     }
 ```
 
-`Looper.prepare()` 方法用于为当前线程创建一个 Looper 对象，在主线程需要依赖此 Looper 对象来构建一个 Handler 对象，通过该 Handler 对象来向子线程下发耗时任务（这些知识点可以在这里了解：[Handler、Looper与MessageQueue源码解析](https://www.jianshu.com/p/ae905db64e29)）
+`Looper.prepare()` 方法用于为当前线程创建一个 Looper 对象，在主线程需要依赖此 Looper 对象来构建一个 Handler 对象，通过该 Handler 对象来向子线程下发耗时任务（这些知识点可以在这里了解：[Handler、Looper与MessageQueue源码解析](./Android多线程之Handler、Looper与MessageQueue源码解析.md)）
 
 之后可以看到有一个同步代码块，在当中调用了 `notifyAll()`来唤醒等待线程，那该唤醒的又是哪个线程呢？这里需要明确各个方法是运行于哪个线程，`run()` 方法肯定是运行于子线程，但用于向 HandlerThread 下发任务的 Handler 是初始化于主线程，因此 `getLooper()`方法也是运行于主线程的。由于是两个不同的线程，`run()` 方法和 `getLooper()` 的运行先后顺序是不明确的，因此 `getLooper()` 方法需要确保 Looper 对象不为 **null** 时才返回，否则将一直阻塞等待 Looper 对象初始化完成
 
