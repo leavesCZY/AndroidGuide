@@ -1,6 +1,6 @@
 阅读本节内容需要读者对 HashMap 、HashSet 和 LinkedHashMap 的源码有所了解，因为 LinkedHashSet 的内部实现都是来自于这三个容器类，其内部源码十分简单，简单到它只有一个成员变量、四个构造函数、一个 Set 接口的方法
 
-如果你想多了解下这三个容器类，可以从这里获得：[Java集合框架源码解析](https://github.com/leavesC/JavaLearn)
+如果你想多了解下这三个容器类，可以从这里获得：[Java集合框架源码解析](https://github.com/leavesC/Java_Android_Learn)
 
 LinkedHashSet  的所有源码如下所示
 
@@ -58,4 +58,4 @@ LinkedHashSet  继承于 HashSet，而 LinkedHashSet 调用的父类构造函数
 
 关于 LinkedHashSet 的源码实在也没什么好讲的，它的实现都是依靠其他容器类来组合支持的，所以如果想了解 LinkedHashSet ，就只能先去了解 HashMap 、HashSet 和 LinkedHashMap 的源码
 
-**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/JavaLearn)**
+**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/Java_Android_Learn)**

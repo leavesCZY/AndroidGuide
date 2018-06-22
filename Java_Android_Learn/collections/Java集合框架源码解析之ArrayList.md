@@ -490,5 +490,5 @@ public static void main(String[] args) {
 
 关于 ArrayList 的内容就讲到这里了，一方面是篇幅所限，一方面我是觉得很多知识点其实也不需要怎么讲，直接看源码的话认知会更为深刻一点，因此我也把对 ArrayList 的详细源码注释开源到了 GitHub 上，欢迎关注
 
-#### 源码地址：[JavaLearn](https://github.com/leavesC/JavaLearn)
+#### 源码地址：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)
 
