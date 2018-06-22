@@ -20,7 +20,7 @@
   * [Java集合框架源码解析之数组与链表](Java_Android_Learn/collections/Java集合框架源码解析之数组与链表.md)
   * [Java集合框架源码解析之ArrayList](Java_Android_Learn/collections/Java集合框架源码解析之ArrayList.md)
   * [Java集合框架源码解析之LinkedList](Java_Android_Learn/collections/Java集合框架源码解析之LinkedList.md)
-  * [Java集合框架源码解析之HashMap](JavaLJava_Android_Learnearn/collections/Java集合框架源码解析之HashMap.md)
+  * [Java集合框架源码解析之HashMap](Java_Android_Learn/collections/Java集合框架源码解析之HashMap.md)
   * [Java集合框架源码解析之LinkedHashMap](Java_Android_Learn/collections/Java集合框架源码解析之LinkedHashMap.md)
   * [Java集合框架源码解析之HashSet](Java_Android_Learn/collections/Java集合框架源码解析之HashSet.md)
   * [Java集合框架源码解析之LinkedHashSet](Java_Android_Learn/collections/Java集合框架源码解析之LinkedHashSet.md)
