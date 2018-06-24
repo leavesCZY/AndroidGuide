@@ -1,6 +1,6 @@
 AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler ，实现了线程的复用，后台任务执行顺序的控制、子线程和 UI 线程的切换，使得开发者可以以简单的方法来执行一些耗时任务
 
-此篇文章就基于 Android API 27 版本的源码，来对 AsyncTask 进行分析，以便对其底层工作流程有所了解
+此篇文章就基于 Android API 27 版本的源码来对 AsyncTask 进行一次整体分析，以便对其底层工作流程有所了解
 
 一般，AsyncTask 是以类似于以下的方式来调用的
 
@@ -167,7 +167,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     private static volatile Executor sDefaultExecutor = SERIAL_EXECUTOR;
 ```
 
-看到线程池，这里就又引出了另外一个问题，后台任务是在子线程中调用的，那 AsyncTask 又是如何在 UI 线程中调用 `onPreExecute()、onPostExecute(Result)、onProgressUpdate(Progress)`这几个方法的呢？
+看到线程池，这里就又引出了另外一个问题，后台任务是在子线程中调用的，那 AsyncTask 又是如何在 UI 线程中回调 `onPreExecute()、onPostExecute(Result)、onProgressUpdate(Progress)`这几个方法的呢？
 
 先看几个相关方法的声明
 
@@ -327,3 +327,20 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     }
 ```
 
+例如，在通过 `publishProgress(Progress)` 方法更新后台任务的执行进度时，在内部就会将进度值包装到 **Message** 中，然后传递给 **Handler** 进行处理
+
+```java
+    //运行于工作线程，此方法用于更新任务的进度值
+    //会触发 onProgressUpdate() 被执行
+    @WorkerThread
+    protected final void publishProgress(Progress... values) {
+        if (!isCancelled()) {
+            //将与进度值相关的参数 Progress 包装到 AsyncTaskResult 对象当中，并传递给 Handler 进行处理 
+            getHandler().obtainMessage(MESSAGE_POST_PROGRESS, new AsyncTaskResult<Progress>(this, values)).sendToTarget();
+        }
+    }
+```
+
+**以上就是 AsyncTask 较为关键的几个点，看过后应该就能明白 AsyncTask 的整体工作流程了，如果需要 AsyncTask 更为详细的源码注释，可以看这里：[AsyncTask](https://github.com/leavesC/Java_Android_Learn/blob/master/Java_Android_Learn/sourceCode/AsyncTask.java)**
+
+**更多的源码解读请看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)**
