@@ -62,3 +62,4 @@
 
 * [其他](Java_Android_Learn/other)
     * [Android 事件分发机制详解](Java_Android_Learn/other/Android事件分发机制详解.md)
+    * [Android 解决 View 的滑动冲突](Java_Android_Learn/other/Android解决View的滑动冲突.md)
