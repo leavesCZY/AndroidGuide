@@ -53,9 +53,12 @@
     * [Android IPC机制（6）-AIDL使用详解](Java_Android_Learn/ipc/AndroidIPC机制（6）-AIDL使用详解.md)
 
 * [框架学习笔记](Java_Android_Learn/notes)
-    * [AndroidConstraintLayout使用详解](Java_Android_Learn/notes/AndroidConstraintLayout使用详解.md)
-    * [约束布局（ConstraintLayout1.1.2版本的新特性](Java_Android_Learn/notes/约束布局（ConstraintLayout1.1.2版本的新特性.md)
-    * [Retrofit2与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
+    * [Android ConstraintLayout 使用详解](Java_Android_Learn/notes/AndroidConstraintLayout使用详解.md)
+    * [约束布局 ConstraintLayout 1.1.2版本的新特性](Java_Android_Learn/notes/约束布局（ConstraintLayout1.1.2版本的新特性.md)
+    * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
     * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
     * [Gson 使用详解](Java_Android_Learn/notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
+
+* [其他](Java_Android_Learn/other)
+    * [Android 事件分发机制详解](Java_Android_Learn/other/Android事件分发机制详解.md)
