@@ -4,7 +4,7 @@
 
 在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
 
-* [基础](recollect)
+* [Java](recollect)
     * [重拾Java（0）-基础知识点](recollect/重拾Java（0）-基础知识点.md)
     * [重拾Java（1）-基本数据类型与字面值](recollect/重拾Java（1）-基本数据类型与字面值.md)
     * [重拾Java（2）-运算符](recollect/重拾Java（2）-运算符.md)
@@ -16,7 +16,7 @@
     * [重拾Java（8）-反射](recollect/重拾Java（8）-反射.md)
     * [重拾Java（9）-Lambda表达式](recollect/重拾Java（9）-Lambda表达式.md)
 
-* [集合框架](collections)
+* [Java 集合框架](collections)
     * [Java 集合框架源码解析之数组与链表](collections/Java集合框架源码解析之数组与链表.md)
     * [Java 集合框架源码解析之ArrayList](collections/Java集合框架源码解析之ArrayList.md)
     * [Java 集合框架源码解析之LinkedList](collections/Java集合框架源码解析之LinkedList.md)
@@ -25,7 +25,7 @@
     * [Java 集合框架源码解析之HashSet](collections/Java集合框架源码解析之HashSet.md)
     * [Java 集合框架源码解析之LinkedHashSet](collections/Java集合框架源码解析之LinkedHashSet.md)
 
-* [源码](sourceCode)
+* [Java 集合框架源码](sourceCode)
     * [ArrayList](sourceCode/ArrayList.java)
     * [LinkedList](sourceCode/LinkedList.java)
     * [HashMap](sourceCode/HashMap.java)
@@ -33,20 +33,20 @@
     * [HashSet](sourceCode/HashSet.java)
     * [LinkedHashSet](sourceCode/LinkedHashSet.java)
 
-* [四大组件](other)
+* [Android 四大组件](other)
     * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
     * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
     * [Android BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
     * [Android Service 使用详解](other/AndroidService使用详解.md)
     * [Android ContentProvider基本用法](other/AndroidContentProvider基本用法.md)
 
-* [Android多线程机制](multithreading)
+* [Android 多线程机制](multithreading)
     * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
     * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
     * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
     * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
 
-* [源码](sourceCode)
+* [Android 多线程机制源码](sourceCode)
     * [HandlerThread](sourceCode/HandlerThread.java)
     * [IntentService](sourceCode/IntentService.java)
     * [AsyncTask](sourceCode/AsyncTask.java)
@@ -59,7 +59,7 @@
     * [Android IPC机制（5）-Binder连接池](ipc/AndroidIPC机制（5）-Binder连接池.md)
     * [Android IPC机制（6）-AIDL使用详解](ipc/AndroidIPC机制（6）-AIDL使用详解.md)
 
-* [框架学习笔记](notes)
+* [Android 框架学习笔记](notes)
     * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
     * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
     * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
@@ -67,7 +67,7 @@
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
 
-* [其他](other)
+* [Android 相关](other)
 	* [Android 应用基础知识](other/Android应用基础知识.md)
 	* [Android Permission 问权限大全](other/AndroidPermission访问权限大全.md)
     * [Android 进程和线程](other/Android进程和线程.md)
