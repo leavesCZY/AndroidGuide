@@ -36,8 +36,9 @@
 * [四大组件](other)
     * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
     * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
-    * [Android BroadcastReceiver 使用详解.md](other/AndroidBroadcastReceiver使用详解.md)
-    * [Android Service 使用详解.md](other/AndroidService使用详解.md)
+    * [Android BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
+    * [Android Service 使用详解](other/AndroidService使用详解.md)
+    * [Android ContentProvider基本用法](other/AndroidContentProvider基本用法.md)
 
 * [Android多线程机制](multithreading)
     * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
