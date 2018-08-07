@@ -2,8 +2,6 @@
 
 这是一份关于 Java 、Kotlin 、 Android 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
 
-在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
-
 * [Java](recollect)
     * [重拾Java（0）-基础知识点](recollect/重拾Java（0）-基础知识点.md)
     * [重拾Java（1）-基本数据类型与字面值](recollect/重拾Java（1）-基本数据类型与字面值.md)
@@ -33,8 +31,42 @@
     * [HashSet](sourceCode/HashSet.java)
     * [LinkedHashSet](sourceCode/LinkedHashSet.java)
 
-* [Android 应用源码分享]()
-    * [一个具备私聊和群聊功能的应用](https://github.com/leavesC/Chat)
+
+------
+
+
+* [Kotlin](kotlin)
+  * [变量和函数](kotlin/变量和函数.md)
+  * [基本数据类型和其他基本类型](kotlin/基本数据类型和其他基本类型.md)
+  * [目录和包](kotlin/目录和包.md)
+  * [条件循环和区间](kotlin/条件循环和区间.md)
+  * [返回和跳转](kotlin/返回和跳转.md)
+  * [修饰符](kotlin/修饰符.md)
+  * [类](kotlin/类.md)
+  * [抽象类、嵌套类、内部类、密封类、枚举类](kotlin/抽象类、嵌套类、内部类、密封类、枚举类.md)
+  * [数据类](kotlin/数据类.md)
+  * [继承](kotlin/继承.md)
+  * [接口](kotlin/接口.md)
+  * [可空性](kotlin/可空性.md)
+  * [类型的检查与转换](kotlin/类型的检查与转换.md)
+  * [数组](kotlin/数组.md)
+  * [集合](kotlin/集合.md)
+  * [命名参数、默认参数值、可变参数](kotlin/命名参数、默认参数值、可变参数.md)
+  * [扩展函数和扩展属性](kotlin/扩展函数和扩展属性.md)
+  * [Lambda表达式](kotlin/Lambda表达式.md)
+  * [with与apply函数](kotlin/with与apply函数.md)
+  * [函数操作符](kotlin/函数操作符.md)
+  * [异常](kotlin/异常.md)
+  * [运算符重载](kotlin/运算符重载.md)
+  * [字符串模板](kotlin/字符串模板.md)
+  * [中缀调用和解构声明](kotlin/中缀调用和解构声明.md)
+
+
+------
+
+
+* [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [一个具备私聊和群聊功能的聊天应用](https://github.com/leavesC/Chat)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
     * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
 
