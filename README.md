@@ -1,6 +1,6 @@
-# Java_Android_Learn
+# Java_Kotlin_Android_Learn
 
-这是我的一份 Java 与 Android 开发的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
+这是一份关于 Java 、Kotlin 、 Android 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
 
 在此也推荐下我的另一份对 Kotlin 的学习笔记：[KotlinLearn](https://github.com/leavesC/KotlinLearn)
 
