@@ -33,6 +33,11 @@
     * [HashSet](sourceCode/HashSet.java)
     * [LinkedHashSet](sourceCode/LinkedHashSet.java)
 
+* [Android 应用源码分享]()
+    * [一个具备私聊和群聊功能的应用](https://github.com/leavesC/Chat)
+    * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
+    * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
+
 * [Android 四大组件](other)
     * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
     * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
@@ -66,6 +71,12 @@
     * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
+    * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
+
+* [Android 自定义View](other)
+    * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
+    * [Wifi 信号指示 View](https://github.com/leavesC/WifiStateView)
+    * [仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
 
 * [Android 相关](other)
 	* [Android 应用基础知识](other/Android应用基础知识.md)
@@ -75,4 +86,6 @@
     * [Android 系统权限](other/Android系统权限.md)
     * [Android 事件分发机制详解](other/Android事件分发机制详解.md)
     * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
-
+    * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
+    * [扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
+    * [解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
