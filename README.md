@@ -31,7 +31,6 @@
     * [HashSet](sourceCode/HashSet.java)
     * [LinkedHashSet](sourceCode/LinkedHashSet.java)
 
-
 ------
 
 
@@ -60,7 +59,6 @@
   * [运算符重载](kotlin/运算符重载.md)
   * [字符串模板](kotlin/字符串模板.md)
   * [中缀调用和解构声明](kotlin/中缀调用和解构声明.md)
-
 
 ------
 
@@ -104,6 +102,7 @@
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
+    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
 
 * [Android 自定义View](other)
     * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
