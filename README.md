@@ -103,6 +103,7 @@
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
+    * [RxJava2 入门详细笔记.md](notes/RxJava2入门详细笔记.md)
 
 * [Android 自定义View](other)
     * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
