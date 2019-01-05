@@ -64,7 +64,7 @@
 
 
 * [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [一个具备私聊和群聊功能的聊天应用](https://github.com/leavesC/Chat)
+    * [一个Android平台的 IM 应用](https://github.com/leavesC/Chat)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
     * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
 
@@ -103,7 +103,8 @@
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
-    * [RxJava2 入门详细笔记.md](notes/RxJava2入门详细笔记.md)
+    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
+    * [Android APT 实例讲解](https://github.com/leavesC/Android_APT)
 
 * [Android 自定义View](other)
     * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
