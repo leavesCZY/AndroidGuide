@@ -1,8 +1,82 @@
 # Java_Kotlin_Android_Learn
 
-这是一份关于 Java 、Kotlin 、 Android 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助
+这是一份关于 Android、Java、Kotlin 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
 
-* [Java](recollect)
+本人的 GitHub 主页：[leavesC](https://github.com/leavesC)
+
+本人的 博客 主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
+
+
+### Android 知识点
+
+* [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [一个聊天应用](https://github.com/leavesC/Chat)
+    * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
+    * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
+    * [一个纯 Kotlin 的开源工具类App](https://github.com/leavesC/Activity)
+
+* [Android 框架学习笔记](notes)
+    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
+    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+    * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
+    * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
+    * [Gson 使用详解](notes/AndroidGson使用详解.md)
+    * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
+    * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
+    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
+    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
+    * [Android APT 实例讲解](https://github.com/leavesC/Android_APT)
+    * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
+
+* [Android 四大组件](other)
+    * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
+    * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
+    * [Android BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
+    * [Android Service 使用详解](other/AndroidService使用详解.md)
+    * [Android ContentProvider基本用法](other/AndroidContentProvider基本用法.md)
+
+* [Android 自定义View](other)
+    * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
+    * [Wifi 信号指示 View](https://github.com/leavesC/WifiStateView)
+    * [仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
+
+* [Android 相关](other)
+	* [Android 应用基础知识](other/Android应用基础知识.md)
+	* [Android Permission 问权限大全](other/AndroidPermission访问权限大全.md)
+    * [Android 进程和线程](other/Android进程和线程.md)
+    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
+    * [Android 系统权限](other/Android系统权限.md)
+    * [Android 事件分发机制详解](other/Android事件分发机制详解.md)
+    * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
+    * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
+    * [扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
+    * [解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
+
+* [Android 多线程机制](multithreading)
+    * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+    * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
+    * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
+    * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
+
+* [Android 多线程机制源码](sourceCode)
+    * [HandlerThread](sourceCode/HandlerThread.java)
+    * [IntentService](sourceCode/IntentService.java)
+    * [AsyncTask](sourceCode/AsyncTask.java)
+
+* [Android IPC 机制](ipc)
+    * [Android IPC机制（1）-进程和线程](ipc/AndroidIPC机制（1）-进程和线程.md)
+    * [Android IPC机制（2）-序列化机制](ipc/AndroidIPC机制（2）-序列化机制.md)
+    * [Android IPC机制（3）-AIDL](ipc/AndroidIPC机制（3）-AIDL.md)
+    * [Android IPC机制（4）-Messenger](ipc/AndroidIPC机制（4）-Messenger.md)
+    * [Android IPC机制（5）-Binder连接池](ipc/AndroidIPC机制（5）-Binder连接池.md)
+    * [Android IPC机制（6）-AIDL使用详解](ipc/AndroidIPC机制（6）-AIDL使用详解.md)
+
+------
+
+
+### Java 知识点
+
+* [Java 重拾](recollect)
     * [重拾Java（0）-基础知识点](recollect/重拾Java（0）-基础知识点.md)
     * [重拾Java（1）-基本数据类型与字面值](recollect/重拾Java（1）-基本数据类型与字面值.md)
     * [重拾Java（2）-运算符](recollect/重拾Java（2）-运算符.md)
@@ -34,7 +108,9 @@
 ------
 
 
-* [Kotlin](kotlin)
+### Kotlin 知识点
+
+* [Kotlin 入门](kotlin)
   * [变量和函数](kotlin/变量和函数.md)
   * [基本数据类型和其他基本类型](kotlin/基本数据类型和其他基本类型.md)
   * [目录和包](kotlin/目录和包.md)
@@ -62,64 +138,3 @@
 
 ------
 
-
-* [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [一个聊天应用](https://github.com/leavesC/Chat)
-    * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
-    * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
-    * [一个纯 Kotlin 的系统工具应用](https://github.com/leavesC/Activity)
-
-* [Android 四大组件](other)
-    * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
-    * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
-    * [Android BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
-    * [Android Service 使用详解](other/AndroidService使用详解.md)
-    * [Android ContentProvider基本用法](other/AndroidContentProvider基本用法.md)
-
-* [Android 多线程机制](multithreading)
-    * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
-    * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
-    * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
-    * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
-
-* [Android 多线程机制源码](sourceCode)
-    * [HandlerThread](sourceCode/HandlerThread.java)
-    * [IntentService](sourceCode/IntentService.java)
-    * [AsyncTask](sourceCode/AsyncTask.java)
-
-* [Android IPC 机制](ipc)
-    * [Android IPC机制（1）-进程和线程](ipc/AndroidIPC机制（1）-进程和线程.md)
-    * [Android IPC机制（2）-序列化机制](ipc/AndroidIPC机制（2）-序列化机制.md)
-    * [Android IPC机制（3）-AIDL](ipc/AndroidIPC机制（3）-AIDL.md)
-    * [Android IPC机制（4）-Messenger](ipc/AndroidIPC机制（4）-Messenger.md)
-    * [Android IPC机制（5）-Binder连接池](ipc/AndroidIPC机制（5）-Binder连接池.md)
-    * [Android IPC机制（6）-AIDL使用详解](ipc/AndroidIPC机制（6）-AIDL使用详解.md)
-
-* [Android 框架学习笔记](notes)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
-    * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
-    * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
-    * [Gson 使用详解](notes/AndroidGson使用详解.md)
-    * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
-    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
-    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
-    * [Android APT 实例讲解](https://github.com/leavesC/Android_APT)
-
-* [Android 自定义View](other)
-    * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
-    * [Wifi 信号指示 View](https://github.com/leavesC/WifiStateView)
-    * [仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
-
-* [Android 相关](other)
-	* [Android 应用基础知识](other/Android应用基础知识.md)
-	* [Android Permission 问权限大全](other/AndroidPermission访问权限大全.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android 事件分发机制详解](other/Android事件分发机制详解.md)
-    * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
-    * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
-    * [扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
-    * [解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
