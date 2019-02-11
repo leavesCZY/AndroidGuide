@@ -10,24 +10,25 @@
 ### Android 知识点
 
 * [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
     * [一个聊天应用](https://github.com/leavesC/Chat)
+    * [一个纯 Kotlin 的开源工具类App](https://github.com/leavesC/Activity)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
     * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
-    * [一个纯 Kotlin 的开源工具类App](https://github.com/leavesC/Activity)
-
+    
 * [Android 框架学习笔记](notes)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+    * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
+    * [Android APT 实例讲解](https://github.com/leavesC/Android_APT)
+    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
+    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
     * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
+    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
+    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
-    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
-    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
-    * [Android APT 实例讲解](https://github.com/leavesC/Android_APT)
-    * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
-
+    
 * [Android 四大组件](other)
     * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
     * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
