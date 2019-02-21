@@ -2,16 +2,16 @@
 
 这是一份关于 Android、Java、Kotlin 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
 
-本人的 GitHub 主页：[leavesC](https://github.com/leavesC)
+本人的GitHub主页：[leavesC](https://github.com/leavesC)
 
-本人的 博客 主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
+本人的博客主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
 
 
 ### Android 知识点
 
-* [Android 应用源码分享](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Android OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
-    * [一个聊天应用](https://github.com/leavesC/Chat)
+* [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
+    * [一个开源 IM 应用](https://github.com/leavesC/Chat)
     * [一个纯 Kotlin 的开源工具类App](https://github.com/leavesC/Activity)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
     * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
@@ -30,26 +30,26 @@
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     
 * [Android 四大组件](other)
-    * [Android Activity 标签属性](other/AndroidActivity标签属性.md)
-    * [Android Activity 使用详解](other/AndroidActivity使用详解.md)
-    * [Android BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
-    * [Android Service 使用详解](other/AndroidService使用详解.md)
-    * [Android ContentProvider基本用法](other/AndroidContentProvider基本用法.md)
+    * [Activity 使用详解](other/AndroidActivity使用详解.md)
+    * [Activity 标签属性](other/AndroidActivity标签属性.md)
+    * [Service 使用详解](other/AndroidService使用详解.md)
+    * [BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
+    * [ContentProvider 使用详解](other/AndroidContentProvider基本用法.md)
 
 * [Android 自定义View](other)
     * [侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
     * [Wifi 信号指示 View](https://github.com/leavesC/WifiStateView)
     * [仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
+    * [View 事件分发机制详解](other/Android事件分发机制详解.md)
+    * [解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
 
 * [Android 相关](other)
-	* [Android 应用基础知识](other/Android应用基础知识.md)
-	* [Android Permission 问权限大全](other/AndroidPermission访问权限大全.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android 事件分发机制详解](other/Android事件分发机制详解.md)
-    * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
-    * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
+    * [内存泄漏分析](other/Android内存泄漏分析.md)
+    * [进程和线程](other/Android进程和线程.md)
+	* [应用基础知识](other/Android应用基础知识.md)
+    * [系统权限](other/Android系统权限.md)
+	* [Permission 大全](other/AndroidPermission访问权限大全.md)
+    * [工具类库](https://github.com/leavesC/AndroidUtils)
     * [扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
     * [解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
 
@@ -58,11 +58,9 @@
     * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
     * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
     * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
-
-* [Android 多线程机制源码](sourceCode)
-    * [HandlerThread](sourceCode/HandlerThread.java)
-    * [IntentService](sourceCode/IntentService.java)
-    * [AsyncTask](sourceCode/AsyncTask.java)
+    * [HandlerThread 源码注解](sourceCode/HandlerThread.java)
+    * [IntentService 源码注解](sourceCode/IntentService.java)
+    * [AsyncTask 源码注解](sourceCode/AsyncTask.java)
 
 * [Android IPC 机制](ipc)
     * [Android IPC机制（1）-进程和线程](ipc/AndroidIPC机制（1）-进程和线程.md)
@@ -97,14 +95,13 @@
     * [Java 集合框架源码解析之LinkedHashMap](collections/Java集合框架源码解析之LinkedHashMap.md)
     * [Java 集合框架源码解析之HashSet](collections/Java集合框架源码解析之HashSet.md)
     * [Java 集合框架源码解析之LinkedHashSet](collections/Java集合框架源码解析之LinkedHashSet.md)
+    * [ArrayList 源码注解](sourceCode/ArrayList.java)
+    * [LinkedList 源码注解](sourceCode/LinkedList.java)
+    * [HashMap 源码注解](sourceCode/HashMap.java)
+    * [LinkedHashMap 源码注解](sourceCode/LinkedHashMap.java)
+    * [HashSet 源码注解](sourceCode/HashSet.java)
+    * [LinkedHashSet 源码注解](sourceCode/LinkedHashSet.java)
 
-* [Java 集合框架源码](sourceCode)
-    * [ArrayList](sourceCode/ArrayList.java)
-    * [LinkedList](sourceCode/LinkedList.java)
-    * [HashMap](sourceCode/HashMap.java)
-    * [LinkedHashMap](sourceCode/LinkedHashMap.java)
-    * [HashSet](sourceCode/HashSet.java)
-    * [LinkedHashSet](sourceCode/LinkedHashSet.java)
 
 ------
 
@@ -145,4 +142,4 @@
 * [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
 * [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
 * [日期计算类 LocalDateUtil](code/util/LocalDateUtil.java)
-
+* [随机数生成类 RandomUtil](code/util/RandomUtil.java)
