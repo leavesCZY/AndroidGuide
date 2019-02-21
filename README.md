@@ -2,12 +2,13 @@
 
 这是一份关于 Android、Java、Kotlin 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
 
-本人的GitHub主页：[leavesC](https://github.com/leavesC)
+### 项目主页：[leavesC](https://github.com/leavesC/Java_Kotlin_Android_Learn)
 
-本人的博客主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
+### 博客主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
 
+------
 
-### Android 知识点
+#### 一、Android 知识点
 
 * [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
@@ -73,7 +74,7 @@
 ------
 
 
-### Java 知识点
+#### 二、Java 知识点
 
 * [Java 重拾](recollect)
     * [重拾Java（0）-基础知识点](recollect/重拾Java（0）-基础知识点.md)
@@ -106,7 +107,7 @@
 ------
 
 
-### Kotlin 知识点
+#### 三、### Kotlin 知识点
 
 * [Kotlin 入门](kotlin)
   * [变量和函数](kotlin/变量和函数.md)
@@ -137,7 +138,7 @@
 ------
 
 
-### 工具类
+#### 四、工具类
 
 * [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
 * [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
