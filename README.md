@@ -107,7 +107,7 @@
 ------
 
 
-#### 三、### Kotlin 知识点
+#### 三、Kotlin 知识点
 
 * [Kotlin 入门](kotlin)
   * [变量和函数](kotlin/变量和函数.md)
