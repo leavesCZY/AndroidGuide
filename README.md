@@ -2,7 +2,7 @@
 
 这是一份关于 Android、Java、Kotlin 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
 
-### 项目主页：[leavesC](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+### 项目主页：[Java_Kotlin_Android_Learn](https://github.com/leavesC/Java_Kotlin_Android_Learn)
 
 ### 博客主页：[leavesC](https://www.jianshu.com/u/9df45b87cfdf)
 
@@ -23,7 +23,7 @@
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
-    * [DataBinding 使用详解](https://github.com/leavesC/DataBinding_Demo)
+    * [DataBinding 使用详解](https://github.com/leavesC/DataBindingSamples)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
@@ -102,7 +102,6 @@
     * [LinkedHashMap 源码注解](sourceCode/LinkedHashMap.java)
     * [HashSet 源码注解](sourceCode/HashSet.java)
     * [LinkedHashSet 源码注解](sourceCode/LinkedHashSet.java)
-
 
 ------
 
