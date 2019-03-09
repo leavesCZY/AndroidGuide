@@ -28,6 +28,8 @@ public class DecimalFormatUtil {
         System.out.println(new DecimalFormat("##.#").format(113.1415));
         //113.2
         System.out.println(new DecimalFormat("00.#").format(113.1615));
+        //11211.210012
+        System.out.println(new BigDecimal("0011211.210012000").stripTrailingZeros().toPlainString());
     }
 
 }
