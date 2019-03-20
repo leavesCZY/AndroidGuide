@@ -18,8 +18,6 @@
 * [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [一个 IM 应用](https://github.com/leavesC/Chat)
     * [一个纯 Kotlin 的工具类App](https://github.com/leavesC/Activity)
-    * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
-    * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
 
 
 * [Android 四大组件](https://github.com/leavesC/Java_Kotlin_Android_Learn)
@@ -41,8 +39,10 @@
     * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
     * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
+    * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
+    * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
     * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
     * [Android 进程和线程](other/Android进程和线程.md)
     * [Android 应用基础知识](other/Android应用基础知识.md)
