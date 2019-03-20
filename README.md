@@ -12,7 +12,7 @@
 
 * [Android 开源库](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
-    * [一个小巧而强大的 Key-Value 管理框架](https://github.com/leavesC/DoKV)
+    * [一个小巧而强大的 Key-Value 管理框架 - DoKV](https://github.com/leavesC/DoKV)
 
 
 * [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
@@ -38,19 +38,19 @@
  	* [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
-    * [Gson 使用详解](notes/AndroidGson使用详解.md)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
-    * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android 应用基础知识](other/Android应用基础知识.md)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
-    * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
-    * [Android 扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
-    * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
+        * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
+        * [Gson 使用详解](notes/AndroidGson使用详解.md)
+        * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
+        * [约束布局 ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+        * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
+        * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
+        * [Android 进程和线程](other/Android进程和线程.md)
+        * [Android 应用基础知识](other/Android应用基础知识.md)
+        * [Android 系统权限](other/Android系统权限.md)
+        * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
+        * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
+        * [Android 扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
+        * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
 
 
 * [Android 自定义View](https://github.com/leavesC/Java_Kotlin_Android_Learn)
@@ -66,9 +66,9 @@
     * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
     * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
     * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
-    * [HandlerThread 源码详细注解](sourceCode/HandlerThread.java)
-    * [IntentService 源码详细注解](sourceCode/IntentService.java)
-    * [AsyncTask 源码详细注解](sourceCode/AsyncTask.java)
+    * [Android HandlerThread 源码详细注释](sourceCode/HandlerThread.java)
+    * [Android IntentService 源码详细注释](sourceCode/IntentService.java)
+    * [Android AsyncTask 源码详细注释](sourceCode/AsyncTask.java)
 
 
 * [Android IPC 机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
@@ -104,12 +104,12 @@
     * [Java 集合框架源码解析之LinkedHashMap](collections/Java集合框架源码解析之LinkedHashMap.md)
     * [Java 集合框架源码解析之HashSet](collections/Java集合框架源码解析之HashSet.md)
     * [Java 集合框架源码解析之LinkedHashSet](collections/Java集合框架源码解析之LinkedHashSet.md)
-    * [ArrayList 源码注解](sourceCode/ArrayList.java)
-    * [LinkedList 源码注解](sourceCode/LinkedList.java)
-    * [HashMap 源码注解](sourceCode/HashMap.java)
-    * [LinkedHashMap 源码注解](sourceCode/LinkedHashMap.java)
-    * [HashSet 源码注解](sourceCode/HashSet.java)
-    * [LinkedHashSet 源码注解](sourceCode/LinkedHashSet.java)
+    * [ArrayList 源码详细注释](sourceCode/ArrayList.java)
+    * [LinkedList 源码详细注释](sourceCode/LinkedList.java)
+    * [HashMap 源码详细注释](sourceCode/HashMap.java)
+    * [LinkedHashMap 源码详细注释](sourceCode/LinkedHashMap.java)
+    * [HashSet 源码详细注释](sourceCode/HashSet.java)
+    * [LinkedHashSet 源码详细注释](sourceCode/LinkedHashSet.java)
 
 ------
 
