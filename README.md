@@ -71,6 +71,10 @@
     * [Android AsyncTask 源码详细注释](sourceCode/AsyncTask.java)
 
 
+* [Android 集合框架](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android 集合框架之 - SparseArray](collections_android/SparseArray.java)
+
+
 * [Android IPC 机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android IPC机制（1）-进程和线程](ipc/AndroidIPC机制（1）-进程和线程.md)
     * [Android IPC机制（2）-序列化机制](ipc/AndroidIPC机制（2）-序列化机制.md)
