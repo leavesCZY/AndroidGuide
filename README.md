@@ -51,6 +51,7 @@
     * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
     * [Android 扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
     * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
+    * [Android 获取应用 Crash 信息的方法](other/Android获取应用Crash信息的方法.md)
 
 
 * [Android 自定义View](https://github.com/leavesC/Java_Kotlin_Android_Learn)
