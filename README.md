@@ -1,6 +1,6 @@
 # Java_Kotlin_Android_Learn
 
-这是一份关于 Android、Java、Kotlin 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
+这是一份关于 Android、Java、Kotlin、Git 的学习笔记，既包含对基础知识点的介绍，也包含对一些重要知识点的源码解析，希望对你也有所帮助，欢迎 star
 
 ### 项目主页：[Java_Kotlin_Android_Learn](https://github.com/leavesC/Java_Kotlin_Android_Learn)
 
@@ -32,8 +32,8 @@
     * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
     * [Android APT 实例讲解](https://github.com/leavesC/DoKV)
 	* [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
- 	* [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
- 	* [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
+    * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
+    * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
@@ -145,7 +145,15 @@
 ------
 
 
-#### 四、工具类
+
+#### 四、Git教程详解
+
+* [Git教程详解（1）](git/Git教程详解（1）.md)
+* [Git教程详解（2）](git/Git教程详解（2）.md)
+
+
+
+#### 五、工具类
 
 * [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
 * [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
