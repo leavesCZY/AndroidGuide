@@ -28,26 +28,39 @@
     * [ContentProvider 使用详解](other/AndroidContentProvider基本用法.md)
 
 
+* [Android 相关](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android 应用基础知识](other/Android应用基础知识.md)
+    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
+    * [Android 进程和线程](other/Android进程和线程.md)
+    * [Android Fragment使用详解](notes/AndroidFragment使用详解.md)
+    * [Android Dialog使用详解](notes/AndroidDialog使用详解.md)
+    * [Android Notification的使用](notes/AndroidNotification的使用.md)
+    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
+    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+
+
+* [Android 权限系统](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android 系统权限](other/Android系统权限.md)
+    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
+    * [Android 6.0运行时权限解析](other/Android6.0运行时权限解析.md)
+    * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
+    
+
 * [Android 框架学习笔记](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
     * [Android APT 实例讲解](https://github.com/leavesC/DoKV)
+    * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
 	* [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
-    * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+
+
+* [Android 方案实现](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
     * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android 应用基础知识](other/Android应用基础知识.md)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
     * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
     * [Android 扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
     * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
