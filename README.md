@@ -18,6 +18,7 @@
 * [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [一个 IM 应用](https://github.com/leavesC/Chat)
     * [一个纯 Kotlin 的工具类App](https://github.com/leavesC/Activity)
+    * [两个小游戏 + 一个阅读类应用，适合初学者](https://github.com/leavesC/SmallApp)
 
 
 * [Android 四大组件](https://github.com/leavesC/Java_Kotlin_Android_Learn)
@@ -42,7 +43,7 @@
 * [Android 权限系统](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android 系统权限](other/Android系统权限.md)
     * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
-    * [Android 6.0运行时权限解析](other/Android6.0运行时权限解析.md)
+    * [Android 6.0 运行时权限解析](other/Android6.0运行时权限解析.md)
     * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
     
 
