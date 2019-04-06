@@ -86,17 +86,17 @@
     * [Android AsyncTask 源码详细注释](sourceCode/AsyncTask.java)
 
 
+* [Android IPC 机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [AndroidIPC机制（1）-进程和线程](https://github.com/leavesC/IPCSamples)
+    * [AndroidIPC机制（2）-序列化机制](https://github.com/leavesC/IPCSamples)
+    * [AndroidIPC机制（3）-AIDL](https://github.com/leavesC/IPCSamples)
+    * [AndroidIPC机制（4）-Messenger](https://github.com/leavesC/IPCSamples)
+    * [AndroidIPC机制（5）-Binder连接池](https://github.com/leavesC/IPCSamples)
+
+
 * [Android 集合框架](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android 集合框架之 - SparseArray](collections_android/SparseArray.java)
-
-
-* [Android IPC 机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Android IPC机制（1）-进程和线程](ipc/AndroidIPC机制（1）-进程和线程.md)
-    * [Android IPC机制（2）-序列化机制](ipc/AndroidIPC机制（2）-序列化机制.md)
-    * [Android IPC机制（3）-AIDL](ipc/AndroidIPC机制（3）-AIDL.md)
-    * [Android IPC机制（4）-Messenger](ipc/AndroidIPC机制（4）-Messenger.md)
-    * [Android IPC机制（5）-Binder连接池](ipc/AndroidIPC机制（5）-Binder连接池.md)
-    * [Android IPC机制（6）-AIDL使用详解](ipc/AndroidIPC机制（6）-AIDL使用详解.md)
+    
 
 ------
 
@@ -169,6 +169,8 @@
 
 * [Git教程详解（1）](git/Git教程详解（1）.md)
 * [Git教程详解（2）](git/Git教程详解（2）.md)
+
+------
 
 
 
