@@ -1,6 +1,6 @@
-### with与apply函数
+## 一、with与apply函数
 
-#### with函数
+### 1.1、with函数
 
 with函数用于对同一个对象执行多次操作而不需要反复把对象的名称写出来
 
@@ -48,7 +48,7 @@ with 函数的返回值是执行 Lambda 表达式的结果，该结果就是 Lam
     println(result)  //kotlin.Unit
 ```
 
-#### apply函数
+### 1.2、apply函数
 
 apply函数和with函数的唯一区别在于：apply函数始终会返回作为实参传递给它的对象
 
