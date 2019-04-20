@@ -4,7 +4,7 @@ Kotlin 文件都能以一条 **package** 语句开头，而文件中定义的所
 
 包的声明应处于源文件顶部，import 语句紧随其后
 
-```java
+```kotlin
 package base
 
 import java.text.SimpleDateFormat
@@ -49,6 +49,13 @@ fun main(args: Array<String>) {
     val point = Point(10, index)
     Test(true)
 }
+```
+
+如果出现名字冲突，可以使用  as  关键字在本地重命名冲突项来消歧义
+
+```kotlin
+import learn.package1.Point
+import learn.package2.Point as PointTemp //PointTemp 可以用来表示 learn.package2.Point 了
 ```
 
 在 Java 中，要把类放到和包结构**匹配**的文件与目录结构中，而 Kotlin 允许把多个类放到同一个文件中，文件名也可以任意选择。Kotlin 也没有对磁盘上源文件的布局强加任何限制，包层级结构不需要遵循目录层级结构 ,但最好还是遵循 Java 的目录布局并根据包结构把源码文件放到相应的目录中
@@ -109,14 +116,15 @@ public 修饰符是限制级最低的修饰符，是默认的修饰符。如果�
 
 ### 2.3、protected
 
-protected 修饰符只能被用在类或者接口中的成员上。在 Java 中，可以从同一个包中访问一个 protected 的成员，但对于 Kotlin 来说，protected 成员只在类和它的子类中可见
+protected 修饰符只能被用在类或者接口中的成员上。在 Java 中，可以从同一个包中访问一个 protected 的成员，但对于 Kotlin 来说，protected 成员只在类和它的子类中可见。此外，protected 不适用于顶层声明
 
 ### 2.4、internal
 
-如果是一个定义为 internal  的包成员的话，对所在的整个 module  可见。如果它是一个其它领域的成员，它就需要依赖那个领域的可见性了。比如，如果我们写了一个 private  类，那么它的 internal  修饰的函数的可见性就会限制于它所在的这个类的可见性。
+如果是一个定义为 internal 的包成员的话，对所在的整个 module 可见。如果它是一个其它领域的成员，它就需要依赖那个领域的可见性了。比如，如果我们写了一个 private  类，那么它的 internal 修饰的函数的可见性就会限制于它所在的这个类的可见性
+
 我们可以访问同一个 module  中的 internal  修饰的类，但是不能访问其它 module  的
 
-> 根据Jetbrains的定义，一个 module  应该是一个单独的功能性的单位，它应该是可以被单独编译、运行、测试、debug 的。根据我们项目不同的模块，可以在 Android Studio 中创建不同的 module。在Eclipse中，这些 module  可以认为是在一个 workspace  中的不同的 project
+> 根据 Jetbrains 的定义，一个 module  应该是一个单独的功能性的单位，它应该是可以被单独编译、运行、测试、debug 的。根据我们项目不同的模块，可以在 Android Studio 中创建不同的 module。在Eclipse中，这些 module  可以认为是在一个 workspace  中的不同的 project
 
 ### 2.5、private
 
