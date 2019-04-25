@@ -14,38 +14,10 @@
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
     * [一个小巧而强大的 Key-Value 管理框架 - DoKV](https://github.com/leavesC/DoKV)
 
-
 * [Android 开源应用](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [一个 IM 应用](https://github.com/leavesC/Chat)
     * [一个纯 Kotlin 的工具类App](https://github.com/leavesC/Activity)
     * [两个小游戏 + 一个阅读类应用，适合初学者](https://github.com/leavesC/SmallApp)
-
-
-* [Android 四大组件](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Activity 使用详解](other/AndroidActivity使用详解.md)
-    * [Activity 标签属性](other/AndroidActivity标签属性.md)
-    * [Service 使用详解](other/AndroidService使用详解.md)
-    * [BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
-    * [ContentProvider 使用详解](other/AndroidContentProvider基本用法.md)
-
-
-* [Android 相关](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Android 应用基础知识](other/Android应用基础知识.md)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android Fragment使用详解](notes/AndroidFragment使用详解.md)
-    * [Android Dialog使用详解](notes/AndroidDialog使用详解.md)
-    * [Android Notification的使用](notes/AndroidNotification的使用.md)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
-
-
-* [Android 权限系统](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
-    * [Android 6.0 运行时权限解析](other/Android6.0运行时权限解析.md)
-    * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
-    
 
 * [Android 框架学习笔记](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
@@ -57,7 +29,6 @@
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
     * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
-
 * [Android 方案实现](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
@@ -67,15 +38,39 @@
     * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
     * [Android 获取应用 Crash 信息的方法](other/Android获取应用Crash信息的方法.md)
 
-
 * [Android 自定义View](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android 侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
     * [Android Wifi 信号指示 View](https://github.com/leavesC/WifiStateView)
     * [Android 仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
     * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
+    * [Android 自定义View合辑](https://github.com/leavesC/CustomView)
+        * [折线图](https://github.com/leavesC/CustomView)
+        * [时钟](https://github.com/leavesC/CustomView)
 
+* [Android 四大组件](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Activity 使用详解](other/AndroidActivity使用详解.md)
+    * [Activity 标签属性](other/AndroidActivity标签属性.md)
+    * [Service 使用详解](other/AndroidService使用详解.md)
+    * [BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
+    * [ContentProvider 使用详解](other/AndroidContentProvider基本用法.md)
 
+* [Android 相关](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android 应用基础知识](other/Android应用基础知识.md)
+    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
+    * [Android 进程和线程](other/Android进程和线程.md)
+    * [Android Fragment使用详解](notes/AndroidFragment使用详解.md)
+    * [Android Dialog使用详解](notes/AndroidDialog使用详解.md)
+    * [Android Notification的使用](notes/AndroidNotification的使用.md)
+    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
+    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
+
+* [Android 权限系统](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+    * [Android 系统权限](other/Android系统权限.md)
+    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
+    * [Android 6.0 运行时权限解析](other/Android6.0运行时权限解析.md)
+    * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
+    
 * [Android 多线程机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
     * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
@@ -85,14 +80,12 @@
     * [Android IntentService 源码详细注释](sourceCode/IntentService.java)
     * [Android AsyncTask 源码详细注释](sourceCode/AsyncTask.java)
 
-
 * [Android IPC 机制](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [AndroidIPC机制（1）-进程和线程](https://github.com/leavesC/IPCSamples)
     * [AndroidIPC机制（2）-序列化机制](https://github.com/leavesC/IPCSamples)
     * [AndroidIPC机制（3）-AIDL](https://github.com/leavesC/IPCSamples)
     * [AndroidIPC机制（4）-Messenger](https://github.com/leavesC/IPCSamples)
     * [AndroidIPC机制（5）-Binder连接池](https://github.com/leavesC/IPCSamples)
-
 
 * [Android 集合框架](https://github.com/leavesC/Java_Kotlin_Android_Learn)
     * [Android 集合框架之 - SparseArray](collections_android/SparseArray.java)
