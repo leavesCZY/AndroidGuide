@@ -45,6 +45,7 @@
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
     * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
     * [Android 自定义View合辑](https://github.com/leavesC/CustomView)
+        * [太极](https://github.com/leavesC/CustomView)
         * [波浪](https://github.com/leavesC/CustomView)
         * [下雨](https://github.com/leavesC/CustomView)
         * [仿QQ邮箱下拉加载](https://github.com/leavesC/CustomView)
