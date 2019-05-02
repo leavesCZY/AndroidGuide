@@ -1,16 +1,31 @@
-package android.util;
 
-import com.android.internal.util.ArrayUtils;
-import com.android.internal.util.GrowingArrayUtils;
+使用 Android Studio 作为 IDE 的开发者可能会遇到一个现象，就是在代码中如果声明了  `Map<Integer, Object>` 类型的变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，意思就是**用 SparseArray<Object> 性能更优，可以考虑来替换 HashMap**
 
-import libcore.util.EmptyArray;
+这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/Java_Kotlin_Android_Learn/blob/master/collections/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8BHashMap.md)
 
- //SparseArray<E> 相当于 Map<Integer,E> ，key 存放在 mKeys 中，而该 key 对应的 value 则存放在 mValues 中
- //mKeys 和 mValues 通过如下方式对应起来：
- //假设要向 SparseArray 存入 key 为 10，value 为 200 的键值对，则先将 10 存到 mKeys 中，假设对应的索引值是 index ，则将 value 存入 mValues[index] 中
+## 一、基本概念
 
-public class SparseArray<E> implements Cloneable {
+先看下 SparseArray 的使用方式
 
+```java
+        SparseArray<String> sparseArray = new SparseArray<>();
+        sparseArray.put(100, "leavesC");
+        sparseArray.remove(100);
+        sparseArray.get(100);
+        sparseArray.removeAt(29);
+```
+
+SparseArray<E> 相当于 Map<Integer,E> ，key 值固定为 int 类型，在初始化时只需要声明 Value 的数据类型即可，其内部用两个数组分别来存储 Key 列表和 Value 列表：`int[] mKeys ; Object[] mValues`
+
+`mKeys` 和 `mValues` 通过如下方式对应起来：假设要向 `SparseArray` 存入 `key` 为 `10`，`value` 为 `200` 的键值对，则先将 `10` 存到 `mKeys` 中，假设 `10` 在 `mKeys` 中对应的索引值是 `index` ，则将 `value` 存入 `mValues[index]` 中
+
+最首要的一点就是 SparseArray 避免了 Map 每次存取值时的**装箱拆箱**操作，其 Key 值类型都是基本数据类型 int，这有利于提升性能
+
+## 二、全局变量
+
+布尔变量 `mGarbage` 也是 SparseArray 的一个优化点之一，用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再完成**
+
+```java
     //数组元素在没有外部指定值时的默认元素值
     private static final Object DELETED = new Object();
 
@@ -25,7 +40,13 @@ public class SparseArray<E> implements Cloneable {
     //该值并不一定是时时处于正确状态，因为有可能出现只删除 key 和 value 两者之一的情况
     //所以在调用 size() 方法前都需要进行 GC
     private int mSize;
+```
 
+## 三、构造函数
+
+key 数组和 value 数组的默认大小都是 10，如果在初始化时已知数据量的预估大小，则可以直接指定初始容量，这样可以避免后续的扩容操作
+
+```java
     //设置数组的默认初始容量为10
     public SparseArray() {
         this(10);
@@ -48,13 +69,25 @@ public class SparseArray<E> implements Cloneable {
         }
         mSize = 0;
     }
+```
 
+## 四、添加元素
 
+添加元素的方法有如下几个，主要看 `put(int key, E value)` 方法，当中用到了 `ContainerHelpers` 类提供的二分查找方法：`binarySearch`，用于查找目标 key 在 mKeys 中的当前索引或者是目标索引 
 
-    /******************************** 增添元素 ********************************/
+binarySearch 方法的返回值分为两种情况：
 
+- 如果 mKeys 中存在对应的 key，则直接返回对应的索引值
+- 如果 mKeys 中不存在对应的 key
+  - 假设 mKeys 中存在"值比 key 大且大小与 key 最接近的值的索引"为 presentIndex，则此方法的返回值为 ~presentIndex
+  - 如果 mKeys 中不存在比 key 还要大的值的话，则返回值为 ~mKeys.length
 
-    //将索引 index 处的元素赋值为 value
+可以看到，即使在 mKeys 中不存在目标 key，但其返回值也指向了应该让 key 存入的位置。通过将计算出的索引值进行 ~ 运算，则返回值一定是 0 或者负数，从而与“找得到目标key的情况（返回值大于0）”的情况区分开
+
+且通过这种方式来存放数据，可以使得 mKeys 的内部值一直是按照值递增的方式来排序的
+
+```java
+//将索引 index 处的元素赋值为 value
     //SparseArray 的元素值都是存到 mValues 中的，因此如果知道目标位置（index），则可以直接向数组 mValues 赋值
     public void setValueAt(int index, E value) {
         //如果需要则先进行垃圾回收
@@ -128,10 +161,15 @@ public class SparseArray<E> implements Cloneable {
         mValues = GrowingArrayUtils.append(mValues, mSize, value);
         mSize++;
     }
+```
 
-    /******************************** 移除元素 ********************************/
+## 五、移除元素
 
+上文说了，布尔变量 `mGarbage` 用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再完成**
 
+以下几个方法在移除元素时，都是只切断了 mValues 中的引用，而 mKeys 并没有进行回收，这个操作会留到 `gc()` 进行处理
+
+```java
     //如果存在 key 对应的元素值，则将其移除
     public void delete(int key) {
         //用二分查找法查找指定 key 在 mKeys 中的索引值
@@ -193,9 +231,13 @@ public class SparseArray<E> implements Cloneable {
         mSize = 0;
         mGarbage = false;
     }
+```
 
-    /******************************** 查找元素 ********************************/
+## 六、查找元素
 
+查找元素的方法较多，但逻辑都是挺简单的
+
+```java
     //根据 key 查找相应的元素值，查找不到则返回默认值
     @SuppressWarnings("unchecked")
     public E get(int key, E valueIfKeyNotFound) {
@@ -272,15 +314,13 @@ public class SparseArray<E> implements Cloneable {
         }
         return -1;
     }
+```
 
-    //获取当前集合元素大小
-    public int size() {
-        if (mGarbage) {
-            gc();
-        }
-        return mSize;
-    }
+## 七、垃圾回收
 
+因为 SparseArray 中可能会出现只移除 value 和 value 两者之一的情况，导致数组中存在无效引用，因此 `gc()` 方法就用于移除无效引用，并将有效的元素值位置合并在一起
+
+```java
     //垃圾回收
     //因为 SparseArray 中可能出现只移除 value 和 value 两者之一的情况
     //所以此方法就用于移除无用的引用
@@ -307,51 +347,22 @@ public class SparseArray<E> implements Cloneable {
         mGarbage = false;
         mSize = o;
     }
+```
 
-    @Override
-    @SuppressWarnings("unchecked")
-    public SparseArray<E> clone() {
-        SparseArray<E> clone = null;
-        try {
-            clone = (SparseArray<E>) super.clone();
-            clone.mKeys = mKeys.clone();
-            clone.mValues = mValues.clone();
-        } catch (CloneNotSupportedException cnse) {
-            /* ignore */
-        }
-        return clone;
-    }
+## 八、优劣势
 
-    /**
-     * {@inheritDoc}
-     *
-     * <p>This implementation composes a string by iterating over its mappings. If
-     * this map contains itself as a value, the string "(this Map)"
-     * will appear in its place.
-     */
-    @Override
-    public String toString() {
-        if (size() <= 0) {
-            return "{}";
-        }
-        StringBuilder buffer = new StringBuilder(mSize * 28);
-        buffer.append('{');
-        for (int i=0; i<mSize; i++) {
-            if (i > 0) {
-                buffer.append(", ");
-            }
-            int key = keyAt(i);
-            buffer.append(key);
-            buffer.append('=');
-            Object value = valueAt(i);
-            if (value != this) {
-                buffer.append(value);
-            } else {
-                buffer.append("(this Map)");
-            }
-        }
-        buffer.append('}');
-        return buffer.toString();
-    }
+从上文的解读来看，SparseArray 的主要优势有以下几点：
 
-}
+- 避免了基本数据类型的装箱拆箱操作
+- 和 Map 每个存储结点都是一个类对象不同，SparseArray 不需要用于包装的的结构体，单个元素的存储成本更加低廉
+- 在数据量不大的情况下，查找效率较高（二分查找法）
+- 延迟了垃圾回收的时机，只在需要的时候才一次进进行
+
+
+劣势有以下几点：
+
+- 插入新元素可能会导致移动大量的数组元素
+- 数据量较大时，查找效率（二分查找法）会明显降低
+
+
+## 更多的学习笔记可以看这里：[Java_Kotlin_Android_Learn](https://github.com/leavesC/Java_Kotlin_Android_Learn)

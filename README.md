@@ -93,8 +93,8 @@
     * [AndroidIPC机制（5）-Binder连接池](https://github.com/leavesC/IPCSamples)
 
 * [Android 集合框架](https://github.com/leavesC/Java_Kotlin_Android_Learn)
-    * [Android 集合框架之 - SparseArray](collections_android/SparseArray.java)
-    
+    * [Android 集合框架源码解析之SparseArray](collections_android/SparseArray源码解析.md)
+    * [SparseArray 源码详细注释](collections_android/SparseArray.java)
 
 ------
 
