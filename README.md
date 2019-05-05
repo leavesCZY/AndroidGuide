@@ -45,7 +45,8 @@
     * [Android 仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
 
 * [Android 自定义View合辑，持续更新中](https://github.com/leavesC/CustomView)
-    * [WaveLoadingView（贝塞尔曲线-2）](https://github.com/leavesC/CustomView)
+    * [跳跃小球（贝塞尔曲线-3）](https://github.com/leavesC/CustomView)
+    * [带文本的圆形波浪（贝塞尔曲线-2）](https://github.com/leavesC/CustomView)
     * [波浪（贝塞尔曲线-1）](https://github.com/leavesC/CustomView)
     * [仿QQ邮箱下拉刷新](https://github.com/leavesC/CustomView)
     * [太极](https://github.com/leavesC/CustomView)
