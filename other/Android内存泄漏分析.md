@@ -114,7 +114,7 @@ public class HandlerActivity extends AppCompatActivity {
 先启动HandlerActivity后退出，等个三四秒后，可以看到LeakCanary提示我们应用内存泄漏了
 
 通过文字提示可以看到问题就出在Handler身上
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-0460414eb8c7b7e6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-0460414eb8c7b7e6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 解决办法就是在HandlerActivity退出后，移除Handler的所有回调和消息
 
@@ -185,7 +185,7 @@ public class ThreadActivity extends AppCompatActivity {
 即使创建了新的Activity，旧的Activity中建立的线程依然还在执行，从而导致无法释放Activity占用的内存，从而造成严重的内存泄漏
 
 LeakCanary的检测结果：
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-6e83c7ea0fd32f9a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-6e83c7ea0fd32f9a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 想要避免因为 Thread 造成内存泄漏，可以在 Activity 退出后主动停止 Thread
 例如，可以为 Thread 设置一个布尔变量 threadSwitch 来控制线程的启动与停止
@@ -323,7 +323,7 @@ public class ToastActivity extends AppCompatActivity {
 }
 ```
 先点击一次 Button 使 Toast 弹出后，退出 ToastActivity，此时 LeakCanary 又会提示说造成内存泄漏了
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-8cf92759cdc2fe19?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-8cf92759cdc2fe19?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 当中提及了 Toast.mContext，通过查看Toast类的源码可以看到，Toast类内部的mContext指向传入的Context。而ToastUtils中的toast变量是静态类型的，其生命周期是与整个应用一样长的，从而导致 ToastActivity 得不到释放。因此，对Context的引用不能超过它本身的生命周期。
 
@@ -440,4 +440,4 @@ public class BaseFragment extends Fragment {
 ```
 
 当在测试debug版本的过程中出现内存泄露时，LeakCanary将会自动展示一个通知栏显示检测结果
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-79f58a267695f59e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-79f58a267695f59e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

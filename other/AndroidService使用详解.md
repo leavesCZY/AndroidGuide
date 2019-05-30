@@ -232,11 +232,11 @@ public class MainActivity extends AppCompatActivity {
           android:label="@string/app_name" />
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c3690e2316b8f9a4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c3690e2316b8f9a4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 点击“播放音乐”按钮后，在后台将会运行着名为“Service测试”的服务
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-323881d8767e934e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-323881d8767e934e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 通过Log日志可以发现，多次点击“播放音乐”按钮，“onCreate()”方法只会在初始时调用一次，“onStartCommand(Intent intent, int flags, int startId)”方法会在每次点击时都被调用，点击“停止音乐”按钮，“onDestroy()”方法会被调用
 
@@ -322,11 +322,11 @@ public class StartIntentServiceActivity extends AppCompatActivity {
 
 可以看到是依次输出的，即IntentService的工作线程是逐一处理所有启动请求的
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-b33102bf7825eda6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-b33102bf7825eda6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此外，查看后台，可以看到当前后台应用程序进程中有两个服务
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-fbcce2e5b5bcfa77?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-fbcce2e5b5bcfa77?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## **四、绑定Service**
 
@@ -497,7 +497,7 @@ public class BindServiceActivity extends AppCompatActivity {
 
 其中，如果服务已启动并接受绑定，则当系统调用了onUnbind() 方法，想要在客户端下一次绑定到服务时调用 onRebind() 方法的话，则onUnbind() 方法需返回 true。onRebind() 返回空值，但客户端仍可以在其 onServiceConnected() 回调中接收到 IBinder对象
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-568542042002a6d1?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-568542042002a6d1?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### **4.3、绑定时机**
 
@@ -529,7 +529,7 @@ public class BindServiceActivity extends AppCompatActivity {
 ```
 点击播放音乐后，状态栏就出现了一个通知
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-699e4b1e1c8cfef4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-699e4b1e1c8cfef4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 当中，提供给 startForeground() 的整型参数不得为 0。要从前台移除服务，需调用 stopForeground()方法，此方法不会停止服务。 但是，如果前台服务被停止，则通知也会被移除
 

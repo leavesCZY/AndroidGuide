@@ -30,7 +30,7 @@ Android 3.0（API 11）添加了一个强大的功能就是 Fragment （片段�
  - onDetach                
   当片段与 Activity 解除关联的时候调用
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-82215f275d6a1794?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-82215f275d6a1794?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 片段在 onCreateView() 方法中创建一个视图并返回，方法签名如下
 
@@ -156,13 +156,13 @@ Activity 生命周期与片段生命周期之间的最显著差异在于它们�
 
 从下图中可以看到 Activity 的每个连续状态如何决定片段可以收到的回调方法。 例如，当 Activity 收到其 onCreate() 回调时，Activity 中的片段只会收到 onActivityCreated() 回调。一旦 Activity 达到 Resume 状态，就可以随意向 Activity 添加片段和移除其中的片段。 因此，只有当 Activity 处于 Resume 状态时，片段的生命周期才能独立变化。当 Activity 离开 Resume 状态时，片段会在 Activity 的推动下再次经历其生命周期
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c0bf8ba96fca123f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c0bf8ba96fca123f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## **四、具体使用**
 ### **4.1、在 Activity 的布局文件内声明片段**
 先来看下效果图
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-68af539a2c5f208a?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-68af539a2c5f208a?imageMogr2/auto-orient/strip)
 
 该界面一共使用了两个 Fragment ，一个片段用于列出字符串列表，一个片段用于显示图片
 
@@ -336,7 +336,7 @@ public class MainActivity extends AppCompatActivity implements SelectFragment.Ca
 ### **4.2、通过编程方式将片段添加到某个现有 ViewGroup**
 先来看效果图
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-0da2bcb568fab59a?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-0da2bcb568fab59a?imageMogr2/auto-orient/strip)
 
 首先创建一个 Fragment 子类，在 onCreate() 方法中获取传递来的参数，并显示在 TextView 中
 

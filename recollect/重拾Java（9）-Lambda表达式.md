@@ -1,15 +1,20 @@
 >以下内容是我对 Java 8 编程参考官方教程（第9版） 该书的读书笔记
 
 ### 一、简介 
-Lambda表达式（也称为闭包）是JDK8新增的功能，底层通过 invokedynamic 指令来生成匿名类来实现。Lambda表达式本质上是一个匿名方法，但这个方法不是独立执行的，而是用于实现由函数式接口定义的另一个方法。因此，Lambda表达式会导致生成一个匿名类。
-函数式接口是仅包含一个抽象方法的接口。一般来说，这个方法指明了接口的目标用途。因此，函数式接口通常表示单个动作。例如，标准接口 Runnable 是一个函数式接口，因为它自定义了一个方法 run() 。因此，run() 定义了 Runnable 的动作。此外，函数式接口定义了 Lambda 表达式的目标类型。
+
+Lambda表达式（也称为闭包）是JDK8新增的功能，底层通过 invokedynamic 指令来生成匿名类来实现。Lambda表达式本质上是一个匿名方法，但这个方法不是独立执行的，而是用于实现由函数式接口定义的另一个方法。因此，Lambda表达式会导致生成一个匿名类
+
+函数式接口是仅包含一个抽象方法的接口。一般来说，这个方法指明了接口的目标用途。因此，函数式接口通常表示单个动作。例如，标准接口 Runnable 是一个函数式接口，因为它自定义了一个方法 run() 。因此，run() 定义了 Runnable 的动作。此外，函数式接口定义了 Lambda 表达式的目标类型
 
 ### 二、Lambda表达式的基础知识
-Lambda 表达式引入了一个新的语法元素和操作符，这个操作符是 **->** 。它将 Lambda 表达式分为两个部分，左侧指定了  Lambda 表达式表达式需要的所有参数（如果不需要参数则使用空的参数列表），右侧指定了 Lambda 体，即 Lambda 表达式要执行的动作。
-Java 定义了两种 Lambda 体。一种包含单独一个表达式，另一种包含一个代码块。
+
+Lambda 表达式引入了一个新的语法元素和操作符，这个操作符是 **->** 。它将 Lambda 表达式分为两个部分，左侧指定了  Lambda 表达式表达式需要的所有参数（如果不需要参数则使用空的参数列表），右侧指定了 Lambda 体，即 Lambda 表达式要执行的动作
+
+Java 定义了两种 Lambda 体。一种包含单独一个表达式，另一种包含一个代码块
+
 以下看几个例子：
 
-```
+```java
     //不接收参数，直接返回 1.23
     ()->1.23
 
@@ -28,13 +33,14 @@ Java 定义了两种 Lambda 体。一种包含单独一个表达式，另一种�
     //接受两个参数，依次将字符串打印到控制到，无返回值
     (String name,int age)->{ System.out.println(name); System.out.println(age); }
 ```
-当 Lambda 表达式需要参数时，需要在操作符左侧的参数列表中加以指定，可以显示指定参数的类型，但通常不需要这么做，因为很多时候参数的类型是可以推断出来的。
+当 Lambda 表达式需要参数时，需要在操作符左侧的参数列表中加以指定，可以显示指定参数的类型，但通常不需要这么做，因为很多时候参数的类型是可以推断出来的
 
 
 ### 三、函数式接口
+
 函数式接口是仅定义了一个抽象方法的接口，以下是函数式接口的一个例子：
 
-```
+```java
 public interface Filter {
 
     boolean filter();
@@ -42,25 +48,29 @@ public interface Filter {
 }
 
 ```
-如前所述，Lambda 表达式不是独立执行的，而是构成了一个函数式接口定义的抽象方法的实现，该函数式接口定义了它的目标类型。
+如前所述，Lambda 表达式不是独立执行的，而是构成了一个函数式接口定义的抽象方法的实现，该函数式接口定义了它的目标类型
+
 首先，声明对函数式接口 Filter 的一个引用
 
-```
+```java
 	Filter filter
 ```
 接下来，将一个 Lambda 表达式赋给该接口引用
 
-```
+```java
 	filter = ()-> true ;
 ```
 当目标类型上下文中出现 Lambda 表达式时，会自动创建实现了函数式接口的一个类的实现，函数式接口声明的抽象方法的行为由 Lambda 表达式定义。当通过目标调用该方法时，就会执行 Lambda 表达式。因此，Lambda 表达式提供了一种将代码片段转换为对象的方法
 
 ### 四、使用示例
-现在假设一个场景，需要对一批学生进行筛选，需要找出分别符合两个条件的学生：名字以“叶”开头，年龄大于18。
+
+现在假设一个场景，需要对一批学生进行筛选，需要找出分别符合两个条件的学生：名字以“叶”开头，年龄大于18
+
 #### 4.1、纯命令式的思路
+
 如果使用传统的命令式的编程方法，一开始我们可能会这样写代码
 
-```
+```java
 public class Student {
 
     private String name;
@@ -96,7 +106,7 @@ public class Student {
 }
 ```
 
-```
+```java
 public class LambdaMain {
 
     public static void main(String[] args) {
@@ -148,9 +158,10 @@ public class LambdaMain {
 毫无疑问这样是可以可以解决问题的，只是这样并不符合面向对象的思想
 
 #### 4.2、面向对象的编程方法
+
 我们可以改为使用接口，具体的方法实现由不同的类来实现，由此得到一个典型的面向对象式的解决方案
 
-```
+```java
 	public interface Filter {
 
         boolean filter(Student student);
@@ -183,10 +194,11 @@ public class LambdaMain {
         return students;
     }
 ```
-使用了面向对象的编程方法虽然使得逻辑结构更为清晰，具体的需求由特定的类来完成筛选，使用匿名类使代码也相对简洁了些，但这样依然会导致出现大量的重复代码。
+使用了面向对象的编程方法虽然使得逻辑结构更为清晰，具体的需求由特定的类来完成筛选，使用匿名类使代码也相对简洁了些，但这样依然会导致出现大量的重复代码
+
 重复的代码有：
 
-```
+```java
 		new Filter() {
             @Override
             public boolean filter(Student student) {
@@ -196,7 +208,7 @@ public class LambdaMain {
 ```
 不重复的代码是：
 
-```
+```java
 student.getName().startsWith("叶");
 student.getAge() > 18;
 ```
@@ -204,18 +216,23 @@ student.getAge() > 18;
 这就导致重复编写了两个基本一样的代码，我们需要思考的是，要怎么修改才能使得代码更好地应对变化的需求，而不是每个不同的需求都需要编写独立且基本逻辑相同的代码
 
 #### 4.3、使用 Lambda 表达式
+
 若是改为 Lambda 表达式来完成需求，代码可以简化为
 
-```
+```java
     public static void main(String[] args) {
         List<Student> studentList = getDataList();
         List<Student> startsWithYeList = filterStudent(studentList, (student) -> student.getName().startsWith("叶"));
         List<Student> ageList = filterStudent(studentList, (student) -> student.getAge() > 18);
     }
 ```
-可以看到，在每个不同的需求中，仅仅只是传入了对应不同需求所需要的具体筛选操作，而不包含其它重复性代码，代码简化到了十分“干净”的程度，就连传入的参数的类型都给省略了，这是因为编译器可以根据上下文来推断参数类型 Filter 作为函数式接口只定义了单一抽象方法：`boolean filter(Student student);` 所以可以很容易地推断出其抽象方法需要的参数类型
+可以看到，在每个不同的需求中，仅仅只是传入了对应不同需求所需要的具体筛选操作，而不包含其它重复性代码，代码简化到了十分“干净”的程度，就连传入的参数的类型都给省略了，这是因为编译器可以根据上下文来推断参数类型 
+
+Filter 作为函数式接口只定义了单一抽象方法：`boolean filter(Student student);` 所以可以很容易地推断出其抽象方法需要的参数类型
+
 此外，可以将不同的 Lambda 表达式赋给接口引用，就像普通的变量一样使用
-```
+
+```java
     public static void main(String[] args) {
         List<Student> studentList = getDataList();
 
@@ -228,10 +245,12 @@ student.getAge() > 18;
 ```
 
 ### 五、块 Lambda 表达式
-Lambda 表达式还有另外一种表达方式，其操作符右侧的代码可以由一个代码块构成，其中可以包含多条语句，就像其他一般的代码块一样。需要注意的是，块 Lambda 需要显式使用 return 语句来返回值。
+
+Lambda 表达式还有另外一种表达方式，其操作符右侧的代码可以由一个代码块构成，其中可以包含多条语句，就像其他一般的代码块一样。需要注意的是，块 Lambda 需要显式使用 return 语句来返回值
+
 例如，上一节中的 Lambda 表达式可以改写为如下形式：
 
-```
+```java
     public static void main(String[] args) {
         List<Student> studentList = getDataList();
         //用花括号来包围 Lambda 体
@@ -247,10 +266,12 @@ Lambda 表达式还有另外一种表达方式，其操作符右侧的代码可�
     }
 ```
 ### 六、 Lambda 表达式访问变量
+
 需要注意的是， Lambda 表达式对外部变量的操作权限会有一些不同，Lambda 表达式可以访问或修改其外层类的实例或静态变量的值，以及调用其外层类定义的方法。但是，当 Lambda 表达式使用其外层作用域内定义的局部变量时，该变量会被隐式地被声明为常量，所以在之后再次修改其值时就变得不合法了
+
 此外，Lambda 表达式内部不能访问默认方法
 
-```
+```java
     public interface Filter {
 
 	    boolean filter(Student student);
@@ -281,11 +302,12 @@ Lambda 表达式还有另外一种表达方式，其操作符右侧的代码可�
 }
 ```
 ### 七、泛型函数式接口
+
 与 Lambda 表达式关联的函数式接口可以是泛型，此次 Lambda 表达式的目标类型部分由声明函数式接口引用时指定的参数类型决定
 
 上一节的 Filter 接口可以修改为
 
-```
+```java
     public interface Filter<T> {
 
         boolean filter(T t);
@@ -301,16 +323,19 @@ Lambda 表达式还有另外一种表达方式，其操作符右侧的代码可�
     }
 ```
 ### 八、方法引用
+
 Lambda 表达式使我们可以通过函数式接口来声明一个匿名方法，方法引用和 Lambda 表达式拥有类似的特性（都需要一个目标类型以及可以被转化为函数式接口的实例），我们并不需要为方法引用提供方法体，而是可以直接通过方法名称引用已有方法
+
 #### 8.1、静态方法的方法引用
+
 静态方法的方法引用要使用如下语法进行声明，类名与方法名之间是有双冒号分隔开
 
-```
+```java
  ClassName::methodName
 ```
 被引用的方法的方法签名需要与函数式接口相同
 
-```
+```java
 public class LambdaMain {
 
     public interface Filter {
@@ -345,9 +370,10 @@ public class LambdaMain {
 ```
 
 #### 8.2、实例方法的方法引用
+
 实例方法的方法引用用于传递对某个对象的实例方法的引用
 
-```
+```java
 public class Test {
 
     public Test() {
@@ -394,9 +420,10 @@ public class LambdaMain {
 }
 ```
 ### 九、构造函数引用
+
 构造函数引用与创建方法引用类似，可以创建构造函数的引用，然后把这个引用赋值给定义的方法与构造函数兼容的任何函数式接口的引用
 
-```
+```java
 public class LambdaMain {
 
     public interface Filter {

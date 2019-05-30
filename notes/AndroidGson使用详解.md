@@ -3,8 +3,11 @@ Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json �
 Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
 
 ### 一、Gson的基本用法
+
 #### 1.1、Gson对象
+
 在进行序列化与反序列操作前，需要先实例化一个 `com .google.gson.Gson` 对象，获取 Gson 对象的方法有两种
+
 ```java
         //通过构造函数来获取
         Gson gson = new Gson();
@@ -12,6 +15,7 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
         Gson gson = new GsonBuilder().create();
 ```
 #### 1.2、生成 Json
+
 利用 Gson 可以很方便地生成 Json 字符串，通过使用 `addProperty` 的四个重载方法
 
 ```java
@@ -53,6 +57,7 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
 ![](https://upload-images.jianshu.io/upload_images/2552605-94b04476e4417dfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 1.3、Json与数组、List的转化
+
 Json数组 与 字符串数组
 
 ```java
@@ -96,7 +101,9 @@ Json数组 与 List
 ![](https://upload-images.jianshu.io/upload_images/2552605-211daa95353ae2c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 1.4、序列化与反序列化
+
 Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与 Json，前者实现了序列化，后者实现了反序列化
+
 首先，声明一个 User 类
 
 ```java
@@ -130,7 +137,9 @@ public class User {
 
 }
 ```
+
 序列化的方法很简单，调用 gson 对象的 toJson 方法，传入要序列化的对象
+
 
 ```java
     public static void main(String[] args) {
@@ -141,6 +150,7 @@ public class User {
         System.out.println(gson.toJson(user));
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-db69cdae3d1e7522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 反序化的方式也类似
@@ -157,11 +167,13 @@ public class User {
 ```
 
 ### 二、属性重命名
+
 继续使用上一节声明的 User 类，根据 User 类声明的各个属性名，移动端的开发者希望接口返回的数据格式即是如下这样的
 
 ```java
 {"name":"leavesC","age":24,"sex":true}
 ```
+
 如果没有和服务器端沟通好或者是 API 改版了，接口返回的数据格式可能是这样的
 
 ```java
@@ -171,8 +183,11 @@ public class User {
 ```java
 {"userName":"leavesC","age":24,"sex":true}
 ```
+
 如果继续使用上一节介绍的方法，那无疑会解析出错
+
 例如
+
 ```java
     public static void main(String[] args) {
         //反序列化
@@ -184,11 +199,14 @@ public class User {
     }
 ```
 name 属性值解析不到，所以为 null
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-c080c99d65d13a92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 此时为了兼顾多种格式的数据，就需要使用 **SerializedName** 注解
+
 根据 SerializedName 的声明来看，SerializedName 包含两个属性值，一个是字符串，一个是字符串数组，而字符串数组含有默认值
+
 ```java
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -199,9 +217,11 @@ public @interface SerializedName {
     String[] alternate() default {};
 }
 ```
+
 SerializedName 的作用是为了在序列化或反序列化时，指导 Gson 如果将原有的属性名和其它特殊情况下的属性名联系起来
 
 例如，修改 User 类，为 name 声明 SerializedName 注解，注解值为 userName
+
 ```java
 /**
  * 作者：chenZY
@@ -219,6 +239,7 @@ public class User {
 
 }
 ```
+
 在序列时，Json 格式就会相应改变
 
 ```java
@@ -230,9 +251,11 @@ public class User {
         System.out.println(gson.toJson(user));
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-61eeeef2fe623457.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 在反序列化时也一样，能够解析到正确的属性值
+
 ```java
     public static void main(String[] args) {
         //反序列化
@@ -243,6 +266,7 @@ public class User {
         System.out.println(user);
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-227fb3c46d8df821.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 还有个问题没解决，为了应对多种属性名不一致的情况，难道我们要声明多个 User 类吗？这显然是不现实的，所以还需要为 User 类设置多个备选属性名，这就需要用到 SerializedName 注解的另一个属性值 **alternate** 了。
@@ -264,7 +288,9 @@ public class User {
 
 }
 ```
+
 以下几种情况都能够被正确的反序列化
+
 ```java
     public static void main(String[] args) {
         //反序列化
@@ -285,13 +311,17 @@ public class User {
         System.out.println(user);
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-144d6020aa12a5d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 三、字段过滤
-有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求。
+
+有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求
 
 #### 3.1、基于@Expose注解
-Expose 注解包含两个属性值，且均声明了默认值。Expose 的含义即为“暴露”，即用于对外暴露字段，serialize 用于指定是否进行序列化，deserialize 用于指定是否进行反序列化。如果字段不声明 Expose 注解，则意味着不进行序列化和反序列化操作，相当于两个属性值均为 false 。此外，Expose 注解需要和 GsonBuilder 构建的 Gson 对象一起使用才能生效。
+
+Expose 注解包含两个属性值，且均声明了默认值。Expose 的含义即为“暴露”，即用于对外暴露字段，serialize 用于指定是否进行序列化，deserialize 用于指定是否进行反序列化。如果字段不声明 Expose 注解，则意味着不进行序列化和反序列化操作，相当于两个属性值均为 false 。此外，Expose 注解需要和 GsonBuilder 构建的 Gson 对象一起使用才能生效
+
 ```java
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
@@ -354,6 +384,7 @@ public class User {
 
 }
 ```
+
 按照如上的注解值，只有声明了 Expose 注解且 serialize 值为 true 的字段才能被序列化，只有声明了 Expose 注解且 deserialize 值为 true 的字段才能被反序列化
 
 ```java
@@ -369,9 +400,11 @@ public class User {
         System.out.println(user.toString());
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-eb392c57b8976ca1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 3.2、基于版本
+
 Gson 提供了 @Since 和 @Until 两个注解基于版本对字段进行过滤，@Since 和 @Until 都包含一个 Double 属性值，用于设置版本号。Since 的意思是“自……开始”，Until 的意思是“到……为止”，一样要和 GsonBuilder 配合使用。
 
 ```java
@@ -389,6 +422,7 @@ public @interface Until {
     double value();
 }
 ```
+
 当版本( GsonBuilder 设置的版本) 大于或等于 Since 属性值或小于 Until 属性值时字段会进行序列化和反序列化操作，而没有声明注解的字段都会加入序列化和反序列操作
 
 现在来看个例子，修改 User 类
@@ -455,7 +489,9 @@ public class User {
 ![](https://upload-images.jianshu.io/upload_images/2552605-00e4d2edc0450ff2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 3.3、基于访问修饰符
+
 访问修饰符由 **java.lang.reflect.Modifier** 提供 int 类型的定义，而 GsonBuilder 对象的 `excludeFieldsWithModifiers`方法接收一个 int 类型可变参数，指定不进行序列化和反序列化操作的访问修饰符字段
+
 看个例子
 
 ```java
@@ -488,10 +524,13 @@ public class ModifierSample {
         System.out.println(gson.toJson(modifierSample));
     }
 ```
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-95103080e1ad3096.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 3.4、基于策略
+
 GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`方法用于传入不定长参数的策略方法，用于直接排除指定字段名或者指定字段类型
+
 看个例子
 
 ```java
@@ -564,7 +603,9 @@ addDeserializationExclusionStrategy(ExclusionStrategy strategy);
 ```
 
 ### 四、个性化配置
+
 #### 4.1、输出 null
+
 对于 Gson 而言，在序列化时如果某个属性值为 null 的话，那么在序列化时该字段不会参与进来，如果想要显示输出该字段的话，可以通过 GsonBuilder 进行配置
 
 ```java
@@ -597,6 +638,7 @@ public class Strategies {
 ![](https://upload-images.jianshu.io/upload_images/2552605-2f47be27f5d8149f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 4.2、格式化输出Json
+
 默认的序列化后的 Josn 字符串并不太直观，可以选择格式化输出
 
 ```java
@@ -613,6 +655,7 @@ public class Strategies {
 ![](https://upload-images.jianshu.io/upload_images/2552605-2ecc59dd76da8ee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 4.3、格式化时间
+
 Gson 也可以对时间值进行格式化
 
 ```java
@@ -668,6 +711,7 @@ public static void main(String[] args) {
 ![](https://upload-images.jianshu.io/upload_images/2552605-a13f38169f04324b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 五、TypeAdapter
+
 TypeAdapter 是一个泛型抽象类，用于接管某种类型的序列化和反序列化过程，包含两个抽象方法，分别用于自定义序列化和反序列化过程
 
 ```java
@@ -675,6 +719,7 @@ public abstract void write(JsonWriter var1, T var2) throws IOException;
 
 public abstract T read(JsonReader var1) throws IOException;
 ```
+
 下面看个简单的例子
 
 ```java
@@ -773,10 +818,13 @@ public class UserTypeAdapter extends TypeAdapter<User> {
     }
 ```
 可以看到 User 类按照预定义的策略来完成序列化和反序列化了
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-df0c57707991228c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 六、JsonSerializer 和 JsonDeserializer
+
 TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还提供了只接管序列化过程的接口，即 JsonSerializer
+
 看个例子
 
 ```java
@@ -799,6 +847,7 @@ TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还�
 ![](https://upload-images.jianshu.io/upload_images/2552605-12d00d781a5955eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 相对应的，JsonDeserializer 接口提供了反序列化的接口
+
 ```java
 public static void main(String[] args) {
         Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new JsonDeserializer<User>() {
@@ -831,9 +880,11 @@ public static void main(String[] args) {
 ![](https://upload-images.jianshu.io/upload_images/2552605-9061eb60511c7d07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 这里有个比较麻烦的地方，那就是在使用 **TypeAdapter 、JsonSerializer** 和 **JsonDeserializer** 时，总需要调用 **registerTypeAdapter** 方法进行注册，那有没有更简单的注册方法呢？
+
 有的，Gosn 还提供了另一个注解 **@JsonAdapter** 用于进行简单的声明
 
 类似于这样，声明了 User 类的序列化或反序列化操作由 UserTypeAdapter 完成，注解的优先级高于 **registerTypeAdapter** 方法
+
 ```java
 @JsonAdapter(UserTypeAdapter.class)
 public class User {

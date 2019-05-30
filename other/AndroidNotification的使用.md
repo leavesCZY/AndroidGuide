@@ -1,10 +1,12 @@
 Notification（通知）是可以在应用的常规 UI 外部向用户显示的消息。当App告知系统发出通知时，它将先以图标的形式显示在通知区域中。用户可以打开抽屉式通知栏查看通知的详细信息
 
 ## **一、创建通知**
+
 在 **NotificationCompat.Builder** 对象中为通知指定 UI 信息和操作，然后通过调用 **NotificationCompat.Builder.build()** 创建通知，它将返回包含符合指定要求的 Notification 对象
 要发出通知，通过调用 **NotificationManager.notify()** 将 Notification 对象传递给系统
 
 ## **二、必需的通知内容**
+
 Notification 对象必须包含以下内容：
 
  - 小图标，由 setSmallIcon() 设置
@@ -14,34 +16,43 @@ Notification 对象必须包含以下内容：
 其他通知设置和内容都是可选的
 
 ## **三、通知操作**
+
 尽管通知操作都是可选的，但是一般都需要向通知添加一个操作，例如让用户直接从通知跳转到应用中的 Activity，在其中查看一个更详细的信息
 在 Notification 内部，操作本身由 **PendingIntent** 定义，后者包含在应用中启动 Activity 的 Intent。如果要在用户点击抽屉式通知栏中的通知文本时启动 Activity，则可通过调用 **setContentIntent()** 来添加 PendingIntent
 
 ## **四、通知优先级**
+
 可以根据需要设置通知的优先级。优先级充当一个提示，提醒设备 UI 应该如何显示通知。 要设置通知的优先级，需调用 **NotificationCompat.Builder.setPriority()** 并传入一个 **NotificationCompat** 优先级常量。有五个优先级别，范围从 **PRIORITY_MIN (-2)** 到 **PRIORITY_MAX (2)**；如果未设置，则优先级默认为 **PRIORITY_DEFAULT (0)**
 
 ## **五、PendingIntent**
+
 PendingIntent类封装了一个Intent和一个动作，当调用该类的send方法的时候，将会执行该动作。由于PendingIntent类是一个待处理的意图，这个动作通常是在将来的某个时刻要调用的一个操作，很可能是系统要调用的。例如，一个PendingIntent类可以用于构造一个Notification，以便当用户触碰该通知的时候，能够触发某些动作
 PendingIntent类中的动作是Context类中的几个方法之一，例如**startActivity，startService，sendBroadcast**
+
 使用PendingIntent来启动一个Activity
 
 ```java
    PendingIntent pi = PendingIntent.getActivity(Context context, int requestCode,Intent intent, int flags);
 ```
+
 静态方法getActivity是返回PendingIntent类的一个实例的几个方法之一，其他的方法还有**getActivities、getService和getBroadcast**
+
 这些方法决定了最终PendingIntent所能执行的动作，可以用来启动Activity，启动Service，发送广播等
 
 ## **六、NotificationManager**
+
 要发布一个通知，可以使用NotificationManager，这是Android系统中的内建服务之一，是一个已有的系统服务，可以通过如下代码来获取它
 
 ```java
 NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 ```
+
 然后，在该NotificationManager上调用notify方法来发布一个通知，需要传入唯一的ID和Notification对象
 
 ```java
 mNotificationManager.notify(int id, notification);
 ```
+
 通知ID用于标识该通知，在想要取消特定Notification的时候，就需要使用到它
 
 ```java
@@ -56,6 +67,7 @@ mNotificationManager.cancel(int id);
  - 调用了 **cancelAll()** 方法，该方法将删除之前发出的所有通知
 
 ## **七、创建简单通知**
+
 在布局文件中加入两个按钮
 
 ```java
@@ -141,7 +153,7 @@ mNotificationManager.cancel(int id);
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-d7c1baf35613191b?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-d7c1baf35613191b?imageMogr2/auto-orient/strip)
 
 ## **八、创建多文本通知**
 
@@ -175,7 +187,7 @@ public void notification(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-57ac030cacab5f94?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-57ac030cacab5f94?imageMogr2/auto-orient/strip)
 
 ## **九、将扩展布局应用于通知**
 
@@ -212,7 +224,7 @@ public void notification(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-f57079e2d5d19fae?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-f57079e2d5d19fae?imageMogr2/auto-orient/strip)
 
 ## **十、大图样式**
 
@@ -247,14 +259,18 @@ public void notification(View view) {
 
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-185e149a7229d1b2?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-185e149a7229d1b2?imageMogr2/auto-orient/strip)
 
 ## **十一、更新通知**
+
 当需要为同一类型的事件多次发出同一通知时，应避免创建全新的通知， 而是应考虑通过更改之前通知的某些值来更新通知
-想要将通知设置为能够更新的状态，需要通过调用 **NotificationManager.notify(int id, notification)** 发出带有通知 ID 的通知。 
+
+想要将通知设置为能够更新的状态，需要通过调用 **NotificationManager.notify(int id, notification)** 发出带有通知 ID 的通知
+
 要在发出之后更新此通知，请更新或创建 **NotificationCompat.Builder** 对象，从该对象构建 **Notification** 对象，并发出与之前所用 ID 相同的 **Notification**。如果之前的通知仍然可见，则系统会根据 **Notification** 对象的内容更新该通知。相反，如果之前的通知已被清除，系统则会创建一个新通知
 
 ## **十二、启动 Activity 时保留返回栈**
+
 默认情况下，从应用外点击通知启动一个Activity后，按返回键会回到主屏幕。但某些时候需要按返回键后仍然留在当前应用的需求，这就要用到TaskStackBuilder了
 执行以下步骤：
 
@@ -331,10 +347,12 @@ public void notification(View view) {
 
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-f65d56d10fffabd0?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-f65d56d10fffabd0?imageMogr2/auto-orient/strip)
 
 ## **十三、不保留返回栈**
+
 默认情况下，从通知启动的Activity会在近期任务列表里出现。如果不需要在近期任务里显示，就不必在清单文件中定义其 Activity 层次结构，也不必调用 addParentStack() 来构建返回栈
+
 取而代之的是，可使用清单文件设置 Activity 任务选项，并通过调用 getActivity() 创建 PendingIntent：
 
  - 在清单文件中，将以下属性添加到 Activity 的 < activity > 元素
@@ -382,10 +400,12 @@ public void notification(View view) {
 ```
 运行结果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-452de4c0cfc59738?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-452de4c0cfc59738?imageMogr2/auto-orient/strip)
 
 ## **十四、在通知中显示进度**
+
 通知可能包括动画形式的进度指示器，向用户显示正在进行的操作状态。 如果可以估计操作所需的时间以及任意时刻的完成进度，则使用“限定”形式的指示器（进度栏）。 如果无法估计操作的时长，则使用“非限定”形式的指示器（Activity 指示器）
+
 要在 Android 4.0 及更高版本的平台上使用进度指示器，需调用 setProgress()。对于早期版本，必须创建包括 ProgressBar 视图的自定义通知布局
 
 要显示限定形式的进度栏，需要通过调用 **setProgress(max, progress, false)** 将进度栏添加到通知，然后发出通知。随着操作的进行，递增 progress 并更新通知
@@ -420,9 +440,10 @@ public void notification(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-677a9c2748199be9?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-677a9c2748199be9?imageMogr2/auto-orient/strip)
 
 此外还有另一种形式的进度条，即非限定形式
+
 要显示非限定形式的 Activity 指示器，需使用 **setProgress(0, 0, true)** 将其添加到通知（忽略前两个参数），然后发出通知。这样一来，指示器的样式就与进度栏相同，只是其动画还在继续
 
 在操作开始之际发出通知。除非主动修改通知，否则动画将一直运行。 操作完成后，调用 **setProgress(0, 0, false)**，然后更新通知以删除 Activity 指示器否则，否则即使操作完成，动画仍将运行。同时，请记得更改通知文本，以表明操作已完成
@@ -458,9 +479,10 @@ public void notification(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-ed75f1cef678bbca?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-ed75f1cef678bbca?imageMogr2/auto-orient/strip)
 
 ## **十五、自定义通知布局**
+
 可以利用通知框架定义自定义通知布局，由该布局定义通知在 **RemoteViews** 对象中的外观。 自定义布局通知类似于常规通知，但是它们是基于 XML 布局文件中所定义的 **RemoteViews**
 
 自定义通知布局的可用高度取决于通知视图。普通视图布局限制为 **64 dp**，扩展视图布局限制为 **256 dp**
@@ -514,4 +536,4 @@ public void notification(View view) {
 
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-7b1267c8408cd848?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-7b1267c8408cd848?imageMogr2/auto-orient/strip)

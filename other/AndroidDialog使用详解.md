@@ -101,7 +101,7 @@ public void showButtonDialogFragment(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-0f8535a7789b588c?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-0f8535a7789b588c?imageMogr2/auto-orient/strip)
 
 ## **三、包含一个中性按钮的对话框**
 思路类似，对话框包含一个中性按钮
@@ -157,7 +157,7 @@ public class NeutralDialogFragment extends DialogFragment {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-36427ad7b8d4d352?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-36427ad7b8d4d352?imageMogr2/auto-orient/strip)
 
 ## **四、列表对话框**
 
@@ -208,7 +208,7 @@ public void showItemsDialogFragment(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-4d14cb3d504a0a8c?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-4d14cb3d504a0a8c?imageMogr2/auto-orient/strip)
 
 ## **五、多项选择对话框**
 
@@ -277,7 +277,7 @@ public void showMultiChoiceDialogFragment(View view) {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-a955c4ea063862ba?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-a955c4ea063862ba?imageMogr2/auto-orient/strip)
 
 ## **六、单项选择对话框**
 
@@ -339,7 +339,7 @@ public class SingleChoiceDialogFragment extends DialogFragment {
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-2a91ca14ffe5bd4e?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-2a91ca14ffe5bd4e?imageMogr2/auto-orient/strip)
 
 ## **七、自定义对话框**
 可以通过创建一个自定义布局，然后调用 AlertDialog.Builder 对象上的 setView() 方法将其添加到 AlertDialog 中，从而让对话框拥有自定义样式
@@ -469,4 +469,4 @@ public class MainActivity extends AppCompatActivity implements ViewDialogFragmen
 ```
 运行效果
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-ad2be65343195bc9?imageMogr2/auto-orient/strip)
+![](http://upload-images.jianshu.io/upload_images/2552605-ad2be65343195bc9?imageMogr2/auto-orient/strip)

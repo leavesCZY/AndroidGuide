@@ -64,6 +64,7 @@ dependencies {
 这里将其改为引用 `config.gradle` 文件的形式
 
 首先，需要在根目录下的 `build.gradle` 文件中应用 `config.gradle` 文件，这样在 `Module` 配置文件中才引用得到当中的属性值
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-83324b77c34c3c26.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此时就可以修改应用版本号以及依赖库的声明方式了
@@ -109,6 +110,7 @@ dependencies {
 ##### 二、签名属性配置
 
 通常，应用的签名类型会分为 `release` 和 `debug` 两类，并分别使用不同的签名文件
+
 为了安全考虑以及实现自动化打包，可以通过 `gradle` 来声明签名配置，包括签名文件路径、签名别名、签名密码等
 在 `local.properties` 文件中声明签名文件路径以及签名密码
 
@@ -121,6 +123,7 @@ key.storePassword=123456789
 ```
 
 根据配置可知，签名文件是放在工程的 `doc` 文件夹内
+
 ![](https://upload-images.jianshu.io/upload_images/2552605-6f2725bd181534ad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 通过代码获取到签名的各个配置项
@@ -182,6 +185,7 @@ def storeFile_ = file(keyStorePath_)
 ##### 三、多渠道打包
 
 有时候，为了方便进行精准营销，会有生成不同渠道包的要求，此时就需要在同个应用上打上不同的渠道ID（channelId），这可以通过 `productFlavors` 来实现
+
 先在 `AndroidManifest.xml` 文件中配置占位符，`appKey` 即对应各个渠道的 ID 值
 
 ```xml
@@ -368,7 +372,6 @@ static def hostName() {
 在多渠道打包时，除了需要在应用中打上特定的标签外，也可能需要使之使用不同的资源文件，例如应用图标和应用名称
 
 此时可以以各个 `productFlavor` 的名称来命名相应的文件夹，并在其中放置相应的图标文件以及声明了应用名称的 `string.xml` 文件，这样在多渠道打包时，Gradle 就会自动引用相应的资源文件
-
 
 
 **上述所有的示例代码可以在这里获取：[GradleSamples](https://github.com/leavesC/GradleSamples)**

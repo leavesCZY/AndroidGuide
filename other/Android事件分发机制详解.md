@@ -237,7 +237,7 @@ dispatchTouchEvent 方法和  onTouchEvent 方法的返回值存在三种情况�
  - 返回 父类的同名方法
 
 通过不断改变 Activity 与 MyTextView 中各个方法的返回值，可以得到如下所示的TouchEvent事件发布机制流程图：
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-12aabc243379bdf8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-12aabc243379bdf8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 从上面的流程图可以得出以下结论：
 
@@ -357,7 +357,7 @@ Activity 的布局文件代码如下所示：
 ```
 在默认情况下，Activity 、ViewGroup 和 View 的各个触摸事件相关方法的调用顺序如上所示
 通过不断改变 Activity、ViewGroup 和 View 中各个方法的返回值，可以得到如下所示的 TouchEvent 事件发布机制流程图：
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c301c1233d6c4dba?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c301c1233d6c4dba?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 从上面的流程图可以得出以下结论：
 

@@ -207,7 +207,7 @@ Activity 基本上以三种状态存在：
 
 下图说明了这些循环以及 Activity 在状态转变期间可能经过的路径
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-7a9a18f68e2cd178?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-7a9a18f68e2cd178?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## **八、保存 Activity 状态**
 

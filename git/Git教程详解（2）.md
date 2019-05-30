@@ -13,7 +13,7 @@
 
 还是先在D盘初始化一个仓库test，当前仓库为空
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-936e90f1afcbc7ac?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-936e90f1afcbc7ac?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 手动创建一个1.txt文件，将之添加到仓库中
 
@@ -22,7 +22,7 @@ git add 1.txt
 git commit -m '第一个版本，添加了1.txt文件'
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-fa4665b7f74ebff3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-fa4665b7f74ebff3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 再手动创建一个2.txt，将之添加到仓库中
 ```java
@@ -30,7 +30,7 @@ git add 2.txt
 git commit -m '第二个版本，添加了2.txt文件'
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-8519f4720b217f84?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-8519f4720b217f84?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
 
@@ -47,13 +47,13 @@ git log
 git log 1.txt
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-4df867cbc4550964?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-4df867cbc4550964?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到1.txt文件只保存有第一个版本时的日志信息，因为在第二个版本时它并没有改动
 
 再来查看2.txt文件的日志信息
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-cd5fa68520bc2004?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-cd5fa68520bc2004?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 同理，2.txt文件则只有第二个版本时的信息
 
@@ -68,7 +68,7 @@ git diff
 
 向1.txt文件手动添加一行内容：111111111111，查看变化
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-42a166e1f75a1614?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-42a166e1f75a1614?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 因为此时1.txt文件还未提交到暂存区中，所以该命令查看的是工作区与最新提交之间状态的差别
 “+”号表示的是添加的内容
@@ -76,7 +76,7 @@ git diff
 
 先将1.txt文件添加到暂存区，再来查看变化
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-3ec72a1ae7c24035?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-3ec72a1ae7c24035?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到并没有提示文件差异，因为此时对比的是工作区与暂存区之间的差别，而此时文件内容是一样的
 
@@ -85,13 +85,13 @@ git diff
 ```java
 git diff head
 ```
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-4277988cd6017b7d?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-4277988cd6017b7d?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 最新提交的内容为空，可以看到对比最新提交还是多出了一行内容
 
 将1.txt文件提交到仓库，并查看版本信息
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-3e3e1e3ac3ddbcc3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-3e3e1e3ac3ddbcc3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 二、分支操作
 master是git默认创建的分支，在进行并行开发的过程中，往往就需要创建多个分支，让多人同时进行开发
@@ -111,7 +111,7 @@ git branch
 
 这两条命令上篇博文也讲到了
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-73062cd111ea3655?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-73062cd111ea3655?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以使用以下命令切换回上一个分支，即master
 
@@ -119,7 +119,7 @@ git branch
 git checkout -
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-3b0dbaef07045ed4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-3b0dbaef07045ed4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 再切换回feature-A分支
 当前1.txt的内容应该只有一行，再增添一行内容，现在完整的内容应该是：
@@ -131,7 +131,7 @@ git checkout -
 
 将1.txt文件提交到仓库
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-17159f4934bf0946?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-17159f4934bf0946?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 再切换回master分支，查看1.txt文件内容
 
@@ -141,7 +141,7 @@ git checkout master
 cat 1.txt
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-2f0fc5094a27fbec?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-2f0fc5094a27fbec?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到feature-A分支下的修改对master下的文件并没有影响
 
@@ -153,7 +153,7 @@ cat 1.txt
 ```
 再提交文件
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-3aed8ca267c6e865?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-3aed8ca267c6e865?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 尝试在master分支下合并两个分支的内容
 
@@ -161,7 +161,7 @@ cat 1.txt
 git merge feature-A
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-cd03fe6b0a4e7783?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-cd03fe6b0a4e7783?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到提示说：**自动合并失败，请解决冲突后再提交**
 因为在两个分支下，1.txt文件的第二行都有内容，且内容不同，git不知道该如何合并
@@ -188,7 +188,7 @@ git merge feature-A
 ```
 向仓库提交文件
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-08967c6109bc154c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-08967c6109bc154c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 有时，采用图表形式输出提交日志看起来可能会比较直观
 feature-A分支内容的改变以及合并操作也一目了然
@@ -197,7 +197,7 @@ feature-A分支内容的改变以及合并操作也一目了然
 git log --graph
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-4d96dfdd7f7c299b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-4d96dfdd7f7c299b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 三、修改操作
 前边的版本号也比较乱了，这里在**Git**文件夹下再来重新建立一个新的仓库
@@ -207,7 +207,7 @@ git log --graph
 init object git
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-02bd3116c4be1163?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-02bd3116c4be1163?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此时，提交时的描述内容是“第一个版本，添加了1.txt文件”，如果想要修改它，可以使用如下命令
 
@@ -216,16 +216,16 @@ git commit --amend
 ```
 此时，Notepad++就会被启动，这样就可以来修改其描述内容了，以“#”符号注释的内容可以不用理会
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-d8c916e20f464a09?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-d8c916e20f464a09?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 将描述内容修改为
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-0fb1f66eebe0b5d8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-0fb1f66eebe0b5d8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 修改完成后关闭编辑器，确认保存即可
 再来查询版本信息，可以看到描述内容已经修改了
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-e32cc77b53683cc9?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-e32cc77b53683cc9?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 其实，在提交文件到仓库时，如果想要提交多行描述文本，可以不用加**-m**参数，即直接用
 
@@ -238,15 +238,15 @@ git commit
 
 此时，再将1.txt文件中的“**git**”单词删去，重新提交
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-fd07a47c83d74534?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-fd07a47c83d74534?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 再将“object”单词删去，重新提交
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-ac1dd1c48ef92041?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-ac1dd1c48ef92041?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此时的版本号情况
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-84d8e0d403a12ec4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-84d8e0d403a12ec4?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 这里只是删去了一个单词，就又多了一个版本号，这里来尝试将最新两个版本号合并
 
@@ -255,7 +255,7 @@ git rebase -i head~2
 ```
 此时，Notepad++会自动启动
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-18c4d1d4788220d6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-18c4d1d4788220d6?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 对比上图查询到的版本信息已经描述内容，可以知道前两行内容的意义
 
@@ -268,7 +268,7 @@ fixup 73b0cbc 删去了单词object
 退出保存
 再来查询当前版本信息
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-331f6263b8f4198f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-331f6263b8f4198f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到版本变成了两个，且最新一个版本号与之前两个均不一样，这个是合并后得来的
 
@@ -286,17 +286,17 @@ git commit --amend
 退出保存
 再来查询版本号信息，已经被正确改动了
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-7b33b9881463cd61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-7b33b9881463cd61?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 四、远程仓库操作
 
 在GitHub上新建一个仓库，命名为GitTest，具体步骤可以参考我上一篇博文，注意不要生成README文件
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-51a9ab0bec978fb9?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-51a9ab0bec978fb9?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 在GitHub上创建的仓库路径为：https://github.com/initobject/GitTest.git
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-980f77171ab0c8b2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-980f77171ab0c8b2?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 现在再来将之设置成本地仓库的远程仓库
 
@@ -310,7 +310,7 @@ Git会自动将远程仓库的名称设置为origin
 ```java
 git push -u origin master
 ```
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-10a763de0f552c22?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-10a763de0f552c22?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 如此执行后，当前分支的内容就会被推送到远程仓库origin的master分支
 -u参数可以在推送的同时，将origin仓库的master分支设置为本地仓库当前分支的上游（upstream）。添加了这个参数，将来运行git pull命令从远程仓库获取内容时，本地仓库的这个分支就可以直接从origin的master分支获取内容，省去了另外添加参数的麻烦
@@ -318,7 +318,7 @@ git push -u origin master
 刷新GitHub网页，可以看到代码已经上传到了仓库了
 比如我的GitHub仓库：https://github.com/initobject/GitTest
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-4b296b4a01c0ae9c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-4b296b4a01c0ae9c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 此外，也可以为远程仓库设置分支
 现在本地创建一个feature-A分支
@@ -332,27 +332,27 @@ git checkout -b feature-A
 git push -u origin feature-A
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-e88a9d5e5dac1254?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-e88a9d5e5dac1254?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 刷新GitHub网页，可以看到多了一个新分支，而文本内容一样
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-7f614976ddc12b23?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-7f614976ddc12b23?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
 
 现在重新创建一个新仓库Git_New，用来从GitHub获取之前提交的内容
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-a77e6eef22499429?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-a77e6eef22499429?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 远程仓库的地址可以从这里获取
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c6626f75c8a7f879?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c6626f75c8a7f879?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ```java
 git clone https://github.com/initobject/GitTest.git
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-983d9a82e543cc63?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-983d9a82e543cc63?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 可以看到Git_New文件夹下也多了一个新目录GitTest，即是我们之前上传的
 
@@ -363,7 +363,7 @@ git add .  （符号“.”表示增加工作区所有文件到暂存区）
 git commit -m '增添了GitTest文件夹'
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-167f18e42f6b1578?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-167f18e42f6b1578?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 因为GitTest仓库是从远程仓库clone而来的，此时，GitTest仓库的master分支是与GitHub远程仓库相的master分支在内容上是完全相同的
 
@@ -381,7 +381,7 @@ git checkout -b feature-A origin/feature-A
 // origin/feature-A 代表以origin为名的远程仓库的feature-A分支
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-b186dd4df8ecc5c0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-b186dd4df8ecc5c0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 再来查看当前分支的相关信息
 
@@ -391,7 +391,7 @@ git branch -a
 // -a 加上该参数可以同时显示本地仓库与远程仓库的分支信息
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c866f39924de80a5?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c866f39924de80a5?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 切换回master分支，为1.txt文件增添一个单词：**object**
@@ -402,7 +402,7 @@ init object
 ```
 再查看当前状态
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-c235509c8e3a3b39?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-c235509c8e3a3b39?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 提示1.txt文件未提交
 提交该文件，并推送到远程仓库
@@ -412,11 +412,11 @@ git push
 ```
 推送前需要先输入GitHub账户名与密码
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-556eef61c772d1b0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-556eef61c772d1b0?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 刷新GitHub网页，可以看到仓库的描述文本都被改变了
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-3437b6c67332c25f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-3437b6c67332c25f?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ---
 
@@ -430,11 +430,11 @@ git push
 git pull origin
 ```
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-8d1f9a94b5507014?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-8d1f9a94b5507014?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 查看版本变化，可以看到最新版本号就是之前推送的
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-b6e59d568681f38d?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-b6e59d568681f38d?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 这样，本地仓库的内容也得到了更新
 这种方式方便于进行多人合作开发，一人向远程仓库推送开发内容，另一人获取到本地，修改完成后再提交到远程仓库，也可以在不同分支下分开开发，如此循环反复直至软件培育完成

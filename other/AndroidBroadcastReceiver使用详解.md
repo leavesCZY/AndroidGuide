@@ -656,7 +656,7 @@ private final String TAG = "MainActivity";
 
 为了方便查看电量变化，可以在模拟器的“extended controls”面板中主动地改变模拟器的电量，查看Log输出
 
-![这里写图片描述](http://upload-images.jianshu.io/upload_images/2552605-dbe03d95cc3fb423?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![](http://upload-images.jianshu.io/upload_images/2552605-dbe03d95cc3fb423?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### **5.3、应用安装更新卸载监听**
 
