@@ -89,6 +89,7 @@
 * [Android 开源库](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
     * [一个小巧而强大的 Key-Value 管理框架 - DoKV](https://github.com/leavesC/DoKV)
+    * [linux 环境编译 ijkplayer so 库实践](https://github.com/leavesC/ijkplayer-so-extend)
 
 * [Android 开源应用](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [一个 IM 应用](https://github.com/leavesC/Chat)
