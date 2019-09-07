@@ -868,3 +868,9 @@ class B {
 //使用 with 关键字表示类C是由类A和类B混合构成的
 class C = A with B;
 ```
+
+
+
+### 九、未完待续
+
+本文已加入我的学习笔记大全：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
