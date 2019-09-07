@@ -12,7 +12,6 @@
 
 希望本指南对你会有所帮助，欢迎 star
 
-
 ------
 
 
@@ -44,7 +43,6 @@
     * [LinkedHashMap 源码详细注释](sourceCode/LinkedHashMap.java)
     * [HashSet 源码详细注释](sourceCode/HashSet.java)
     * [LinkedHashSet 源码详细注释](sourceCode/LinkedHashSet.java)
-
 
 ------
 
@@ -81,10 +79,17 @@
         * [委托](kotlin/21_委托.md)
         * [注解](kotlin/22_注解.md)
 
+------
+
+
+#### 三、Dart 知识点
+
+* [Dart 入门教程](dart/Dart入门教程.md)
 
 ------
 
-#### 三、Android 知识点
+
+#### 四、Android 知识点
 
 * [Android 开源库](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
@@ -104,7 +109,7 @@
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [Gson 使用详解](notes/AndroidGson使用详解.md)
+        * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
@@ -122,7 +127,7 @@
     * [时钟](https://github.com/leavesC/CustomView)
     * [饼状图](https://github.com/leavesC/CustomView)
     * [下雨](https://github.com/leavesC/CustomView)
-        
+    
 * [Android 集合框架](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android 集合框架源码解析之SparseArray](collections_android/SparseArray源码解析.md)
     * [SparseArray 源码详细注释](collections_android/SparseArray.java)
@@ -178,16 +183,15 @@
 ------
 
 
-#### 四、Git教程详解
+#### 五、Git教程详解
 
 * [Git教程详解（1）](git/Git教程详解（1）.md)
 * [Git教程详解（2）](git/Git教程详解（2）.md)
 
-
 ------
 
 
-#### 五、工具类
+#### 六、工具类
 
 * [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
 * [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
