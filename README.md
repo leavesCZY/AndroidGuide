@@ -1,14 +1,8 @@
-![](logo/logo.png)
+这是一份关于 Java、Kotlin、Dart、Android 的学习指南
 
-这是一份关于 Java、Kotlin、Android 的学习指南
+本指南以 Java & Kotlin & Dart 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
 
-本指南以 Java & Kotlin 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
-
-对于已入门者，可以看下本指南对于 Java 集合框架的详细源码注解，以此开始学习之路由浅入深的步伐
-
-对于已具备了基础语法知识的读者，可以再看下本指南介绍关于 Git 如何使用的章节，以此学会版本控制
-
-再之后，Android 章节的内容包括：四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布等从浅到深的知识，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
+Android 章节的内容包括：四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布等从浅到深的知识，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
 
 希望本指南对你会有所帮助，欢迎 star
 
@@ -85,6 +79,39 @@
 #### 三、Dart 知识点
 
 * [Dart 入门教程](dart/Dart入门教程.md)
+    * [开篇](dart/Dart入门教程.md)
+    * [变量](dart/Dart入门教程.md)
+        * [变量声明](dart/Dart入门教程.md)
+        * [dynamic](dart/Dart入门教程.md)
+        * [final 和 const](dart/Dart入门教程.md)
+    * [内建类型](dart/Dart入门教程.md)
+        * [num](dart/Dart入门教程.md)
+        * [string](dart/Dart入门教程.md)
+        * [bool](dart/Dart入门教程.md)
+        * [list](dart/Dart入门教程.md)
+        * [set](dart/Dart入门教程.md)
+        * [map](dart/Dart入门教程.md)
+    * [函数](dart/Dart入门教程.md)
+        * [一般概念](dart/Dart入门教程.md)
+        * [函数也是对象](dart/Dart入门教程.md)
+        * [位置参数](dart/Dart入门教程.md)
+        * [命名参数](dart/Dart入门教程.md)
+        * [默认参数值](dart/Dart入门教程.md)
+        * [函数变量](dart/Dart入门教程.md)
+        * [匿名函数](dart/Dart入门教程.md)
+        * [局部函数](dart/Dart入门教程.md)
+    * [运算符](dart/Dart入门教程.md)
+    * [流程控制](dart/Dart入门教程.md)
+    * [枚举](dart/Dart入门教程.md)
+    * [异常处理](dart/Dart入门教程.md)
+    * [类](dart/Dart入门教程.md)
+        * [类声明](dart/Dart入门教程.md)
+        * [构造函数](dart/Dart入门教程.md)
+        * [继承](dart/Dart入门教程.md)
+        * [抽象类](dart/Dart入门教程.md)
+        * [接口](dart/Dart入门教程.md)
+        * [mixins](dart/Dart入门教程.md)
+    * [未完待续](dart/Dart入门教程.md)
 
 ------
 
@@ -109,7 +136,7 @@
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-        * [Gson 使用详解](notes/AndroidGson使用详解.md)
+    * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
