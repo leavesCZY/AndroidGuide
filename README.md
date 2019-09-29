@@ -124,8 +124,9 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
     * [linux 环境编译 ijkplayer so 库实践](https://github.com/leavesC/ijkplayer-so-extend)
 
 * [Android 开源应用](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [一个 IM 应用](https://github.com/leavesC/Chat)
-    * [一个纯 Kotlin 的工具类App](https://github.com/leavesC/Activity)
+    * [Round - 一个聊天App](https://github.com/leavesC/Chat)
+    * [Weather - 一个天气预报App](https://github.com/leavesC/Chat)
+    * [Activity - 一个纯Kotlin的工具类App](https://github.com/leavesC/Activity)
     * [两个小游戏 + 一个阅读类应用，适合初学者](https://github.com/leavesC/SmallApp)
 
 * [Android 框架学习](https://github.com/leavesC/JavaKotlinAndroidGuide)
