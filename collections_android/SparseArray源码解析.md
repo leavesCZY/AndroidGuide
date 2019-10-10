@@ -1,9 +1,9 @@
 
-使用 Android Studio 作为 IDE 的开发者可能会遇到一个现象，就是在代码中如果声明了  `Map<Integer, Object>` 类型的变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，意思就是**用 SparseArray<Object> 性能更优，可以考虑来替换 HashMap**
+使用 Android Studio 作为 IDE 的开发者可能会遇到一个现象，就是在代码中如果声明了  `Map<Integer, Object>` 类型的变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，意思就是**用 SparseArray< Object > 性能更优，可以用来替代 HashMap**
 
-这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/Java_Kotlin_Android_Learn/blob/master/collections/Java%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90%E4%B9%8BHashMap.md)
+这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/JavaKotlinAndroidGuide/tree/master/collections)
 
-## 一、基本概念
+### 一、基本概念
 
 先看下 SparseArray 的使用方式
 
@@ -15,15 +15,18 @@
         sparseArray.removeAt(29);
 ```
 
-SparseArray<E> 相当于 Map<Integer,E> ，key 值固定为 int 类型，在初始化时只需要声明 Value 的数据类型即可，其内部用两个数组分别来存储 Key 列表和 Value 列表：`int[] mKeys ; Object[] mValues`
+SparseArray< E > 相当于 Map< Integer,E > ，key 值固定为 int 类型，在初始化时只需要声明 Value 的数据类型即可，其内部用两个数组分别来存储 Key 列表和 Value 列表：`int[] mKeys ; Object[] mValues`
 
-`mKeys` 和 `mValues` 通过如下方式对应起来：假设要向 `SparseArray` 存入 `key` 为 `10`，`value` 为 `200` 的键值对，则先将 `10` 存到 `mKeys` 中，假设 `10` 在 `mKeys` 中对应的索引值是 `index` ，则将 `value` 存入 `mValues[index]` 中
+`mKeys` 和 `mValues` 通过如下方式对应起来：
 
-最首要的一点就是 SparseArray 避免了 Map 每次存取值时的**装箱拆箱**操作，其 Key 值类型都是基本数据类型 int，这有利于提升性能
+- 假设要向 `SparseArray` 存入 `key` 为 `10`，`value` 为 `200` 的键值对，则先将 `10` 存到 `mKeys` 中，假设 `10` 在 `mKeys` 中对应的索引值是 `index` ，则将 `value` 存入 `mValues[index]` 中
+- mKeys 中的元素值按照递增的形式存放，每次存放新的键值对时都通过二分查找方法来对 mKeys 进行排序
 
-## 二、全局变量
+最重要的一点就是 SparseArray 避免了 Map 每次存取值时的**装箱拆箱**操作，Key 值都是基本数据类型 int，这有利于提升性能
 
-布尔变量 `mGarbage` 也是 SparseArray 的一个优化点之一，用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再完成**
+### 二、全局变量
+
+布尔变量 `mGarbage` 也是 SparseArray 的一个优化点之一，用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再统一进行**
 
 ```java
     //数组元素在没有外部指定值时的默认元素值
@@ -42,7 +45,7 @@ SparseArray<E> 相当于 Map<Integer,E> ，key 值固定为 int 类型，在初�
     private int mSize;
 ```
 
-## 三、构造函数
+### 三、构造函数
 
 key 数组和 value 数组的默认大小都是 10，如果在初始化时已知数据量的预估大小，则可以直接指定初始容量，这样可以避免后续的扩容操作
 
@@ -71,9 +74,9 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-## 四、添加元素
+### 四、添加元素
 
-添加元素的方法有如下几个，主要看 `put(int key, E value)` 方法，当中用到了 `ContainerHelpers` 类提供的二分查找方法：`binarySearch`，用于查找目标 key 在 mKeys 中的当前索引或者是目标索引 
+添加元素的方法有如下几个，主要看 `put(int key, E value)` 方法，当中用到了 `ContainerHelpers` 类提供的二分查找方法：`binarySearch`，用于查找目标 key 在 mKeys 中的当前索引（已有改 key）或者是目标索引（没有该 key） 
 
 binarySearch 方法的返回值分为两种情况：
 
@@ -84,10 +87,10 @@ binarySearch 方法的返回值分为两种情况：
 
 可以看到，即使在 mKeys 中不存在目标 key，但其返回值也指向了应该让 key 存入的位置。通过将计算出的索引值进行 ~ 运算，则返回值一定是 0 或者负数，从而与“找得到目标key的情况（返回值大于0）”的情况区分开
 
-且通过这种方式来存放数据，可以使得 mKeys 的内部值一直是按照值递增的方式来排序的
+从这个可以看出该方法的巧妙之处，单纯的一个返回值就可以区分出多种情况，且通过这种方式来存放数据可以使得 mKeys 的内部值一直是按照值递增的方式来排序的
 
 ```java
-//将索引 index 处的元素赋值为 value
+	//将索引 index 处的元素赋值为 value
     //SparseArray 的元素值都是存到 mValues 中的，因此如果知道目标位置（index），则可以直接向数组 mValues 赋值
     public void setValueAt(int index, E value) {
         //如果需要则先进行垃圾回收
@@ -163,7 +166,7 @@ binarySearch 方法的返回值分为两种情况：
     }
 ```
 
-## 五、移除元素
+### 五、移除元素
 
 上文说了，布尔变量 `mGarbage` 用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再完成**
 
@@ -233,7 +236,7 @@ binarySearch 方法的返回值分为两种情况：
     }
 ```
 
-## 六、查找元素
+### 六、查找元素
 
 查找元素的方法较多，但逻辑都是挺简单的
 
@@ -316,7 +319,7 @@ binarySearch 方法的返回值分为两种情况：
     }
 ```
 
-## 七、垃圾回收
+### 七、垃圾回收
 
 因为 SparseArray 中可能会出现只移除 value 和 value 两者之一的情况，导致数组中存在无效引用，因此 `gc()` 方法就用于移除无效引用，并将有效的元素值位置合并在一起
 
@@ -349,7 +352,7 @@ binarySearch 方法的返回值分为两种情况：
     }
 ```
 
-## 八、优劣势
+### 八、优劣势
 
 从上文的解读来看，SparseArray 的主要优势有以下几点：
 
@@ -365,4 +368,5 @@ binarySearch 方法的返回值分为两种情况：
 - 数据量较大时，查找效率（二分查找法）会明显降低
 
 
-## 更多的学习笔记可以看这里：[Java_Kotlin_Android_Learn](https://github.com/leavesC/Java_Kotlin_Android_Learn)
+
+### 更多的学习笔记可以看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
