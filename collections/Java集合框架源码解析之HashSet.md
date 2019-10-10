@@ -1,8 +1,12 @@
+> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
+>
+> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+
 HashSet 实现了 Set 接口，不允许插入重复的元素，允许包含 null 元素，且不保证元素迭代顺序，特别是不保证该顺序恒久不变
 
 HashSet 的代码十分简单，去掉注释后的代码不到两百行。HashSet 底层是通过 HashMap 来实现的，如果看过我上一篇关于 HashMap 源码的解析，再来看 HashSet 就会有一种“不过如此”的感觉了
 
-在向 HashSet 添加元素时，HashSet 会将该操作转换为向 HashMap 添加键值对，如果 HashMap 中包含 key 值与待插入元素相等的键值对（hashCode() 方法返回值相等，通过 equals() 方法比较也返回 true），则待添加的键值对的 value 会覆盖原有数据，但 key 不会有所改变，因此如果向 HashSet 添加一个已存在的元素时，元素不会被存入 HashMap 中，从而实现了 HashSet 元素不重复的特征
+在向 HashSet 添加元素时，HashSet 会将该操作转换为向 HashMap 添加键值对，如果 HashMap 中包含 key 值与待插入元素相等的键值对（hashCode() 方法返回值相等，通过 equals() 方法比较也返回 true），则待添加的键值对的 value 会覆盖原有数据，但 key 不会改变，因此如果向 HashSet 添加一个已存在的元素时，元素不会被存入 HashMap 中，从而实现了 HashSet 元素不重复的特征
 
 在此就直接贴出源代码了
 
@@ -207,5 +211,7 @@ public class HashSet<E>
 }
 ```
 
-#### 更详细的源码解析可以看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)
+
+
+#### 更详细的源码解析可以看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
 

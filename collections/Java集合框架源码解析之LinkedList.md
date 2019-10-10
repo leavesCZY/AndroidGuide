@@ -1,6 +1,10 @@
-LinkedList 同时实现了 List 接口和 Deque 接口，所以既可以将 LinkedList 当做一个有序容器，也可以将之看作一个队列（Queue），同时又可以看作一个栈（Stack）。虽然 LinkedList 和 ArrayList 一样都实现了 List 接口，但其底层是通过**双向链表**来实现的，所以 LinkedList 插入和删除元素的效率都要比 ArrayList 高，因此随机访问的效率也要比 ArrayList 低
+> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
+>
+> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
 
-#### LinkedList 的类声明
+LinkedList 同时实现了 List 接口和 Deque 接口，所以既可以将 LinkedList 当做一个有序容器，也可以将之看作一个队列（Queue），同时又可以看作一个栈（Stack）。虽然 LinkedList 和 ArrayList 一样都实现了 List 接口，但其底层是通过**双向链表**来实现的，所以插入和删除元素的效率都要比 ArrayList 高，但也因此随机访问的效率要比 ArrayList 低
+
+#### 一、LinkedList 的类声明
 
 ```java
 public class LinkedList<E>
@@ -33,7 +37,7 @@ public class LinkedList<E>
     }
 ```
 
-#### 包含的成员变量
+#### 二、包含的成员变量
 
 ```java
  	//双向链表包含的结点总数
@@ -53,7 +57,7 @@ public class LinkedList<E>
 
 ![](https://upload-images.jianshu.io/upload_images/2552605-5fc0a4fb9515e7c3.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#### 构造函数
+#### 三、构造函数
 
 不同于 ArrayList，因为 LinkedList 使用的是链表结构，所以 LinkedList 不需要去请求一片连续的内存空间来存储数据，而是在每次有新的元素需要添加进来时，再来动态请求内存空间。因此 LinkedList 的两个构造函数要简单得多
 
@@ -68,7 +72,7 @@ public class LinkedList<E>
     }
 ```
 
-#### 添加元素
+#### 四、添加元素
 
 `add(E e)` 方法用于向链表的尾部添加结点，因为有 `last` 指向链表的尾结点，因此向尾部添加新元素只需要修改几个引用即可，效率较高
 
@@ -137,7 +141,7 @@ public class LinkedList<E>
 
 ![](https://upload-images.jianshu.io/upload_images/2552605-817b1e290041b1dc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
-#### 移除元素
+#### 五、移除元素
 
 `remove()` 方法有两种重载形式，其内部都是通过调用 `unlink(Node<E> x)` 方法来移除指定结点在链表中的引用，不同于 ArrayList 在移除元素时可能导致的大量数据移动，LinkedList 只需要通过移除引用即可将指定元素从链表中移除
 
@@ -202,7 +206,7 @@ public class LinkedList<E>
     }
 ```
 
-#### 获取/修改 元素
+#### 六、获取/修改 元素
 
 在获取或修改指定索引的元素前，都需要先通过正向遍历或者反向遍历获取到该结点，如果集合包含的数据量很大，那么要相应的代价也会很大，因此说 LinkedList 的查找效率并不高
 
@@ -243,7 +247,7 @@ public class LinkedList<E>
     }
 ```
 
-#### 几个常用的方法
+#### 七、几个常用的方法
 
 ```java
 	//判断是否包含元素 o
@@ -312,7 +316,7 @@ public class LinkedList<E>
     }
 ```
 
-#### Deque接口
+#### 八、Deque接口
 
 以上介绍的几个方法都是 **List** 接口中所声明的，接下来看下 **Deque** 接口中的方法
 
@@ -408,7 +412,7 @@ public class LinkedList<E>
     }
 ```
 
-#### 效率比较
+#### 九、效率比较
 
 上面说过，LinkedList 相比 ArrayList 添加和移除元素的效率会高些，但随机访问元素的效率要比 ArrayList 低，这里我也来做个测试，看下两者之间的差距
 
@@ -416,7 +420,6 @@ public class LinkedList<E>
 
 ```java
 public static void main(String[] args) {
-
         List<String> stringArrayList = new ArrayList<>();
         for (int i = 0; i < 300000; i++) {
             stringArrayList.add("leavesC " + i);
@@ -428,7 +431,7 @@ public static void main(String[] args) {
         }
         //结束时间
         long endTime = System.currentTimeMillis();
-        System.out.println("移除 ArrayList 中的100个元素，所用时间：" + (endTime - startTime) + "毫秒");
+        System.out.println("移除 ArrayList 中的100个元素,用时：" + (endTime - startTime) + "毫秒");
 
         //开始时间
         startTime = System.currentTimeMillis();
@@ -437,7 +440,7 @@ public static void main(String[] args) {
         }
         //结束时间
         endTime = System.currentTimeMillis();
-        System.out.println("遍历 ArrayList 中的10000个元素，所用时间：" + (endTime - startTime) + "毫秒");
+        System.out.println("遍历 ArrayList 中的10000个元素,用时：" + (endTime - startTime) + "毫秒");
 
 
         List<String> stringLinkedList = new LinkedList<>();
@@ -451,7 +454,7 @@ public static void main(String[] args) {
         }
         //结束时间
         endTime = System.currentTimeMillis();
-        System.out.println("移除 LinkedList 中的100个元素，所用时间：" + (endTime - startTime) + "毫秒");
+        System.out.println("移除 LinkedList 中的100个元素,用时：" + (endTime - startTime) + "毫秒");
         //开始时间
         startTime = System.currentTimeMillis();
         for (int i = 0; i < 10000; i++) {
@@ -459,14 +462,18 @@ public static void main(String[] args) {
         }
         //结束时间
         endTime = System.currentTimeMillis();
-        System.out.println("遍历 LinkedList 中的10000个元素，所用时间：" + (endTime - startTime) + "毫秒");
+        System.out.println("遍历 LinkedList 中的10000个元素,用时：" + (endTime - startTime) + "毫秒");
     }
-
 ```
 可以看出来，两者之间的差距还是非常大的，因此，在使用集合时需要根据实际情况来判断到底哪一种数据结构才更加适合
 
-![](https://upload-images.jianshu.io/upload_images/2552605-b808b0f4c97c2925.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+移除 ArrayList 中的100个元素,用时：11毫秒
+遍历 ArrayList 中的10000个元素,用时：1毫秒
+移除 LinkedList 中的100个元素,用时：0毫秒
+遍历 LinkedList 中的10000个元素,用时：246毫秒
+```
 
 
 
-#### 更详细的源码解析可以看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)
+**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/JavaKotlinAndroidGuide)**

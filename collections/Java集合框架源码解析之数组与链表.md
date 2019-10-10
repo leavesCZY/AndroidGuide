@@ -1,10 +1,12 @@
-#### 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
+> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
+>
+> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
 
 因为数组与链表是 Java 集合框架中很多地方都涉及到的知识点，此篇文章作为开头，就先对数组与链表这两种数据结构进行介绍
 
 数组与链表是两种差别较大的数据结构，在内存空间上的存储方式也有很大区别
 
-### 数组
+### 一、数组
 
 假设现在有6个元素存放在数组中，则数组在内存中的存储结构就如下图所示
 
@@ -16,7 +18,7 @@
 
 在 ArrayList 与 HashMap 等容器类中，其底层实际用来存放数据的结构都是数组
 
-### 链表
+### 二、链表
 
 假设现在有4个元素依靠链表来存放，则链表在内存中的存储结构就如下所示
 
@@ -30,4 +32,4 @@
 
 在 HashMap 中，其底层在存放数据时就使用到了链表
 
-#### 更详细的源码解析可以看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)
+#### 更详细的源码解析可以看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
