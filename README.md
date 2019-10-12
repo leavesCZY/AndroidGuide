@@ -137,7 +137,7 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-        * [Gson 使用详解](notes/AndroidGson使用详解.md)
+    * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
