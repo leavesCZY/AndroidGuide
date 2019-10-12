@@ -1,13 +1,19 @@
+> 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
+>
+> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+
 本文的目的是来分析下 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制，通过源码来了解整个消息处理流程的走向以及相关三者之间的关系
 
-需要先了解以下几个预备知识
+需要先了解以下几个基本概念
 
-- Handler：UI 线程或者子线程通过 Handler 向 MessageQueue（消息队列） 发送 Message
-- MessageQueue：通过 Handler 发送的消息并非是立即执行的，需要存入一个消息队列中来依次执行
-- Looper：Looper 不断从 MessageQueue 中获取消息并将之传递给消息处理者（即是消息发送者 Handler 本身）进行处理
-- 互斥机制：可能会有多条线程（1条 UI 线程，n 条子线程）向同一个消息队列插入消息，此时就需要进行同步
+- Handler：主线程或者子线程通过 Handler 向 MessageQueue（消息队列） 发送 Message，以此来触发定时任务或者更新 UI 
+- MessageQueue：通过 Handler 发送的消息并非是立即执行的，需要存入消息队列中来依次执行，消息队列中的任务依照消息的优先级高低（延时时间的长短）来顺序存放
+- Looper：Looper 用于从 MessageQueue 中循环获取消息并将之传递给消息处理者（即消息发送者 Handler 本身）来进行处理，每条 Message 都有个 target 变量用来指向消息的发送者本身，以此把 Message 和其处理者关联起来
+- 互斥机制：可能会有多条线程（1条 UI 线程，n 条子线程）同时向同一个消息队列插入消息，此时就需要有同步机制来保证消息的有序性以避免竞态
 
-Handler 发送消息的形式主要有以下几种形式，其最终调用的都是 `sendMessageAtTime()` 方法
+先从开发者日常的使用方法作为入口，以此来分析其整个流程的走向
+
+Handler 发送消息的形式主要有以下几个方法，不管其是否是延时任务，其最终调用的都是 `sendMessageAtTime()` 方法
 
 ```java
     public final boolean sendMessage(Message msg){
@@ -26,7 +32,7 @@ Handler 发送消息的形式主要有以下几种形式，其最终调用的都
     }
 ```
 
-可以看到 `sendMessageAtTime()` 方法中需要一个已初始化的 `MessageQueue` 类型的全局变量 `mQueue`，否则程序无法继续走下去
+ `sendMessageAtTime()` 方法中需要一个已初始化的 `MessageQueue` 类型的全局变量 `mQueue`，否则程序无法继续走下去
 
 ```java
     public boolean sendMessageAtTime(Message msg, long uptimeMillis) {
@@ -187,7 +193,7 @@ Handler 发送消息的形式主要有以下几种形式，其最终调用的都
     }
 ```
 
-因为存在多个线程往同一个 Loop 线程的 MessageQueue 中插入消息的可能，所以 `enqueueMessage()` 内部需要进行同步。可以看出 MessageQueue 内部是以链表的结构来存储 Message 的（**Message.next**），根据 Message 的延时时间的长短来将决定其在消息队列中的位置
+因为存在多个线程同时往同一个 Loop 线程的 MessageQueue 中插入消息的可能，所以 `enqueueMessage()` 内部需要进行同步。可以看出 MessageQueue 内部是以链表的结构来存储 Message 的（**Message.next**），根据 Message 的延时时间的长短来将决定其在消息队列中的位置
 
 **mMessages** 代表的是消息队列中的第一条消息，如果 mMessages 为空，说明消息队列是空的，或者 mMessages 的触发时间要比新消息晚，则将新消息插入消息队列的头部；如果 mMessages 不为空，则寻找消息列队中第一条触发时间比新消息晚的非空消息，并将新消息插到该消息前面
 
@@ -488,13 +494,14 @@ boolean enqueueMessage(Message msg, long when) {
 
 最后来总结下以上的内容
 
-一、在创建 Handler 实例时要么为构造函数提供一个 Looper 实例，要么默认使用当前线程关联的 Looper 对象，如果当前线程没有关联的 Looper 对象，则会导致抛出异常
+1. 在创建 Handler 实例时要么为构造函数提供一个 Looper 实例，要么默认使用当前线程关联的 Looper 对象，如果当前线程没有关联的 Looper 对象，则会导致抛出异常
 
-二、Looper 与 Thread ，Looper 与 MessageQueue 都是一一对应的关系，在关联后无法更改，但 Handler 与 Looper 可以是多对一的关系
+2. Looper 与 Thread ，Looper 与 MessageQueue 都是一一对应的关系，在关联后无法更改，但 Handler 与 Looper 可以是多对一的关系
 
-三、Handler 能用于更新 UI 有个前提条件：Handler 与主线程关联在了一起。在主线程中初始化的 Handler 会默认与主线程绑定在一起，所以此后在处理 Message 时，`handleMessage(Message msg)` 方法的所在线程就是主线程，因此 Handler 能用于更新 UI 
+3. Handler 能用于更新 UI 有个前提条件：Handler 与主线程关联在了一起。在主线程中初始化的 Handler 会默认与主线程绑定在一起，所以此后在处理 Message 时，`handleMessage(Message msg)` 方法的所在线程就是主线程，因此 Handler 能用于更新 UI 
 
-四、可以创建关联到另一个线程 Looper 的 Handler，只要本线程能够拿到另外一个线程的 Looper 实例
+4. 可以创建关联到另一个线程 Looper 的 Handler，只要本线程能够拿到另外一个线程的 Looper 实例
+
 
 ```java
 		new Thread("Thread_1") {
@@ -520,4 +527,6 @@ boolean enqueueMessage(Message msg, long when) {
         }.start();
 ```
 
-**更多的源码解读请看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)**
+
+
+**更多的源码解读请看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)**

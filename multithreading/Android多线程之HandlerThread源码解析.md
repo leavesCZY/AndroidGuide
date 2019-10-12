@@ -1,4 +1,8 @@
-> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](./Android多线程之Handler、Looper与MessageQueue源码解析.md)
+> 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
+>
+> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+>
+> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](https://github.com/leavesC/JavaKotlinAndroidGuide/blob/master/multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
 
 #### 一、概述
 
@@ -15,14 +19,14 @@
 
 创建 HandlerThread 并调用 `start()` 方法，使其在子线程内创建 Looper 对象
 
-```
+```java
 	HandlerThread handlerThread = new HandlerThread("HandlerThread");
     handlerThread.start();
 ```
 
 然后以 HandlerThread 内部的 Looper 对象为参数创建一个 Handler，通过 Handler 向子线程发送 Message，以此下发耗时任务，消息的接收者与任务的处理者则由回调函数 ChildCallback 来完成
 
-```
+```java
 	Handler childThreadHandler = new Handler(handlerThread.getLooper(), new ChildCallback());
 	
 	//Callback 运行于子线程
@@ -114,9 +118,7 @@ public class MainActivity extends AppCompatActivity {
 
 #### 三、源码分析
 
-先看下 HandlerThread 的类声明
-
-Thread 的子类
+先看下 HandlerThread 的类声明，是 Thread 的子类
 
 ```java
 	public class HandlerThread extends Thread
@@ -162,7 +164,7 @@ Thread 的子类
     }
 ```
 
-`Looper.prepare()` 方法用于为当前线程创建一个 Looper 对象，在主线程需要依赖此 Looper 对象来构建一个 Handler 对象，通过该 Handler 对象来向子线程下发耗时任务（这些知识点可以在这里了解：[Handler、Looper与MessageQueue源码解析](./Android多线程之Handler、Looper与MessageQueue源码解析.md)）
+`Looper.prepare()` 方法用于为当前线程创建一个 Looper 对象，在主线程需要依赖此 Looper 对象来构建一个 Handler 对象，通过该 Handler 对象来向子线程下发耗时任务
 
 之后可以看到有一个同步代码块，在当中调用了 `notifyAll()`来唤醒等待线程，那该唤醒的又是哪个线程呢？这里需要明确各个方法是运行于哪个线程，`run()` 方法肯定是运行于子线程，但用于向 HandlerThread 下发任务的 Handler 是初始化于主线程，因此 `getLooper()`方法也是运行于主线程的。由于是两个不同的线程，`run()` 方法和 `getLooper()` 的运行先后顺序是不明确的，因此 `getLooper()` 方法需要确保 Looper 对象不为 **null** 时才返回，否则将一直阻塞等待 Looper 对象初始化完成
 
@@ -316,4 +318,6 @@ public class HandlerThread extends Thread {
 }
 ```
 
-**更多的源码解读请看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)**
+
+
+**更多的源码解读请看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)**

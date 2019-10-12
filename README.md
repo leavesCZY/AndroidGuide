@@ -137,7 +137,7 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [Gson 使用详解](notes/AndroidGson使用详解.md)
+        * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
@@ -165,9 +165,9 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
     * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
     * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
     * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
-    * [Android HandlerThread 源码详细注释](sourceCode/HandlerThread.java)
-    * [Android IntentService 源码详细注释](sourceCode/IntentService.java)
-    * [Android AsyncTask 源码详细注释](sourceCode/AsyncTask.java)
+    * [Android HandlerThread 源码详细注释](multithreading/HandlerThread.java)
+    * [Android IntentService 源码详细注释](multithreading/IntentService.java)
+    * [Android AsyncTask 源码详细注释](multithreading/AsyncTask.java)
 
 * [Android IPC 机制](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [AndroidIPC机制（1）-进程和线程](https://github.com/leavesC/IPCSamples)
