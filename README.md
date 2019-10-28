@@ -1,8 +1,10 @@
-这是一份关于 Java、Kotlin、Dart、Android 的学习指南
+这是一份关于 Java、Kotlin、Dart、Android 、Flutter 的学习指南
 
 本指南以 Java & Kotlin & Dart 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
 
 Android 章节的内容包括：四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布等从浅到深的知识，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
+
+Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目，提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容，正在密集更新中……
 
 希望本指南对你会有所帮助，欢迎 star
 
@@ -137,7 +139,7 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
     * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-    * [Gson 使用详解](notes/AndroidGson使用详解.md)
+        * [Gson 使用详解](notes/AndroidGson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
@@ -210,16 +212,23 @@ Android 章节的内容包括：四大组件、权限系统、官方框架、自
 
 ------
 
+#### 五、Flutter
 
-#### 五、Git教程详解
+* [一个包含多个Demo示例的项目 - flutter_do](https://github.com/leavesC/flutter_do)
+* [Flutter 实战 - 用贝塞尔曲线画一个带文本的波浪球 Widget](https://juejin.im/post/5db5c03a6fb9a0208668e4f3)
+
+------
+
+#### 六、Git教程详解
 
 * [Git教程详解（1）](git/Git教程详解（1）.md)
 * [Git教程详解（2）](git/Git教程详解（2）.md)
 
+
 ------
 
 
-#### 六、工具类
+#### 七、工具类
 
 * [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
 * [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
