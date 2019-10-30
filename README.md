@@ -13,39 +13,38 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
 
 #### 一、Java 知识点
 
-* [Java 重拾](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [重拾Java（0）-基础知识点](recollect/重拾Java（0）-基础知识点.md)
-    * [重拾Java（1）-基本数据类型与字面值](recollect/重拾Java（1）-基本数据类型与字面值.md)
-    * [重拾Java（2）-运算符](recollect/重拾Java（2）-运算符.md)
-    * [重拾Java（3）-异常处理](recollect/重拾Java（3）-异常处理.md)
-    * [重拾Java（4）-线程](recollect/重拾Java（4）-线程.md)
-    * [重拾Java（5）-枚举](recollect/重拾Java（5）-枚举.md)
-    * [重拾Java（6）-注解](recollect/重拾Java（6）-注解.md)
-    * [重拾Java（7）-泛型](recollect/重拾Java（7）-泛型.md)
-    * [重拾Java（8）-反射](recollect/重拾Java（8）-反射.md)
-    * [重拾Java（9）-Lambda表达式](recollect/重拾Java（9）-Lambda表达式.md)
+* [Java 重拾](java)
+    * [重拾Java（0）-基础知识点](java/重拾Java（0）-基础知识点.md)
+    * [重拾Java（1）-基本数据类型与字面值](java/重拾Java（1）-基本数据类型与字面值.md)
+    * [重拾Java（2）-运算符](java/重拾Java（2）-运算符.md)
+    * [重拾Java（3）-异常处理](java/重拾Java（3）-异常处理.md)
+    * [重拾Java（4）-线程](java/重拾Java（4）-线程.md)
+    * [重拾Java（5）-枚举](java/重拾Java（5）-枚举.md)
+    * [重拾Java（6）-注解](java/重拾Java（6）-注解.md)
+    * [重拾Java（7）-泛型](java/重拾Java（7）-泛型.md)
+    * [重拾Java（8）-反射](java/重拾Java（8）-反射.md)
+    * [重拾Java（9）-Lambda表达式](java/重拾Java（9）-Lambda表达式.md)
 
-* [Java 集合框架](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Java 集合框架源码解析之数组与链表](collections/Java集合框架源码解析之数组与链表.md)
-    * [Java 集合框架源码解析之ArrayList](collections/Java集合框架源码解析之ArrayList.md)
-    * [Java 集合框架源码解析之LinkedList](collections/Java集合框架源码解析之LinkedList.md)
-    * [Java 集合框架源码解析之HashMap](collections/Java集合框架源码解析之HashMap.md)
-    * [Java 集合框架源码解析之LinkedHashMap](collections/Java集合框架源码解析之LinkedHashMap.md)
-    * [Java 集合框架源码解析之HashSet](collections/Java集合框架源码解析之HashSet.md)
-    * [Java 集合框架源码解析之LinkedHashSet](collections/Java集合框架源码解析之LinkedHashSet.md)
-    * [ArrayList 源码详细注释](sourceCode/ArrayList.java)
-    * [LinkedList 源码详细注释](sourceCode/LinkedList.java)
-    * [HashMap 源码详细注释](sourceCode/HashMap.java)
-    * [LinkedHashMap 源码详细注释](sourceCode/LinkedHashMap.java)
-    * [HashSet 源码详细注释](sourceCode/HashSet.java)
-    * [LinkedHashSet 源码详细注释](sourceCode/LinkedHashSet.java)
+* [Java 集合框架](java_collections)
+    * [Java 集合框架源码解析之数组与链表](java_collections/Java集合框架源码解析之数组与链表.md)
+    * [Java 集合框架源码解析之ArrayList](java_collections/Java集合框架源码解析之ArrayList.md)
+    * [Java 集合框架源码解析之LinkedList](java_collections/Java集合框架源码解析之LinkedList.md)
+    * [Java 集合框架源码解析之HashMap](java_collections/Java集合框架源码解析之HashMap.md)
+    * [Java 集合框架源码解析之LinkedHashMap](java_collections/Java集合框架源码解析之LinkedHashMap.md)
+    * [Java 集合框架源码解析之HashSet](java_collections/Java集合框架源码解析之HashSet.md)
+    * [Java 集合框架源码解析之LinkedHashSet](java_collections/Java集合框架源码解析之LinkedHashSet.md)
+    * [ArrayList 源码详细注释](java_collections/ArrayList.java)
+    * [LinkedList 源码详细注释](java_collections/LinkedList.java)
+    * [HashMap 源码详细注释](java_collections/HashMap.java)
+    * [LinkedHashMap 源码详细注释](java_collections/LinkedHashMap.java)
+    * [HashSet 源码详细注释](java_collections/HashSet.java)
+    * [LinkedHashSet 源码详细注释](java_collections/LinkedHashSet.java)
 
 ------
 
-
 #### 二、Kotlin 知识点
 
-* [Kotlin 入门教程](https://github.com/leavesC/JavaKotlinAndroidGuide)
+* [Kotlin 入门教程](kotlin)
     * [基础](kotlin)
 	    * [变量、数据类型、函数](kotlin/1_变量、数据类型、函数.md)
         * [包、类型别名、修饰符](kotlin/2_Package、修饰符.md)
@@ -76,7 +75,6 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
         * [注解](kotlin/22_注解.md)
 
 ------
-
 
 #### 三、Dart 知识点
 
@@ -117,7 +115,6 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
 
 ------
 
-
 #### 四、Android 知识点
 
 * [Android 开源库](https://github.com/leavesC/JavaKotlinAndroidGuide)
@@ -137,13 +134,13 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
     * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
 	* [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
     * [Gradle 常用配置总结](https://github.com/leavesC/GradleSamples)
-    * [RxJava2 入门详细笔记](notes/RxJava2入门详细笔记.md)
+    * [RxJava2 入门详细笔记](android/RxJava2入门详细笔记.md)
   	* [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
-        * [Gson 使用详解](notes/AndroidGson使用详解.md)
+    * [Gson 使用详解](android/Gson使用详解.md)
 
 * [Android 自定义View基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Android View 事件分发机制详解](other/Android事件分发机制详解.md)
-    * [Android 解决 View 的滑动冲突](other/Android解决View的滑动冲突.md)
+    * [Android View 事件分发机制详解](android/Android事件分发机制详解.md)
+    * [Android 解决 View 的滑动冲突](android/Android解决View的滑动冲突.md)
     * [Android 侧边栏滑动索引 View](https://github.com/leavesC/LetterIndexView)
     * [Android 仿360悬浮球与加速球](https://github.com/leavesC/FloatBall)
 
@@ -158,18 +155,18 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
     * [饼状图](https://github.com/leavesC/CustomView)
     * [下雨](https://github.com/leavesC/CustomView)
     
-* [Android 集合框架](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Android 集合框架源码解析之SparseArray](collections_android/SparseArray源码解析.md)
-    * [SparseArray 源码详细注释](collections_android/SparseArray.java)
+* [Android 集合框架](android_collections)
+    * [Android 集合框架源码解析之SparseArray](android_collections/SparseArray源码解析.md)
+    * [SparseArray 源码详细注释](android_collections/SparseArray.java)
 
-* [Android 多线程机制](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Android 多线程之Handler、Looper与MessageQueue源码解析](multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
-    * [Android 多线程之HandlerThread源码解析](multithreading/Android多线程之HandlerThread源码解析.md)
-    * [Android 多线程之IntentService源码解析](multithreading/Android多线程之IntentService源码解析.md)
-    * [Android 多线程之AsyncTask源码解析](multithreading/Android多线程之AsyncTask源码解析.md)
-    * [Android HandlerThread 源码详细注释](multithreading/HandlerThread.java)
-    * [Android IntentService 源码详细注释](multithreading/IntentService.java)
-    * [Android AsyncTask 源码详细注释](multithreading/AsyncTask.java)
+* [Android 多线程机制](android_multithreading)
+    * [Android 多线程之Handler、Looper与MessageQueue源码解析](android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+    * [Android 多线程之HandlerThread源码解析](android_multithreading/Android多线程之HandlerThread源码解析.md)
+    * [Android 多线程之IntentService源码解析](android_multithreading/Android多线程之IntentService源码解析.md)
+    * [Android 多线程之AsyncTask源码解析](android_multithreading/Android多线程之AsyncTask源码解析.md)
+    * [Android HandlerThread 源码详细注释](android_multithreading/HandlerThread.java)
+    * [Android IntentService 源码详细注释](android_multithreading/IntentService.java)
+    * [Android AsyncTask 源码详细注释](android_multithreading/AsyncTask.java)
 
 * [Android IPC 机制](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [AndroidIPC机制（1）-进程和线程](https://github.com/leavesC/IPCSamples)
@@ -178,6 +175,24 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
     * [AndroidIPC机制（4）-Messenger](https://github.com/leavesC/IPCSamples)
     * [AndroidIPC机制（5）-Binder连接池](https://github.com/leavesC/IPCSamples)
 
+* [Android 基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
+    * [Activity 使用详解](android/AndroidActivity使用详解.md)
+    * [Activity 标签属性](android/AndroidActivity标签属性.md)
+    * [Fragment使用详解](oandroidther/AndroidFragment使用详解.md)
+    * [Service 使用详解](android/AndroidService使用详解.md)
+    * [BroadcastReceiver 使用详解](android/AndroidBroadcastReceiver使用详解.md)
+    * [ContentProvider 使用详解](android/AndroidContentProvider基本用法.md)
+    * [应用基础知识](android/Android应用基础知识.md)
+    * [内存泄漏分析](android/Android内存泄漏分析.md)
+    * [进程和线程](android/Android进程和线程.md)
+    * [Dialog使用详解](android/AndroidDialog使用详解.md)
+    * [Notification的使用](android/AndroidNotification的使用.md)
+    * [ConstraintLayout 使用详解](android/AndroidConstraintLayout使用详解.md)
+    * [ConstraintLayout 1.1.2版本的新特性](android/ConstraintLayout1.1.2版本的新特性.md)
+    * [系统权限](android/Android系统权限.md)
+    * [Permission 大全](android/AndroidPermission访问权限大全.md)
+    * [6.0 运行时权限解析](android/Android6.0运行时权限解析.md)
+    
 * [Android 方案实现](https://github.com/leavesC/JavaKotlinAndroidGuide)
     * [在Android设备上搭建Web服务器](https://github.com/leavesC/AndroidServer)
     * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
@@ -185,30 +200,9 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
     * [Android 工具类库](https://github.com/leavesC/AndroidUtils)
     * [Android 扫描并连接蓝牙音响设备](https://github.com/leavesC/BluetoothDemo)
     * [Android 解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)
-    * [Android 获取应用 Crash 信息的方法](other/Android获取应用Crash信息的方法.md)
-
-* [Android 权限系统](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Android 系统权限](other/Android系统权限.md)
-    * [Android Permission 大全](other/AndroidPermission访问权限大全.md)
-    * [Android 6.0 运行时权限解析](other/Android6.0运行时权限解析.md)
+    * [Android 获取应用 Crash 信息的方法](android/Android获取应用Crash信息的方法.md)
     * [Android 运行时权限封装](https://github.com/leavesC/PermissionSteward)
-
-* [Android 基础](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Android 应用基础知识](other/Android应用基础知识.md)
-    * [Android 内存泄漏分析](other/Android内存泄漏分析.md)
-    * [Android 进程和线程](other/Android进程和线程.md)
-    * [Android Fragment使用详解](notes/AndroidFragment使用详解.md)
-    * [Android Dialog使用详解](notes/AndroidDialog使用详解.md)
-    * [Android Notification的使用](notes/AndroidNotification的使用.md)
-    * [Android ConstraintLayout 使用详解](notes/AndroidConstraintLayout使用详解.md)
-    * [Android ConstraintLayout 1.1.2版本的新特性](notes/约束布局ConstraintLayout1.1.2版本的新特性.md)
-
-* [Android 四大组件](https://github.com/leavesC/JavaKotlinAndroidGuide)
-    * [Activity 使用详解](other/AndroidActivity使用详解.md)
-    * [Activity 标签属性](other/AndroidActivity标签属性.md)
-    * [Service 使用详解](other/AndroidService使用详解.md)
-    * [BroadcastReceiver 使用详解](other/AndroidBroadcastReceiver使用详解.md)
-    * [ContentProvider 使用详解](other/AndroidContentProvider基本用法.md)
+    * [Android Gradle 常用配置总结](android/Gradle常用配置总结.md)
 
 ------
 
@@ -224,9 +218,7 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
 * [Git教程详解（1）](git/Git教程详解（1）.md)
 * [Git教程详解（2）](git/Git教程详解（2）.md)
 
-
 ------
-
 
 #### 七、工具类
 
