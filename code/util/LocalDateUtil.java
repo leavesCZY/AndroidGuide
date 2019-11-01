@@ -1,4 +1,4 @@
-package com.company.utils;
+package utils;
 
 import java.text.MessageFormat;
 import java.time.*;
