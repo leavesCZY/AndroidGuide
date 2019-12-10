@@ -8,6 +8,8 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
 
 希望本指南对你会有所帮助，欢迎 star
 
+![随缘关注](img\qrcode.png)
+
 ------
 
 

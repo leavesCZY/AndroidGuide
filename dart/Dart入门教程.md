@@ -1,40 +1,43 @@
+> 本文已收录至学习笔记大全：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
+>
+> 作者：[leavesC](https://github.com/leavesC)
+
 [TOC]
-
-
 
 ### 一、开篇
 
 dart 语言具有如下特性
 
-- 一切变量皆是对象，每个对象都是类的实例。int、double、函数、 null 等都是对象，所有对象都继承自 Object 类
+- 一切变量皆是对象，每个对象都是类的实例。int、double、null、函数等都是对象，所有对象都继承自 Object 类
 - dart 是强类型语言，但由于具备类型推导功能所以类型声明是可选的
 - dart 支持顶级函数、静态函数、实例函数，也允许在函数中嵌套函数，即局部函数。类似的，dart 也支持顶级变量、静态变量和实例变量
-- dart 没有关于 public、protected、private 的关键字。通过为变量标识符添加下划线前缀，表明该标识符对其库是私有的
-- ....
+- dart 没有关于 public、protected、private 的关键字。通过为变量标识符添加下划线前缀，表明该对象是私有的
+- 标识符以字母或下划线开头，后跟任意字母和数字组合
 
-先来看个小例子
+看个小例子
 
 ```dart
 /**
  * 多行注释
  */
 void printString(String msg) {
-  print("msg value: $msg");
+  print('msg value: $msg');
 }
 
+//单行注释
 void main() {
-  var msg = "Hello, World!";
+  var msg = 'Hello, World!';
   printString(msg); //msg value: Hello, World!
   printString(null); //msg value: null
 }
 ```
 
-如上代码包含了 dart 语言（也是基本所有编程语言）的基本元素
+如上代码包含了 dart 语言（也是基本所有的编程语言都具备的）的一些基本元素
 
 - 多行注释和单行注释
-- 以分号结尾且必需有
+- 以分号结尾且是必需的
 - 允许定义顶层函数
-- 最基础的数据类型之一：String，其它的内置数据类型还有 int 、double、list、map 等
+- 最基础的数据类型之一：String，以单引号或双引号包裹起来。其它的内置数据类型还有 int 、double、list、map 等
 - 类型推导。通过关键字 var 来声明变量而无需指明变量类型
 - 一种方便的插入变量值的方式，字符串字面值：$msg
 - 应用程序的入口：main 函数
@@ -45,24 +48,24 @@ void main() {
 
 与 Java 语言相比，dart 语言包含的类似的基本数据类型只有 `int` 和 `double` 两种，且这两种类型的变量均是对象，其默认值均为 null
 
-本教程遵循官方风格指南建议，大部分例子都是使用 var 来声明变量
+本教程遵循官方风格指南建议，大部分例子都是使用 var 来声明变量而不指明对象类型
 
 ```dart
 void main() {
-  int value;
-  print(value); //null
+  int intValue;
+  print(intValue); //null
 
-  value = 10;
-  print(value); //10
+  intValue = 10;
+  print(intValue); //10
 
-  var varValue = 20;
-  print(varValue); //20
+  var varIntValue = 20;
+  print(varIntValue); //20
 }
 ```
 
-dart 语言是强类型语言，无法将一个已声明具体变量类型的变量赋值为另一个无继承关系的变量
+dart 是强类型语言，无法将一个已声明具体变量类型的变量赋值为另一个无继承关系的变量
 
-例如，第二行代码是会导致报错的，无法将一个 double 值赋值到一个 int 类型变量上
+例如，以下代码会导致报错，因为无法将一个 double 值赋值到一个 int 类型变量上
 
 ```dart
   int intValue = 20;
@@ -91,7 +94,11 @@ dart 语言是强类型语言，无法将一个已声明具体变量类型的变
 
 #### 2.3、final 和 const
 
-如果你希望一个变量在赋值后其引用不能再改变，可以通过 final 或 const 这两个关键字来实现。const 变量代表的是编译时常量，在编译期，程序运行前就有确定值了，因此实例变量不能使用 const 修饰。而 final 修饰的变量是运行时常量，可以在运行时再赋予变量值，因此实例变量能使用 final 修饰
+如果你希望一个变量在赋值后其引用不能再改变，可以通过 **final** 或 **const** 这两个关键字来实现
+
+const 变量代表的是编译时常量，例如字面量就是一种编译时常量，在编译期，程序运行前就有确定值了，因此实例变量不能使用 const 修饰。如果 const 变量是类级别的，需要标记为 `static const`
+
+而 final 修饰的变量是运行时常量，赋值后不能再改变引用，可以在运行时再赋予变量值，因此实例变量能使用 final 修饰
 
 ```dart
 void main() {
@@ -114,11 +121,7 @@ String getName(boolValue) {
 
 #### 3.1、num
 
-dart 的数字类型有 int 和 double 两种，这两种都是 num 类的子类
-
-int 类型根据平台的不同，整数值不大于64位。在 Dart VM 上，值可以从 **-2<sup>63</sup> 到 2<sup>63</sup>-1**，编译成 JavaScript 的 Dart 使用JavaScript 代码，允许值从 **-2<sup>53</sup> 到 2<sup>53</sup> - 1**
-
-double 类型即**64位双精度浮点数**，由 IEEE 754标准 指定
+dart 的数字类型有 int 和 double 两种，这两种都是 num 类的子类。int 类型根据平台的不同，整数值不大于64位。在 Dart VM 上，值可以从 **-2<sup>63</sup> 到 2<sup>63</sup>-1**，编译成 JavaScript 的 Dart 使用JavaScript 代码，允许值从 **-2<sup>53</sup> 到 2<sup>53</sup> - 1**。double 类型即**64位双精度浮点数**，由 IEEE 754 标准指定
 
 ```dart
 void main() {
@@ -145,25 +148,21 @@ void main() {
 
 #### 3.2、string
 
-除了可以通过单引号或者双引号来声明一个字符串外，也可以通过相邻的字符串字面量来声明一个组合字符串（相当于使用 + 把字符串相加为一个整体）
+除了可以通过单引号或者双引号来声明一个字符串外，也可以通过相邻的字符串字面量来声明一个组合字符串（相当于使用 + 把字符串相加为一个整体），此时可以混用**单引号**和**双引号**，但建议只用单引号
 
 ```dart
   var stringValue = "leavesC";
-
   var stringValue2 = 'leavesC =_=';
-
   var stringValue3 = "分段 "
       "换行了也可以"
       '又换了一行';
-
   print(stringValue3); //分段 换行了也可以又换了一行
 ```
 
-此外，也可以使用带有单引号或双引号的三重引号，包含的转义字符将会生效
+此外，也可以使用带有单引号或双引号的三重引号，此时包含的转义字符是有效的
 
 ```dart
-  var stringValue4='''
-  \n 换行符
+var stringValue='''\n 换行符
   \t 制表符
   ''';
 ```
@@ -171,7 +170,7 @@ void main() {
 也可以用 **r前缀** 创建一个原始字符串，包含的转义字符将会失效
 
 ```dart
-  var stringValue4=r'''
+  var stringValue=r'''
   \n 换行符
   \t 制表符
   ''';
@@ -179,13 +178,13 @@ void main() {
 
 #### 3.3、bool
 
-dart 语言也用 bool 关键字来表示事物的真假，只有两个对象具有 bool 类型：true 和 false，它们都是编译时常量。且 dart 是强 bool 类型检查，只有 bool 类型的值是 true 才被认为是 true
+dart 语言用 bool 关键字来表示真假两面，bool 类型只有两个实例：true 和 false，它们都是编译时常量，且只有 bool 类型的值是 true 才被认为是 true
 
 #### 3.4、list
 
 list 也是最常见的数据类型之一，dart 通过方括号来声明 list 变量
 
-由于 dart 具有类型推导功能，因此 listValue 自动被赋予为 List<int> 类型，因此在声明 listValue 后就无法为其添加其他类型变量的值了
+由于 dart 具有类型推导功能，因此 listValue 自动被赋予为 **List< int >** 类型，因此在声明 listValue 后就无法为其添加其他类型变量的值了
 
 ```dart
   var listValue = [1, 2, 3];
@@ -259,7 +258,6 @@ var mapValue = <String, String>{"name": "leavesC"};
 
 ```dart
   var mapValue = const {"name": "leavesC", "age": 24};
-
   //error，可正常编译，但会导致运行时抛出异常
   mapValue["name"] = "hi";
 ```
@@ -872,9 +870,3 @@ class B {
 //使用 with 关键字表示类C是由类A和类B混合构成的
 class C = A with B;
 ```
-
-
-
-### 十、未完待续
-
-本文已加入我的学习笔记大全：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
