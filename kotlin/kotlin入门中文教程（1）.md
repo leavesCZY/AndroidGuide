@@ -1,4 +1,4 @@
-> 本文已收录至学习笔记大全：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
+> 本文已收录至学习笔记大全：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
 >
 > 作者：[leavesC](https://github.com/leavesC)
 

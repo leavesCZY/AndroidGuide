@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+> 项目主页：https://github.com/leavesC/AndroidAllGuide
 
 HashMap 是用于映射(键值对)处理的数据类型，不保证元素的顺序按照插入顺序来排列，为了解决这一问题，Java 在 JDK1.4 以后提供了 LinkedHashMap 来实现有序的 HashMap
 
@@ -271,4 +271,4 @@ public class LRUCache {
 
 
 
-#### 更详细的源码解析可以看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
+#### 更详细的源码解析可以看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)

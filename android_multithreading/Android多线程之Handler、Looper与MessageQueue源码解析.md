@@ -1,6 +1,6 @@
 > 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+> 项目主页：https://github.com/leavesC/AndroidAllGuide
 
 本文的目的是来分析下 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制，通过源码来了解整个消息处理流程的走向以及相关三者之间的关系
 
@@ -529,4 +529,4 @@ boolean enqueueMessage(Message msg, long when) {
 
 
 
-**更多的源码解读请看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)**
+**更多的源码解读请看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)**

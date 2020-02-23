@@ -1,8 +1,8 @@
 > 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/JavaKotlinAndroidGuide
+> 项目主页：https://github.com/leavesC/AndroidAllGuide
 >
-> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](https://github.com/leavesC/JavaKotlinAndroidGuide/blob/master/android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+> 想要了解 HandlerThread 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制有所了解，如果你还没有这方面的知识，可以先看我写的另一篇文章：[Handler、Looper与MessageQueue源码解析](https://github.com/leavesC/AndroidAllGuide/blob/master/android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
 
 #### 一、概述
 
@@ -320,4 +320,4 @@ public class HandlerThread extends Thread {
 
 
 
-**更多的源码解读请看这里：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)**
+**更多的源码解读请看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)**

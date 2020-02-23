@@ -1,4 +1,4 @@
-> 本文已收录至学习笔记大全：[JavaKotlinAndroidGuide](https://github.com/leavesC/JavaKotlinAndroidGuide)
+> 本文已收录至学习笔记大全：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
 >
 > 作者：[leavesC](https://github.com/leavesC)
 
@@ -102,7 +102,7 @@ const 变量代表的是编译时常量，例如字面量就是一种编译时�
 
 ```dart
 void main() {
-  const URL = "https://github.com/leavesC/JavaKotlinAndroidGuide";
+  const URL = "https://github.com/leavesC/AndroidAllGuide";
   var booleValue = true;
   final name = getName(booleValue);
   print(name);
