@@ -1,12 +1,12 @@
-这是一份关于 Java、Kotlin、Dart、Android 、Flutter 的学习指南
+这是一份关于 Java、Kotlin、Dart、Android 、Flutter 一整个体系的入门及进阶指南
 
 本指南以 Java & Kotlin & Dart 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
 
-Android 章节的内容包括：四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布等从浅到深的知识，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
+Android 章节的内容包括：**四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布**等从浅到深的知识，进阶内容包含 **Google Jetpack、Kotlin 协程详解**等知识点，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
 
-Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目，提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容，正在密集更新中……
+Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目，提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容
 
-希望本指南对你会有所帮助，欢迎 star
+博客正在持续密集更新中，希望本指南对你会有所帮助，欢迎 star
 
 ------
 
@@ -125,18 +125,18 @@ Flutter 章节的内容包括一个帮助开发者加深了解 Flutter 的项目
 #### 四、Android 知识点
 
 * [Android 开源库](https://github.com/leavesC/AndroidAllGuide)
+    * [基于最新架构搭建的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
     * [一个小巧而强大的 Key-Value 管理框架 - DoKV](https://github.com/leavesC/DoKV)
+    * [Kotlin / Java 平台下的 Json 序列化和反序列化库 - JsonHolder](https://github.com/leavesC/JsonHolder)
     * [linux 环境编译 ijkplayer so 库实践](https://github.com/leavesC/ijkplayer-so-extend)
-
+    
 * [Android 开源应用](https://github.com/leavesC/AndroidAllGuide)
-    * [Round - 一个聊天App](https://github.com/leavesC/Chat)
-    * [Weather - 一个天气预报App](https://github.com/leavesC/Chat)
-    * [Activity - 一个纯Kotlin的工具类App](https://github.com/leavesC/Activity)
+    * [一个聊天App - Round](https://github.com/leavesC/Chat)
+    * [一个纯Kotlin的工具类App - Activity](https://github.com/leavesC/Activity)
     * [两个小游戏 + 一个阅读类应用，适合初学者](https://github.com/leavesC/SmallApp)
 
 * [Android 框架学习](https://github.com/leavesC/AndroidAllGuide)
-    * [基于 ViewModel+LiveData+Retrofit+RxJava 封装的网络请求框架](https://github.com/leavesC/ViewModel_Retrofit_RxJava)
     * [Android APT 实例讲解](https://github.com/leavesC/DoKV)
     * [Android DataBinding 从入门到进阶](https://github.com/leavesC/DataBindingSamples)
 	* [Retrofit2 与服务端实例讲解](https://github.com/leavesC/Retrofit2Samples)
