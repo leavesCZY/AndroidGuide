@@ -125,11 +125,11 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
 #### 四、Android 知识点
 
 * [从源码看 Jetpack](https://github.com/leavesC/AndroidAllGuide)
-    * [从源码看 Jetpack（1）-Lifecycle源码解析](jetpack/从源码看 Jetpack（1）-Lifecycle源码解析.md)
-    * [从源码看 Jetpack（2）-Lifecycle衍生](jetpack/从源码看 Jetpack（2）-Lifecycle衍生.md)
-    * [从源码看 Jetpack（3）-LiveData源码解析](jetpack/从源码看 Jetpack（3）-LiveData源码解析.md)
-    * [从源码看 Jetpack（4）-LiveData衍生](jetpack/从源码看 Jetpack（4）-LiveData衍生.md)
-    * [从源码看 Jetpack（5）-Startup源码详解](jetpack/从源码看 Jetpack（5）-Startup源码详解.md)
+    * [从源码看 Jetpack（1）-Lifecycle源码解析](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%881%EF%BC%89-Lifecycle%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md)
+    * [从源码看 Jetpack（2）-Lifecycle衍生](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%882%EF%BC%89-Lifecycle%E8%A1%8D%E7%94%9F.md)
+    * [从源码看 Jetpack（3）-LiveData源码解析](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%883%EF%BC%89-LiveData%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md)
+    * [从源码看 Jetpack（4）-LiveData衍生](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%884%EF%BC%89-LiveData%E8%A1%8D%E7%94%9F.md)
+    * [从源码看 Jetpack（5）-Startup源码详解](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%885%EF%BC%89-Startup%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3.md)
 
 * [Android 开源库](https://github.com/leavesC/AndroidAllGuide)
     * [基于最新架构搭建的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
