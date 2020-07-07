@@ -2,7 +2,7 @@
 
 本指南以 Java & Kotlin & Dart 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
 
-Android 章节的内容包括：**四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布**等从浅到深的知识，进阶内容包含 **Google Jetpack、Kotlin 协程详解**等知识点，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
+Android 章节的内容包括：**四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布**等从浅到深的知识，进阶内容包含 **Google Jetpack 源码解析、Kotlin 协程详解**等知识点，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
 
 Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目，提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容
 
@@ -124,6 +124,13 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
 
 #### 四、Android 知识点
 
+* [从源码看 Jetpack](https://github.com/leavesC/AndroidAllGuide)
+    * [从源码看 Jetpack（1）-Lifecycle源码解析](jetpack/从源码看 Jetpack（1）-Lifecycle源码解析.md)
+    * [从源码看 Jetpack（2）-Lifecycle衍生](jetpack/从源码看 Jetpack（2）-Lifecycle衍生.md)
+    * [从源码看 Jetpack（3）-LiveData源码解析](jetpack/从源码看 Jetpack（3）-LiveData源码解析.md)
+    * [从源码看 Jetpack（4）-LiveData衍生](jetpack/从源码看 Jetpack（4）-LiveData衍生.md)
+    * [从源码看 Jetpack（5）-Startup源码详解](jetpack/从源码看 Jetpack（5）-Startup源码详解.md)
+
 * [Android 开源库](https://github.com/leavesC/AndroidAllGuide)
     * [基于最新架构搭建的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
@@ -226,10 +233,3 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
 * [Git教程详解（2）](git/Git教程详解（2）.md)
 
 ------
-
-#### 七、工具类
-
-* [高精度计算类 BigDecimalUtil](code/util/BigDecimalUtil.java)
-* [精度截取类 DecimalFormatUtil](code/util/DecimalFormatUtil.java)
-* [日期计算类 LocalDateUtil](code/util/LocalDateUtil.java)
-* [随机数生成类 RandomUtil](code/util/RandomUtil.java)
