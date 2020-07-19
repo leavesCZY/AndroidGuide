@@ -1,4 +1,4 @@
-### 这是一份 Android 开发体系内从基础入门到高级进阶的~~完整~~指南，包含基础的语言教程，系统源码详解、第三方框架使用指南、协程官方文档翻译、Jetpack 原理剖析等一系列的内容。文章正在持续密集更新中，希望本指南对你会有所帮助，欢迎 star
+### 这是一份 Android 开发体系内从基础入门到高级进阶的~~完整~~指南，包含基础的语言教程，系统源码详解、第三方框架使用指南、Flutter 教程、协程官方文档翻译、Jetpack 原理剖析等一系列的内容。文章正在持续密集更新中，希望本指南对你会有所帮助，欢迎 star
 
 ------
 
@@ -204,37 +204,13 @@ Kotlin 入门教程
 * [Dart 入门教程](dart/Dart入门教程.md)
     * [开篇](dart/Dart入门教程.md)
     * [变量](dart/Dart入门教程.md)
-        * [变量声明](dart/Dart入门教程.md)
-        * [dynamic](dart/Dart入门教程.md)
-        * [final 和 const](dart/Dart入门教程.md)
     * [内建类型](dart/Dart入门教程.md)
-        * [num](dart/Dart入门教程.md)
-        * [string](dart/Dart入门教程.md)
-        * [bool](dart/Dart入门教程.md)
-        * [list](dart/Dart入门教程.md)
-        * [set](dart/Dart入门教程.md)
-        * [map](dart/Dart入门教程.md)
     * [函数](dart/Dart入门教程.md)
-        * [一般概念](dart/Dart入门教程.md)
-        * [函数也是对象](dart/Dart入门教程.md)
-        * [位置参数](dart/Dart入门教程.md)
-        * [命名参数](dart/Dart入门教程.md)
-        * [默认参数值](dart/Dart入门教程.md)
-        * [函数变量](dart/Dart入门教程.md)
-        * [匿名函数](dart/Dart入门教程.md)
-        * [局部函数](dart/Dart入门教程.md)
     * [运算符](dart/Dart入门教程.md)
     * [流程控制](dart/Dart入门教程.md)
     * [枚举](dart/Dart入门教程.md)
     * [异常处理](dart/Dart入门教程.md)
     * [类](dart/Dart入门教程.md)
-        * [类声明](dart/Dart入门教程.md)
-        * [构造函数](dart/Dart入门教程.md)
-        * [继承](dart/Dart入门教程.md)
-        * [抽象类](dart/Dart入门教程.md)
-        * [接口](dart/Dart入门教程.md)
-        * [mixins](dart/Dart入门教程.md)
-    * [未完待续](dart/Dart入门教程.md)
 
 ------
 
