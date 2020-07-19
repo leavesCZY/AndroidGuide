@@ -1,14 +1,57 @@
-这是一份关于 Java、Kotlin、Dart、Android 、Flutter 一整个体系的入门及进阶指南
-
-本指南以 Java & Kotlin & Dart 的基础语法知识作为开始，涵盖了大部分的语言知识点，帮助初学者入门
-
-Android 章节的内容包括：**四大组件、权限系统、官方框架、自定义View、多线程机制、IPC机制、第三方框架、开源应用、开源库发布**等从浅到深的知识，进阶内容包含 **Google Jetpack 源码解析、Kotlin 协程详解**等知识点，涵盖了一位 Android 开发者从初学到精通的道路上应该了解的知识点或者会遇到的问题
-
-Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目，提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容
-
-博客正在持续密集更新中，希望本指南对你会有所帮助，欢迎 star
+### 这是一份 Android 开发体系内从基础入门到高级进阶的~~完整~~指南，包含基础的语言教程，系统源码详解、第三方框架使用指南、协程官方文档翻译、Jetpack 原理剖析等一系列的内容。文章正在持续密集更新中，希望本指南对你会有所帮助，欢迎 star
 
 ------
+
+#### 源码解析
+
+* [从源码看 Jetpack](jetpack)
+    * [从源码看 Jetpack（1）-Lifecycle源码解析](jetpack/Lifecycle源码解析.md)
+    * [从源码看 Jetpack（2）-Lifecycle衍生](jetpack/Lifecycle衍生.md)
+    * [从源码看 Jetpack（3）-LiveData源码解析](jetpack/LiveData源码解析.md)
+    * [从源码看 Jetpack（4）-LiveData衍生](jetpack/LiveData衍生.md)
+    * [从源码看 Jetpack（5）-Startup源码详解](jetpack/Startup源码详解.md)
+
+* [Android 多线程机制](android_multithreading)
+    * [Android 多线程之Handler、Looper与MessageQueue源码解析](android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+    * [Android 多线程之HandlerThread源码解析](android_multithreading/Android多线程之HandlerThread源码解析.md)
+    * [Android 多线程之IntentService源码解析](android_multithreading/Android多线程之IntentService源码解析.md)
+    * [Android 多线程之AsyncTask源码解析](android_multithreading/Android多线程之AsyncTask源码解析.md)
+    * [Android HandlerThread 源码详细注释](android_multithreading/HandlerThread.java)
+    * [Android IntentService 源码详细注释](android_multithreading/IntentService.java)
+    * [Android AsyncTask 源码详细注释](android_multithreading/AsyncTask.java)
+
+* [Android 集合框架](android_collections)
+    * [Android 集合框架源码解析之SparseArray](android_collections/SparseArray源码解析.md)
+    * [SparseArray 源码详细注释](android_collections/SparseArray.java)
+
+* [Java 集合框架](java_collections)
+    * [Java 集合框架源码解析之-数组与链表](java_collections/Java集合框架源码解析之数组与链表.md)
+    * [Java 集合框架源码解析之-ArrayList](java_collections/Java集合框架源码解析之ArrayList.md)
+    * [Java 集合框架源码解析之-LinkedList](java_collections/Java集合框架源码解析之LinkedList.md)
+    * [Java 集合框架源码解析之-HashMap](java_collections/Java集合框架源码解析之HashMap.md)
+    * [Java 集合框架源码解析之-LinkedHashMap](java_collections/Java集合框架源码解析之LinkedHashMap.md)
+    * [Java 集合框架源码解析之-HashSet](java_collections/Java集合框架源码解析之HashSet.md)
+    * [Java 集合框架源码解析之-LinkedHashSet](java_collections/Java集合框架源码解析之LinkedHashSet.md)
+    * [ArrayList 源码详细注释](java_collections/ArrayList.java)
+    * [LinkedList 源码详细注释](java_collections/LinkedList.java)
+    * [HashMap 源码详细注释](java_collections/HashMap.java)
+    * [LinkedHashMap 源码详细注释](java_collections/LinkedHashMap.java)
+    * [HashSet 源码详细注释](java_collections/HashSet.java)
+    * [LinkedHashSet 源码详细注释](java_collections/LinkedHashSet.java)
+
+#### kotlin 协程
+
+* [Kotlin 协程官方文档中文翻译](kotlin_coroutine)
+    * [kotlin 协程官方文档（1）-协程基础（Coroutine Basics）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（1）-协程基础（Coroutine%20Basics）.md)
+    * [kotlin 协程官方文档（2）-取消和超时（Cancellation and Timeouts）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（2）-取消和超时（Cancellation%20and%20Timeouts）.md)
+    * [kotlin 协程官方文档（3）-组合挂起函数（Coroutine Context and Dispatchers）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（3）-组合挂起函数（Coroutine%20Context%20and%20Dispatchers）.md)
+    * [kotlin 协程官方文档（4）-协程上下文和调度器（Coroutine Context and Dispatchers）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（4）-协程上下文和调度器（Coroutine%20Context%20and%20Dispatchers）.md)
+    * [kotlin 协程官方文档（5）-异步流（Asynchronous Flow）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（5）-异步流（Asynchronous%20Flow）.md)
+    * [kotlin 协程官方文档（6）-通道（Channels）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（6）-通道（Channels）.md)
+    * [kotlin 协程官方文档（7）-异常处理（Exception Handling）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（7）-异常处理（Exception%20Handling）.md)
+    * [kotlin 协程官方文档（8）-共享可变状态和并发性（Shared mutable state and concurrency）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（8）-共享可变状态和并发性（Shared%20mutable%20state%20and%20concurrency）.md)
+    * [kotlin 协程官方文档（9）-选择表达式(实验阶段)（Select Expression (experimental)）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（9）-选择表达式(实验阶段)（Select%20Expression%20(experimental)）.md)
+
 
 
 #### 一、Java 知识点
@@ -25,20 +68,7 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
     * [重拾Java（8）-反射](java/重拾Java（8）-反射.md)
     * [重拾Java（9）-Lambda表达式](java/重拾Java（9）-Lambda表达式.md)
 
-* [Java 集合框架源码解析](java_collections)
-    * [Java 集合框架源码解析之-数组与链表](java_collections/Java集合框架源码解析之数组与链表.md)
-    * [Java 集合框架源码解析之-ArrayList](java_collections/Java集合框架源码解析之ArrayList.md)
-    * [Java 集合框架源码解析之-LinkedList](java_collections/Java集合框架源码解析之LinkedList.md)
-    * [Java 集合框架源码解析之-HashMap](java_collections/Java集合框架源码解析之HashMap.md)
-    * [Java 集合框架源码解析之-LinkedHashMap](java_collections/Java集合框架源码解析之LinkedHashMap.md)
-    * [Java 集合框架源码解析之-HashSet](java_collections/Java集合框架源码解析之HashSet.md)
-    * [Java 集合框架源码解析之-LinkedHashSet](java_collections/Java集合框架源码解析之LinkedHashSet.md)
-    * [ArrayList 源码详细注释](java_collections/ArrayList.java)
-    * [LinkedList 源码详细注释](java_collections/LinkedList.java)
-    * [HashMap 源码详细注释](java_collections/HashMap.java)
-    * [LinkedHashMap 源码详细注释](java_collections/LinkedHashMap.java)
-    * [HashSet 源码详细注释](java_collections/HashSet.java)
-    * [LinkedHashSet 源码详细注释](java_collections/LinkedHashSet.java)
+
 
 ------
 
@@ -70,16 +100,7 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
 	* [委托](kotlin/kotlin入门中文教程（2）.md)
 	* [注解](kotlin/kotlin入门中文教程（2）.md)
 
-* [Kotlin 协程](kotlin_coroutine)
-    * [kotlin 协程官方文档（1）-协程基础（Coroutine Basics）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（1）-协程基础（Coroutine%20Basics）.md)
-    * [kotlin 协程官方文档（2）-取消和超时（Cancellation and Timeouts）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（2）-取消和超时（Cancellation%20and%20Timeouts）.md)
-    * [kotlin 协程官方文档（3）-组合挂起函数（Coroutine Context and Dispatchers）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（3）-组合挂起函数（Coroutine%20Context%20and%20Dispatchers）.md)
-    * [kotlin 协程官方文档（4）-协程上下文和调度器（Coroutine Context and Dispatchers）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（4）-协程上下文和调度器（Coroutine%20Context%20and%20Dispatchers）.md)
-    * [kotlin 协程官方文档（5）-异步流（Asynchronous Flow）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（5）-异步流（Asynchronous%20Flow）.md)
-    * [kotlin 协程官方文档（6）-通道（Channels）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（6）-通道（Channels）.md)
-    * [kotlin 协程官方文档（7）-异常处理（Exception Handling）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（7）-异常处理（Exception%20Handling）.md)
-    * [kotlin 协程官方文档（8）-共享可变状态和并发性（Shared mutable state and concurrency）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（8）-共享可变状态和并发性（Shared%20mutable%20state%20and%20concurrency）.md)
-    * [kotlin 协程官方文档（9）-选择表达式(实验阶段)（Select Expression (experimental)）](https://github.com/leavesC/AndroidAllGuide/blob/master/kotlin_coroutine/kotlin%20协程官方文档（9）-选择表达式(实验阶段)（Select%20Expression%20(experimental)）.md)
+
 
 ------
 
@@ -124,12 +145,7 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
 
 #### 四、Android 知识点
 
-* [从源码看 Jetpack](https://github.com/leavesC/AndroidAllGuide)
-    * [从源码看 Jetpack（1）-Lifecycle源码解析](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%881%EF%BC%89-Lifecycle%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md)
-    * [从源码看 Jetpack（2）-Lifecycle衍生](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%882%EF%BC%89-Lifecycle%E8%A1%8D%E7%94%9F.md)
-    * [从源码看 Jetpack（3）-LiveData源码解析](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%883%EF%BC%89-LiveData%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90.md)
-    * [从源码看 Jetpack（4）-LiveData衍生](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%884%EF%BC%89-LiveData%E8%A1%8D%E7%94%9F.md)
-    * [从源码看 Jetpack（5）-Startup源码详解](https://github.com/leavesC/AndroidAllGuide/blob/master/jetpack/%E4%BB%8E%E6%BA%90%E7%A0%81%E7%9C%8B%20Jetpack%EF%BC%885%EF%BC%89-Startup%E6%BA%90%E7%A0%81%E8%AF%A6%E8%A7%A3.md)
+
 
 * [Android 开源库](https://github.com/leavesC/AndroidAllGuide)
     * [基于最新架构搭建的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
@@ -169,18 +185,7 @@ Flutter 章节的内容包含一个帮助开发者加深了解 Flutter 的项目
     * [饼状图](https://github.com/leavesC/CustomView)
     * [下雨](https://github.com/leavesC/CustomView)
     
-* [Android 集合框架](android_collections)
-    * [Android 集合框架源码解析之SparseArray](android_collections/SparseArray源码解析.md)
-    * [SparseArray 源码详细注释](android_collections/SparseArray.java)
 
-* [Android 多线程机制](android_multithreading)
-    * [Android 多线程之Handler、Looper与MessageQueue源码解析](android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
-    * [Android 多线程之HandlerThread源码解析](android_multithreading/Android多线程之HandlerThread源码解析.md)
-    * [Android 多线程之IntentService源码解析](android_multithreading/Android多线程之IntentService源码解析.md)
-    * [Android 多线程之AsyncTask源码解析](android_multithreading/Android多线程之AsyncTask源码解析.md)
-    * [Android HandlerThread 源码详细注释](android_multithreading/HandlerThread.java)
-    * [Android IntentService 源码详细注释](android_multithreading/IntentService.java)
-    * [Android AsyncTask 源码详细注释](android_multithreading/AsyncTask.java)
 
 * [Android IPC 机制](https://github.com/leavesC/AndroidAllGuide)
     * [AndroidIPC机制（1）-进程和线程](https://github.com/leavesC/IPCSamples)
