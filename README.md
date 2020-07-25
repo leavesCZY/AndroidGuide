@@ -46,7 +46,8 @@
 #### 开源库发布
 
 * [Android 开源库](https://github.com/leavesC/AndroidAllGuide)
-    * [基于最新架构搭建的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
+    * [一个基于 Kotlin + Coroutines + Jetpack 封装的网络请求框架 - ReactiveHttp](https://github.com/leavesC/ReactiveHttp)
+    * [基于 Jetpack LiveData 的扩展组件 - EventLiveData](https://github.com/leavesC/EventLiveData)
     * [OkHttp 网络请求调试利器 - Monitor](https://github.com/leavesC/Monitor)
     * [一个小巧而强大的 Key-Value 管理框架 - DoKV](https://github.com/leavesC/DoKV)
     * [Kotlin / Java 平台下的 Json 序列化和反序列化库 - JsonHolder](https://github.com/leavesC/JsonHolder)
