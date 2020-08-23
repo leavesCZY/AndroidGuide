@@ -2,7 +2,7 @@
 
 ### 一、这是什么？
 
-这是一份 Android 开发从基础入门到进阶的~~**完整**~~（并不是）指南，所有文章都是[本人](https://github.com/leavesC)这几年时间里一字一字码出来的，文章的更新方向和更新频率以我的学习计划为导向，会一直持续密集更新下去.....
+这是一份 Android 开发从基础入门到进阶的~~完整~~（**并不是**）指南，所有文章都是[本人](https://github.com/leavesC)这几年时间里一字一字码出来的，文章的更新方向和更新频率以我的学习计划为导向，会一直持续密集更新下去.....
 
 ### 二、包含什么？
 
@@ -12,4 +12,6 @@
 
 使用 GitBook 食用最佳，[点击这里开始阅读吧！](https://leavesc.gitbook.io/androidguide/)
 
-![](https://s1.ax1x.com/2020/08/23/dB3tQP.png)
+
+
+![AndroidGuide](https://s1.ax1x.com/2020/08/23/dB3tQP.png)
