@@ -1,5 +1,7 @@
 上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 的几个开发者比较容易忽略的衍生产物
 
+本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
+
 本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
@@ -176,7 +178,7 @@ ProcessLifecycleOwner 是 `androidx.lifecycle:lifecycle-process:xxx` 库下的�
 
 以下就来介绍下 ProcessLifecycleOwner 的使用方法以及 `androidx.lifecycle:lifecycle-process:xxx` 库下的所有类
 
-#### 2.1、使用方法
+#### 2.1、如何使用
 
 ProcessLifecycleOwner 是单例模式，获取到其唯一实例后向其添加 Observer 即可。需要注意的是，ProcessLifecycleOwner 是依靠于应用内所有 Activity 的生命周期的变化来定义生命周期事件的，所以对于那些完全无 UI 界面的应用来说使用 ProcessLifecycleOwner 是没有意义的
 

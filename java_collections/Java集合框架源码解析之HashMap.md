@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 
 HashMap 是用于映射(键值对)处理的数据类型，基于哈希表的 Map 接口的非同步实现，允许插入最多一条`key`为`null`的键值对，允许插入多条`value`为`null`的键值对。此外，HashMap 不保证元素顺序，根据需要该容器可能会对元素重新哈希，元素的顺序也会被重新打散，因此在不同时间段迭代同一个 HashMap 的顺序可能会不同。HashMap 非线程安全，即同一时刻有多个线程同时写 HashMap 的话可能会导致数据的不一致
 
@@ -574,5 +574,3 @@ public class KeyMain {
 ```
 
 可以看到此时存入同等数据量的数据所用时间呈几何数增长了，此时主要影响性能的点就在于对哈希冲突的处理了
-
-#### 更详细的源码解析可以看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)

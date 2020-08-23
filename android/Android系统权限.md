@@ -76,8 +76,6 @@ Android 将根据 **targetSdkVersion** 属性值决定应用是否需要权限�
 
 如果设备运行的是 Android 5.1（API 级别 22）或更低版本，并且应用的 targetSdkVersion 是 22 或更低版本，则系统会在安装时要求用户授予权限
 
-要想了解更详细的权限机制，可以看我的另一篇文章：[Android 6.0 运行时权限解析](http://blog.csdn.net/new_one_object/article/details/54943741)
-
 ## **七、定义和实施权限**
 
 要实施自己的权限，必须先使用一个或多个**< permission >**元素在 **AndroidManifest.xml** 中声明它们。

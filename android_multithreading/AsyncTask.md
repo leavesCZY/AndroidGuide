@@ -1,3 +1,4 @@
+```java
 package android.os;
 
 import android.annotation.MainThread;
@@ -20,10 +21,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/6/24 15:01
- * 描述：https://github.com/leavesC/Java_Android_Learn
- *      https://www.jianshu.com/u/9df45b87cfdf
+ * 描述：
  */
 public abstract class AsyncTask<Params, Progress, Result> {
 
@@ -425,3 +425,4 @@ public abstract class AsyncTask<Params, Progress, Result> {
     }
 
 }
+```

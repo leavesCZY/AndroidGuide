@@ -521,7 +521,7 @@ public class BindServiceActivity extends AppCompatActivity {
             mediaPlayer.start();
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this);
             mBuilder.setSmallIcon(R.drawable.bird);
-            mBuilder.setContentTitle("这是标题吧~叶应是叶");
+            mBuilder.setContentTitle("这是标题吧~leavesc");
             mBuilder.setContentText("http://blog.csdn.net/new_one_object");
             startForeground(1, mBuilder.build());
         }

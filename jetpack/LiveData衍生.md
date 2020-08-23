@@ -1,5 +1,7 @@
 上篇文章介绍了关于 LiveData 类的源码解析，本篇文章再来介绍下 LiveData 的一系列衍生类及衍生方法
 
+本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
+
 本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
 
 ```groovy

@@ -1,5 +1,7 @@
 LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到其身影。LiveData 可以和**生命周期绑定**，当 **Lifecycle**（例如 Activity、Fragment 等）处于活跃状态时才进行数据回调，并在 Lifecycle 处于无效状态（DESTROYED）时自动移除数据监听行为，从而避免常见的**内存泄露和 NPE 问题**
 
+本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
+
 本文就来介绍下 LiveData 的内部实现逻辑，从而让读者在知道其使用方法之外，还可以了解到其实现原理以及以下几点比较容易忽略的重要特性：
 
 - 一个 Observer 对象只能和一个 Lifecycle 对象绑定，否则将抛出异常
@@ -276,9 +278,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **remo
 
 `dispatchingValue()` 函数设计得比较巧妙，用两个全局的布尔变量 **mDispatchingValue** 和 **mDispatchInvalidated** 就实现了**新旧值判断、旧值舍弃、新值重新全局发布**的逻辑
 
-其中需要注意 mObservers 的遍历过程，由于每遍历到一个 item 都会检查一次当前的 value 是否已经过时，是的话则中断遍历，所以是存在仅有部分 Observer 收到值的情况
-
-> 而有一个我比较疑惑的点是：从逻辑上看 dispatchingValue() 函数只会在主线程进行调用，那么 dispatchingValue() 一定是会在执行完毕后才被再次执行，不存在多线程同时调用的情况，且 dispatchingValue() 函数内部也没有嵌套调用自己，那么此时 mDispatchingValue 和 mDispatchInvalidated 两个变量就显得没有意义了，希望了解其作用的同学可以留言指教下
+其中需要注意 mObservers 的遍历过程，由于每遍历一个 item 都会检查一次当前的 value 是否已经过时，是的话则中断遍历，所以会存在**仅有部分 Observer 收到值**的情况
 
 ```java
     //用于标记当前是否正处于向 mObservers 发布 value 的过程
@@ -293,7 +293,9 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **remo
 	@SuppressWarnings("WeakerAccess") /* synthetic access */
     void dispatchingValue(@Nullable ObserverWrapper initiator) {
         if (mDispatchingValue) {
-            //如果当前正处于向 mObservers 发布 mData 的过程中（即 mDispatchingValue 为 true）
+            //如果 mDispatchingValue 为 true，说明当前正处于向 mObservers 发布 mData 的过程中
+            //而 dispatchingValue 方法只会在主线程进行调用，所以会出现 mDispatchingValue 为 true 的情况
+            //说明 Observer 的 onChanged 方法内部又主动向 LiveData setValue
             //则将 mDispatchInvalidated 置为 true，用于标明有新值到来，正在回调的值是已经过时的了
             mDispatchInvalidated = true;
             return;
@@ -408,10 +410,10 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **remo
 
 此章节再来介绍下 LiveData 是如何判断是否需要向 Observer 回调值的
 
-先来说下为什么需要进行这个判断，而不能每次接受到新值时都直接进行回调，这是基于以下几个原因的：
+先来说下为什么需要进行这个判断，而不能每次接受到新值时都直接进行回调，这是基于以下两个原因的：
 
-1. observeForever() 函数是只要接收到 value 就会马上运行回调逻辑，这个过程也不是马上就能完成（因为还需要 Post 到主线程运行）， 与 observe() 函数根据 Lifecycle 的变化再来进行回调的时机的先后顺序具有不确定性。所以需要判断进行回调的 value 对于 Observer 来说是否是新值，避免重复回调
-2. 外部可能在不同阶段先后调用了多次 observe() 函数或者 observeForever() 函数，此时也需要仅在没有对 Observer 传过值的情况下进行回调，避免重复回调
+1. `observeForever()` 函数是只要接收到 value 就会马上运行回调逻辑， 与 `observe()` 函数根据 Lifecycle 的变化再来进行回调的时机的先后顺序具有不确定性。所以需要判断进行回调的 value 对于 Observer 来说是否是新值，避免重复回调
+2. 外部可能在不同阶段先后调用了多次 `observe()` 函数或者 `observeForever()` 函数，此时也需要仅在没有对 Observer 传过值的情况下进行回调，避免重复回调
 
 LiveData 在其构造函数内部就开始了新旧值的记录，主要是根据一个整数 mVersion 来记录当前 value 的版本号，即新旧程度
 

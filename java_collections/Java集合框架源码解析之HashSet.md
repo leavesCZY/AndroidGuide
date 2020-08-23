@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 
 HashSet 实现了 Set 接口，不允许插入重复的元素，允许包含 null 元素，且不保证元素迭代顺序，特别是不保证该顺序恒久不变
 
@@ -210,8 +210,3 @@ public class HashSet<E>
     
 }
 ```
-
-
-
-#### 更详细的源码解析可以看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
-

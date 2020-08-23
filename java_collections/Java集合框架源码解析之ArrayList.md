@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 
 ArrayList 可能是很多人使用得最为频繁的容器类了，ArrayList 实现了 List 接口，是一个有序容器，即存放元素的顺序与添加顺序相同，允许添加相同元素，包括 null ，底层通过数组来实现数据存储，容器内存储的元素个数不能超出数组空间。所以向容器中添加元素时如果发现数组空间不足，容器会自动对底层数组进行扩容操作
 
@@ -503,5 +503,3 @@ public static void main(String[] args) {
 ```
 
 关于 ArrayList 的内容就讲到这里了，一方面是篇幅所限，一方面我是觉得很多知识点其实也不需要怎么讲，直接看源码的话认知会更为深刻一点，因此我也把对 ArrayList 的详细源码注释开源到了 GitHub 上，欢迎关注
-
-#### 源码地址：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)

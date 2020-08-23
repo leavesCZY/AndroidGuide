@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 
 阅读本节内容需要读者对 HashMap 、HashSet 和 LinkedHashMap 的源码有所了解，因为 LinkedHashSet 的内部实现都是来自于这三个容器类，其内部源码十分简单，简单到它只有一个成员变量、四个构造函数、一个 Set 接口的方法
 
@@ -60,4 +60,4 @@ LinkedHashSet  继承于 HashSet，而 LinkedHashSet 调用的父类构造函数
 
 关于 LinkedHashSet 的源码实在也没什么好讲的，它的实现都是依靠其他容器类来组合支持的，所以如果想了解 LinkedHashSet ，就只能先去了解 HashMap 、HashSet 和 LinkedHashMap 的源码
 
-**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/AndroidAllGuide)**
+**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/AndroidGuide)**

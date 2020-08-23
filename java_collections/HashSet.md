@@ -1,3 +1,4 @@
+```java
 package java.util;
 
 import java.io.InvalidObjectException;
@@ -196,3 +197,4 @@ public class HashSet<E>
     }
 
 }
+```

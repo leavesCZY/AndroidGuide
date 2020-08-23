@@ -1,9 +1,3 @@
-> 本文已收录至学习笔记大全：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
->
-> 作者：[leavesC](https://github.com/leavesC)
-
-[TOC]
-
 ### 一、开篇
 
 dart 语言具有如下特性
@@ -102,7 +96,7 @@ const 变量代表的是编译时常量，例如字面量就是一种编译时�
 
 ```dart
 void main() {
-  const URL = "https://github.com/leavesC/AndroidAllGuide";
+  const URL = "https://github.com/leavesC/AndroidGuide";
   var booleValue = true;
   final name = getName(booleValue);
   print(name);

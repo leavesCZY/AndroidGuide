@@ -527,7 +527,7 @@ public void notification(View view) {
         builder.setSmallIcon(R.drawable.lufei);
 
         RemoteViews rv = new RemoteViews(getPackageName(), R.layout.message);
-        rv.setTextViewText(R.id.tv_title, "叶应是叶");
+        rv.setTextViewText(R.id.tv_title, "leavesc");
         builder.setContent(rv);
 
         mNotificationManager.notify(id++, builder.build());

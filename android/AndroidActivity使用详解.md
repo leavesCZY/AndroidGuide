@@ -43,8 +43,6 @@ Activity 的用户界面是由层级式视图：衍生自 View 类的对象 — 
 
 还可以在此元素中加入几个其他属性值以定义 UI 风格或者运行属性。 **android:name** 属性是唯一必需的属性，它用于指定 Activity 的类名
 
-更详细的介绍可以看这里：[Android Activity标签属性](https://www.jianshu.com/p/8598825222cc)
-
 此外，**< activity >** 元素还可以指定各种 Intent 过滤器，使用 **< intent-filter >** 元素以声明其他应用组件激活它的方法
 
 当使用 Android Stduio 创建新应用时，会自动为主 Activity 设置一个 Intent 过滤器，其中声明了该 Activity 响应主操作且置于“launcher”类别内

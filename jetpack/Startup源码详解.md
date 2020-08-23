@@ -1,5 +1,7 @@
 最近，Google Jetpack 官网上新增了一个名为 `App Startup` 的组件，链接：[App Startup](https://developer.android.com/topic/libraries/app-startup)。根据官方文档的介绍，`App Startup` 提供了一种直接、高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
 
+本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
+
 本文内容均基于`App Startup`当前最新的 alpha 版本：
 
 ```java

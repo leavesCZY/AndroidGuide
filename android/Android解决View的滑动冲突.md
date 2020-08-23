@@ -1,5 +1,3 @@
-关于 Android 的 TouchEvent 事件分发机制可以看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)，本文讲解的是如何去解决 View 之间的滑动冲突
-
 当父容器与子 View 都可以滑动时，就会产生滑动冲突。例如 ViewPager 中包含了 ListView 时，ViewPager 可以横向滑动，而 ListView 可以竖向滑动，此时就会产生滑动冲突。而我们之所以在使用的过程中没有发现这个问题，是因为 ViewPager 内部已经处理好滑动冲突了
 
 解决 View 之间的滑动冲突的方法分为两种，分别是外部拦截法和内部拦截法
@@ -102,7 +100,7 @@
 
 ```java
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/7/15 10:26
  * 描述：
  */
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
 
 ```java
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/7/15 10:26
  * 描述：
  */
@@ -245,7 +243,7 @@ public class MyViewPager extends ViewPager {
 
 ```java
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/7/15 12:40
  * 描述：
  */
@@ -300,7 +298,7 @@ public class MyListView extends ListView {
 
 ```java
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/7/15 10:26
  * 描述：
  */
@@ -326,5 +324,3 @@ public class MyViewPager extends ViewPager {
 
 }
 ```
-
-### 更多的学习笔记看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)

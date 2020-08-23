@@ -1,3 +1,4 @@
+```java
 package android.app;
 
 import android.annotation.WorkerThread;
@@ -10,10 +11,9 @@ import android.os.Looper;
 import android.os.Message;
 
 /**
- * 作者：叶应是叶
+ * 作者：leavesc
  * 时间：2018/6/22 13:39
  * 描述：https://github.com/leavesC
- * https://www.jianshu.com/u/9df45b87cfdf
  */
 public abstract class IntentService extends Service {
 
@@ -110,3 +110,4 @@ public abstract class IntentService extends Service {
     protected abstract void onHandleIntent(@Nullable Intent intent);
 
 }
+```

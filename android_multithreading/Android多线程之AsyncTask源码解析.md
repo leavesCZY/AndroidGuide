@@ -1,6 +1,6 @@
 > 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 >
 
 AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler ，实现了线程的复用，后台任务执行顺序的控制、子线程和 UI 线程的切换，使得开发者可以以简单的方法来执行一些耗时任务
@@ -218,7 +218,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
 
 `onPreExecute()`在 `executeOnExecutor(Executor, Params)`中有被调用，因为 `executeOnExecutor()`方法被要求在 UI 线程中调用，因此 `onPreExecute()`自然也会在 UI 线程中被执行
 
-其它方法的调用则涉及到了 **Handler、Looper 与 MessageQueue** 的相关知识点，关于这些可以从这里获取详细介绍： [**AndroidAllGuide**](https://github.com/leavesC/AndroidAllGuide) ，这里就简单介绍下
+其它方法的调用则涉及到了 **Handler、Looper 与 MessageQueue** 的相关知识点，关于这些可以从这里获取详细介绍： [**AndroidGuide**](https://github.com/leavesC/AndroidGuide) ，这里就简单介绍下
 
 看下 AsyncTask 类的三个构造函数。当中，除了无参构造函数，其他两个构造函数都使用 `@hide`注解隐藏起来了，因此我们在一般情况下只能使用调用无参构造函数来初始化 AsyncTask
 
@@ -347,5 +347,3 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
 ```
 
 
-
-**更多的源码解读请看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)**

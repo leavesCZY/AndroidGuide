@@ -188,7 +188,7 @@ public class SelectFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final String[] names = {"Hi", "Hello", "叶应是叶"};
+        final String[] names = {"Hi", "Hello", "leavesc"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_activated_1, names);
         View view = inflater.inflate(R.layout.fragment_select, container, false);
         ListView listView = (ListView) view.findViewById(R.id.listView);

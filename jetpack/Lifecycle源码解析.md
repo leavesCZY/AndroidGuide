@@ -1,4 +1,6 @@
-Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单且高效了许多，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文的内容就是对 Lifecycle 进行了一次全面的源码讲解，希望对你有所帮助
+Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单且高效了许多，使得我们可以以一种统一的方式来监听 Activity、Fragment、Service、甚至 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文的内容就是对 Lifecycle 进行了一次全面的源码讲解，希望对你有所帮助
+
+本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
 
 本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
 
@@ -13,11 +15,11 @@ implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
 
 ### 一、Lifecycle 
 
-#### 1.1、基本的使用方法
+#### 1.1、如何使用
 
 现如今，如果我们想要根据 Activity 的生命周期状态的变化来管理我们的业务逻辑的话，那么可以很方便的使用类似如下代码来监听其生命周期状态的变化
 
-```java
+```kotlin
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -37,13 +39,13 @@ implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
     }
 ```
 
-以上代码是基于接口的形式（DefaultLifecycleObserver）来进行事件回调的，每当 Activity 的生命周期函数被触发时，该接口的相应同名函数就会在之前或者之后被调用，以此来获得相应生命周期事件变化的通知
+以上代码是基于接口的形式（DefaultLifecycleObserver）来进行事件回调的，每当 Activity 的生命周期函数被触发时，该接口的相应同名函数就会在**之前或者之后被调用**，以此来获得相应生命周期事件变化的通知
 
-此外还有一种基于 `OnLifecycleEvent` 注解的方式来进行回调的方法，该方法主要是面向基于 Java 7 作为编译版本的平台，该方式在以后会被逐步废弃，Google 官方也建议尽量使用接口回调的形式
+此外还有一种基于 `OnLifecycleEvent` 注解的方式来进行回调的方法，该方法主要是面向基于 Java 7 作为编译版本的平台，但该方式在以后会被逐步废弃，Google 官方也建议开发者尽量使用接口回调的形式
 
-基于注解的方式不对函数名做特定要求，但是对于函数的入参类型、入参顺序、入参个数有特定要求，这个在后续章节会有介绍
+基于注解的方式不对函数名做特定要求，但是对于函数的**入参类型、入参顺序、入参个数**有特定要求，这个在后续章节会有介绍
 
-```java
+```kotlin
 		lifecycle.addObserver(object : LifecycleObserver {
 
             @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -64,7 +66,7 @@ implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
         })
 ```
 
-#### 1.2、Lifecycle 源码
+#### 1.2、Lifecycle
 
 Lifecycle 是一个抽象类，其本身的逻辑比较简单，在大多数时候我们会接触到的是其子类 LifecycleRegistry。Lifecycle 内部仅包含一个全局变量，三个抽象方法、两个枚举类
 
@@ -151,7 +153,7 @@ public interface LifecycleObserver {
 }
 ```
 
-##### 2.2.1、LifecycleEventObserver
+##### 1、LifecycleEventObserver
 
 LifecycleEventObserver 用于监听 Lifecycle 的生命周期变化，可以获取到生命周期事件发生的具体变化
 
@@ -163,7 +165,7 @@ public interface LifecycleEventObserver extends LifecycleObserver {
 }
 ```
 
-##### 2.2.2、FullLifecycleObserver
+##### 2、FullLifecycleObserver
 
 FullLifecycleObserver 根据 **Activity/Fragment** 这两个类的生命周期回调函数扩展了几个同名的抽象方法，可以看成是对 LifecycleEventObserver 进行更加具体的事件拆分
 
@@ -185,7 +187,7 @@ interface FullLifecycleObserver extends LifecycleObserver {
 
 ```
 
-##### 2.2.3、DefaultLifecycleObserver
+##### 3、DefaultLifecycleObserver
 
 DefaultLifecycleObserver 接口继承于 FullLifecycleObserver，`androidx.lifecycle:lifecycle-common-java8:xxx` 整个依赖库仅包含了该接口，从依赖库的命名上来看，可以看出它是用于 Java 8 平台的。DefaultLifecycleObserver 将 FullLifecycleObserver 的所有方法都进行了默认实现，让开发者可以只处理自己关心的生命周期事件。因为大多数时候我们仅需要使用一部分生命周期状态函数，如果使用 FullLifecycleObserver 的话我们就必须实现所有抽象方法，而大部分方法可能都是空实现
 
@@ -214,7 +216,7 @@ public interface DefaultLifecycleObserver extends FullLifecycleObserver {
 }
 ```
 
-##### 2.2.4、FullLifecycleObserverAdapter
+##### 4、FullLifecycleObserverAdapter
 
 FullLifecycleObserverAdapter 实现了 LifecycleEventObserver 接口，用于在收到 Lifecycle 生命周期事件状态变化时，对其两个构造函数参数（ **FullLifecycleObserver、LifecycleEventObserver**）进行事件转发
 
@@ -328,9 +330,7 @@ public @interface OnLifecycleEvent {
         // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
         // need to support activities that don't extend from FragmentActivity from support lib),
         // use a framework fragment to get the correct timing of Lifecycle events
-        //在 API 29 之前，为了保持与旧版本的 ProcessLifecycleOwner 的兼容性
-        //（因为有可能更新了 lifecycle-runtime 库而目标设备并非 29+，并且需要支持 support 包中没有继承于 FragmentActivity 的 Activity），
-        //此处向 activity 添加一个不可见的 framework 中的 fragment，以此来取得 Activity 生命周期事件的正确回调
+        //在 API 29 之前，向 activity 添加一个不可见的 framework 中的 fragment，以此来取得 Activity 生命周期事件的正确回调
         android.app.FragmentManager manager = activity.getFragmentManager();
         if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
             manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
@@ -345,9 +345,9 @@ ReportFragment 的 `injectIfNeededIn()` 函数会根据两种情况来进行事�
 - 运行设备的系统版本号小于 29。此情况会通过向 Activity 添加一个无 UI 界面的 Fragment（即 ReportFragment），间接获得 Activity 的各个生命周期事件的回调通知
 - 运行设备的系统版本号大于或等于29。此情况会向 Activity 注册一个 LifecycleCallbacks ，以此来直接获得各个生命周期事件的回调通知。此时也会同时执行第一种情况的操作
 
-之所以会进行这两种情况区分，是因为 `registerActivityLifecycleCallbacks` 是 SDK 29 时 `android.app.Activity` 新添加的方法，从这个版本开始支持直接在 `LifecycleCallbacks` 中取得事件通知。当用户的设备 SDK 版本小于 29 时，就还是需要通过 ReportFragment 来间接取得事件通知。且为了保证 support 包的兼容性，即使 SDK 版本号大于 29，也依然会添加 ReportFragment
+之所以会进行这两种情况区分，是因为 `registerActivityLifecycleCallbacks` 是 SDK 29 时 `android.app.Activity` 新添加的方法，从这个版本开始支持直接在 `LifecycleCallbacks` 中取得事件通知。当用户的设备 SDK 版本小于 29 时，就还是需要通过 ReportFragment 来间接取得事件通知
 
-#### 3.1、SDK >= 29+
+#### 3.1、SDK >= 29
 
 先来看下 LifecycleCallbacks 类。其逻辑就是会在 Activity 的 **onCreate、onStart、onResume** 等方法**被调用后**通过 `dispatch(activity, Lifecycle.Event.ON_XXX)` 方法发送相应的 Event 值，并在 **onPause、onStop、onDestroy** 等方法**被调用前**发送相应的 Event 值
 
@@ -485,9 +485,8 @@ public class Fragment implements ComponentCallbacks, OnCreateContextMenuListener
 在具体看 LifecycleRegistry 的实现逻辑之前，需要先对 LifecycleRegistry 的定位、作用和必须具备的功能有一个大致的了解，可以从我们想要的效果来逆推实现这个效果所需要的步骤：
 
 1. 不单单是 Activity 和 Fragment 可以实现 LifecycleOwner 接口，像 Service、Dialog 等具有生命周期的类一样可以实现 LifecycleOwner 接口，而不管 LifecycleOwner 的实现类是什么，其本身所需要实现的**功能/逻辑**都是一样的：**addObserver、removeObserver、getCurrentState、遍历循环 observers 进行 Event 通知**等。所以 Google 官方势必需要提供一个通用的 Lifecycle 实现类，以此来简化开发者实现 LifecycleOwner 接口的成本，最终的实现类即 LifecycleRegistry（**之后假设我们需要实现 LifecycleOwner 接口的仅有 Activity 一种，方便读者理解**）
-2. 外部可以通过 addObserver() 方法来向 LifecycleRegistry 添加 Observer，Observer 内部可能会被用于执行一些耗时操作，而在耗时操作完成之前 Activity 可能已经走向 DESTORY 状态了，所以 LifecycleRegistry 也需要做好避免内存泄漏的准备，不能直接强引用 Activity
+2.  LifecycleRegistry 需要持有 LifecycleOwner 对象来判断是否可以向其回调事件通知，但为了避免内存泄漏也不能直接强引用 LifecycleOwner
 3. 假设当 Activity 处于 State.STARTED 状态时向其添加了一个 LifecycleEventObserver ，此时就必须向 LifecycleEventObserver 同步当前的最新状态值，所以 LifecycleEventObserver 就会先后收到 Lifecycle.Event.ON_CREATE、Lifecycle.Event.ON_START 两个 Event
-4. 外部可能先后向 LifecycleRegistry 添加多个 Observer 或者是移除 Observer，且可能是在不同线程上进行调用，所以在管理 Observer 时需要做好同步处理
 5. LifecycleRegistry 向 Observer 发布 Event 值的触发条件有两种：
    - 新添加了一个 Observer，需要向其同步 Activity 当前的 State 值。在同步的过程中新的 Event 值可能刚好又来了，此时需要考虑如何向所有 Observer 同步最新的 Event 值
    - Activity 的生命周期状态发生了变化，需要向 Observer 同步最新的 State 值。在同步的过程中可能又添加了新的 Observer 或者移除了 Observer ，此时一样需要考虑如何向所有 Observer 同步最新的 Event 值
@@ -514,9 +513,11 @@ public class LifecycleRegistry extends Lifecycle {
 }
 ```
 
-addObserver() 函数的主要逻辑是：将传入的 observer 对象包装为 ObserverWithState 类型，方便将**注解形式的LifecycleObserver（Java 7）**和**接口实现的 LifecycleObserver（Java 8）**进行状态回调时的入口统一为 **dispatchEvent()** 方法。此外，由于当添加 LifecycleObserver 时 Lifecycle 可能已经处于非 INITIALIZED 状态了，所以需要通过循环检查的方式来向 ObserverWithState 逐步下发 Event 值
+`addObserver()` 函数的主要逻辑是：将传入的 observer 对象包装为 ObserverWithState 类型，方便将**注解形式的LifecycleObserver（Java 7）和接口实现的 LifecycleObserver（Java 8）**进行状态回调时的入口统一为 `dispatchEvent()` 方法。此外，由于当添加 LifecycleObserver 时 Lifecycle 可能已经处于非 INITIALIZED 状态了，所以需要通过循环检查的方式来向 ObserverWithState 逐步下发 Event 值
 
 ```java
+	//Lifecycle 类中对 addObserver 方法添加了 @MainThread 注解，意思是该方法只能用于主线程调用
+    //所以此处不需要考虑多线程的情况
 	@Override
     public void addObserver(@NonNull LifecycleObserver observer) {
         State initialState = mState == DESTROYED ? DESTROYED : INITIALIZED;
@@ -524,7 +525,7 @@ addObserver() 函数的主要逻辑是：将传入的 observer 对象包装为 O
         ObserverWithState previous = mObserverMap.putIfAbsent(observer, statefulObserver);
 
         if (previous != null) {
-            //如果 observer 已经已经传进来过了，则不重复添加，直接返回
+            //如果 observer 之前已经传进来过了，则不重复添加，直接返回
             return;
         }
         LifecycleOwner lifecycleOwner = mLifecycleOwner.get();
@@ -534,7 +535,9 @@ addObserver() 函数的主要逻辑是：将传入的 observer 对象包装为 O
             return;
         }
 
-        //如果 isReentrance 为 true，则说明此时存在多线程同时 addObserver 的情况或者是正处于向外回调 Lifecycle.Event 的状态
+        //如果 isReentrance 为 true，则说明此时以下两种情况至少有一个成立：
+        //1. mAddingObserverCounter != 0。会出现这种情况，是由于开发者先添加了一个 LifecycleObserver ，当还在向其回调事件的过程中，在回调函数里又再次调用了 addObserver 方法添加了一个新的 LifecycleObserver
+        //2.mHandlingEvent 为 true。即此时正处于向外回调 Lifecycle.Event 的状态
         boolean isReentrance = mAddingObserverCounter != 0 || mHandlingEvent;
 
         State targetState = calculateTargetState(observer);
@@ -543,7 +546,8 @@ addObserver() 函数的主要逻辑是：将传入的 observer 对象包装为 O
         mAddingObserverCounter++;
 
         //statefulObserver.mState.compareTo(targetState) < 0 成立的话说明 State 值还没遍历到目标状态
-        //mObserverMap.contains(observer) 成立的话说明 observer 还没有并移除，因为有可能在遍历过程中 observer 就被移除了，所以这里每次循环都检查下
+        //mObserverMap.contains(observer) 成立的话说明 observer 还没有并移除
+        //因为有可能在遍历过程中开发者主动在回调函数里将 observer 给移除掉了，所以这里每次循环都检查下
         while ((statefulObserver.mState.compareTo(targetState) < 0
                 && mObserverMap.contains(observer))) {
             //将 observer 已经遍历到的当前的状态值 mState 保存下来
@@ -563,6 +567,15 @@ addObserver() 函数的主要逻辑是：将传入的 observer 对象包装为 O
         mAddingObserverCounter--;
     }
 ```
+
+向 LifecycleObserver 回调事件的过程可以用以下这张官方提供的图来展示
+
+1. 假设当前 LifecycleRegistry 的 mState 处于 RESUMED 状态，此时通过 addObserver 方法新添加的 LifecycleObserver 会被包装为 ObserverWithState，且初始化状态为 INITIALIZED。由于 RESUMED 大于INITIALIZED，ObserverWithState 就会按照 `INITIALIZED -> CREATED -> STARTED -> RESUMED ` 这样的顺序先后收到事件通知
+2. 假设当前 LifecycleRegistry 的 mState 处于 STARTED 状态。如果 LifecycleRegistry 收到 ON_RESUME 事件，mState 就需要变更为 RESUMED；如果 LifecycleRegistry 收到 ON_STOP 事件，mState 就需要变更为 CREATED；所以说，LifecycleRegistry 的 mState 会先后向不同方向迁移
+
+![](https://developer.android.google.cn/images/topic/libraries/architecture/lifecycle-states.svg)
+
+
 
 ObserverWithState 将外界传入的 LifecycleObserver 对象传给 Lifecycling 进行类型包装，将反射逻辑和接口回调逻辑都给汇总综合成一个新的 LifecycleEventObserver 对象，从而使得 Event 分发过程都统一为一个入口
 
@@ -619,7 +632,7 @@ ObserverWithState 将外界传入的 LifecycleObserver 对象传给 Lifecycling 
 2. 如果开发者自己实现的自定义 Observer 仅实现了 LifecycleEventObserver 和 FullLifecycleObserver 这两个接口当中的一个，那么也需要在有事件触发的情况下调用相应接口的对应方法
 3. 实现了通过以上两个接口来实现回调外，Google 也提供了通过注解的方法来声明生命周期回调函数，此时就只能通过反射来进行回调
 
-基于以上三点现状，如果在 LifecycleRegistry 中直接对外部传入的 Observer 来进行类型判断、接口回调、反射调用等一系列操作的话，那势必会使得 LifecycleRegistry 整个类非常的臃肿，所以 Lifecycling 的作用就是来将这一系列的逻辑给封装起来，仅仅开放一个 onStateChanged 方法即可让  LifecycleRegistry 完成整个事件分发，从而使得整个流程会更加清晰明了且职责分明
+基于以上三点现状，如果在 LifecycleRegistry 中直接对外部传入的 Observer 来进行**类型判断、接口回调、反射调用**等一系列操作的话，那势必会使得 LifecycleRegistry 整个类非常的臃肿，所以 Lifecycling 的作用就是来将这一系列的逻辑给封装起来，仅仅开放一个 onStateChanged 方法即可让  LifecycleRegistry 完成整个事件分发，从而使得整个流程会更加清晰明了且职责分明
 
 那现在就来看下 lifecycleEventObserver 方法的逻辑
 

@@ -1,0 +1,30 @@
+{
+	"title": "叶志陈",
+	"author": "叶志陈",
+	"language": "zh-hans",
+	"links": {
+		"sidebar": {
+			"我的GitHub": "https://github.com/leavesC"
+		}
+	},
+	"plugins": [
+		"github",
+		"github-buttons",
+		"back-to-top-button",
+		"splitter"
+	],
+	"pluginsConfig": {
+		"github": {
+			"url": "https://github.com/leavesC/AndroidGuide"
+		},
+		"github-buttons": {
+			"buttons": [{
+				"user": "leavesC",
+				"repo": "AndroidGuide",
+				"type": "star",
+				"size": "small",
+				"count": true
+			}]
+		}
+	}
+}

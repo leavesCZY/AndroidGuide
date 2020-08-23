@@ -130,7 +130,7 @@ public class OrderReceiver_2 extends BroadcastReceiver {
 
         //向下一优先级的Receiver传递数据
         Bundle bundle = new Bundle();
-        bundle.putString("Data", "（叶应是叶）");
+        bundle.putString("Data", "（leavesc）");
         setResultExtras(bundle);
     }
 }
@@ -231,7 +231,7 @@ public class MainActivity extends AppCompatActivity {
 02-20 22:52:30.143 6714-6714/com.example.zy.myapplication E/OrderReceiver_2: OrderReceiver_2被调用了
 02-20 22:52:30.143 6714-6714/com.example.zy.myapplication E/OrderReceiver_2: 从上一优先级的Receiver传递来的数据--（Hello）
 02-20 22:52:30.150 6714-6714/com.example.zy.myapplication E/OrderReceiver_3: OrderReceiver_3被调用了
-02-20 22:52:30.150 6714-6714/com.example.zy.myapplication E/OrderReceiver_3: 从上一优先级的Receiver传递来的数据--（叶应是叶）
+02-20 22:52:30.150 6714-6714/com.example.zy.myapplication E/OrderReceiver_3: 从上一优先级的Receiver传递来的数据--（leavesc）
 ```
 
 可以看出 Receiver 接收广播时不仅因为“**priority**”属性存在先后顺序，且 Receiver 之间也能够传递数据
@@ -501,7 +501,7 @@ public class PermissionReceiver extends BroadcastReceiver {
 
 ```java
 /**
- * Created by 叶应是叶 on 2017/2/21.
+ * Created by leavesc on 2017/2/21.
  */
 
 public class NetworkUtils {

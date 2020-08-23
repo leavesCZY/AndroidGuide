@@ -46,7 +46,7 @@ public class MyDialogFragment extends DialogFragment {
 在 ButtonDialogFragment 类中重载 **show()** 方法，传入所有需要的参数，并调用 DialogFragment 类本身的 **show(FragmentManager manager, String tag)** 方法，从而显示对话框。"tag" 参数是系统用于保存片段状态并在必要时进行恢复的唯一标记名称，该标记还允许通过调用 **findFragmentByTag()** 获取片段的句柄
 ```java
 /**
- * Created by 叶应是叶 on 2017/2/23.
+ * Created by leavesc on 2017/2/23.
  */
 
 public class ButtonDialogFragment extends DialogFragment {
@@ -86,7 +86,7 @@ public class ButtonDialogFragment extends DialogFragment {
 ```java
 public void showButtonDialogFragment(View view) {
         ButtonDialogFragment buttonDialogFragment = new ButtonDialogFragment();
-        buttonDialogFragment.show("Hi,你好", "叶应是叶", new DialogInterface.OnClickListener() {
+        buttonDialogFragment.show("Hi,你好", "leavesc", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Toast.makeText(MainActivity.this, "点击了确定 " + which, Toast.LENGTH_SHORT).show();
@@ -146,7 +146,7 @@ public class NeutralDialogFragment extends DialogFragment {
 ```java
     public void showNeutralDialogFragment(View view) {
         NeutralDialogFragment neutralDialogFragment = new NeutralDialogFragment();
-        neutralDialogFragment.show("Hi,你好", "叶应是叶", "确定~", new DialogInterface.OnClickListener() {
+        neutralDialogFragment.show("Hi,你好", "leavesc", "确定~", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {

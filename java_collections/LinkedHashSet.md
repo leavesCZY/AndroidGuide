@@ -1,3 +1,4 @@
+```java
 package java.util;
 
 public class LinkedHashSet<E>
@@ -35,3 +36,5 @@ public class LinkedHashSet<E>
     }
 
 }
+
+```

@@ -370,4 +370,3 @@ Activity 的布局文件代码如下所示：
 其实，`dispatchTouchEvent` 方法具有“记忆”功能。如果 Action_Down 事件传递给了某 ViewGroup（或者Activity），ViewGroup 默认继续向下传递交由子View进行处理，ViewGroup 会记录该事件是否被子View给消费了。那 ViewGroup 如何知道子 View 是否消费了该事件呢？如果该事件会再次向上传递给 ViewGroup 的 `onTouchEvent` 方法进行处理，那就说明子 View 没能消费掉该事件。当第二次事件（Action_Move或者Action_Up）向下传递到该 ViewGroup， ViewGroup 的 `dispatchTouchEvent` 方法会进行判断，若子 View 消费了上次的 Action_Down 事件，那么本次事件就继续向下传递交由子 View 进行处理，若上次的事件没有被子 View 所消费，那么本次的事件就不会继续向下传递了，ViewGroup 直接调用自己的 `onTouchEvent` 方法来处理该事件
 “记忆”的有效期只在单次的触摸事件中，即从Action_Down 事件开始，在 Action_Up 事件结束
 
-### 更多的学习笔记看这里：[Java_Android_Learn](https://github.com/leavesC/Java_Android_Learn)

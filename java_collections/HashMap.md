@@ -1,3 +1,4 @@
+```java
 package java.util;
 
 import java.io.IOException;
@@ -2158,3 +2159,4 @@ public class HashMap<K, V> extends AbstractMap<K, V>
     }
 
 }
+```

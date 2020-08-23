@@ -86,7 +86,7 @@ public class GenericMain {
 
         System.out.println();
 
-        User<String, Double> integerUser = new User<>("叶应是叶", 24.0);
+        User<String, Double> integerUser = new User<>("leavesc", 24.0);
         integerUser.showType();
     }
 
@@ -489,6 +489,3 @@ public class GenericMain {
 #### 7.5、对泛型异常的限制
 
 泛型类不能扩展 Throwable，意味着不能创建泛型异常类
-
-#### 我的GitHub主页： [leavesC](https://github.com/leavesC)
-#### 我的简书主页： [叶应是叶](https://www.jianshu.com/u/9df45b87cfdf)

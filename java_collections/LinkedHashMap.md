@@ -1,3 +1,4 @@
+```java
 package java.util;
 
 import java.util.function.Consumer;
@@ -479,3 +480,5 @@ public class LinkedHashMap<K,V>
     }
 
 }
+
+```

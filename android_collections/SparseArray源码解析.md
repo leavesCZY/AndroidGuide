@@ -1,6 +1,6 @@
 使用 Android Studio 作为 IDE 的开发者可能会遇到一个现象，就是在代码中如果声明了  `Map<Integer, Object>` 类型的变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，意思就是**用 SparseArray< Object > 性能更优，可以用来替代 HashMap**
 
-这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/AndroidAllGuide/blob/master/java_collections/Java集合框架源码解析之HashMap.md)
+这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/AndroidGuide/blob/master/java_collections/Java集合框架源码解析之HashMap.md)
 
 ### 一、基本概念
 
@@ -367,6 +367,6 @@ binarySearch 方法的返回值分为两种情况：
 - 数据量较大时，查找效率（二分查找法）会明显降低
 
 
-篇幅所限，这里就不粘贴处 SparseArray.java 的完整详细源码注解了，可以点击这里查看：[SparseArray.java](https://github.com/leavesC/AndroidAllGuide/blob/master/android_collections/SparseArray.java)
+篇幅所限，这里就不粘贴处 SparseArray.java 的完整详细源码注解了，可以点击这里查看：[SparseArray.java](https://github.com/leavesC/AndroidGuide/blob/master/android_collections/SparseArray.java)
 
-### 更多的学习笔记可以看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
+### 更多的学习笔记可以看这里：[AndroidGuide](https://github.com/leavesC/AndroidGuide)

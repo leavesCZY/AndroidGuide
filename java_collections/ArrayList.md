@@ -1,3 +1,4 @@
+```java
 package java.util;
 
 import java.util.function.Consumer;
@@ -1106,3 +1107,5 @@ public class ArrayList<E> extends AbstractList<E>
     }
 
 }
+
+```

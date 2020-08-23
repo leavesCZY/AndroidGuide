@@ -122,7 +122,7 @@ URI 代表了要操作的数据对象，主要包含了两部分信息：
 
 ```java
 /**
- * 作者： 叶应是叶
+ * 作者： leavesc
  * 时间： 2017/4/3 12:07
  * 描述：
  */
@@ -232,7 +232,7 @@ public class BookProvider extends ContentProvider {
         contentValues.put("userName", "叶叶");
         contentValues.put("sex", "男");
         sqLiteDatabase.insert(DbOpenHelper.USER_TABLE_NAME, null, contentValues);
-        contentValues.put("userName", "叶应是叶");
+        contentValues.put("userName", "leavesc");
         contentValues.put("sex", "男");
         sqLiteDatabase.insert(DbOpenHelper.USER_TABLE_NAME, null, contentValues);
         sqLiteDatabase.setTransactionSuccessful();
@@ -350,7 +350,7 @@ public class MainActivity extends AppCompatActivity {
 04-03 16:54:34.010 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:4  BookName:叫什么名字好呢
 04-03 16:54:34.018 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:1  UserName:叶  Sex:女
 04-03 16:54:34.018 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:2  UserName:叶叶  Sex:男
-04-03 16:54:34.018 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:3  UserName:叶应是叶  Sex:男
+04-03 16:54:34.018 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:3  UserName:leavesc  Sex:男
 04-03 16:54:34.018 25151-25151/com.czy.contentproviderdemo E/MainActivity: ID:4  UserName:叶叶叶  Sex:男
 ```
 
@@ -408,7 +408,7 @@ public void showContacts(View view) {
         values.clear();
         values.put(ContactsContract.Data.RAW_CONTACT_ID, rawContactId);
         values.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, "叶应是叶");
+        values.put(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, "leavesc");
         getContentResolver().insert(android.provider.ContactsContract.Data.CONTENT_URI, values);
         //往data表入电话数据
         values.clear();

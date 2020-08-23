@@ -1,6 +1,6 @@
 > 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidAllGuide
+> 项目主页：https://github.com/leavesC/AndroidGuide
 
 因为数组与链表是 Java 集合框架中很多地方都涉及到的知识点，此篇文章作为开头，就先对数组与链表这两种数据结构进行介绍
 
@@ -31,5 +31,3 @@
 5. 链表不需事先申请内存空间，根据实际使用情况可以进行动态申请
 
 在 HashMap 中，其底层在存放数据时就使用到了链表
-
-#### 更详细的源码解析可以看这里：[AndroidAllGuide](https://github.com/leavesC/AndroidAllGuide)
