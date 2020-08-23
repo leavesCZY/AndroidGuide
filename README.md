@@ -10,4 +10,6 @@
 
 ### 三、在哪里看？
 
-使用 GitBook 食用最佳，[点击这里开始阅读吧！]()
+使用 GitBook 食用最佳，[点击这里开始阅读吧！](https://leavesc.gitbook.io/androidguide/)
+
+![](https://s1.ax1x.com/2020/08/23/dB3tQP.png)
