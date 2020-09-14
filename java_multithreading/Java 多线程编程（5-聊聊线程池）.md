@@ -138,7 +138,7 @@ ThreadPoolExecutor 中参数最多的一个构造函数的声明如下所示：
 	//停止状态，当调用 shutdownNow() 方法后处于这个状态
 	//任务队列中的任务也不再处理且作为方法返回值返回，此后不再接受新任务
     private static final int STOP       =  1 << COUNT_BITS;
-	//TERMINATED 之前的临时状态，当线程都被回收后就会处于这个状态
+	//TERMINATED 之前的临时状态，当线程都被回收且任务队列已清空后就会处于这个状态
     private static final int TIDYING    =  2 << COUNT_BITS;
 	//终止状态，在处于 TIDYING 状态后会立即调用 terminated() 方法，调用完成就会马上转到此状态
     private static final int TERMINATED =  3 << COUNT_BITS;
@@ -151,7 +151,7 @@ ThreadPoolExecutor 中参数最多的一个构造函数的声明如下所示：
 实际上 ThreadPoolExecutor 就是通过将一个 32 位的 int 类型变量分割为两段，**高 3 位用来表示线程池的当前生命周期状态，低 29 位就拿来表示线程池的当前线程数量**，从而做到用一个变量值来维护两份数据，这个变量值就是 `ctl`。从 `ctl` 的初始值就可以知道线程池的初始生命周期状态( runState )是 `RUNNING`，初始线程数量 ( workerCount )是 0。这种用一个变量去存储两个值的做法，可以避免在做相关决策时出现不一致的情况，且不必为了维护两者的一致而使用锁，后续需要获取线程池的**当前生命周期状态**和**线程数量**的时候，也可以直接采用位运算的方式获取，在速度上相比基本运算会快很多
 
 ```java
-private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+	private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
 ```
 
 ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
@@ -355,12 +355,12 @@ ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
 
 上面所讲的线程其实指的是 ThreadPoolExecutor 的内部类 Worker ，Worker 内部包含了一个 Thread 对象，所以本文就把 Worker 实例也看做线程来对待
 
-Worker 继承于 AbstractQueuedSynchronizer，意味着 Worker 就相当于一个锁。之没有使用可重入锁 ReentrantLock，为的就是实现不可重入的特性来辅助判断线程是否处于执行任务的状态：在开始执行单个任务前进行加锁，在任务执行结束后解锁，以便在后续通过判断 Worker 是否处于锁定状态来得知其是否处于执行阶段
+Worker 继承于 AbstractQueuedSynchronizer，意味着 Worker 就相当于一个锁。之没有使用 synchronized 或者 ReentrantLock，是因为它们都是**可重入锁**，Worker 继承于 AQS 为的就是自定义实现**不可重入**的特性来辅助判断线程是否处于执行任务的状态：在开始执行任务前进行加锁，在任务执行结束后解锁，以便在后续通过判断 Worker 是否处于锁定状态来得知其是否处于执行阶段
 
-1. Worker 在开始执行单个任务前会执行 `Worker.lock()` ，表明线程正在执行任务
-2. 如果 Worker 处于锁定状态，则不应该对其进行中断
-3. Worker 如果处于非锁定状态，说明其当前并非正在执行任务，此时才允许对其进行中断
-4. 线程池在执行 `shutdown()` 方法或 `tryTerminate()` 方法时会调用 `interruptIdleWorkers()` 方法来中断空闲的线程，`interruptIdleWorkers()` 方法会使用`Worker.tryLock()` 方法来判断线程是否是处于空闲状态，是的话才可以进行回收
+1. Worker 在开始执行任务前会执行 `Worker.lock()` ，表明线程正在执行任务
+2. 如果 Worker 处于锁定状态，则不应该对其进行中断，避免任务执行一半就被打断
+3. 如果 Worker 处于非锁定状态，说明其当前是处于阻塞获取任务的状态，此时才允许对其进行中断
+4. 线程池在执行 `shutdown()` 方法或 `shutdownNow()` 方法时会调用 `interruptIdleWorkers()` 方法来回收空闲的线程，`interruptIdleWorkers()` 方法会使用`Worker.tryLock()` 方法来尝试获取锁，由于 Worker 是不可重入锁，所以如果锁获取成功就说明线程处于空闲状态，此时才可以进行回收
 
 Worker 同时也是 Runnable 类型，`thread` 是通过 `getThreadFactory().newThread(this)` 来创建的，即将 Worker 本身作为构造参数传给 Thread 进行初始化，所以在 `thread` 启动的时候 Worker 的 `run()` 方法就会被执行
 
@@ -410,6 +410,7 @@ private final class Worker
             return getState() != 0;
         }
 
+    	//只有在 state 值为 0 的时候才能获取到锁，以此实现不可重入的特性
         protected boolean tryAcquire(int unused) {
             if (compareAndSetState(0, 1)) {
                 setExclusiveOwnerThread(Thread.currentThread());
@@ -449,6 +450,10 @@ private final class Worker
         Thread wt = Thread.currentThread();
         Runnable task = w.firstTask;
         w.firstTask = null;
+
+        //因为 Worker 的默认值是 -1，而 Worker 的 interruptIfStarted() 方法只有在 state >=0 的时候才允许进行中断
+        //所以这里调用 unlock() 并不是为了解锁，而是为了让 Worker 的 state 值变为 0，让 Worker 允许外部进行中断
+        //所以，即使客户端调用了 shutdown 或者 shutdownNow 方法，在 Worker 线程还未执行到这里前，无法在 interruptWorkers() 方法里发起中断请求
         w.unlock(); // allow interrupts
         
         //用于标记是否由于被打断而非正常结束导致的线程终止
@@ -947,7 +952,7 @@ ThreadPoolExecutor 提供了多个配置参数以便满足多种不同的需求�
 可以通过 ThreadPoolExecutor 的以下几个属性来监控线程池的运行状态：
 
 1. taskCount：线程池已执行结束（不管成功与否）的任务数加上任务队列中目前包含的任务数
-2. completedTaskCount：线程池已执行结束（不管成功与否）的任务数，小于或等于 taskCount
+2. completedTaskCount：线程池已执行结束（不管成功与否）的任务数，小于等于 taskCount
 3. largestPoolSize：线程池曾经创建过的最大线程数量。如果该数值等于 maximumPoolSize 那就说明线程池曾经满过
 4. getPoolSize()：获取当前线程总数
 5. getActiveCount()：获取当前正在执行任务的线程总数
