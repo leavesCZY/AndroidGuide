@@ -28,11 +28,11 @@
     * [SavedStateHandle 源码解析](jetpack/SavedStateHandle源码详解.md)
 
 * [Java 多线程]()
-	* [入门筑基](java_multithreading/Java 多线程编程（1-入门筑基）.md)
-	* [异步中包含同步](java_multithreading/Java 多线程编程（2-异步中包含同步）.md)
-	* [线程活性故障有哪些](java_multithreading/Java 多线程编程（3-线程活性故障有哪些）.md)
-	* [“锁”事碎碎念](java_multithreading/Java 多线程编程（4-“锁”事碎碎念）.md)
-	* [聊聊线程池](java_multithreading/Java 多线程编程（5-聊聊线程池）.md)
+	* [入门筑基](java_multithreading/1-入门筑基.md)
+	* [异步中包含同步](java_multithreading/2-异步中包含同步.md)
+	* [线程活性故障有哪些](java_multithreading/3-线程活性故障有哪些.md)
+	* [“锁”事碎碎念](java_multithreading/4-“锁”事碎碎念.md)
+	* [聊聊线程池](java_multithreading/5-聊聊线程池.md)
 
 * [Android 多线程]()
 	* [Handler、Looper、MessageQueue 源码解析](android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
