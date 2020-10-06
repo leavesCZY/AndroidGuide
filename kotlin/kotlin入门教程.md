@@ -1,31 +1,30 @@
 ### 一、Hello World
 
-按照国际惯例，学习一门新的语言通常都是从 Hello World 开始的，在这里也不例外
+按照国际惯例，学习一门新的语言通常都是要从打印 Hello World 开始的
 
 ```kotlin
 package main
 
-fun main(args: Array<String>) {
-    println("Hello World")
+fun main() {
+    val msg: String = "Hello World"
+    println(msg)
 }
 ```
 
-从这个简单的函数就可以列出 kotlin 和 Java 的几点不同
+从这个简单的函数就可以列出 kotlin 和 Java 的几个不同点
 
 1. 函数可以定义在文件的最外层，不需要把它放在类中
 2. 用关键字 **fun** 来声明一个函数
-3. 参数类型写在变量名之后，这有助于在类型自动推导时省略类型声明
-4. 数组就是类。和 Java 不同，kotlin 没有声明数组类型的特殊语法
-5. 使用 `println` 代替了 `System.out.println` ，这是 kotlin 标准库提供的对 Java 标准库函数的封装
+3. 可以省略 `main` 方法的参数
+4. 参数类型写在变量名之后，这有助于在类型自动推导时省略类型声明
+5. 使用 `println` 代替了 `System.out.println` ，这是 kotlin 标准库提供的对 Java 标准库函数的简易封装
 6. 可以省略代码结尾的分号
-
-此外，kotlin 的最新版本已经可以省略 `main` 方法的参数了
 
 ### 二、Package
 
-kotlin 文件都以一条 **package** 语句开头，文件中定义的所有声明（类、函数和属性）都会被放到这个包中。如果其他文件中定义的声明也有相同的包，这个文件可以直接使用它们，如果包不相同则需要导入它们
+kotlin 文件都以 **package** 开头，同个文件中定义的所有声明（类、函数和属性）都会被放到这个包中。同个包中的声明可以直接使用，不同包的声明需要导入后使用
 
-包的声明应处于源文件顶部，import 语句紧随其后
+包的声明要放在文件顶部，import 语句紧随其后
 
 ```kotlin
 package base
@@ -34,7 +33,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 ```
 
-kotlin 不区分导入的是类还是函数，允许使用 `import` 关键字导入任何种类的声明。此外，也可以在包名称后加上 **.*** 来导入特定包中定义的所有声明，这不仅会让包中定义的类可见，也会让顶层函数和属性可见
+kotlin 不区分导入的是类还是函数，可以使用 `import` 关键字导入任何种类的声明。此外也可以在包名称后加上 **.*** 来导入包中定义的所有声明，从而让包中定义的类、顶层函数、和属性都可以直接引用
 
 ```kotlin
 package learn.package2
@@ -75,7 +74,7 @@ fun main() {
 }
 ```
 
-Java 语言规定类要放到和包结构**匹配**的文件夹目录结构中，而 kotlin 允许把多个类放到同一个文件中，文件名也可以任意选择。kotlin 也没有对磁盘上源文件的布局强加任何限制，包层级结构不需要遵循目录层级结构 ,但最好还是遵循 Java 的目录布局并根据包结构把源码文件放到相应的目录中
+Java 语言规定类要放到和包结构**匹配**的文件夹目录结构中，且文件名必须和类名相同。而 kotlin 允许把多个类放到同一个文件中，文件名也可以任意选择。kotlin 也没有文件夹目录施加任何限制，包层级结构不需要遵循同样的目录层级结构 ,但 kotlin 官方还是建议根据包声明把源码文件放到相应的目录中
 
 如果包名出现命名冲突，可以使用  **as  关键字**在本地重命名冲突项来消歧义
 
@@ -86,7 +85,7 @@ import learn.package2.Point as PointTemp //PointTemp 可以用来表示 learn.pa
 
 kotlin 中也有一个类似的概念可以用来重命名现有类型，叫做类型别名。类型别名用于为现有类型提供一个替代名称，如果类型名称比较长，就可以通过引入一个较短或者更为简略的名称来方便记忆
 
-类型别名不会引入新的类型，依然相应其底层类型，所以在下述代码中输出的 class 类型是一致的
+类型别名不会引入新的类型，依然对应其底层类型，所以在下述代码中输出的 class 类型是一致的
 
 ```kotlin
 class Base {
@@ -116,7 +115,7 @@ fun main() {
 
 不可变变量在赋值之后就不能再去改变它的状态了，因此不可变变量可以说是线程安全的，因为它们无法改变，所有线程访问到的对象都是同一个，因此也不需要去做访问控制。开发者应当尽可能地使用不可变变量，这样可以让代码更加接近函数式编程风格
 
-编程领域中也推崇一种开发原则：尽可能使用 val，不可变对象及纯函数来设计程序。这样可以尽量避免副作用带来的影响
+编程领域也推崇一种开发原则：尽可能使用 val，不可变对象及纯函数来设计程序。这样可以尽量避免副作用带来的影响
 
 ```kotlin
 fun main() {
@@ -129,7 +128,7 @@ fun main() {
 }
 ```
 
-在声明变量时我们通常不需要显式指明变量的类型，这可以由编译器根据上下文自动推导出来。如果只读变量在声明时没有初始值，则必须指明变量类型，且在使用前必须确保在各个分支条件下变量可以被初始化，否则编译期会报异常
+在声明变量时我们通常不需要显式指明变量的类型，这可以由编译器根据上下文自动推导出来。如果只读变量在声明时没有初始的默认值，则必须指明变量类型，且在使用前必须确保在各个分支条件下变量可以被初始化，否则编译器就会报异常
 
 ```kotlin
 fun main() {
@@ -146,7 +145,7 @@ fun main() {
 }
 ```
 
-#### 3.1、基本数据类型
+#### 1、基本数据类型
 
 与 Java 不同，kotlin 并不区分基本数据类型和它的包装类，在 kotlin 中一切都是对象，可以在任何变量上调用其成员函数和属性。kotlin 没有像 Java 中那样的原始基本类型，但 **byte、char、integer、float 或者 boolean** 等类型仍然有保留，但是全部都作为对象存在
 
@@ -201,9 +200,9 @@ fun main() {
     println(intValue_2 === intValue_3)
 ```
 
-> 如果 intValue_1 的值是100，就会发现 intValue_2 === intValue_3 的比较结果是 true，这就涉及到 Java 对包装类对象的重复使用问题了
+> 如果 intValue_1 的值是100，就会发现 intValue_2 === intValue_3 的比较结果是 true，这就涉及到 Java 对包装类对象的复用问题了
 
-#### 3.2、字符串
+#### 2、字符串
 
 kotlin 与 Java 一样用  String  类型来表示字符串，字符串是不可变的，可以使用索引运算符访问`[]` 来访问包含的单个字符，也可以用  for  循环来迭代字符串，此外也可以用 + 来连接字符串
 
@@ -233,7 +232,7 @@ kotlin 支持在字符串字面值中引用局部变量，只需要在变量名�
     println(price)  //$100.99
 ```
 
-#### 3.3、数组
+#### 3、数组
 
 kotlin 中的数组是带有类型参数的类，其元素类型被指定为相应的类型参数，使用  Array  类来表示，  Array  类定义了  get  与  set  函数（按照运算符重载约定这会转变为  [ ]  ）以及  size  属性等
 
@@ -277,7 +276,7 @@ kotlin 中的数组是带有类型参数的类，其元素类型被指定为相�
     val charArray = charArrayOf('H', 'e', 'l', 'l', 'o')
 ```
 
-#### 3.4、Any 和 Any?
+#### 4、Any 和 Any?
 
 Any 类型是 kotlin 所有非空类型的超类型，包括像 Int 这样的基本数据类型
 
@@ -294,7 +293,7 @@ println(any.javaClass) //class java.lang.Integer
 val any: Any? = null
 ```
 
-#### 3.5、Unit
+#### 5、Unit
 
 kotlin 中的 Unit 类型类似于 Java 中的 void，可以用于函数没有返回值时的情况
 
@@ -326,11 +325,11 @@ class NoResultClass : Test<Unit> {
 }
 ```
 
-#### 3.6、Nothing
+#### 6、Nothing
 
 Nothing 类型没有任何值，只有被当做函数返回值使用，或者被当做泛型函数返回值的类型参数使用时才会有意义，可以用 Nothing 来表示一个函数不会被正常终止，从而帮助编译器对代码进行诊断
 
-编译器知道返回值为 Nothing 类型的函数从不正常终止，所以编译器会把 name1 的类型推断为非空，因为 name1 在为 null 时的分支处理会始终抛出异常
+编译器知道返回值为 Nothing 类型的函数从不会正常终止，所以编译器会把 name1 的类型推断为非空，因为 name1 在为 null 时的分支处理会始终抛出异常
 
 ```kotlin
 data class User(val name: String?)
@@ -360,9 +359,7 @@ kotlin 中的函数以关键字 fun 作为开头，函数名称紧随其后，�
         fun getNameLastChar(): Char {
             return name.get(name.length - 1)
         }
-```
 
-```kotlin
         //带有两个不同类型的参数，一个是 String 类型，一个是 Int 类型
         //返回值为 Int 类型
         fun test1(str: String, int: Int): Int {
@@ -395,7 +392,7 @@ kotlin 中的函数以关键字 fun 作为开头，函数名称紧随其后，�
         fun test(str: String, int: Int) = println(str.length + int)
 ```
 
-#### 4.1、命名参数
+#### 1、命名参数
 
 为了增强代码的可读性，kotlin 允许我们使用命名参数，即在调用某函数的时候，可以将函数参数名一起标明，从而明确地表达该参数的含义与作用，但是在指定了一个参数的名称后，之后的所有参数都需要标明名称
 
@@ -412,7 +409,7 @@ fun compute(index: Int, value: String) {
 }
 ```
 
-#### 4.2、默认参数值
+#### 2、默认参数值
 
 可以在声明函数的时候指定参数的默认值，从而避免创建重载的函数
 
@@ -456,7 +453,7 @@ fun compute(name: String = "leavesC", age: Int, value: Int = 100) {
 }
 ```
 
-#### 4.3、可变参数
+#### 3、可变参数
 
 可变参数可以让我们把任意个数的参数打包到数组中传给函数，kotlin 的语法相比 Java 有所不同，改为通过使用 varage 关键字声明可变参数
 
@@ -488,7 +485,7 @@ fun compute(vararg name: String) {
 }
 ```
 
-#### 4.4、局部函数
+#### 4、局部函数
 
 kotlin 支持在函数中嵌套函数，被嵌套的函数称为局部函数
 
@@ -510,7 +507,7 @@ fun compute(name: String, country: String) {
 
 ### 五、表达式和条件循环
 
-#### 5.1、语句和表达式
+#### 1、语句和表达式
 
 这里需要先区分“语句”和“表达式”这两个概念。语句是可以单独执行，能够产生实际效果的代码，表现为赋值逻辑、打印操作、流程控制等形式，Java 中的流程控制（if，while，for）等都是语句。表达式可以是一个值、变量、常量、操作符、或它们之间的组合，表达式可以看做是包含返回值的语句
 
@@ -527,14 +524,16 @@ fun compute(name: String, country: String) {
 
 ```kotlin
 1       //字面表达式，返回 1
-++1     //自增，返回 2
+
+++1     //也属于表达式，自增会返回 2
+
 //与 Java 不同，kotlin 中的 if 是作为表达式存在的，其可以拥有返回值
 fun getLength(str: String?): Int {
     return if (str.isNullOrBlank()) 0 else str.length
 }
 ```
 
-#### 5.2、If 表达式
+#### 2、If 表达式
 
 if 的分支可以是代码块，最后的表达式作为该块的返回值
 
@@ -566,7 +565,7 @@ if 的分支可以是代码块，最后的表达式作为该块的返回值
 
 如果将 if 作为表达式而不是语句（例如：返回它的值或者把它赋给变量），该表达式需要有 else 分支
 
-#### 5.3、when 表达式
+#### 3、when 表达式
 
 when 表达式与 Java 中的 **switch/case** 类似，但是要强大得多。when 既可以被当做表达式使用也可以被当做语句使用，when 将参数和所有的分支条件顺序比较直到某个分支满足条件，然后它会运行右边的表达式。如果 when 被当做表达式来使用，符合条件的分支的值就是整个表达式的值，如果当做语句使用， 则忽略个别分支的值。与 Java 的 switch/case 不同之处是 When 表达式的参数可以是任何类型，并且分支也可以是一个条件
 
@@ -618,7 +617,7 @@ unknown
     }
 ```
 
-#### 5.4、for 循环
+#### 4、for 循环
 
 和 Java 中的 for 循环最为类似的形式是
 
@@ -656,7 +655,7 @@ unknown
     }
 ```
 
-#### 5.5、while 和 do/while 循环
+#### 5、while 和 do/while 循环
 
 while 和 do/while 与 Java 中的区别不大
 
@@ -678,7 +677,7 @@ while 和 do/while 与 Java 中的区别不大
     } while (index < list.size)
 ```
 
-#### 5.6、返回和跳转
+#### 6、返回和跳转
 
 kotlin 有三种结构化跳转表达式：
 
@@ -812,9 +811,9 @@ fun fun5() {
 
 ### 六、区间
 
-Ranges 表达式使用一个 **..**  操作符来声明一个闭区间，它被用于定义实现了一个 RangTo  方法
+Ranges 表达式使用一个 **..**  操作符来声明一个闭区间，它被用于定义实现一个 RangTo 方法
 
-以下三种声明形式是等价的
+以下三种声明方式都是等价的
 
 ```kotlin
     var index = 5
@@ -834,7 +833,7 @@ Ranges 表达式使用一个 **..**  操作符来声明一个闭区间，它被�
 
 数字类型的 ranges 在被迭代时，编译器会将它们转换为与 Java 中使用 index 的 for 循环的相同字节码的方式来进行优化
 
-Ranges 默认会自增长，所以如果像以下的代码就不会被执行
+Ranges 默认会自增长，所以像以下的代码就不会被执行
 
 ```kotlin
     for (index in 10..0) {
@@ -883,7 +882,7 @@ Ranges 默认会自增长，所以如果像以下的代码就不会被执行
 
 ### 七、修饰符
 
-#### 7.1、final 和  oepn
+#### 1、final 和  oepn
 
 kotlin 中的类和方法默认都是 final 的，即不可继承的，如果想允许创建一个类的子类，需要使用 open 修饰符来标识这个类，此外，也需要为每一个希望被重写的属性和方法添加 open 修饰符
 
@@ -931,27 +930,25 @@ open class Button : View() {
 }
 ```
 
-#### 7.2、public
+#### 2、public
 
 public 修饰符是限制级最低的修饰符，是默认的修饰符。如果一个定义为 public  的成员被包含在一个 private  修饰的类中，那么这个成员在这个类以外也是不可见的
 
-#### 7.3、protected
+#### 3、protected
 
 protected 修饰符只能被用在类或者接口中的成员上。在 Java 中，可以从同一个包中访问一个 protected 的成员，但对于 kotlin 来说，protected 成员只在该类和它的子类中可见。此外，protected 不适用于顶层声明
 
-#### 7.4、internal
+#### 4、internal
 
-一个定义为 internal 的包成员，对其所在的整个 module 可见。如果它是一个其它领域的成员，它就需要依赖那个领域的可见性了。比如，如果我们写了一个 private  类，那么它的 internal 修饰的函数的可见性就会限制于它所在的这个类的可见性
-
-我们可以访问同一个 module  中的 internal  修饰的类，但是其它 module  是访问不到该 internal  类的，该修饰符可用于对外发布的开源库，将开源库中不希望被外部引用的代码设为 internal 权限，可避免对外部引用库造成混淆
+一个定义为 internal 的包成员，对其所在的整个 module 可见，但对于其它 module 而言就是不可见的了。例如，假设我们想要发布一个开源库，库中包含某个类，我们希望这个类对于库本身是全局可见的，但对于外部使用者来说它不能被引用到，此时就可以选择将其声明为 internal 的来实现这个目的
 
 > 根据 Jetbrains 的定义，一个 module  应该是一个单独的功能性的单位，可以看做是一起编译的 kotlin 文件的集合，它应该是可以被单独编译、运行、测试、debug 的。相当于在 Android Studio 中主工程引用的 module，Eclipse 中在一个 workspace 中的不同的 project
 
-#### 7.5、private
+#### 5、private
 
 private  修饰符是限制级最高的修饰符，kotlin 允许在顶层声明中使用 private 可见性，包括类、函数和属性，这表示只在自己所在的文件中可见，所以如果将一个类声明为 private，就不能在定义这个类之外的地方中使用它。此外，如果在一个类里面使用了 private  修饰符，那访问权限就被限制在这个类里面，继承这个类的子类也不能使用它。所以如果类、对象、接口等被定义为 private，那么它们只对被定义所在的文件可见。如果被定义在了类或者接口中，那它们只对这个类或者接口可见
 
-#### 7.6、总结
+#### 6、总结
 
 | 修饰符         | 类成员       | 顶层声明     |
 | -------------- | ------------ | ------------ |
@@ -960,11 +957,9 @@ private  修饰符是限制级最高的修饰符，kotlin 允许在顶层声明�
 | protected      | 子类中可见   |              |
 | private        | 类中可见     | 文件中可见   |
 
-
-
 ### 八、空安全
 
-#### 8.1、可空性
+#### 1、可空性
 
 在 kotlin 中，类型系统将一个引用分为可以容纳  null （可空引用）或者不能容纳 null（非空引用）两种类型。 例如，String 类型的常规变量不能指向 null 
 
@@ -992,7 +987,7 @@ fun check(name: String?): Boolean {
 }
 ```
 
-正确的做法事显式地进行 null 检查
+正确的做法是显式地进行 null 检查
 
 ```kotlin
 fun check(name: String?): Boolean {
@@ -1003,7 +998,7 @@ fun check(name: String?): Boolean {
 }
 ```
 
-#### 8.2、安全调用运算符：?.
+#### 2、安全调用运算符：?.
 
 安全调用运算符：`?.` 允许把一次 null 检查和一次方法调用合并为一个操作，如果变量值非空，则方法或属性会被调用，否则直接返回 null
 
@@ -1023,7 +1018,7 @@ fun check(name: String?) {
 }
 ```
 
-#### 8.3、Elvis 运算符：?:
+#### 3、Elvis 运算符：?:
 
 Elvis 运算符：`?:` 用于替代 `?.` 直接返回默认值 null 的情况，Elvis 运算符接收两个运算数，如果第一个运算数不为 null ，运算结果就是其运算结果值，如果第一个运算数为 null ，运算结果就是第二个运算数
 
@@ -1043,7 +1038,7 @@ fun check(name: String?) {
 }
 ```
 
-#### 8.4、安全转换运算符：as?
+#### 4、安全转换运算符：as?
 
 安全转换运算符：`as?` 用于把值转换为指定的类型，如果值不适合该类型则返回 null
 
@@ -1054,7 +1049,7 @@ fun check(any: Any?) {
 }
 ```
 
-#### 8.5、非空断言：!!
+#### 5、非空断言：!!
 
 非空断言用于把任何值转换为非空类型，如果对 null 值做非空断言，则会抛出异常
 
@@ -1072,7 +1067,7 @@ fun check(name: String?) {
 }
 ```
 
-#### 8.6、可空类型的扩展
+#### 6、可空类型的扩展
 
 为可空类型定义扩展函数是一种更强大的处理 null 值的方式，可以允许接收者为 null 的调用，并在该函数中处理 null ，而不是在确保变量不为 null 之后再调用它的方法
 
@@ -1095,13 +1090,13 @@ public inline fun CharSequence?.isNullOrEmpty(): Boolean {
 }
 ```
 
-#### 8.7、平台类型
+#### 7、平台类型
 
 平台类型是 kotlin 对 java 所作的一种平衡性设计。kotlin 将对象的类型分为了可空类型和不可空类型两种，但 java 平台的一切对象类型均为可空的，当在 kotlin 中引用 java 变量时，如果将所有变量均归为可空类型，最终将多出许多 null 检查；如果均看成不可空类型，那么就很容易就写出忽略了NPE 风险的代码。为了平衡两者，kotlin 引入了平台类型，即当在 kotlin 中引用 java 变量值时，既可以将之看成可空类型，也可以将之看成不可空类型，由开发者自己来决定是否进行 null 检查
 
 ### 九、类型的检查与转换
 
-#### 9.1、类型检查
+#### 1、类型检查
 
 **is 与 !is** 操作符用于在运行时检查对象是否符合给定类型：
 
@@ -1127,36 +1122,9 @@ fun parserType(value: Any) {
 }
 ```
 
-#### 9.2、智能转换
+同时，is 操作符也附带了一个智能转换功能。在许多情况下，不需要在 kotlin 中使用显式转换操作符，因为编译器跟踪不可变值的 is 检查以及显式转换，并在需要时自动插入安全的转换
 
-在许多情况下，不需要在 kotlin 中使用显式转换操作符，因为编译器跟踪不可变值的 is 检查以及显式转换，并在需要时自动插入安全的转换
-
-例如，对于以下例子来说，当判断 value 为 String 类型通过时，就可以直接将 value 当做 String 类型变量并调用其内部属性
-
-```kotlin
-fun main() {
-    val strValue = "leavesC"
-    parserType(strValue) //value is String , length : 7
-
-    val intValue = 100
-    parserType(intValue) //value is Int , toLong : 100
-
-    val doubleValue = 100.22
-    parserType(doubleValue) //value !is Long
-
-    val longValue = 200L
-    parserType(longValue) //unknown
-}
-
-fun parserType(value: Any) {
-    when (value) {
-        is String -> println("value is String , length : ${value.length}")
-        is Int -> println("value is Int , toLong : ${value.toLong()}")
-        !is Long -> println("value !is Long")
-        else -> println("unknown")
-    }
-}
-```
+例如，在上面的例子中，当判断 value 为 String 类型通过时，就可以直接将 value 当做 String 类型变量并调用其内部属性，这个过程就叫做智能转换
 
 编译器会指定根据上下文环境，将变量智能转换为合适的类型
 
@@ -1176,7 +1144,7 @@ fun parserType(value: Any) {
     }
 ```
 
-#### 9.3、不安全的转换操作符
+#### 2、不安全的转换操作符
 
 如果转换是不可能的，转换操作符 `as` 会抛出一个异常。因此，我们称之为不安全的转换操作符
 
@@ -1208,7 +1176,7 @@ fun parserType(value: Any) {
     val y: String? = x as String?
 ```
 
-#### 9.4、安全的转换操作符
+#### 3、安全的转换操作符
 
 可以使用安全转换操作符 as? 来避免在转换时抛出异常，它在失败时返回 null
 
@@ -1219,11 +1187,9 @@ fun parserType(value: Any) {
 
 尽管以上例子 as? 的右边是一个非空类型的 String，但是其转换的结果是可空的
 
-
-
 ### 十、类
 
-#### 10.1、基本概念
+#### 1、基本概念
 
 类的概念就是把数据和处理数据的代码封装成一个单一的实体。在 Java 中，数据存储在一个私有字段中，通过提供访问器方法：**getter 和 setter** 来访问或者修改数据
 
@@ -1262,7 +1228,7 @@ kotlin 也使用关键字 **class** 来声明类，类声明由类名、类头�
 
 kotlin 区分了**主构造方法（在类体外部声明）和次构造方法（在类体内部声明）**，一个类可以有一个主构造函数和多个次构造函数，此外也允许在初始化代码块中 `init` 添加额外的初始化逻辑
 
-#### 10.2、主构造函数
+#### 2、主构造函数
 
 主构造函数是类头的一部分，跟在类名（和可选的类型参数）后，主构造函数的参数可以是可变的（var）或只读的（val）
 
@@ -1332,7 +1298,7 @@ fun main() {
 }
 ```
 
-#### 10.3、次构造函数
+#### 3、次构造函数
 
 类也可以声明包含前缀 constructor 的次构造函数。如果类有一个主构造函数，每个次构造函数都需要直接委托给主构造函数或者委托给另一个次构造函数以此进行间接委托，用 this 关键字来进行指定即可
 
@@ -1373,7 +1339,7 @@ fun main() {
 
 初始化块中的代码实际上会成为主构造函数的一部分，委托给主构造函数会作为次构造函数的第一条语句，因此所有初始化块中的代码都会在次构造函数体之前执行。即使该类没有主构造函数，这种委托仍会隐式发生，并且仍会执行初始化块。如果一个非抽象类没有声明任何（主或次）构造函数，会默认生成一个不带参数的公有主构造函数
 
-#### 10.4、属性
+#### 4、属性
 
 在 Java 中，字段和其访问器的组合被称作属性。在 kotlin 中，属性是头等的语言特性，完全替代了字段和访问器方法。在类中声明一个属性和声明一个变量一样是使用 val 和 var 关键字。val 变量只有一个 getter ，var 变量既有 getter 也有 setter
 
@@ -1393,7 +1359,7 @@ class User() {
 }
 ```
 
-#### 10.5、自定义访问器
+#### 5、自定义访问器
 
 访问器的默认实现逻辑很简单：创建一个存储值的字段，以及返回属性值的 getter 和更新属性值的 setter。如果需要的话，也可以自定义访问器
 
@@ -1440,7 +1406,7 @@ class Point(val x: Int, val y: Int) {
 }
 ```
 
-#### 10.6、延迟初始化
+#### 6、延迟初始化
 
 一般地，非空类型的属性必须在构造函数中初始化，但像使用了 Dagger2 这种依赖注入框架的项目来说就十分的不方便了，为了应对这种情况，可以用 lateinit 修饰符来标记该属性，用于告诉编译器该属性会在稍后的时间被初始化
 
@@ -1470,9 +1436,9 @@ Exception in thread "main" kotlin.UninitializedPropertyAccessException: lateinit
 
 ### 十一、类的分类
 
-#### 11.1、抽象类
+#### 1、抽象类
 
-声明为 abstract 的类内部可以包含没有实现体的成员方法，且该成员方法也用 abstract 标记，这种类称为抽象类，包含的没有实现体的方法称为抽象方法
+声明为 abstract 的类内部可以包含没有实现体的成员方法，且该成员方法也用 abstract 标记，这种类称为抽象类，没有实现体的方法就称为抽象方法
 
 此外，我们并不需要用 open 标注一个抽象类或者抽象方法，因为这是默认声明的
 
@@ -1488,7 +1454,7 @@ class Derived : BaseClass() {
 }
 ```
 
-#### 11.2、数据类
+#### 2、数据类
 
 数据类是一种非常强大的类，可以避免重复创建 Java 中的用于保存状态但又操作非常简单的 POJO 的模版代码，它们通常只提供了用于访问它们属性的简单的 getter 和 setter
 
@@ -1629,7 +1595,7 @@ fun main() {
 }
 ```
 
-#### 11.3、密封类
+#### 3、密封类
 
 Sealed 类（密封类）用于对类可能创建的子类进行限制，用 Sealed 修饰的类的**直接子类**只允许被定义在 Sealed 类所在的文件中（密封类的间接继承者可以定义在其他文件中），这有助于帮助开发者掌握父类与子类之间的变动关系，避免由于代码更迭导致的潜在 bug，且密封类的构造函数只能是 private 的
 
@@ -1670,7 +1636,7 @@ fun check(view: View): Boolean {
 }
 ```
 
-#### 11.4、枚举类
+#### 4、枚举类
 
 kotlin 也提供了枚举的实现，相比 Java 需要多使用 class 关键字来声明枚举
 
@@ -1729,37 +1695,7 @@ fun main() {
 }
 ```
 
-#### 11.5、匿名内部类
-
-使用**对象表达式**来创建匿名内部类实例
-
-```kotlin
-interface OnClickListener {
-
-    fun onClick()
-
-}
-
-class View {
-
-    fun setClickListener(clickListener: OnClickListener) {
-
-    }
-
-}
-
-fun main() {
-    val view = View()
-    view.setClickListener(object : OnClickListener {
-        override fun onClick() {
-
-        }
-
-    })
-}
-```
-
-#### 11.6、嵌套类
+#### 5、嵌套类
 
 在 kotlin 中在类里面再定义的类默认是嵌套类，此时嵌套类不会包含对外部类的隐式引用
 
@@ -1803,7 +1739,7 @@ public final class MainkotlinKt {
 }
 ```
 
-#### 11.7、内部类
+#### 6、内部类
 
 如果需要去访问外部类的成员，需要用 inner 修饰符来标注被嵌套的类，这称为内部类。内部类会隐式持有对外部类的引用
 
@@ -1855,9 +1791,106 @@ public final class MainkotlinKt {
 | 嵌套类（不存储外部类的引用） | static class A | class A       |
 | 内部类（存储外部类的引用）   | class A        | inner class A |
 
+#### 7、匿名内部类
+
+可以使用**对象表达式**来创建匿名内部类实例
+
+```kotlin
+interface OnClickListener {
+
+    fun onClick()
+
+}
+
+class View {
+
+    fun setClickListener(clickListener: OnClickListener) {
+
+    }
+
+}
+
+fun main() {
+    val view = View()
+    view.setClickListener(object : OnClickListener {
+        override fun onClick() {
+
+        }
+
+    })
+}
+```
+
+#### 8、内联类
+
+在有些时候，我们需要对原生类型进行包装以便提升程序的健壮性。例如，对于 `sendEmail` 方法的入参参数而言，我们无法严格限制入参参数的含义类型，有的开发者可能会将 delay 理解为以毫秒为单位，有的开发者可能又会理解为以分钟为单位
+
+```kotlin
+fun sendEmail(delay: Long) {
+    println(delay)
+}
+```
+
+为了提升程序的健壮性，我们可以通过声明一个包装类来作为参数类型：
+
+```kotlin
+fun sendEmail(delay: Time) {
+    println(delay.second)
+}
+
+class Time(val second: Long)
+
+class Minute(private val count: Int) {
+
+    fun toTime(): Time {
+        return Time(count * 60L)
+    }
+
+}
+
+fun main() {
+    sendEmail(Minute(10).toTime())
+}
+```
+
+这样，在代码源头上就限制了开发者能够传入的参数类型，开发者通过类名就能直接表达出自己希望的时间大小。然而这种方式由于额外的堆内存分配问题，就引入了运行时的性能开销，新的包装类相对原生类型所需要的性能消耗要大得多，可是此时又需要考虑程序的健壮性和可读性，所以包装类也是需要的
+
+内联类（InlineClass）就是为了解决这两者的矛盾而诞生的。上述代码可以改为以下方式来实现
+
+```kotlin
+fun sendEmail(delay: Time) {
+    println(delay.second)
+}
+
+inline class Time(val second: Long)
+
+inline class Minute(private val count: Int) {
+
+    fun toTime(): Time {
+        return Time(count * 60L)
+    }
+
+}
+
+fun main() {
+    sendEmail(Minute(10).toTime())
+}
+```
+
+使用 inline 修饰的类就称为内联类，内联类必须含有唯一的一个属性在主构造函数中初始化，在运行时将使用这个唯一属性来表示内联类的实例，从而避免了包装类在运行时的额外开销
+
+例如，通过查看字节码可以看到`sendEmail` 方法会被解释为一个以 long 类型作为入参类型的函数，并不包含任何对象
+
+```java
+   public static final void sendEmail_G1aXmDY/* $FF was: sendEmail-G1aXmDY*/(long delay) {
+      boolean var4 = false;
+      System.out.println(delay);
+   }
+```
+
 ### 十二、接口
 
-#### 12.1、抽象方法与默认方法
+#### 1、抽象方法与默认方法
 
 kotlin 中的接口与 Java 8 中的类似，可以包含抽象方法的定义以及非抽象方法的实现，不需要使用 default 关键字来标注有默认实现的非抽象方法，但在实现接口的抽象方法时需要使用 override 进行标注
 
@@ -1908,7 +1941,7 @@ interface Clickable2 {
 }
 ```
 
-#### 12.2、抽象属性
+#### 2、抽象属性
 
 接口中可以包含抽象属性声明，接口不定义该抽象属性是应该存储到一个支持字段还是通过 getter 来获取，接口本身并不包含任何状态，因此只有实现这个接口的类在需要的情况下会存储这个值
 
@@ -1963,7 +1996,69 @@ interface Clickable {
 }
 ```
 
-### 十三、继承
+### 十三、SAM 接口
+
+对于以下例子，在 Kotlin 1.4 之前第二种写法是不支持的，我们必须完全实现 SelfRunnable 才可以调用 `setRunnable` 方法
+
+```kotlin
+/**
+ * 作者：leavesC
+ * 时间：2020/10/6 21:28
+ * 描述：
+ * GitHub：https://github.com/leavesC
+ */
+interface SelfRunnable {
+
+    fun run()
+
+}
+
+fun setRunnable(selfRunnable: SelfRunnable) {
+    selfRunnable.run()
+}
+
+fun main() {
+    setRunnable(object : SelfRunnable {
+        override fun run() {
+            println("hello,leavesC")
+        }
+    })
+    //错误，Kotlin 1.4 之前不支持
+//    setRunnable {
+//        println("hello,leavesC")
+//    }
+}
+```
+
+而在 Kotlin 1.4 之后，Kotlin 开始支持 **SAM 转换**。只有一个抽象方法的接口称为**函数式接口**或 **SAM（单一抽象方法）接口**，函数式接口可以有多个非抽象成员，但只能有一个抽象成员。SAM 转换即 `Single Abstract Method Conversions`，对于只有单个非默认抽象方法的接口，可以直接用 Lambda 来表示，前提是 Lambda 所表示的函数类型能够跟接口中的方法签名相匹配
+
+所以，在 Kotlin 1.4 之后，就支持直接以 Lambda 的方式来声明 SelfRunnable 的实现类，从而使得在方法调用上可以更加简洁，但这也要求 interface 同时使用 fun 关键字修饰
+
+```kotlin
+/**
+ * 作者：leavesC
+ * 时间：2020/10/6 21:28
+ * 描述：
+ * GitHub：https://github.com/leavesC
+ */
+fun interface SelfRunnable {
+
+    fun run()
+
+}
+
+fun setRunnable(selfRunnable: SelfRunnable) {
+    selfRunnable.run()
+}
+
+fun main() {
+    setRunnable {
+        println("hello,leavesC")
+    }
+}
+```
+
+### 十四、继承
 
 在 kotlin 中所有类都有一个共同的超类 **Any** ，对于没有超类声明的类来说它就是默认超类。需要注意的是， Any  并不是  **java.lang.Object**  ，它除了  **equals()  、 hashCode()  与 toString()**  外没有其他属性或者函数
 
@@ -1995,7 +2090,7 @@ class SubClass2 : Base {
 }
 ```
 
-#### 13.1、覆盖方法
+#### 1、覆盖方法
 
 与 Java 不同，kotlin 需要显式标注可覆盖的成员和覆盖后的成员：
 
@@ -2020,7 +2115,7 @@ class SubClass() : Base() {
 用 open 标注的函数才可以被子类重载，子类用 override 表示该函数是要对父类的同签名函数进行覆盖。标记为 override 的成员本身也是开放的，也就是说，它可以被子类覆盖。如果想禁止再次覆盖，可以使用 final 关键字标记
 如果父类没有使用 open 对函数进行标注，则子类不允许定义相同签名的函数。对于一个 final 类（没有用 open 标注的类）来说，使用 open 标记属性和方法是无意义的
 
-#### 13.2、属性覆盖
+#### 2、属性覆盖
 
 属性覆盖与方法覆盖类似。在超类中声明为 open 的属性，如果要进行覆盖则必须在派生类中重新声明且以 override 开头，并且它们必须具有兼容的类型
 
@@ -2077,7 +2172,7 @@ fun main() {
 }
 ```
 
-#### 13.3、调用超类实现
+#### 3、调用超类实现
 
 派生类可以通过 super 关键字调用其超类的函数与属性访问器的实现
 
@@ -2175,9 +2270,9 @@ class SubClass() : BaseClass(), BaseInterface {
 }
 ```
 
-### 十四、集合
+### 十五、集合
 
-#### 14.1、只读集合与可变集合
+#### 1、只读集合与可变集合
 
 kotlin 的集合设计和 Java 不同的另一项特性是：kotlin 把访问数据的接口和修改集合数据的接口分开了，`kotlin.collections.Collection` 接口提供了**遍历集合元素、获取集合大小、判断集合是否包含某元素**等操作，但这个接口没有提供**添加和移除元素**的方法。`kotlin.collections.MutableCollection` 接口继承于 `kotlin.collections.Collection` 接口，扩展出了用于**添加、移除、清空元素**的方法
 
@@ -2204,7 +2299,7 @@ kotlin 的集合设计和 Java 不同的另一项特性是：kotlin 把访问数
     println(mutableList.contains("leavesC"))
 ```
 
-#### 14.2、集合与 Java
+#### 2、集合与 Java
 
 因为 Java 并不会区分只读集合与可变集合，即使 kotlin 中把集合声明为只读的， Java 代码也可以修改这个集合，而 Java 代码中的集合对 kotlin 来说也是可变性未知的，kotlin 代码可以将之视为只读的或者可变的，包含的元素也是可以为 null 或者不为 null 的
 
@@ -2235,7 +2330,7 @@ public class JavaMain {
     val list4: MutableList<String?> = JavaMain.names
 ```
 
-#### 14.3、只读集合的可变性
+#### 3、只读集合的可变性
 
 只读集合不一定就是不可变的。例如，假设存在一个拥有只读类型接口的对象，该对象存在两个不同的引用，一个只读，一个可变，当可变引用修改了该对象后，这对只读引用来说就相当于“只读集合被修改了”，因此只读集合并不总是线程安全的。如果需要在多线程环境下处理数据，需要保证正确地同步了对数据的访问，或者使用支持并发访问的数据结构
 
@@ -2252,7 +2347,7 @@ public class JavaMain {
     list1.forEach { it -> println(it) } //LEAVESC YE
 ```
 
-#### 14.4、集合与可空性
+#### 4、集合与可空性
 
 集合的可空性可以分为三种：
 
@@ -2273,9 +2368,9 @@ public class JavaMain {
     intList3 = null
 ```
 
-### 十五、扩展函数和扩展属性
+### 十六、扩展函数和扩展属性
 
-#### 15.1、扩展函数
+#### 1、扩展函数
 
 扩展函数用于为一个类增加一种新的行为，这是为缺少有用函数的类进行扩展的途径。扩展函数的用途就类似于在 Java 中实现的静态工具方法。而在 kotlin 中使用扩展函数的一个优势就是我们不需要在调用方法的时候把整个对象当作参数传入，扩展函数表现得就像是属于这个类本身的一样，可以使用 this 关键字并直接调用其所有 public 方法
 
@@ -2327,7 +2422,7 @@ fun main() {
 
 需要注意的是，如果扩展函数声明于 class 内部，则该扩展函数只能该类和其子类内部调用，因为此时相当于声明了一个非静态函数，外部无法引用到。所以一般都是将扩展函数声明为全局函数
 
-#### 15.2、扩展属性
+#### 2、扩展属性
 
 扩展函数也可以用于属性
 
@@ -2351,7 +2446,7 @@ fun main() {
 }
 ```
 
-#### 15.3、不可重写的扩展函数
+#### 3、不可重写的扩展函数
 
 看以下例子，子类 Button 重写了父类 View 的 click() 函数，此时如果声明一个 View 变量，并赋值为 Button 类型的对象，调用的 click() 函数将是 Button 类重写的方法
 
@@ -2397,7 +2492,7 @@ fun Button.longClick() = println("Button longClicked")
 
 需要注意的是，扩展函数不会自动地在整个项目范围内生效，如果需要使用到扩展函数，需要进行导入
 
-#### 15.4、可空接收者
+#### 4、可空接收者
 
 可以为可空的接收者类型定义扩展，即使接受者为 null，使得开发者在调用扩展函数前不必进行判空操作，且可以通过 `this == null` 来检查接收者是否为空
 
@@ -2418,7 +2513,7 @@ fun String?.check() {
 }
 ```
 
-### 十六、Lambda 表达式
+### 十七、Lambda 表达式
 
 Lambda 表达式本质上就是可以传递给其它函数的一小段代码，通过 Lambda 表达式可以把通用的代码结构抽取成库函数，也可以把 Lambda 表达式存储在一个变量中，把这个变量当做普通函数对待
 
@@ -2573,11 +2668,11 @@ fun main() {
 }
 ```
 
-### 十七、标准库中的扩展函数
+### 十八、标准库中的扩展函数
 
 kotlin 标准库中提供了几个比较实用的扩展函数，定义在 Standard 文件下
 
-#### 17.1、run
+#### 1、run
 
 run 函数接收一个函数参数并以该函数的返回值作为 run 函数的返回值
 
@@ -2607,7 +2702,7 @@ fun main() {
 }
 ```
 
-#### 17.2、with
+#### 2、with
 
 with 函数并不是扩展函数，不过由于作用相近，此处就一起介绍了。with 函数的第一个参数是接受者对象 receiver，第二个参数是在 receiver 对象类型上定义的扩展函数，所以可以在函数内部直接调用 receiver 其公开的方法和属性
 
@@ -2667,7 +2762,7 @@ with 函数的返回值是执行 Lambda 表达式的结果，该结果就是 Lam
     println(result)  //kotin.Unit
 ```
 
-#### 17.3、apply
+#### 3、apply
 
 apply 函数被声明为类型 T 的扩展函数，它的接收者是作为实参的 Lambda 的接受者，最终函数返回 this 即对象本身
 
@@ -2697,7 +2792,7 @@ public inline fun <T> T.apply(block: T.() -> Unit): T {
     println(result.javaClass) //class java.lang.StringBuilder
 ```
 
-#### 17.4、also
+#### 4、also
 
 also 函数接收一个函数类型的参数，该参数又以接收者本身作为参数，最终返回接收者对象本身
 
@@ -2725,7 +2820,7 @@ fun main() {
 }
 ```
 
-#### 17.5、let 
+#### 5、let 
 
 also 函数接收一个函数类型的参数，该参数又以接收者本身作为参数，最终返回函数的求值结果
 
@@ -2751,7 +2846,7 @@ fun main() {
 }
 ```
 
-#### 17.6、takeIf
+#### 6、takeIf
 
 takeIf 接收一个返回值类型为 bool 的函数，当该参数返回值为 true 时返回接受者对象本身，否则返回 null
 
@@ -2779,7 +2874,7 @@ fun check(name: String?): Int {
 }
 ```
 
-#### 17.7、takeUnless
+#### 7、takeUnless
 
 takeUnless 的判断条件与 takeIf 相反，这里不再赘述
 
@@ -2794,11 +2889,11 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
 }
 ```
 
-### 十八、函数操作符
+### 十九、函数操作符
 
-#### 18.1、总数操作符
+#### 1、总数操作符
 
-##### 18.1.1、any
+##### 1、any
 
 如果至少有一个元素符合给出的判断条件，则返回 true
 
@@ -2808,7 +2903,7 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
     println(list.any { it > 7 })   //true
 ```
 
-##### 18.1.2、all
+##### 2、all
 
 如果全部的元素符合给出的判断条件，则返回 true
 
@@ -2818,7 +2913,7 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
     println(list.all { it > 0 })   //true
 ```
 
-##### 18.1.3、count
+##### 3、count
 
 返回符合给出判断条件的元素总数
 
@@ -2828,7 +2923,7 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
     println(list.count { it > 2 })  //4
 ```
 
-##### 18.1.4、fold
+##### 4、fold
 
 在一个初始值的基础上从第一项到最后一项通过一个函数累计所有的元素
 
@@ -2851,7 +2946,7 @@ fun main() {
 27
 ```
 
-##### 18.1.5、foldRight
+##### 5、foldRight
 
 与 fold  一样，但顺序是从最后一项到第一项
 
@@ -2872,14 +2967,14 @@ fun main() {
 27
 ```
 
-##### 18.1.6、forEach
+##### 6、forEach
 
 ```kotlin
     val list = listOf(1, 3, 5, 7, 9)
     list.forEach { print(it + 1) } //246810
 ```
 
-##### 18.1.7、forEachIndexed
+##### 7、forEachIndexed
 
 类似于 forEach ，同时可以得到元素的索引
 
@@ -2894,7 +2989,7 @@ fun main() {
 	4 value is 9
 ```
 
-##### 18.1.8、max
+##### 8、max
 
 返回最大的一项，如果没有则返回null
 
@@ -2903,7 +2998,7 @@ fun main() {
     println(list.max()) //9
 ```
 
-##### 18.1.9、maxBy
+##### 9、maxBy
 
 根据给定的函数返回最大的一项，如果没有则返回 null
 
@@ -2912,7 +3007,7 @@ fun main() {
     println(list.maxBy { -it }) //1
 ```
 
-##### 18.1.10、min
+##### 10、min
 
 返回最小的一项，如果没有则返回null
 
@@ -2921,7 +3016,7 @@ fun main() {
     println(list.min()) //1
 ```
 
-##### 18.1.11、minBy
+##### 11、minBy
 
 根据给定的函数返回最小的一项，如果没有则返回null
 
@@ -2930,7 +3025,7 @@ fun main() {
     println(list.minBy { -it }) //9
 ```
 
-##### 18.1.12、none
+##### 12、none
 
 如果没有任何元素与给定的函数匹配，则返回true
 
@@ -2939,7 +3034,7 @@ fun main() {
     println(list.none { it > 10 }) //true
 ```
 
-##### 18.1.13、reduce
+##### 13、reduce
 
 与 fold  一样，但是没有一个初始值。通过一个函数从第一项到最后一项进行累计
 
@@ -2956,7 +3051,7 @@ fun main() {
 	25
 ```
 
-##### 18.1.14、reduceRight
+##### 14、reduceRight
 
 与 reduce  一样，但是顺序是从最后一项到第一项
 
@@ -2974,7 +3069,7 @@ fun main() {
 	25
 ```
 
-##### 18.1.15、sumBy
+##### 15、sumBy
 
 返回所有每一项通过函数转换之后的数据的总和
 
@@ -2983,9 +3078,9 @@ fun main() {
     println(list.sumBy { it + 1 }) //30
 ```
 
-#### 18.2、过滤操作符
+#### 2、过滤操作符
 
-##### 18.2.1、drop
+##### 1、drop
 
 返回包含去掉前n个元素的所有元素的列表
 
@@ -2994,7 +3089,7 @@ fun main() {
     println(list.drop(2)) //[5, 7, 9]
 ```
 
-##### 18.2.2、dropWhile
+##### 2、dropWhile
 
 返回从第一个开始不符合给定函数的元素起之后的列表
 
@@ -3003,7 +3098,7 @@ fun main() {
     println(list.dropWhile { it < 4 }) //[5, 7, 9, 2]
 ```
 
-##### 18.2.3、dropLastWhile
+##### 3、dropLastWhile
 
 从最后一项开始，返回从开始不符合给定函数的元素起之后的列表
 
@@ -3012,7 +3107,7 @@ fun main() {
     println(list.dropLastWhile { it > 4 }) //[10, 1, 3]
 ```
 
-##### 18.2.4、filter
+##### 4、filter
 
 过滤所有符合给定函数条件的元素
 
@@ -3021,7 +3116,7 @@ fun main() {
     println(list.filter { it < 4 }) //[1, 3, 2]
 ```
 
-##### 18.2.5、filterNot
+##### 5、filterNot
 
 过滤所有不符合给定函数条件的元素
 
@@ -3030,7 +3125,7 @@ fun main() {
     println(list.filterNot { it < 4 }) //[5, 7, 9]
 ```
 
-##### 18.2.6、filterNotNull
+##### 6、filterNotNull
 
 过滤所有元素中不是null的元素
 
@@ -3039,7 +3134,7 @@ fun main() {
     println(list.filterNotNull()) //[1, 3, 5, 7, 9, 2]
 ```
 
-##### 18.2.7、slice
+##### 7、slice
 
 过滤一个list中指定index的元素
 
@@ -3048,7 +3143,7 @@ fun main() {
     println(list.slice(listOf(0, 3))) //[1, 7]
 ```
 
-##### 18.2.8、take
+##### 8、take
 
 返回从第一个开始的n个元素
 
@@ -3057,7 +3152,7 @@ fun main() {
     println(list.take(2)) //[1, 3]
 ```
 
-##### 18.2.9、takeLast
+##### 9、takeLast
 
 返回从最后一个开始的n个元素
 
@@ -3066,7 +3161,7 @@ fun main() {
     println(list.takeLast(2)) //[2, null]
 ```
 
-##### 18.2.10、takeWhile
+##### 10、takeWhile
 
 返回从第一个开始符合给定函数条件的元素。
 
@@ -3076,9 +3171,9 @@ fun main() {
     println(list.takeWhile { it > 0 }) //[1, 3, 5]
 ```
 
-#### 18.3、映射操作符
+#### 3、映射操作符
 
-##### 18.3.1、flatMap
+##### 1、flatMap
 
 遍历所有的元素，为每一个创建一个集合，最后把所有的集合放在一个集合中
 
@@ -3087,7 +3182,7 @@ fun main() {
     println(list.flatMap { listOf(it, it + 1) }) //[1, 2, 3, 4, 5, 6, -1, 0, 7, 8, 9, 10, 2, 3]
 ```
 
-##### 18.3.2、groupBy
+##### 2、groupBy
 
 返回一个根据给定函数分组后的map 
 
@@ -3097,7 +3192,7 @@ fun main() {
     println(list.groupBy { listOf(it, it + 1) }) //{[1, 2]=[1], [3, 4]=[3], [5, 6]=[5], [-1, 0]=[-1], [7, 8]=[7], [9, 10]=[9], [2, 3]=[2]}
 ```
 
-##### 18.3.3、map 
+##### 3、map 
 
 返回一个每一个元素根据给定的函数转换所组成的List。 
 
@@ -3107,7 +3202,7 @@ fun main() {
     println(list.map { listOf(it, it + 1) }) //[[1, 2], [3, 4], [5, 6], [-1, 0], [7, 8], [9, 10], [2, 3]]
 ```
 
-##### 18.3.4、mapIndexed 
+##### 4、mapIndexed 
 
 返回一个每一个元素根据给定的包含元素index的函数转换所组成的List
 
@@ -3117,7 +3212,7 @@ fun main() {
     println(list.mapIndexed { index, value -> index * value }) //[0, 3, 10, -3, 28, 45, 12]
 ```
 
-##### 18.3.5、mapNotNull 
+##### 5、mapNotNull 
 
 返回一个每一个非null元素根据给定的函数转换所组成的List
 
@@ -3126,9 +3221,9 @@ fun main() {
     println(list.mapNotNull { it }) //[1, 3, 5, -1, 7, 9, 2]
 ```
 
-#### 18.4、元素操作符 
+#### 4、元素操作符 
 
-##### 18.4.1、contains 
+##### 1、contains 
 
 如果指定元素可以在集合中找到，则返回true
 
@@ -3138,7 +3233,7 @@ fun main() {
     println(list.contains(13)) //false
 ```
 
-##### 18.4.2、elementAt 
+##### 2、elementAt 
 
 返回给定index对应的元素，如果index数组越界则会抛出 IndexOutOfBoundsException
 
@@ -3148,7 +3243,7 @@ fun main() {
     println(list.elementAt(6)) //null
 ```
 
-##### 11.4.3、elementAtOrElse 
+##### 3、elementAtOrElse 
 
 返回给定index对应的元素，如果index数组越界则会根据给定函数返回默认值
 
@@ -3158,7 +3253,7 @@ fun main() {
     println(list.elementAtOrElse(16, { it * 2 })) //32
 ```
 
-##### 18.4.4、elementAtOrNull 
+##### 4、elementAtOrNull 
 
 返回给定index对应的元素，如果index数组越界则会返回null
 
@@ -3168,7 +3263,7 @@ fun main() {
     println(list.elementAtOrNull(16)) //null
 ```
 
-##### 18.4.5、first 
+##### 5、first 
 
 返回符合给定函数条件的第一个元素
 
@@ -3177,7 +3272,7 @@ fun main() {
     println(list.first { it % 3 == 0 })  //3
 ```
 
-##### 18.4.6、firstOrNull 
+##### 6、firstOrNull 
 
 返回符合给定函数条件的第一个元素，如果没有符合则返回null
 
@@ -3187,7 +3282,7 @@ fun main() {
     println(list.firstOrNull { it % 8 == 0 })  //null
 ```
 
-##### 18.4.7、indexOf 
+##### 7、indexOf 
 
 返回指定元素的第一个index，如果不存在，则返回 -1
 
@@ -3197,7 +3292,7 @@ fun main() {
     println(list.indexOf(12)) //-1
 ```
 
-##### 18.4.8、indexOfFirst 
+##### 8、indexOfFirst 
 
 返回第一个符合给定函数条件的元素的index，如果没有符合则返回 -1
 
@@ -3207,7 +3302,7 @@ fun main() {
     println(list.indexOfFirst { it % 12 == 0 })  //-1
 ```
 
-##### 18.4.9、indexOfLast 
+##### 9、indexOfLast 
 
 返回最后一个符合给定函数条件的元素的index，如果没有符合则返回 -1
 
@@ -3217,7 +3312,7 @@ fun main() {
     println(list.indexOfLast { it % 12 == 0 })  //-1
 ```
 
-##### 18.4.10、last 
+##### 10、last 
 
 返回符合给定函数条件的最后一个元素
 
@@ -3227,7 +3322,7 @@ fun main() {
     println(list.last { it % 3 == 0 })   //9
 ```
 
-##### 18.4.10、lastIndexOf 
+##### 11、lastIndexOf 
 
 返回指定元素的最后一个index，如果不存在，则返回 -1
 
@@ -3237,7 +3332,7 @@ fun main() {
     println(list.lastIndexOf(12))   //-1
 ```
 
-##### 18.4.11、lastOrNull 
+##### 12、lastOrNull 
 
 返回符合给定函数条件的最后一个元素，如果没有符合则返回null
 
@@ -3247,7 +3342,7 @@ fun main() {
     println(list.lastOrNull { it == 10 })       //null
 ```
 
-##### 18.4.12、single 
+##### 13、single 
 
 返回符合给定函数的单个元素，如果没有符合或者超过一个，则抛出异常
 
@@ -3257,7 +3352,7 @@ fun main() {
     println(list.single { it == 2 })      //IllegalArgumentException
 ```
 
-##### 18.4.13、singleOrNull 
+##### 14、singleOrNull 
 
 返回符合给定函数的单个元素，如果没有符合或者超过一个，则返回null
 
@@ -3267,9 +3362,9 @@ fun main() {
     println(list.singleOrNull { it == 2 })      //null
 ```
 
-#### 18.5、生产操作符 
+#### 5、生产操作符 
 
-##### 18.5.1、partition 
+##### 1、partition 
 
 把一个给定的集合分割成两个，第一个集合是由原集合每一项元素匹配给定函数条 件返回 true 的元素组成，第二个集合是由原集合每一项元素匹配给定函数条件返回 false 的元素组成
 
@@ -3280,7 +3375,7 @@ fun main() {
     println(list2)  //[1, 9, 7, 9]
 ```
 
-##### 18.5.2、plus 
+##### 2、plus 
 
 返回一个包含原集合和给定集合中所有元素的集合，因为函数的名字原因，我们可以使用 + 操作符
 
@@ -3291,7 +3386,7 @@ fun main() {
     println(list1 + list2)  //[1, 9, 2, 6, 7, 9, 2, 1, 2, 4, 6, 8, 10]
 ```
 
-##### 18.5.3、zip 
+##### 3、zip 
 
 返回由 pair 组成的List，每个 pair 由两个集合中相同index的元素组成。这个返回的List的大小由最小的那个集合决定
 
@@ -3317,7 +3412,7 @@ fun main() {
     (9, 10)
 ```
 
-##### 18.5.4、unzip 
+##### 4、unzip 
 
 从包含pair的List中生成包含List的Pair
 
@@ -3335,9 +3430,9 @@ fun main() {
     [1, 2, 3]
 ```
 
-#### 18.6、顺序操作符 
+#### 6、顺序操作符 
 
-##### 18.6.1、reverse 
+##### 1、reverse 
 
 返回一个与指定list相反顺序的list
 
@@ -3347,7 +3442,7 @@ fun main() {
     println(list2)      //[(leavesC_3, 3), (leavesC_2, 2), (leavesC, 1)]
 ```
 
-##### 18.6.2、sort 
+##### 2、sort 
 
 返回一个自然排序后的list
 
@@ -3361,7 +3456,7 @@ fun main() {
     println(list4) //[a, ab, b, c, cda, cdd]
 ```
 
-##### 18.6.3、sortBy 
+##### 3、sortBy 
 
 返回一个根据指定函数排序后的list 
 
@@ -3371,7 +3466,7 @@ fun main() {
     println(list2) //[1, 2, 4, 5, 9, 10]
 ```
 
-##### 18.6.4、sortDescending 
+##### 4、sortDescending 
 
 返回一个降序排序后的List
 
@@ -3381,7 +3476,7 @@ fun main() {
     println(list2) //[10, 9, 5, 4, 2, 1]
 ```
 
-##### 18.6.5、sortDescendingBy 
+##### 5、sortDescendingBy 
 
 返回一个根据指定函数降序排序后的list
 
@@ -3391,7 +3486,7 @@ fun main() {
     println(list2) //[1, 9, 5, 2, 4, 10]
 ```
 
-### 十九、异常
+### 二十、异常
 
 kotlin 中异常处理的基本形式和 Java 类似
 
@@ -3452,11 +3547,11 @@ fun compute(index: Int) {
 }
 ```
 
-### 二十、运算符重载
+### 二十一、运算符重载
 
 kotlin 允许为类型提供预定义的操作符实现，这些操作符具有固定的符号表示（例如 + 和 * ）和固定的优先级，通过操作符重载可以将操作符的行为映射到指定的方法。为实现这样的操作符，需要为类提供一个固定名字的成员函数或扩展函数，相应的重载操作符的函数需要用 operator 修饰符标记
 
-#### 20.1、一元操作符
+#### 1、一元操作符
 
 | 操作符 |      函数      |
 | ------ | :------------: |
@@ -3466,7 +3561,7 @@ kotlin 允许为类型提供预定义的操作符实现，这些操作符具有�
 | a++    |    a.inc()     |
 | a--    |    a.dec()     |
 
-#### 20.2、二元操作符
+#### 2、二元操作符
 
 | 操作符  |       函数       |
 | ------- | :--------------: |
@@ -3484,7 +3579,7 @@ kotlin 允许为类型提供预定义的操作符实现，这些操作符具有�
 | a /= b  |  a.divAssign(b)  |
 | a %= b  |  a.remAssign(b)  |
 
-#### 20.3、数组操作符
+#### 3、数组操作符
 
 | 操作符               |          函数           |
 | -------------------- | :---------------------: |
@@ -3495,7 +3590,7 @@ kotlin 允许为类型提供预定义的操作符实现，这些操作符具有�
 | a[i, j] = b          |     a.set(i, j, b)      |
 | a[i_1, ..., i_n] = b | a.set(i_1, ..., i_n, b) |
 
-#### 20.4、等于操作符
+#### 4、等于操作符
 
 | 操作符 |             函数              |
 | ------ | :---------------------------: |
@@ -3512,7 +3607,7 @@ operator fun equals(other: Any?): Boolean
 
 操作符 ===  和 !==  用来做身份检查（它们分别是 Java 中的 ==  和 !=  ），并且它们不能被重载
 
-#### 20.5、比较操作符
+#### 5、比较操作符
 
 | 操作符 |        函数         |
 | ------ | :-----------------: |
@@ -3523,7 +3618,7 @@ operator fun equals(other: Any?): Boolean
 
 所有的比较都转换为对  compareTo  的调用，这个函数需要返回  Int  值
 
-#### 20.6、函数调用
+#### 6、函数调用
 
 | 方法             |          调用           |
 | ---------------- | :---------------------: |
@@ -3532,7 +3627,7 @@ operator fun equals(other: Any?): Boolean
 | a(i, j)          |     a.invoke(i, j)      |
 | a(i_1, ..., i_n) | a.invoke(i_1, ..., i_n) |
 
-#### 20.7、例子
+#### 7、例子
 
 看几个例子
 
@@ -3600,9 +3695,9 @@ fun main() {
 }
 ```
 
-### 二十一、中缀调用与解构声明
+### 二十二、中缀调用与解构声明
 
-#### 21.1、中缀调用
+#### 1、中缀调用
 
 可以以以下形式创建一个 Map 变量
 
@@ -3644,7 +3739,7 @@ public fun <K, V> mapOf(vararg pairs: Pair<K, V>): Map<K, V> =
  val map = mapOf(10 test "leavesC", 20 test "hello")
 ```
 
-#### 21.2、解构声明
+#### 2、解构声明
 
 有时会有把一个对象拆解成多个变量的需求，在 kotlin 中这种语法称为解构声明
 
@@ -3737,9 +3832,9 @@ fun main() {
     }
 ```
 
-### 二十二、Object 关键字
+### 二十三、Object 关键字
 
-#### 22.1、对象声明
+#### 1、对象声明
 
 在 kotlin 的世界中，可以通过**对象声明**这一功能来实现 Java 中的单例模式，将类声明与该类的单一实例声明结合到一起。与类一样，一个对象声明可以包含属性、方法、初始化语句块等的声明，且可以继承类和实现接口，唯一不被允许的是构造方法
 
@@ -3801,7 +3896,7 @@ class Test {
     }
 ```
 
-#### 22.2、伴生对象
+#### 2、伴生对象
 
 如果需要一个可以在没有类实例的情况下调用但是需要访问类内部的函数（类似于 Java 中的静态变量/静态函数），可以将其写成那个类中的对象声明的成员
 
@@ -3827,7 +3922,7 @@ fun main() {
 }
 ```
 
-##### 22.2.1、工厂模式
+##### 1、工厂模式
 
 可以利用伴生对象来实现工厂模式
 
@@ -3850,7 +3945,7 @@ fun main() {
 }
 ```
 
-##### 22.2.2、指定名称
+##### 2、指定名称
 
 伴生对象既可以为其指定名字，也可以直接使用其默认名 Companion，在引用伴生对象时，可以自由选择是否要在类名后加上伴生对象名
 
@@ -3882,7 +3977,7 @@ fun main() {
 }
 ```
 
-##### 22.2.3、实现接口
+##### 3、实现接口
 
 伴生对象也可以实现接口，且可以直接将包含它的类的名字当做实现了该接口的对象实例来使用
 
@@ -3907,7 +4002,7 @@ fun main() {
 }
 ```
 
-#### 22.3、对象表达式
+#### 3、对象表达式
 
 object 能用来声明匿名对象，可用于替代 Java 中的匿名内部类，且对象表达式中的代码可以访问并修改其外部的非 final 型的变量
 
@@ -3924,9 +4019,9 @@ fun main() {
 }
 ```
 
-### 二十三、委托
+### 二十四、委托
 
-#### 23.1、委托模式
+#### 1、委托模式
 
 委托模式是一种基本的设计模式，该模式下有两个对象参与处理同一个请求，接受请求的对象将请求委托给另一个对象来处理。kotlin 原生支持委托模式，可以零样板代码来实现，通过关键字 by 实现委托
 
@@ -3999,7 +4094,7 @@ fun main() {
 }
 ```
 
-#### 23.2、属性委托
+#### 2、属性委托
 
 kotlin 支持通过委托属性将对一个属性的访问操作委托给另外一个对象来完成，对应的语法格式是：
 
@@ -4059,7 +4154,7 @@ fun main() {
 }
 ```
 
-#### 23.3、延迟属性
+#### 3、延迟属性
 
 **lazy()** 是接受一个 lambda 并返回一个 **Lazy < T >** 实例的函数，返回的实例可以作为实现延迟属性的委托，第一次调用 **get()** 会执行已传递给 **lazy()** 函数的 lambda 表达式并记录结果， 后续调用 **get()** 只是返回记录的结果
 
@@ -4090,7 +4185,7 @@ fun main() {
 
 默认情况下，对于 lazy 属性的求值是带同步锁的（synchronized），即带有 **LazyThreadSafetyMode.SYNCHRONIZED** 参数，此时该值只允许同一时刻只能有一个线程对其进行初始化，并且所有线程会看到相同的初始化值。如果初始化委托的同步锁不是必需的，即如果允许多个线程同时执行，那么可以将  **LazyThreadSafetyMode.PUBLICATION**  作为参数传递给 **lazy()** 函数。 而如果你确定初始化将总是发生在单个线程，那么可以使用 **LazyThreadSafetyMode.NONE** 模式， 此时不会有任何线程安全的保证以及相关的资源开销
 
-#### 23.4、可观察属性
+#### 4、可观察属性
 
 **Delegates.observable()** 接受两个参数：初始值以及修改属性值时的回调函数。当为属性赋值后就会调用该回调函数，该回调函数包含三个参数：被赋值的属性、旧值与新值
 
@@ -4126,7 +4221,7 @@ class Example {
 }
 ```
 
-#### 23.5、把属性储存在映射中
+#### 5、把属性储存在映射中
 
 可以在一个 map 映射里存储属性的值，然后把属性的存取操作委托给 map 进行管理
 
@@ -4150,7 +4245,7 @@ class Student(val map: Map<String, Any?>) {
 
 在上述示例中，属性 name 和 age 都是不可变的（val），因此 map 的类型也是 Map 而非 MutableMap（MutableMap 在赋值后可以修改），因此如果为了支持 var 属性，可以将只读的 Map 换成 MutableMap
 
-#### 23.6、局部委托属性
+#### 6、局部委托属性
 
 可以将局部变量声明为委托属性
 
@@ -4186,7 +4281,7 @@ fun main() {
 
 委托变量只会在第一次访问时才会进行初始化，因此如果 **valid** 为 false 的话，**getPrinter()** 方法就不会被调用
 
-### 二十四、注解
+### 二十五、注解
 
 注解是将元数据附加到代码元素上的一种方式，附件的元数据就可以在编译后的类文件或者运行时被相关的源代码工具访问
 
