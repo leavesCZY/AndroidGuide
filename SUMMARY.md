@@ -1,6 +1,6 @@
 * [README](README.md)
 * [语言教程 ]()
-	* [Kotlin](kotlin/kotlin入门中文教程.md)
+	* [Kotlin](kotlin/kotlin入门教程.md)
 	* [Dart](dart/Dart入门教程.md)
 	
 * [Jetpack]()
