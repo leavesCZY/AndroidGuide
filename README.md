@@ -15,7 +15,7 @@
 ![AndroidGuide](https://s1.ax1x.com/2020/10/10/0sd7FJ.png)
 
 * [语言教程 ]()
-	* [两万六千字带你Kotlin入门](kotlin/kotlin入门教程.md)
+	* [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
 	* [Dart](dart/Dart入门教程.md)
 * [Jetpack]()
     * [Lifecycle 源码解析](jetpack/Lifecycle源码解析.md)
@@ -28,6 +28,8 @@
 * [偿还技术债]()
     - [偿还技术债（1）-EventBus源码详解](android_opensource/1-EventBus源码详解.md)
     - [偿还技术债（2）-EventBus自己实现一个？](android_opensource/2-EventBus自己实现一个？.md)
+    - [偿还技术债（3）-ARouter源码详解](android_opensource/3-ARouter源码详解.md)
+    - [偿还技术债（4）-ARouter自己实现一个？](android_opensource/4-ARouter自己实现一个？.md)
 * [Java 多线程]()
 	* [入门筑基](java_multithreading/1-入门筑基.md)
 	* [异步中包含同步](java_multithreading/2-异步中包含同步.md)
