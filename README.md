@@ -32,6 +32,7 @@
     - [三方库源码笔记（4）-ARouter 自己实现一个？](android_opensource/4-ARouter自己实现一个？.md)
     - [三方库源码笔记（5）-LeakCanary 源码详解](android_opensource/5-LeakCanary源码详解.md)
     - [三方库源码笔记（6）-LeakCanary 扩展阅读](android_opensource/6-LeakCanary扩展阅读.md)
+    - [三方库源码笔记（7）-超详细的 Retrofit 源码解析](android_opensource/7-超详细的Retrofit源码解析.md)
 * [Java 多线程编程]()
 	* [Java 多线程编程（1）-入门筑基](java_multithreading/1-入门筑基.md)
 	* [Java 多线程编程（2）-异步中包含同步](java_multithreading/2-异步中包含同步.md)
