@@ -189,7 +189,7 @@ fun main() {
 
 可以看到，在 GC 过后 `referenceQueue.poll()` 的返回值变成了**非 null**，这是由于 `WeakReference` 和 `ReferenceQueue` 的一个组合特性导致的：在声明一个 `WeakReference` 对象时如果同时传入了 `ReferenceQueue` 作为构造参数的话，那么当 `WeakReference` 持有的对象被 GC 回收时，JVM 就会把这个**弱引用**存入与之关联的引用队列之中。依靠这个特性，我们就可以实现内存泄露的检测了
 
-例如，当用户按返回键退出 Activity 时，正常情况下该 Activity 对象应该在不久后就被系统回收，我们可以监听 Activity 的 `onDestroy` 回调，在回调时把 Activity 对象保存到和 `ReferenceQueue` 关联的 `WeakReference` 中，在一段时间后（可以主动触发几次 GC）检测 `WeakReference` 中是否有值，如果一直为 null 的话就说明发生了内存泄露。LeakCanary 就是通过这种方法来实现的
+例如，当用户按返回键退出 Activity 时，正常情况下该 Activity 对象应该在不久后就被系统回收，我们可以监听 Activity 的 `onDestroy` 回调，在回调时把 Activity 对象保存到和 `ReferenceQueue` 关联的 `WeakReference` 中，在一段时间后（可以主动触发几次 GC）检测 `ReferenceQueue` 中是否有值，如果一直为 null 的话就说明发生了内存泄露。LeakCanary 就是通过这种方法来实现的
 
 `ObjectWatcher` 中就封装了上述逻辑，这里来看看其实现逻辑
 
