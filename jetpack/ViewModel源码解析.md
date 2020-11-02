@@ -59,7 +59,7 @@ class MyViewModel : ViewModel() {
 }
 ```
 
-### Q：ViewModel 是如何初始化的？
+### 一、如何初始化？
 
 在上面的例子中，我们并没有看到 ViewModel 是如何进行初始化的，也没有手动调用 ViewModel 的构造函数来创建 ViewModel 实例，这是因为这个操作都隐藏在了 ViewModelProvider 内部，由 ViewModelProvider 自己来通过反射构建
 
@@ -211,7 +211,7 @@ class MyViewModel : ViewModel() {
     }
 ```
 
-### Q：ViewModel 是如何保持不变的？
+### 二、如何保持不变？
 
 既然 Activity 每次创建的 ViewModel 实例都会保存到 ViewModelStore 中，而 Activity 可以在屏幕旋转的情况下保持持有的 ViewModel 实例不变，那么不也就间接说明了在这种情况下 ViewModelStore 也是可以一直保存而不被销毁的了吗
 
@@ -453,7 +453,7 @@ NonConfigurationInstances 是 ComponentActivity 的一个静态内部类，其�
     }
 ```
 
-### Q：ViewModel 在什么时候被回收？
+### 三、在什么时候被回收？
 
 要知道 ViewModel 是在何时回收的，那么就只要看 ViewModelStore 是在什么时候清空 HashMap 就可以了
 
@@ -499,7 +499,7 @@ public class ViewModelStore {
 }
 ```
 
-### Q：ViewModel 包含构造函数时该如何初始化？
+### 四、构造函数该如何调用？
 
 ViewModelProvider 提供的 Factory 接口实现类有两个：
 
@@ -635,7 +635,7 @@ E/myViewModelA: github.leavesc.demo.MyViewModel@e24ac80 age: 10
 E/myViewModelB: github.leavesc.demo.MyViewModel@9abd6fe age: 20
 ```
 
-### Q：ViewModel 的初始化陷阱
+### 五、初始化陷阱
 
 看以下代码，观察当应用启动时日志的输出结果
 
