@@ -297,4 +297,4 @@ class LiveDataCallAdapterActivity : AppCompatActivity() {
 
 ### 三、结尾
 
-LiveDataCallAdapter 的实现逻辑挺简单的，在使用上也很简单。本篇文章也算作是在了解了 Retrofit 源码后所做的一个实战😁😁这里也提供上述代码的 GitHub 链接：[Demo](https://github.com/leavesC/Demo)
+LiveDataCallAdapter 的实现逻辑挺简单的，在使用上也很简单。本篇文章也算作是在了解了 Retrofit 源码后所做的一个实战😁😁这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

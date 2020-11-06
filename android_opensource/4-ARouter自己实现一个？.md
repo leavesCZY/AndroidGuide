@@ -304,4 +304,4 @@ object EasyRouter {
 
 ### 四、结尾
 
-由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyArouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😁😁，这里也提供上述代码的 GitHub 链接：[Demo](https://github.com/leavesC/Demo)
+由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyArouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😁😁，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

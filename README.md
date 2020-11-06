@@ -6,7 +6,7 @@
 
 ### 二、包含什么？
 
-**Kotlin Dart 语言教程、Jetpack 源码剖析、三方库源码解析、系统源码剖析、Flutter 教程、Kotlin 协程、多线程机制剖析、个人开源库、三方框架使用指南** 等一系列乱七八糟的知识点，希望对你有所帮助
+**Kotlin、Dart 入门教程、Jetpack 源码剖析、三方库源码解析、系统源码解析、三方框架使用指南、Flutter 教程、Kotlin 协程、多线程机制解析、个人开源库** 等一系列乱七八糟的知识点，希望对你有所帮助
 
 ### 三、在哪里看？
 
@@ -79,7 +79,7 @@
 * [个人开源库]()
     * [ReactiveHttp：基于 Kotlin + Jetpack + Coroutines+ Retrofit 封装的网络请求框架](https://github.com/leavesC/ReactiveHttp)
     * [EventLiveData：Jetpack LiveData 的改良](https://github.com/leavesC/EventLiveData)
-    * [Monitor：OkHttp/Retrofit 的抓包工具](https://github.com/leavesC/Monitor)
+    * [Monitor：OkHttp/Retrofit 可视化抓包](https://github.com/leavesC/Monitor)
     * [JsonHolder：Kotlin / Java 的 Json 序列化和反序列化库](https://github.com/leavesC/JsonHolder)
 	* [DoKV：小巧而强大的 Key-Value 管理框架](https://github.com/leavesC/DoKV)
 * [三方库入门笔记 ]()

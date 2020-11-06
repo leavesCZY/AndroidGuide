@@ -525,4 +525,4 @@ object EasyEventBus {
 
 ### 四、结尾
 
-文本实现的 EasyEventBus 挺简陋的😁😁，因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[Demo](https://github.com/leavesC/Demo)
+文本实现的 EasyEventBus 挺简陋的😁😁，因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
