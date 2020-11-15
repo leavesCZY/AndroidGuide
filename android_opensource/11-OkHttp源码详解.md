@@ -522,7 +522,40 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
 
 虽然线程池本身对于最大线程数几乎没有限制，但是由于提交任务的操作还受 maxRequests 的控制，所以实际上该线程池最多同时运行 maxRequests 个线程
 
-#### 5、总结
+#### 5、推动请求执行
+
+既然 OkHttp 内部的线程池是不可能无限制地新建线程来执行请求的，那么当请求总数已达到 maxRequests 后，后续的请求只能是先处于等待状态，那么这些等待状态的请求会在什么时候被启动呢？
+
+同步请求和异步请求结束后都会调用到 Dispatcher 的两个 `finished` 方法，在这两个方法里又会触发到 `promoteAndExecute()`方法去遍历任务列表来执行，此时就推动了待处理列表的任务执行操作。所以说，Dispatcher 中的请求都可以看做是在自发性地启动，每个请求结束都会自动触发下一个请求执行（如果有的话），省去了多余的定时检查这类操作
+
+```kotlin
+  /** Used by [AsyncCall.run] to signal completion. */
+  internal fun finished(call: AsyncCall) {
+    call.callsPerHost.decrementAndGet()
+    finished(runningAsyncCalls, call)
+  }
+
+  /** Used by [Call.execute] to signal completion. */
+  internal fun finished(call: RealCall) {
+    finished(runningSyncCalls, call)
+  }
+
+  private fun <T> finished(calls: Deque<T>, call: T) {
+    val idleCallback: Runnable?
+    synchronized(this) {
+      if (!calls.remove(call)) throw AssertionError("Call wasn't in-flight!")
+      idleCallback = this.idleCallback
+    }
+	//判断当前是否有可以启动的待执行任务，有的话则启动
+    val isRunning = promoteAndExecute()
+
+    if (!isRunning && idleCallback != null) {
+      idleCallback.run()
+    }
+  }
+```
+
+#### 6、总结
 
 - 如果是同步请求，那么网络请求过程就会直接在调用者所在线程上完成，不受 Dispatcher 的控制
 - 如果是异步请求，该请求会先存到待执行列表 readyAsyncCalls 中，该请求是否可以立即发起受 maxRequests 和 maxRequestsPerHost 两个条件的限制。如果符合条件，那么就会从 readyAsyncCalls 取出并存到 runningAsyncCalls 中，然后交由 OkHttp 内部的线程池来执行
@@ -955,6 +988,4 @@ completed
 OkHttp 的运行效率很高，但在使用上还是比较原始，一般我们还是需要在 OkHttp 之上进行一层封装，Retrofit 就是一个对 OkHttp 的优秀封装库，对 Retrofit 的源码讲解可以看我的这篇文章：[三方库源码笔记（7）-超详细的 Retrofit 源码解析](https://juejin.im/post/6886121327845965838)
 
 下篇文章就来写关于 OkHttp 拦截器的实战内容吧
-
-
 
