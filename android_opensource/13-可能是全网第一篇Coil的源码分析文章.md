@@ -2,7 +2,9 @@
 
 > 前阵子定了个小目标，打算来深入了解下几个常用的开源库，看下其源码和实现原理，进行总结并输出成文章。初定的目标是 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil 等七个。**目前已经完成了十二篇关于 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp 的文章**，本篇是第十三篇，是关于 Coil 的知识点，希望对你有所帮助😎😎
 
-Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://github.com/leavesC/AndroidGuide/tree/gitbook/android_opensource) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，原创不易，觉得有用就请给个赞吧😂😂
+Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://github.com/leavesC/AndroidGuide/tree/gitbook/android_opensource) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧😂😂
+
+Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的，Coil 在2020年10月22日才发布了 1.0.0 版本，还热乎着呢。我在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而且本文写好的时候离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 的源码分析文章** ~~~
 
 ### 一、Coil 是什么
 
@@ -53,7 +55,7 @@ Coil 一共包含五个组件，可以在 `mavenCentral()`上获取到
 - `io.coil-kt:coil-svg`。包含一个 [decoder](https://coil-kt.github.io/coil/api/coil-base/coil.decode/-decoder) 用于支持解码 SVG。有关更多详细信息，请参见 [SVG](https://coil-kt.github.io/coil/svgs/)
 - `io.coil-kt:coil-video`。包含两个 [fetchers](https://coil-kt.github.io/coil/api/coil-base/coil.fetch/-fetcher) 用于支持读取和解码 [任何 Android 的支持的视频格式](https://developer.android.com/guide/topics/media/media-formats#video-codecs) 的视频帧。有关更多详细信息，请参见 [videos](https://coil-kt.github.io/coil/videos/)
 
-当前 Coil 最新的 release 版本是 1.0.0，在 2020年10月22日才发布的，还热乎着呢。引入如下依赖就包含了 Coil 最基础的图片加载功能（本文是基于11月21日最新提交的代码来进行分析）
+当前 Coil 最新的 release 版本是 1.0.0，引入如下依赖就包含了 Coil 最基础的图片加载功能
 
 ```kotlin
 implementation("io.coil-kt:coil:1.0.0")
