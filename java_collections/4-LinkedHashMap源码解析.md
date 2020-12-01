@@ -1,7 +1,3 @@
-> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
->
-> 项目主页：https://github.com/leavesC/AndroidGuide
-
 HashMap 是用于映射(键值对)处理的数据类型，不保证元素的顺序按照插入顺序来排列，为了解决这一问题，Java 在 JDK1.4 以后提供了 LinkedHashMap 来实现有序的 HashMap
 
 LinkedHashMap 是 HashMap 的子类，它保留了元素的插入顺序，在内部维护着一个按照元素插入顺序或者元素访问顺序来排列的链表，默认是按照元素的插入顺序来排列，就像使用 ArrayList 一样；如果是按照元素的访问顺序来排列，则访问元素后该元素将移至链表的尾部，可以以此来实现 LRUcache 缓存算法

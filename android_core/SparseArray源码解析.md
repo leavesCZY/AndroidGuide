@@ -1,6 +1,6 @@
 使用 Android Studio 作为 IDE 的开发者可能会遇到一个现象，就是在代码中如果声明了  `Map<Integer, Object>` 类型的变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，意思就是**用 SparseArray< Object > 性能更优，可以用来替代 HashMap**
 
-这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/AndroidGuide/blob/master/java_collections/Java集合框架源码解析之HashMap.md)
+这里就来介绍下 SparseArray 的内部原理，看看它与 HashMap 有什么差别，关于 HashMap 的源码解析可以看这里：[Java集合框架源码解析之HashMap](https://github.com/leavesC/AndroidGuide/blob/master/java_collections/3-HashMap源码解析.md)
 
 ### 一、基本概念
 

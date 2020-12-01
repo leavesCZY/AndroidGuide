@@ -1,7 +1,3 @@
-> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
->
-> 项目主页：https://github.com/leavesC/AndroidGuide
-
 LinkedList 同时实现了 List 接口和 Deque 接口，所以既可以将 LinkedList 当做一个有序容器，也可以将之看作一个队列（Queue），同时又可以看作一个栈（Stack）。虽然 LinkedList 和 ArrayList 一样都实现了 List 接口，但其底层是通过**双向链表**来实现的，所以插入和删除元素的效率都要比 ArrayList 高，但也因此随机访问的效率要比 ArrayList 低
 
 #### 一、LinkedList 的类声明
@@ -473,7 +469,3 @@ public static void main(String[] args) {
 移除 LinkedList 中的100个元素,用时：0毫秒
 遍历 LinkedList 中的10000个元素,用时：246毫秒
 ```
-
-
-
-**如果想多了解一些 Java 的集合框架源码解析，可以看这里：[Java集合框架源码解析](https://github.com/leavesC/AndroidGuide)**

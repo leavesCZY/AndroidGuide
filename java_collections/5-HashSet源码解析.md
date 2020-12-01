@@ -1,7 +1,3 @@
-> 本系列文章会陆续对  Java 集合框架（Java Collections Framework，JDK1.8）中的几个常用容器结合源码进行介绍，帮助读者建立起对 Java 集合框架清晰而深入的理解，也算是对自己所学内容的一个总结归纳
->
-> 项目主页：https://github.com/leavesC/AndroidGuide
-
 HashSet 实现了 Set 接口，不允许插入重复的元素，允许包含 null 元素，且不保证元素迭代顺序，特别是不保证该顺序恒久不变
 
 HashSet 的代码十分简单，去掉注释后的代码不到两百行。HashSet 底层是通过 HashMap 来实现的，如果看过我上一篇关于 HashMap 源码的解析，再来看 HashSet 就会有一种“不过如此”的感觉了
