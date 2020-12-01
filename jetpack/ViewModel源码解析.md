@@ -1,17 +1,5 @@
 在两个多月前我开始写 **从源码看 Jetpack** 系列文章，从源码角度介绍 Jetpack 多个组件实现原理，写了一半就停笔去写 **Java 多线程编程** 的文章去了，本篇文章就再来补上 ViewModel 这一个最为基础也最为开发者熟悉的组件
 
-前文导航：
-
-[从源码看 Jetpack（1）-Lifecycle源码解析](https://juejin.im/post/6847902220755992589)
-
-[从源码看 Jetpack（2）-Lifecycle衍生](https://juejin.im/post/6847902220760203277)
-
-[从源码看 Jetpack（3）-LiveData源码解析](https://juejin.im/user/923245496518439/posts)
-
-[从源码看 Jetpack（4）-LiveData衍生](https://juejin.im/post/6847902222353858567)
-
-[从源码看 Jetpack（5）-Startup源码详解](https://juejin.im/post/6847902224069165070)
-
 本文所讲的的源代码基于以下依赖库当前最新版本：
 
 ```groovy

@@ -365,8 +365,3 @@ binarySearch 方法的返回值分为两种情况：
 
 - 插入新元素可能会导致移动大量的数组元素
 - 数据量较大时，查找效率（二分查找法）会明显降低
-
-
-篇幅所限，这里就不粘贴处 SparseArray.java 的完整详细源码注解了，可以点击这里查看：[SparseArray.java](https://github.com/leavesC/AndroidGuide/blob/master/android_collections/SparseArray.java)
-
-### 更多的学习笔记可以看这里：[AndroidGuide](https://github.com/leavesC/AndroidGuide)

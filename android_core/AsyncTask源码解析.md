@@ -1,8 +1,3 @@
-> 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
->
-> 项目主页：https://github.com/leavesC/AndroidGuide
->
-
 AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler ，实现了线程的复用，后台任务执行顺序的控制、子线程和 UI 线程的切换，使得开发者可以以简单的方法来执行一些耗时任务
 
 此篇文章就基于 Android API 27 版本的源码来对 AsyncTask 进行一次整体分析，以便对其底层工作流程有所了解

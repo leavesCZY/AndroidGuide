@@ -1,17 +1,3 @@
-前文导航：
-
-[从源码看 Jetpack（1）-Lifecycle源码解析](https://juejin.im/post/6847902220755992589)
-
-[从源码看 Jetpack（2）-Lifecycle衍生](https://juejin.im/post/6847902220760203277)
-
-[从源码看 Jetpack（3）-LiveData源码解析](https://juejin.im/user/923245496518439/posts)
-
-[从源码看 Jetpack（4）-LiveData衍生](https://juejin.im/post/6847902222353858567)
-
-[从源码看 Jetpack（5）-Startup源码详解](https://juejin.im/post/6847902224069165070)
-
-[从源码看 Jetpack（6）-ViewModel源码详解](https://juejin.im/post/6873356946896846856)
-
 本文所讲的的源代码基于以下依赖库当前最新版本：
 
 ```groovy
