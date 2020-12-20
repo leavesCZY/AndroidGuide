@@ -3,6 +3,7 @@
   * [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
   * [Dart](dart/Dart入门教程.md)
 * [Android 碎碎念]()
+  * [Gson 和 Kotlin data class 的避坑指南](android_core/Gson和KotlinDataClass的避坑指南.md)
   * [一文快速入门 Kotlin 协程](android_core/一文快速入门Kotlin协程.md)
   * [一文读懂 Handler 机制全家桶](android_core/一文读懂Handler机制全家桶.md)
   * [SparseArray 源码解析](android_core/SparseArray源码解析.md)
