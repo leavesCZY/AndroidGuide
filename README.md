@@ -4,9 +4,9 @@
 
 这是一份给 Android 开发者高级进阶的~~完整~~（**还不是**）指南，所有文章都是我这几年时间里一字一字码出来的，原创写作不易，觉得对你有帮助就点下 star 吧😂😂
 
-🐶🐶 突然想捡起以前放下的公众号了，一个人走得快，一群人走得远，写了文章就只有自己看那得有多孤单，只希望对你有所帮助
+🐶🐶 **突然想捡起以前放下的公众号了，一个人走得快，一群人走得远，写了文章就只有自己看那得有多孤单，只希望对你有所帮助**
 
-微信搜索公众号：[码上枝叶](https://testczy.oss-cn-beijing.aliyuncs.com/%E7%A0%81%E4%B8%8A%E6%9E%9D%E5%8F%B6.jpg)
+**微信搜索公众号：**[**码上枝叶**](https://testczy.oss-cn-beijing.aliyuncs.com/%E7%A0%81%E4%B8%8A%E6%9E%9D%E5%8F%B6.jpg)
 
 ![码上枝叶](https://testczy.oss-cn-beijing.aliyuncs.com/%E7%A0%81%E4%B8%8A%E6%9E%9D%E5%8F%B6.jpg)
 
@@ -18,7 +18,7 @@
 
 使用 GitBook 食用最佳，[点击这里开始阅读吧！](https://leavesc.gitbook.io/androidguide/)
 
-![AndroidGuide](https://s3.ax1x.com/2020/12/06/DjKRJg.png)
+![AndroidGuide](https://s3.ax1x.com/2020/12/21/rBNOtx.png)
 
 * [语言教程 ]()
   * [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
