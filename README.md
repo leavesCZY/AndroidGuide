@@ -16,7 +16,7 @@
 
 使用 GitBook 食用最佳，[点击这里开始阅读吧！](https://leavesc.gitbook.io/androidguide/)
 
-![AndroidGuide](https://s3.ax1x.com/2020/12/06/DjKRJg.png)
+![AndroidGuide](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/GitBook.png)
 
 * [语言教程 ]()
   * [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
