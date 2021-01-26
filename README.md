@@ -2,9 +2,7 @@
 
 ### 一、这是什么？
 
-这是一份给 Android 开发者高级进阶的~~完整~~（**还不是**）指南，所有文章都是我这几年时间里一字一字码出来的。一个人走得快，一群人走得远，写了文章就只有自己看那得有多孤单，只希望对你有所帮助😂😂😂
-
-坚持长期原创写作真的很不容易，欢迎关注我的微信公众号，查看更多文章，点击关注：[字节数组](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84.png)
+公众号：字节数组，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点，给 Android 开发者高级进阶的~~完整~~（**还不是**）指南
 
 ![字节数组](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84.png)
 
@@ -18,17 +16,22 @@
 
 ![AndroidGuide](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/GitBook.png)
 
-* [语言教程 ]()
+* [语言教程]()
   * [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
   * [Dart](dart/Dart入门教程.md)
 * [Android 碎碎念]()
-  * [Gson 和 Kotlin data class 的避坑指南](android_core/Gson和KotlinDataClass的避坑指南.md)
+  * [一文读懂 Handler 机制全家桶](android_core/一文读懂Handler机制全家桶.md)
   * [一文快速入门 Kotlin 协程](android_core/一文快速入门Kotlin协程.md)
-  * [一文读懂 Handler 机制全家桶](android_core/一文读懂Handler机制全家桶.md)、
   * [一文快速入门 ConstraintLayout](android_core/一文快速入门ConstraintLayout.md)
+  * [Gson 和 Kotlin data class 的避坑指南](android_core/Gson和KotlinDataClass的避坑指南.md)
   * [Jetpack LiveData 的设计理念及改进](android_core/JetpackLiveData的设计理念及改进.md)
   * [SparseArray 源码解析](android_core/SparseArray源码解析.md)
   * [AsyncTask 源码解析](android_core/AsyncTask源码解析.md)
+  * [ReactiveHttp：基于 Kotlin + Jetpack + Coroutines+ Retrofit 封装的网络请求框架](https://github.com/leavesC/ReactiveHttp)
+  * [EventLiveData：对 Jetpack LiveData 进行功能扩展，解决黏性事件及通知延迟问题](https://github.com/leavesC/EventLiveData)
+  * [Monitor：OkHttp/Retrofit 开发调试利器](https://github.com/leavesC/Monitor)
+  * [JsonHolder：Kotlin/Java 的 Json 序列化和反序列化库](https://github.com/leavesC/JsonHolder)
+  * [DoKV：小巧而强大的 Key-Value 管理框架](https://github.com/leavesC/DoKV)
 * [Jetpack 源码笔记]()
   * [从源码看 Jetpack（1）-Lifecycle 源码解析](jetpack/Lifecycle源码解析.md)
   * [从源码看 Jetpack（2）-Lifecycle 衍生物源码解析](jetpack/Lifecycle衍生.md)
@@ -80,13 +83,7 @@
   * [Kotlin 协程（7）-异常处理](kotlin_coroutine/7-异常处理.md)
   * [Kotlin 协程（8）-共享可变状态和并发性](kotlin_coroutine/8-共享可变状态和并发性.md)
   * [Kotlin 协程（9）-选择表达式](kotlin_coroutine/9-选择表达式.md)
-* [个人开源库]()
-  * [ReactiveHttp：基于 Kotlin + Jetpack + Coroutines+ Retrofit 封装的网络请求框架](https://github.com/leavesC/ReactiveHttp)
-  * [EventLiveData：对 Jetpack LiveData 进行功能扩展，解决黏性事件及通知延迟问题](https://github.com/leavesC/EventLiveData)
-  * [Monitor：OkHttp/Retrofit 开发调试利器](https://github.com/leavesC/Monitor)
-  * [JsonHolder：Kotlin/Java 的 Json 序列化和反序列化库](https://github.com/leavesC/JsonHolder)
-  * [DoKV：小巧而强大的 Key-Value 管理框架](https://github.com/leavesC/DoKV)
-* [三方库入门笔记 ]()
+* [三方库入门笔记]()
   * [Gson 入门笔记](android/Gson使用详解.md)
   * [RxJava2 入门笔记](android/RxJava2入门详细笔记.md)
   * [Dagger2 入门笔记](https://github.com/leavesC/Dagger2Samples)
