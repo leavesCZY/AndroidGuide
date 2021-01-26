@@ -1,7 +1,5 @@
 上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 的几个开发者比较容易忽略的衍生产物
 
-本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
-
 本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
@@ -178,7 +176,7 @@ ProcessLifecycleOwner 是 `androidx.lifecycle:lifecycle-process:xxx` 库下的�
 
 以下就来介绍下 ProcessLifecycleOwner 的使用方法以及 `androidx.lifecycle:lifecycle-process:xxx` 库下的所有类
 
-#### 2.1、如何使用
+#### 1、如何使用
 
 ProcessLifecycleOwner 是单例模式，获取到其唯一实例后向其添加 Observer 即可。需要注意的是，ProcessLifecycleOwner 是依靠于应用内所有 Activity 的生命周期的变化来定义生命周期事件的，所以对于那些完全无 UI 界面的应用来说使用 ProcessLifecycleOwner 是没有意义的
 
@@ -200,7 +198,7 @@ ProcessLifecycleOwner 是单例模式，获取到其唯一实例后向其添加 
         })
 ```
 
-#### 2.2、EmptyActivityLifecycleCallbacks
+#### 2、EmptyActivityLifecycleCallbacks
 
 `EmptyActivityLifecycleCallbacks` 类实现了 `Application.ActivityLifecycleCallbacks` 接口，`ActivityLifecycleCallbacks` 接口提供了用于监听应用内所有 Activity 的生命周期回调的方法。例如，在 Activity 的 `onCreate()` 函数被**调用前（onActivityPreCreated）、被调用时（onActivityCreated）、被调用后（onActivityPostCreated）**，都提供了相应的监听回调
 
@@ -268,7 +266,7 @@ class EmptyActivityLifecycleCallbacks implements Application.ActivityLifecycleCa
 }
 ```
 
-#### 2.3、LifecycleDispatcher
+#### 3、LifecycleDispatcher
 
 LifecycleDispatcher 的主要逻辑是用于向应用内所有 Activity 注入一个 ReportFragment，通过 ReportFragment 来辅助获取 Activity 的生命周期事件。并由外部通过调用 `init(Context)` 方法来进行初始化
 
@@ -312,7 +310,7 @@ class LifecycleDispatcher {
 }
 ```
 
-#### 2.4、ProcessLifecycleOwner
+#### 4、ProcessLifecycleOwner
 
 ProcessLifecycleOwner 实现了 LifecycleOwner 接口，也用到了 LifecycleRegistry 作为其生命周期实现。其构造函数是私有的，通过静态变量来实现单例模式
 
@@ -569,7 +567,7 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
     }
 ```
 
-#### 2.5、ProcessLifecycleOwnerInitializer
+#### 5、ProcessLifecycleOwnerInitializer
 
 上文还有个小细节，就是 `LifecycleDispatcher` 和 `ProcessLifecycleOwner` 两个类都需要外部传入 Context 对象以便进行初始化，但开发者在使用时其实是不需要手动初始化的，因为 Jetpack 已经将这个初始化过程都给隐藏在了 `ProcessLifecycleOwnerInitializer` 这个 ContentProvider 内部了，Application 在启动的过程中就会自动调用 ProcessLifecycleOwnerInitializer 的 `onCreate()`方法
 
@@ -634,7 +632,7 @@ public class ProcessLifecycleOwnerInitializer extends ContentProvider {
 </manifest>
 ```
 
-#### 2.6、总结
+#### 6、总结
 
 - ProcessLifecycleOwner 是对整个应用的生命周期进行监听，但由于 ProcessLifecycleOwner 是依靠于应用内所有 Activity 的生命周期的变化来定义生命周期事件的，所以对于那些完全无 UI 界面的应用来说使用 ProcessLifecycleOwner 是没有意义的
 - ON_CREATE 事件只会在 ProcessLifecycleOwner 初始化的时候被触发

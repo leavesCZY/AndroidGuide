@@ -1,7 +1,5 @@
 LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到其身影。LiveData 可以和**生命周期绑定**，当 **Lifecycle**（例如 Activity、Fragment 等）处于活跃状态时才进行数据回调，并在 Lifecycle 处于无效状态（DESTROYED）时自动移除数据监听行为，从而避免常见的**内存泄露和 NPE 问题**
 
-本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
-
 本文就来介绍下 LiveData 的内部实现逻辑，从而让读者在知道其使用方法之外，还可以了解到其实现原理以及以下几点比较容易忽略的重要特性：
 
 - 一个 Observer 对象只能和一个 Lifecycle 对象绑定，否则将抛出异常
@@ -26,7 +24,7 @@ LiveData 包含两个用于添加数据观察者（Observer）的方法，分别
 
 两个方法的区别对于外部来说只在于是否提供了生命周期安全的保障
 
-#### 1.1、生命周期安全的 observe 
+#### 1、生命周期安全的 observe 
 
 `observe(LifecycleOwner , Observer)` 方法的函数签名如下所示。传入的 **LifecycleOwner** 参数意味着携带了 **Lifecycle** 对象，LiveData 内部就根据 Lifecycle 的生命周期事件的回调变化在合适的时机进行数据通知，并在 Lifecycle 对象处于 **DESTROYED** 状态时自动移除 Observer，这也是 LiveData 避免内存泄漏的最重要的一个点
 
@@ -175,7 +173,7 @@ LifecycleBoundObserver 的整个事件流程是这样的：
     }
 ```
 
-#### 1.2、非生命周期安全的 observeForever 
+#### 2、非生命周期安全的 observeForever 
 
 `observeForever()` 函数的方法签名如下所示。`observeForever()` 函数本身不会考虑外部所处的生命周期状态，只要数据发生变化时就会进行数据回调，因此 `observeForever()`函数是非生命周期安全的
 
@@ -220,7 +218,7 @@ LifecycleBoundObserver 的整个事件流程是这样的：
     }
 ```
 
-#### 1.3、removeObserver
+#### 3、removeObserver
 
 LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **removeObserver** 的方法。removeObserver 的方式一共有两种，逻辑都比较简单
 
@@ -257,7 +255,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **remo
 - setValue(T value)
 - postValue(T value)
 
-#### 2.1、setValue
+#### 1、setValue
 
 `setValue(T)` 函数被限定在只能主线程进行调用
 
@@ -352,7 +350,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 **remo
     }
 ```
 
-#### 2.2、postValue
+#### 2、postValue
 
 `postValue(T)` 函数不限定调用者所在线程，不管是主线程还是子线程都可以调用，因此是存在多线程竞争的可能性的，`postValue(T)` 函数的重点旧在于需要理解其从子线程切换到主线程之间的状态变化
 

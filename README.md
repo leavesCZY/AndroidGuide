@@ -2,13 +2,15 @@
 
 ### 一、这是什么？
 
-公众号：字节数组，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点，给 Android 开发者高级进阶的~~完整~~（**还不是**）指南
+公众号：**字节数组**
+
+热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点，一份给 Android 开发者的高级进阶~~完整~~（**还不是**）指南
 
 ![字节数组](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84.png)
 
 ### 二、包含什么？
 
-**Kotlin、Dart 入门教程、Jetpack 源码剖析、三方库源码解析、系统源码解析、三方框架使用指南、Flutter 教程、Kotlin 协程、多线程机制解析、个人开源库** 等一系列乱七八糟的知识点，希望对你有所帮助
+**系统源码解析、Jetpack 源码剖析、三方框架使用指南、三方库源码解析、Kotlin、Dart 入门教程、Flutter 教程、Kotlin 协程、多线程机制解析、个人开源库** 等一系列乱七八糟的知识点，希望对你有所帮助
 
 ### 三、在哪里看？
 
@@ -33,13 +35,13 @@
   * [JsonHolder：Kotlin/Java 的 Json 序列化和反序列化库](https://github.com/leavesC/JsonHolder)
   * [DoKV：小巧而强大的 Key-Value 管理框架](https://github.com/leavesC/DoKV)
 * [Jetpack 源码笔记]()
-  * [从源码看 Jetpack（1）-Lifecycle 源码解析](jetpack/Lifecycle源码解析.md)
-  * [从源码看 Jetpack（2）-Lifecycle 衍生物源码解析](jetpack/Lifecycle衍生.md)
-  * [从源码看 Jetpack（3）-LiveData 源码解析](jetpack/LiveData源码解析.md)
-  * [从源码看 Jetpack（4）-LiveData 衍生物源码解析](jetpack/LiveData衍生.md)
-  * [从源码看 Jetpack（5）-Startup 源码详解](jetpack/Startup源码详解.md)
-  * [从源码看 Jetpack（6）-ViewModel 源码解析](jetpack/ViewModel源码解析.md)
-  * [从源码看 Jetpack（7）-SavedStateHandle 源码解析](jetpack/SavedStateHandle源码详解.md)
+  * [从源码看 Jetpack（1）-Lifecycle 源码解析](jetpack/1-Lifecycle源码解析.md)
+  * [从源码看 Jetpack（2）-Lifecycle 衍生物源码解析](jetpack/2-Lifecycle衍生.md)
+  * [从源码看 Jetpack（3）-LiveData 源码解析](jetpack/3-LiveData源码解析.md)
+  * [从源码看 Jetpack（4）-LiveData 衍生物源码解析](jetpack/4-LiveData衍生.md)
+  * [从源码看 Jetpack（5）-Startup 源码详解](jetpack/5-Startup源码详解.md)
+  * [从源码看 Jetpack（6）-ViewModel 源码解析](jetpack/6-ViewModel源码解析.md)
+  * [从源码看 Jetpack（7）-SavedStateHandle 源码解析](jetpack/7-SavedStateHandle源码详解.md)
 * [三方库源码笔记]()
   - [三方库源码笔记（1）-EventBus 源码详解](android_opensource/1-EventBus源码详解.md)
   - [三方库源码笔记（2）-EventBus 自己实现一个？](android_opensource/2-EventBus自己实现一个？.md)

@@ -1,7 +1,5 @@
 上篇文章介绍了关于 LiveData 类的源码解析，本篇文章再来介绍下 LiveData 的一系列衍生类及衍生方法
 
-本文已收录至我的学习笔记：[AndroidGuide](https://github.com/leavesC/AndroidGuide)
-
 本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
@@ -17,7 +15,7 @@
 
 LiveData 的 `setValue()` 和 `postValue()` 方法的访问权限都是 `protected`，因此我们在日常开发中基本都是使用其子类
 
-#### 1.1、MutableLiveData
+#### 1、MutableLiveData
 
 MutableLiveData 的源码很简单，只是将 `setValue()` 和 `postValue()` 方法的访问权限提升为了 `public`，从而让外部可以直接调用这两个方法
 
@@ -52,7 +50,7 @@ public class MutableLiveData<T> extends LiveData<T> {
 }
 ```
 
-#### 1.2、MediatorLiveData
+#### 2、MediatorLiveData
 
 MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的也就一百行不到。MediatorLiveData 既可用于将其它 LiveData 作为数据源来进行监听，也可将其作为普通的 MutableLiveData 进行 setValue 和 postValue 
 
@@ -181,7 +179,7 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
 
 Transformations 类是 `lifecycle-livedata` 库提供的一个工具类型的方法类，提供了三个静态方法用于简化对 MediatorLiveData 的使用，这里再来依次介绍下
 
-#### 2.1、map
+#### 1、map
 
 `map(LiveData<X> , Function<X, Y>)` 函数用于简化向 MediatorLiveData 添加数据源的过程。大多数情况下，我们在使用 MediatorLiveData 时就是先将**数据源类型 X** 转换我们的**目标数据类型 Y**，然后再通过 `setValue(Y)` 进行数据回调。map 函数将这个数据类型转换过程抽象为了接口 `Function<I, O>`，将  `setValue(Y)` 过程隐藏在了 map 函数内部
 
@@ -212,7 +210,7 @@ Transformations 类是 `lifecycle-livedata` 库提供的一个工具类型的方
     }
 ```
 
-#### 2.2、switchMap
+#### 2、switchMap
 
 switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果是通过 LiveData 来进行传递的情况下（比如 Room 数据库就支持将查询结果以 LiveData 的形式来返回）会比较有用。下面通过假设一个现实需求来理解其作用会更为简单
 
@@ -293,7 +291,7 @@ switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果�
     }
 ```
 
-#### 2.3、distinctUntilChanged
+#### 3、distinctUntilChanged
 
 `distinctUntilChanged()` 函数用于过滤掉连续重复的回调值，只有本次的回调结果和上次不一致，本次的回调值才被认为是有效的
 
