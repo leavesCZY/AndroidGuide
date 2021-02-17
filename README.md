@@ -6,7 +6,7 @@
 
 热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点，以及各种乱七八糟的知识点，是一份给 Android 开发者的高级进阶~~完整~~（**还不是**）指南，希望对你有所帮助
 
-![公众号：字节数组](https://testczy.oss-cn-beijing.aliyuncs.com/%E9%80%9A%E7%94%A8/%E5%AD%97%E8%8A%82%E6%95%B0%E7%BB%84.png)
+![公众号：字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)
 
 ### 二、在哪里看？
 
