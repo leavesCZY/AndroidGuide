@@ -3,6 +3,7 @@
   * [两万六千字带你 Kotlin 入门](kotlin/kotlin入门教程.md)
   * [Dart](dart/Dart入门教程.md)
 * [Android 精讲]()
+  * [一文读懂 Java & Kotlin 泛型难点](android_core/一文读懂Java&Kotlin泛型难点.md)
   * [一文读懂 SharedPreferences 的缺陷及一点点思考](https://github.com/leavesC/KVHolder/wiki/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82-SharedPreferences-%E7%9A%84%E7%BC%BA%E9%99%B7%E5%8F%8A%E4%B8%80%E7%82%B9%E7%82%B9%E6%80%9D%E8%80%83)
   * [一文读懂 View 事件分发机制](android_core/一文读懂View事件分发机制.md)
   * [一文读懂 Handler 机制全家桶](android_core/一文读懂Handler机制全家桶.md)
