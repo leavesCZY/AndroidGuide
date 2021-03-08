@@ -1,4 +1,6 @@
-> 前阵子定了个小目标，打算来深入了解下几个常用的开源库，看下其源码和实现原理，进行总结并输出成文章。初定的目标是 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil 等七个。**目前已经完成了十一篇关于 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp 的文章**，本篇是第十二篇，是关于 OkHttp 的实战内容，来实现一个 OkHttp 的可视化抓包工具，希望对你有所帮助😎😎
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
 在使用 OkHttp 或者 Retrofit 的时候，我觉得大部分开发者会做得最多的自定义实现就是**拦截器**了。因为 OkHttp 的拦截器真的是太有用了，我们的很多需求：**添加 Header、计算并添加签名信息、网络请求记录**等都可以通过拦截器来自动完成，只要定义好规则，就可以覆盖到全局的 OkHttp 网络请求
 

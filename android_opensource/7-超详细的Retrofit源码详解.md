@@ -1,4 +1,6 @@
-> 国庆假期想着闲着也是闲着，就想着来深入了解下几个常用的开源库，看下其实现原理和源码，进行总结并输出成文章。初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、Coil、OkHttp** 等几个。目前已经完成了六篇关于 EventBus、ARouter、LeakCanary 的文章，本篇是第七篇，来对 Retrofit 进行讲解😂😂希望对你有所帮助
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
 ### 一、前言
 

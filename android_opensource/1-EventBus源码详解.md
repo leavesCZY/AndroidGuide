@@ -1,4 +1,6 @@
-> 国庆假期想着闲着也是闲着，就想着来深入了解下几个常用的开源库😁😁，看下其实现原理和源码，进行总结并输出成文章。初定的目标是 **EventBus、ARouter、LeakCanary、Glide、Coil、Retrofit、OkHttp** 等几个。目前已经完成了部分，在之后的几天里会将文章陆续发布出来😁😁
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
 我们知道，EventBus 在有消息被发送出来时，可以直接为我们回调该消息的所有监听方法，回调操作是通过反射 `method.invoke` 来实现的。那么 EventBus 在回调之前也必须先拿到所有的监听方法才行，这样才知道该消息类型对应什么监听方法以及对应多少监听方法
 
@@ -50,7 +52,7 @@ public class SubscriberMethod {
 
 这个查找的过程是通过 `SubscriberMethodFinder` 类来完成的
 
-#### SubscriberMethodFinder.java
+#### SubscriberMethodFinder
 
 这里来看下 `SubscriberMethodFinder`是如何遍历获取到所有声明了`@Subscribe` 注解的方法
 
@@ -276,9 +278,9 @@ public class SubscriberMethod {
         }
 ```
 
-#### EventBus.java
+#### EventBus
 
-进行上述操作后，就拿到了注册类所有的包含了注解声明的方法了，这些方法都会保存到 `List<SubscriberMethod>` 中。拿到所有方法后，就需要对注册者及其所有监听方法进行归类了
+进行上述操作后，就到了注册类所有的包含了注解声明的方法了，这些方法都会保存到 `List<SubscriberMethod>` 中。拿到所有方法后，就需要对注册者及其所有监听方法进行归类了
 
 归类的目的是既是为了方便后续操作也是为了提高效率。 因为在同个页面或者多个页面间可能存在多个对同种类型消息的监听方法，那么就需要将每种消息类型和其当前的所有监听方法对应起来，提高消息的发送效率。而且在 subscriber 解除注册时，也需要将 subscriber 包含的所有监听方法都给移除掉，那么就需要预先进行归类。监听方法也可以设定自己对消息处理的优先级顺序，所以需要预先对监听方法进行排序
 

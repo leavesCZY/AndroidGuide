@@ -39,7 +39,9 @@
                                                      @@:
 ```
 
-> 前阵子定了个小目标，打算来深入了解下几个常用的开源库，看下其源码和实现原理，进行总结并输出成文章。初定的目标是 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil 等七个。**目前已经完成了十篇关于 EventBus、ARouter、LeakCanary、Retrofit、Glide 的文章**，本篇是第十一篇，来对 OkHttp 的源码进行讲解，希望对你有所帮助😎😎
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
 本文基于当前 OkHttp 的最新版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
 

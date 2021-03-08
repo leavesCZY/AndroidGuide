@@ -1,8 +1,10 @@
 ![](https://s3.ax1x.com/2020/11/17/DV7Na6.png)
 
-> 前阵子定了个小目标，打算来深入了解下几个常用的开源库，看下其源码和实现原理，进行总结并输出成文章。初定的目标是 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil 等七个。**目前已经完成了十二篇关于 EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp 的文章**，本篇是第十三篇，是关于 Coil 的知识点，希望对你有所帮助😎😎
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
-Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://github.com/leavesC/AndroidGuide/tree/gitbook/android_opensource) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧😂😂
+Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://github.com/leavesC/AndroidGuide) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧😂😂
 
 Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的，Coil 在2020年10月22日才发布了 1.0.0 版本，还热乎着呢。我在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而且本文写好的时候离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 的源码分析文章** ~~~
 
@@ -1792,4 +1794,4 @@ class VolleyFetcher(private val application: Application) : Fetcher<Uri> {
 
 [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.im/post/6895740949025177607)
 
-[三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://github.com/leavesC/AndroidGuide/tree/gitbook/android_opensource)
+[三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)

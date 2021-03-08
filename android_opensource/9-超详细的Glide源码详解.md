@@ -1,4 +1,6 @@
-> 前阵子定了个小目标，打算来深入了解下几个常用的开源库，看下其源码和实现原理，进行总结并输出成文章。初定的目标是 EventBus、ARouter、LeakCanary、Retrofit、Glide、Coil、OkHttp 等七个。**目前已经完成了八篇关于 EventBus、ARouter、LeakCanary、Retrofit 的文章**，本篇是第九篇，来对 Glide 进行讲解，希望对你有所帮助😎😎
+> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
 Glide 的源码有点复杂，如果要细细展开来讲解，那么写个十篇文章也囊括不完😂😂所以我就想着换个思路来看源码：**以小点来划分，每个小点只包含 Glide 实现某个功能或目的时所涉及的流程，以此来简化理解难度，通过整合多个小的功能点来把控住 Glide 大的实现方向**
 

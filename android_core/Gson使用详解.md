@@ -108,7 +108,7 @@ Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -224,7 +224,7 @@ SerializedName 的作用是为了在序列化或反序列化时，指导 Gson �
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -273,7 +273,7 @@ public class User {
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -343,7 +343,7 @@ Expose 注解的注解值声明情况有四种
 现在来看个例子，修改 User 类
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -429,7 +429,7 @@ public @interface Until {
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -496,7 +496,7 @@ public class User {
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -535,7 +535,7 @@ GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`�
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -610,7 +610,7 @@ addDeserializationExclusionStrategy(ExclusionStrategy strategy);
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -660,7 +660,7 @@ Gson 也可以对时间值进行格式化
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -724,7 +724,7 @@ public abstract T read(JsonReader var1) throws IOException;
 
 ```java
 /**
- * 作者：chenZY
+ * 作者：leavesC
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
