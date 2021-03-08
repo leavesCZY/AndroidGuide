@@ -1,3 +1,7 @@
+> 对于 Android Developer 来说，Google Jetpack 可以说是当前最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+
 最近，Google Jetpack 官网上新增了一个名为 `App Startup` 的组件，链接：[App Startup](https://developer.android.com/topic/libraries/app-startup)。根据官方文档的介绍，`App Startup` 提供了一种直接、高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
 
 本文内容均基于`App Startup`当前最新的 alpha 版本：

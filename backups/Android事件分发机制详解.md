@@ -71,7 +71,7 @@ public boolean onTouchEvent(MotionEvent event)
 
 ```java
 /**
- * Created by CZY on 2017/6/7.
+ * Created by leavesC on 2017/6/7.
  */
 public class MyTextView extends AppCompatTextView {
 
@@ -251,7 +251,7 @@ ViewGroup 相比 View和Activity多出了一个 `onInterceptTouchEvent(MotionEve
 首先继承 LinearLayout 类并重写其与 TouchEvent 事件发布相关的三个方法，输出相应的触摸事件类型
 ```java
 /**
- * Created by CZY on 2017/6/7.
+ * Created by leavesC on 2017/6/7.
  */
 public class MyLinearLayout extends LinearLayout {
 

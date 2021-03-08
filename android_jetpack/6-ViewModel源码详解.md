@@ -1,3 +1,7 @@
+> 对于 Android Developer 来说，Google Jetpack 可以说是当前最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😁😁
+>
+> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+
 在两个多月前我开始写 **从源码看 Jetpack** 系列文章，从源码角度介绍 Jetpack 多个组件实现原理，写了一半就停笔去写 **Java 多线程编程** 的文章去了，本篇文章就再来补上 ViewModel 这一个最为基础也最为开发者熟悉的组件
 
 本文所讲的的源代码基于以下依赖库当前最新版本：
@@ -498,7 +502,7 @@ ViewModelProvider 提供的 Factory 接口实现类有两个：
 
 ```java
 /**
- * 作者：CZY
+ * 作者：leavesC
  * 时间：2020/9/17 14:07
  * 描述：
  * GitHub：https://github.com/leavesC
@@ -629,7 +633,7 @@ E/myViewModelB: github.leavesc.demo.MyViewModel@9abd6fe age: 20
 
 ```java
 /**
- * 作者：CZY
+ * 作者：leavesC
  * 时间：2020/9/17 14:07
  * 描述：
  * GitHub：https://github.com/leavesC

@@ -3703,7 +3703,7 @@ fun main() {
 
 ```kotlin
 fun main() {
-    val maps = mapOf(1 to "leavesC", 2 to "ye", 3 to "czy")
+    val maps = mapOf(1 to "leavesC", 2 to "ye", 3 to "https://juejin.cn/user/923245496518439")
     maps.forEach { key, value -> println("key is : $key , value is : $value") }
 }
 ```

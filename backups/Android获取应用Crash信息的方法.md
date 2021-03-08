@@ -32,7 +32,7 @@ public void uncaughtException(Thread thread, Throwable throwable){
 
 ```java
 /**
- * Crash处理 CZY
+ * Crash处理 leavesC
  * Created by ZY on 2016/8/27.
  */
 public class CrashHandler implements Thread.UncaughtExceptionHandler {
