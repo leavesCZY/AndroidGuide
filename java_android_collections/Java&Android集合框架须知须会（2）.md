@@ -831,26 +831,26 @@ public class LRUCache {
         map.put("Java", 1);
         map.put("Jetpack", 2);
         map.put("Kotlin", 3);
-        map.put("叶志陈", 4);
+        map.put("业志陈", 4);
         map.put("字节数组", 5);
         map.put("leaveC", 6);
 
         System.out.println();
         Set<String> keySet = map.keySet();
-        //输出结果是：Jetpack Kotlin 叶志陈 字节数组 leaveC
+        //输出结果是：Jetpack Kotlin 业志陈 字节数组 leaveC
         keySet.forEach(key -> System.out.print(key + " "));
 
         //获取链表的头结点的值，使之移动到链表尾部
         map.get("Jetpack");
         System.out.println();
         keySet = map.keySet();
-        //输出结果是：Kotlin 叶志陈 字节数组 leaveC Jetpack
+        //输出结果是：Kotlin 业志陈 字节数组 leaveC Jetpack
         keySet.forEach(key -> System.out.print(key + " "));
 
         //向链表添加元素
         map.put("Dart", 5);
         System.out.println();
-        //输出结果是：叶志陈 字节数组 leaveC Jetpack Dart
+        //输出结果是：业志陈 字节数组 leaveC Jetpack Dart
         keySet.forEach(key -> System.out.print(key + " "));
     }
 

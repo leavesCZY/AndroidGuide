@@ -87,7 +87,7 @@ public class GenericTest {
 
 ```java
         List stringList = new ArrayList();
-        stringList.add("叶志陈");
+        stringList.add("业志陈");
         stringList.add("https://juejin.cn/user/923245496518439");
         String str = (String) stringList.get(0);
 ```
@@ -127,8 +127,8 @@ public class GenericTest3 {
     }
 
     public static void main(String[] args) {
-        NodeA nodeA = new NodeA("叶志陈");
-        NodeB<String> nodeB = new NodeB<>("叶志陈");
+        NodeA nodeA = new NodeA("业志陈");
+        NodeB<String> nodeB = new NodeB<>("业志陈");
     }
 
 }
@@ -148,12 +148,12 @@ public class generic.GenericTest3 {
     Code:
        0: new           #2                  // class generic/GenericTest3$NodeA
        3: dup
-       4: ldc           #3                  // String 叶志陈
+       4: ldc           #3                  // String 业志陈
        6: invokespecial #4                  // Method generic/GenericTest3$NodeA."<init>":(Ljava/lang/Object;)V
        9: astore_1
       10: new           #5                  // class generic/GenericTest3$NodeB
       13: dup
-      14: ldc           #3                  // String 叶志陈
+      14: ldc           #3                  // String 业志陈
       16: invokespecial #6                  // Method generic/GenericTest3$NodeB."<init>":(Ljava/lang/Object;)V
       19: astore_2
       20: return
@@ -186,8 +186,8 @@ public class GenericTest3 {
     }
 
     public static void main(String[] args) {
-        NodeA nodeA = new NodeA("叶志陈");
-        NodeB<String> nodeB = new NodeB<>("叶志陈");
+        NodeA nodeA = new NodeA("业志陈");
+        NodeB<String> nodeB = new NodeB<>("业志陈");
     }
 
 }
@@ -207,12 +207,12 @@ public class generic.GenericTest3 {
     Code:
        0: new           #2                  // class generic/GenericTest3$NodeA
        3: dup
-       4: ldc           #3                  // String 叶志陈
+       4: ldc           #3                  // String 业志陈
        6: invokespecial #4                  // Method generic/GenericTest3$NodeA."<init>":(Ljava/lang/String;)V
        9: astore_1
       10: new           #5                  // class generic/GenericTest3$NodeB
       13: dup
-      14: ldc           #3                  // String 叶志陈
+      14: ldc           #3                  // String 业志陈
       16: invokespecial #6                  // Method generic/GenericTest3$NodeB."<init>":(Ljava/lang/String;)V
       19: astore_2
       20: return
@@ -250,7 +250,7 @@ public class GenericTest3 {
     }
 
     public static void main(String[] args) {
-        NodeA<String> nodeA = new NodeA<>("叶志陈");
+        NodeA<String> nodeA = new NodeA<>("业志陈");
         getField(nodeA.getClass());
         NodeB<String> nodeB = new NodeB<>("https://juejin.cn/user/923245496518439");
         getField(nodeB.getClass());
@@ -799,18 +799,18 @@ inline fun <reified T> toBean(json: String): T {
 data class BlogBean(val name: String, val url: String)
 
 fun main() {
-    val json = """{"name":"叶志陈","url":"https://juejin.cn/user/923245496518439"}"""
-    val listJson = """[{"name":"叶志陈","url":"https://juejin.cn/user/923245496518439"},{"name":"叶志陈","url":"https://juejin.cn/user/923245496518439"}]"""
+    val json = """{"name":"业志陈","url":"https://juejin.cn/user/923245496518439"}"""
+    val listJson = """[{"name":"业志陈","url":"https://juejin.cn/user/923245496518439"},{"name":"业志陈","url":"https://juejin.cn/user/923245496518439"}]"""
 
     val blogBean = toBean<BlogBean>(json)
     val blogMap = toBean<Map<String, String>>(json)
     val blogBeanList = toBean<List<BlogBean>>(listJson)
     
-    //BlogBean(name=叶志陈, url=https://juejin.cn/user/923245496518439)
+    //BlogBean(name=业志陈, url=https://juejin.cn/user/923245496518439)
     println(blogBean)
-    //{name=叶志陈, url=https://juejin.cn/user/923245496518439}
+    //{name=业志陈, url=https://juejin.cn/user/923245496518439}
     println(blogMap)
-    //[{name=叶志陈, url=https://juejin.cn/user/923245496518439}, {name=叶志陈, url=https://juejin.cn/user/923245496518439}]
+    //[{name=业志陈, url=https://juejin.cn/user/923245496518439}, {name=业志陈, url=https://juejin.cn/user/923245496518439}]
     println(blogBeanList)
 }
 ```
