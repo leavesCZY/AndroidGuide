@@ -2,17 +2,17 @@
 
 ### 一、这是什么？
 
-公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
-
-🎁🎁 一份给 Android Developer 的进阶不完整指南，分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点，希望对你有所帮助
-
-![公众号：字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)
+🎁🎁 一份给 Android Developer 的进阶不完整指南，包含 Android 系统源码解析、Jetpack 源码解析、热门开源库源码解析等多个面试必备的知识点，希望对你有所帮助 😇😇
 
 ### 二、在哪里看？
 
-使用 GitBook 食用最佳，[点击这里开始阅读吧！](https://leavesc.gitbook.io/androidguide/)
+公众号：[**字节数组**](https://s3.ax1x.com/2021/02/18/yRiE4K.png)
 
-![AndroidGuide](https://s3.ax1x.com/2021/02/13/ysYOjx.png)
+掘金：[**业志陈**](https://juejin.cn/user/923245496518439/posts)
+
+![公众号：字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)
+
+
 
 * [语言教程]()
   * [两万六千字带你 Kotlin 入门](kotlin_core/两万六千字带你Kotlin入门.md)
