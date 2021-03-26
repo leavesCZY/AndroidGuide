@@ -1,23 +1,32 @@
-> 对于 Android Developer 来说，Google Jetpack 可以说是当前最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😁😁
+> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😇😇
 >
 > 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
-上篇文章介绍了关于 LiveData 类的源码解析，本篇文章再来介绍下 LiveData 的一系列衍生类及衍生方法
+系列文章导航
 
-本文所讲的的源代码基于以下依赖库当前最新的 release 版本：
+- [从源码看 Jetpack（1）- Lifecycle 源码解析](https://juejin.cn/post/6847902220755992589)
+- [从源码看 Jetpack（2）- Lifecycle 衍生物源码解析](https://juejin.cn/post/6847902220760203277)
+- [从源码看 Jetpack（3）- LiveData 源码解析](https://juejin.cn/post/6847902222345633806)
+- [从源码看 Jetpack（4）- LiveData 衍生物源码解析](https://juejin.cn/post/6847902222353858567)
+- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
+- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
+- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
+
+
+上篇文章介绍了 LiveData 的源码实现，本篇文章再来介绍下 LiveData 的一系列衍生类及衍生方法
+
+本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-	compileSdkVersion 29
-
-    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+	implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-core:2.2.0"
 ```
 
-### 一、LiveData 的子类
+### 一、LiveData 子类
 
 先来介绍下 LiveData 的几个子类
 
-LiveData 的 `setValue()` 和 `postValue()` 方法的访问权限都是 `protected`，因此我们在日常开发中基本都是使用其子类
+LiveData 的 `setValue()` 和 `postValue()` 方法的访问权限都是 `protected`，因此我们在日常开发中要使用其子类才能来更新值
 
 #### 1、MutableLiveData
 
@@ -56,37 +65,32 @@ public class MutableLiveData<T> extends LiveData<T> {
 
 #### 2、MediatorLiveData
 
-MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的也就一百行不到。MediatorLiveData 既可用于将其它 LiveData 作为数据源来进行监听，也可将其作为普通的 MutableLiveData 进行 setValue 和 postValue 
+MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的也就一百行不到。MediatorLiveData 既可用于将其它 LiveData 作为数据源来进行监听，也可将其作为普通的 MutableLiveData 进行使用
 
-这里先来看个 MediatorLiveData 的简单用法示例。假设有一个 EditText 用于输入用户名，同时需要在界面上回显用户名的长度，此时就可以用 MediatorLiveData 将**用户名（String）**转换为我们需要的数据类型 **Int**
+这里先来看个 MediatorLiveData 的简单用法示例。假设有一个 EditText 用于输入用户名，同时需要在界面上回显用户名的长度，此时就可以用 MediatorLiveData 将**用户名（String）**转换为我们需要的数据类型 **Int**，只要 `nameLiveData` 的数据发生变化 `nameLengthLiveData` 就能收到通知
 
 ```kotlin
+	/**
+     * @Author: leavesC
+     * @Date: 2021/03/24 18:04
+     * @Desc:
+     * @Github：https://github.com/leavesC
+     */
     private val nameLiveData = MutableLiveData<String>()
 
     private val nameLengthLiveData = MediatorLiveData<Int>()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        //将 nameLiveData 作为数据源
-        //只要 nameLiveData 的数据发生变化 nameLengthLiveData 就能收到通知
-        nameLengthLiveData.addSource(nameLiveData) { name ->
-            nameLengthLiveData.value = name.length
-        }
-        nameLengthLiveData.observe(this, Observer {
-            Log.e("TAG", "name length: $it")
-        })
-
-        btn_print.setOnClickListener {
-            nameLiveData.value = Random.nextInt(1, 200).toString()
-        }
+    //将 nameLiveData 作为数据源
+    //只要 nameLiveData 的数据发生变化 nameLengthLiveData 就能收到通知
+    nameLengthLiveData.addSource(nameLiveData) { name ->
+        nameLengthLiveData.value = name.length
     }
+    nameLengthLiveData.observe(this, Observer {
+        Log.e("TAG", "name length: $it")
+    })
 ```
 
-先来看下其 addSource 方法。主要逻辑是将**外部数据源 source** 以及对应的**数据监听者 onChanged** 包装为 Source 对象，然后检查 source 对象和 onChanged 对象是否已经缓存在 mSources 内部，避免重复添加数据源及 Observer。但是，MediatorLiveData 允许通过多次调用 addSource 方法来添加多个不同的数据源，这使得我们可以将不同的数据渠道（例如：本地数据库缓存、网络请求结果等）进行汇总，最后再统一从一个出口进行分发
-
-需要注意的是，MediatorLiveData 不允许对同个数据源添加多个 Observer 对象，因为就用法而言，开发者是会在 Observer 中将从数据源接收到的值经过一系列逻辑计算后再传递给 MediatorLiveData ，这个转换过程只需要一次即可，所以添加多个 Observer 对象是没有实际意义的
+先来看下其 `addSource` 方法。其主要逻辑是将**外部数据源 source** 以及对应的**数据监听者 onChanged** 包装为 Source 对象，然后检查 `source` 对象和 `onChanged` 对象是否已经缓存在 `mSources` 内部，避免重复添加数据源及 Observer
 
 ```java
     private SafeIterableMap<LiveData<?>, Source<?>> mSources = new SafeIterableMap<>();
@@ -108,7 +112,7 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
             return;
         }
         //如果 MediatorLiveData 当前有处于活跃状态的 Observer 对其进行监听
-        //则调用 Source 对象的 plug() 函数
+        //则调用 Source 对象的 plug() 方法
         if (hasActiveObservers()) {
             e.plug();
         }
@@ -124,7 +128,9 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
     }
 ```
 
-再来看下 Source 类的定义。主要是对外部数据源的 mLiveData 的数据变化进行中转转发，并开放了两个用于增减 Observer 的方法
+需要注意的是，MediatorLiveData 不允许对同个数据源添加多个 Observer 对象，因为就用法而言，开发者是会在 Observer 中将从数据源接收到的值经过一系列逻辑计算后再传递给 MediatorLiveData ，这个转换过程只需要一次即可，所以添加多个 Observer 对象是没有实际意义的
+
+再来看下 Source 类的定义。Source 本身也是一个 Observer，它会对外部传进来的 LiveData 进行监听，当接收到值的时候就直接回调外部传进来的 Observer，对数据进行中转转发
 
 ```java
 	 private static class Source<V> implements Observer<V> {
@@ -157,7 +163,7 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
     }
 ```
 
-此外，为了做到性能最优化，当外部所有 Observer 都移除了对 MediatorLiveData 的监听行为时，MediatorLiveData 会主动移除对数据源的监听行为，因此此时即使对数据源进行监听，其结果值也没有接收者，所以此时继续对数据源进行监听是没有意义的，而这也是为了避免内存泄露。此外，当有 Observer 对 MediatorLiveData 进行监听时，也会触发其开始对数据源进行监听
+此外，为了做到性能最优化，当外部所有 Observer 都移除了对 MediatorLiveData 的监听行为时，MediatorLiveData 会主动移除对数据源的监听行为。而当有 Observer 开始对 MediatorLiveData 进行监听时，也会触发其启动对数据源的监听操作
 
 ```java
     @CallSuper
@@ -177,15 +183,15 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
     }
 ```
 
-以上就是 MediatorLiveData 的所有源码介绍，只要先理解了 LiveData 的内部实现原理，就可以很快明白 MediatorLiveData 的整个事件回调流程
+以上就是 MediatorLiveData 的所有源码介绍，只要先理解了 LiveData 的内部实现原理，就可以很快明白 MediatorLiveData 的整个事件回调流程。MediatorLiveData 最为方便的一点就是允许通过多次调用 `addSource` 方法来添加多个不同的数据源，这使得我们可以将不同的数据渠道（例如：本地数据库缓存、网络请求结果等）进行汇总，最后再统一从一个出口进行分发
 
 ### 二、Transformations
 
-Transformations 类是 `lifecycle-livedata` 库提供的一个工具类型的方法类，提供了三个静态方法用于简化对 MediatorLiveData 的使用，这里再来依次介绍下
+Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具类型的方法类，提供了三个静态方法用于简化对 MediatorLiveData 的使用，这里再来依次介绍下
 
 #### 1、map
 
-`map(LiveData<X> , Function<X, Y>)` 函数用于简化向 MediatorLiveData 添加数据源的过程。大多数情况下，我们在使用 MediatorLiveData 时就是先将**数据源类型 X** 转换我们的**目标数据类型 Y**，然后再通过 `setValue(Y)` 进行数据回调。map 函数将这个数据类型转换过程抽象为了接口 `Function<I, O>`，将  `setValue(Y)` 过程隐藏在了 map 函数内部
+`map(LiveData<X> , Function<X, Y>)` 方法用于简化向 MediatorLiveData 添加数据源的过程。大多数情况下，我们在使用 MediatorLiveData 时就是先将**数据源类型 X** 转换我们的**目标数据类型 Y**，然后再通过 `setValue` 方法进行数据回调。`map` 方法将这个数据类型转换过程抽象为了接口 `Function<I, O>`，将  `setValue` 过程隐藏在了 `map` 方法内部
 
 ```java
     @MainThread
@@ -214,13 +220,35 @@ Transformations 类是 `lifecycle-livedata` 库提供的一个工具类型的方
     }
 ```
 
+使用示例：
+
+```kotlin
+    /**
+     * @Author: leavesC
+     * @Date: 2021/03/24 18:04
+     * @Desc:
+     * @Github：https://github.com/leavesC
+     */
+    private val nameLiveData = MutableLiveData<String>()
+
+    private val nameLengthLiveData: LiveData<Int> = Transformations.map(nameLiveData) {
+        it.length
+    }
+
+    //将 nameLiveData 作为数据源
+    //只要 nameLiveData 的数据发生变化 nameLengthLiveData 就能收到通知
+    nameLengthLiveData.observe(this, {
+        Log.e("TAG", "name length: $it")
+    })
+```
+
 #### 2、switchMap
 
-switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果是通过 LiveData 来进行传递的情况下（比如 Room 数据库就支持将查询结果以 LiveData 的形式来返回）会比较有用。下面通过假设一个现实需求来理解其作用会更为简单
+`switchMap` 方法的逻辑相对来说会比较绕，在某些逻辑计算结果是通过 LiveData 来进行传递的情况下（比如 Room 数据库就支持将查询结果以 LiveData 的形式来返回）会比较有用。下面通过假设一个现实需求来理解其作用会更为简单
 
 假设当前需要你来实现一个通过用户名来查询所有匹配的用户列表的功能，通过向数据库或者网络请求等耗时的方式来获得匹配结果，为了避免阻塞主线程，需要将这个匹配过程放在子线程来完成，主线程通过回调的方式来取得结果
 
-首先，假设有一个 UserDataSource 提供了 `getUsersWithNameLiveData(String)`方法用于请求匹配结果，并通过 LiveData 作为返回值来传递请求结果。switchMap 函数内部也使用到了 MediatorLiveData，将 nameQueryLiveData 作为数据源，每当 `setNameQuery(String)`方法修改了用户名时，switchMap 就能收到更新通知，然后自动触发 `getUsersWithNameLiveData(String)` 函数来进行请求。最终外部只要监听 `getUsersWithNameLiveData()`函数的返回值即可得到最终的请求结果，而不必理会 ViewModel 内部究竟是通过什么方法来取得结果值
+首先，假设有一个 UserDataSource 提供了 `getUsersWithNameLiveData(String)`方法用于请求匹配结果，并通过 LiveData 作为返回值来传递请求结果。`switchMap` 方法内部也使用到了 MediatorLiveData，将 `nameQueryLiveData` 作为数据源，每当 `setNameQuery(String)`方法修改了用户名时，`switchMap` 就能收到更新通知，然后自动触发 `getUsersWithNameLiveData(String)` 方法来进行请求。最终外部只要监听 `getUsersWithNameLiveData()`方法的返回值即可得到最终的请求结果，而不必理会 ViewModel 内部究竟是通过什么方法来取得结果值
 
 ```kotlin
     class UserViewModel : ViewModel() {
@@ -248,7 +276,7 @@ switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果�
     }
 ```
 
-理解了以上的需求后，再来看 switchMap 的实现逻辑就会简单许多，switchMap 也只是将对数据源的监听行为以及数据的变换过程给封装了起来而已，在某些特殊情况下（指结果以 LiveData 的形式来返回）多多少少也为开发者节省了代码量
+理解了以上的需求后，再来看 `switchMap` 的实现逻辑就会简单许多，`switchMap` 也只是将对数据源的监听行为以及数据的变换过程给封装了起来而已，在某些特殊情况下（指结果以 LiveData 的形式来返回）多多少少也为开发者节省了代码量
 
 ```java
 	@MainThread
@@ -297,7 +325,7 @@ switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果�
 
 #### 3、distinctUntilChanged
 
-`distinctUntilChanged()` 函数用于过滤掉连续重复的回调值，只有本次的回调结果和上次不一致，本次的回调值才被认为是有效的
+`distinctUntilChanged()` 方法用于过滤掉连续重复的回调值，只有本次的回调结果和上次不一致，本次的回调值才被认为是有效的
 
 ```java
     @MainThread
@@ -330,7 +358,7 @@ switchMap 函数的逻辑相对来说会比较绕，在某些逻辑计算结果�
 
 ### 三、ComputableLiveData
 
-ComputableLiveData 是 `lifecycle-livedata` 库下的类，虽然命名上带有 LiveData，但实际上并没有直接继承于任何类和接口。ComputableLiveData 可以说是提供了一种更加安全地执行耗时任务的思路，其特点是：带有生命周期监听、响应式的触发耗时任务、以 LiveData 作为中介获取任务执行结果
+ComputableLiveData 是 `lifecycle-livedata` 这个依赖库下的类，虽然命名上带有 LiveData，但实际上并没有直接继承于任何类和接口。ComputableLiveData 可以说是提供了一种更加安全地执行耗时任务的思路，其特点是：带有生命周期监听、响应式的触发耗时任务、以 LiveData 作为中介获取任务执行结果
 
 先来看个简单的使用示例，明白其使用方法。假设当前需要实现一个对指定图片进行压缩，将压缩后的图片显示到 ImageView 上的功能，此时就需要考虑到以下几点：
 
@@ -363,11 +391,9 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
  })
 ```
 
-可以看到，ComputableLiveData 封装了大部分的处理逻辑，仅开放出了一个 `compute()`函数由外部来实现耗时任务的执行体，对使用者来说十分方便
+可以看到，ComputableLiveData 封装了大部分的处理逻辑，仅开放出了一个 `compute()`方法由外部来实现耗时任务的执行体，对使用者来说十分方便
 
-这里再来具体介绍下 ComputableLiveData 的实现逻辑
-
-一共有四个全局变量。为了保证耗时任务只能同时由一个线程来执行，所以使用到了两个 AtomicBoolean 变量来标记耗时任务的执行状态，避免在多线程情况下出现读写竞争的情况，保证 `compute()`函数的原子性
+ComputableLiveData 一共有四个全局变量。为了保证耗时任务只能同时由一个线程来执行，所以使用到了两个 AtomicBoolean 变量来标记耗时任务的执行状态，避免在多线程情况下出现读写竞争的情况，保证 `compute()`方法的原子性
 
 ```java
     //用于执行耗时任务的线程池
@@ -379,7 +405,7 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
     final LiveData<T> mLiveData;
 
     //用于标记当前的耗时任务结果值是否已经过时，已过时则值为 true
-    //外部通过调用 invalidate() 函数将耗时任务置为过时状态
+    //外部通过调用 invalidate() 方法将耗时任务置为过时状态
     @SuppressWarnings("WeakerAccess") /* synthetic access */
     final AtomicBoolean mInvalid = new AtomicBoolean(true);
 
@@ -389,7 +415,7 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
     final AtomicBoolean mComputing = new AtomicBoolean(false);
 ```
 
-有两个构造函数。主要是开放了由外部传入线程池对象的入口。当外部对 mLiveData 进行监听的 Observer 数量从无到有时，将自动触发执行 mRefreshRunnable 
+ComputableLiveData 有两个构造方法，主要是开放了由外部传入线程池对象的入口。当外部对 `mLiveData` 进行监听的 Observer 数量从无到有时，将自动触发执行 `mRefreshRunnable` 
 
 ```java
 	/**
@@ -421,7 +447,7 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
     }
 ```
 
-耗时任务的执行是放在 **mRefreshRunnable** 内部，通过两个 AtomicBoolean 变量来标记 `compute()`的执行状态，并将任务体放在 while 循环内部，在任务过时的时候自动重新执行
+耗时任务的执行是放在 `mRefreshRunnable` 内部，通过两个 AtomicBoolean 变量来标记 `compute()`的执行状态，并将任务体放在 while 循环内部，在任务过时的时候自动重新执行
 
 ```java
 	@VisibleForTesting
@@ -434,9 +460,9 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
                 computed = false;
                 // compute can happen only in 1 thread but no reason to lock others.
 
-                //1. 如果 mComputing 为 false，则将其置为 true。意味着当前没有在执行 compute() 函数，从而使得等式成立，进入 if 内部
+                //1. 如果 mComputing 为 false，则将其置为 true。意味着当前没有在执行 compute() 方法，从而使得等式成立，进入 if 内部
                 //   从而限制了耗时任务只能同时在一个线程下执行
-                //2. 如果 mComputing 为 true ，意味着当前正在执行 compute() 函数，等式不成立，直接跳出 do while 循环，避免阻塞当前线程
+                //2. 如果 mComputing 为 true ，意味着当前正在执行 compute() 方法，等式不成立，直接跳出 do while 循环，避免阻塞当前线程
                 if (mComputing.compareAndSet(false, true)) {
                     // as long as it is invalid, keep computing.
                     try {
@@ -469,17 +495,17 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
                 // We've left invalid in set state. The check below recovers.
 
                 //当 computed 和 mInvalid 均为 true 时，则重新开始一轮循环
-                //会出现这种情况，意味着 compute() 函数执行成功，但外部将其置为已过时状态，需要重新执行一次 compute() 函数
+                //会出现这种情况，意味着 compute() 方法执行成功，但外部将其置为已过时状态，需要重新执行一次 compute() 方法
             } while (computed && mInvalid.get());
         }
     };
 ```
 
-当外部认定 `compute()`函数的结果值已失效时，可以通过 `invalidate()` 函数来触发任务体重新执行。当 **mInvalidationRunnable** 被执行时，mInvalid 的值一共有两种情况：
+当外部认定 `compute()`方法的结果值已失效时，可以通过 `invalidate()` 方法来触发任务体重新执行。当 `mInvalidationRunnable` 被执行时，`mInvalid` 的值一共有两种情况：
 
 1. mInvalid 值为 true。if 等式不成立，说明此时 `compute()` 还未开始执行，或者之前已经被置为过时状态了（compute() 将自动重新执行），此时直接 return 即可
 2. mInvalid 值为 false。mInvalid 将被置为 true，if 等式成立，此时 mRefreshRunnable 的执行状态分为几种
-   - mRefreshRunnable 已执行完毕。此时只要 **isActive** 为 true，则将重新触发执行 mRefreshRunnable
+   - mRefreshRunnable 已执行完毕。此时只要 isActive 为 true，则将重新触发执行 mRefreshRunnable
    - mRefreshRunnable 还处于执行中，且`while (mInvalid.compareAndSet(true, false))`正在执行中。由于将 mInvalid 修改为了 true，则将导致 while 循环重新执行一次，从而达到重新触发 `compute()` 的目的
    - mRefreshRunnable 还处于执行中，`while (mInvalid.compareAndSet(true, false))`已执行完毕，但还未执行到 `while (computed && mInvalid.get())` 语句。此时将 mInvalid 修改为了 true，则将导致 `while (computed && mInvalid.get())`  等式成立， while 循环重新执行一次，从而达到重新触发 `compute()` 的目的
 
@@ -514,7 +540,7 @@ class CompressImgLiveData(private val filePath: String) : ComputableLiveData<Bit
     }
 ```
 
-需要由子类实现的抽象方法，即任务的执行体
+`compute()` 即需要由子类实现的抽象方法，即任务的执行体
 
 ```java
     //由外部实现耗时任务的具体逻辑

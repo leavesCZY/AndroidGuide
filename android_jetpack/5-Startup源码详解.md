@@ -1,28 +1,38 @@
-> 对于 Android Developer 来说，Google Jetpack 可以说是当前最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😁😁
+> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😇😇
 >
 > 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
 
-最近，Google Jetpack 官网上新增了一个名为 `App Startup` 的组件，链接：[App Startup](https://developer.android.com/topic/libraries/app-startup)。根据官方文档的介绍，`App Startup` 提供了一种直接、高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
+系列文章导航
 
-本文内容均基于`App Startup`当前最新的 alpha 版本：
+- [从源码看 Jetpack（1）- Lifecycle 源码解析](https://juejin.cn/post/6847902220755992589)
+- [从源码看 Jetpack（2）- Lifecycle 衍生物源码解析](https://juejin.cn/post/6847902220760203277)
+- [从源码看 Jetpack（3）- LiveData 源码解析](https://juejin.cn/post/6847902222345633806)
+- [从源码看 Jetpack（4）- LiveData 衍生物源码解析](https://juejin.cn/post/6847902222353858567)
+- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
+- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
+- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
+
+最近，Google Jetpack 官网上新增了一个名为 [Startup](https://developer.android.com/topic/libraries/app-startup) 的组件。根据官方文档的介绍，Startup 提供了一种直接高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
+
+本文内容均基于 Startup 当前最新的 alpha 版本：
 
 ```java
-implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
+	implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
 ```
 
-### 一、App Startup 的意义
+### 一、Startup 的意义
 
-`App Startup` 允许 **Library 开发者**和 **App 开发者**共享同一个 ContentProvider 来完成各自的初始化逻辑，并支持设置组件之间的初始化先后顺序，避免为每个需要初始化的组件都单独定义一个 ContentProvider，从而大大缩短应用的启动时间
+Startup 允许 Library 开发者和 App 开发者共享同一个 ContentProvider 来完成各自的初始化逻辑，并支持设置组件之间的初始化先后顺序，避免为每个需要初始化的组件都单独定义一个 ContentProvider，从而大大缩短应用的启动时间
 
-目前很多第三方依赖库为了简化使用者的使用成本，就选择通过声明一个 ContentProvider 来获取 Context 对象并自动完成初始化过程。例如 **Lifecycle** 组件就声明了一个 `ProcessLifecycleOwnerInitializer` 用于获取 context 对象并完成初始化。而在 **AndroidManifest.xml** 文件中声明的每一个 ContentProvider，在 `Application` 的 `onCreate()` 函数被调用之前就会预先被执行并调用内部的 `onCreate()` 方法。应用每构建并执行一个 ContentProvider 都是有着内存和时间的消耗成本，如果应用的 ContentProvider 过多，无疑会大大增加应用的启动时间
+目前很多第三方依赖库为了简化使用者的使用成本，就选择通过声明一个 ContentProvider 来获取 Context 对象并自动完成初始化过程。例如 Lifecycle 组件就声明了一个 `ProcessLifecycleOwnerInitializer` 用于获取 context 对象并完成初始化。而在 AndroidManifest 文件中声明的每一个 ContentProvider，在 Application 的 `onCreate()` 方法被调用之前就会预先被执行并调用内部的 `onCreate()` 方法。应用每构建并执行一个 ContentProvider 都是有着内存和时间的消耗成本，如果应用的 ContentProvider 过多，无疑会大大增加应用的启动时间
 
-因此，`App Startup` 的存在，无疑是可以为很多依赖项（应用自身的组件和第三方组件）提供一个统一的初始化入口，当然这也需要等到 `App Startup` 发布 release 版本并被大多数三方依赖组件采用之后了
+因此，Startup 的存在无疑是可以为很多依赖项（应用自身的组件和第三方组件）提供一个统一的初始化入口，当然这也需要等到 Startup 发布 release 版本并被大多数三方依赖组件采用之后了
 
 ### 二、如何使用
 
 假设我们的项目中一共有三个 Library 需要进行初始化。当中，Library A 依赖于 Library B，Library B 依赖于 Library C，Library C 不需要其它依赖项，则此时可以分别为三个 Library 建立三个 `Initializer` 实现类
 
-`Initializer` 是 Startup 提供的用于声明初始化逻辑和初始化顺序的接口，在 `create(context: Context)`方法中完成初始化过程并返回结果值，在`dependencies()`中指定初始化此 Initializer 前需要先初始化的其它 Initializer 
+Initializer 是 Startup 提供的用于声明初始化逻辑和初始化顺序的接口，在 `create(context: Context)`方法中完成初始化过程并返回结果值，在`dependencies()`中指定初始化此 Initializer 前需要先初始化的其它 Initializer 
 
 ```kotlin
 	class InitializerA : Initializer<A> {
@@ -65,11 +75,11 @@ implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
     }
 ```
 
-Startup 提供了两种初始化方法，分别是**自动初始化**和**手动初始化（延迟初始化）**
+Startup 提供了两种初始化方法，分别是自动初始化和手动初始化（延迟初始化）
 
 #### 1、自动初始化
 
-在 `AndroidManifest` 文件中对 Startup 提供的 `InitializationProvider` 进行声明，并且用 **meta-data** 标签声明 Initializer 实现类的包名路径，value 必须是 **"androidx.startup"**。在这里我们只需要声明 InitializerA 即可，因为 InitializerB 和 InitializerC 均可以通过 InitializerA 的 `dependencies()`方法的返回值链式定位到
+在 AndroidManifest 文件中对 Startup 提供的 `InitializationProvider` 进行声明，并且用 meta-data 标签声明 Initializer 实现类的包名路径，value 必须是 `androidx.startup`。在这里我们只需要声明 InitializerA 即可，因为 InitializerB 和 InitializerC 均可以通过 InitializerA 的 `dependencies()`方法的返回值链式定位到
 
 ```xml
         <provider
@@ -133,7 +143,7 @@ val result = AppInitializer.getInstance(this).initializeComponent(InitializerA::
 
 #### 3、Lint 检查
 
-App Startup 包含一组 Lint 规则，可用于检查是否已正确定义了组件的初始化程序，可以通过运行 `./gradlew :app:lintDebug` 来执行检查规则
+Startup 包含一组 Lint 规则，可用于检查是否已正确定义了组件的初始化程序，可以通过运行 `./gradlew :app:lintDebug` 来执行检查规则
 
 例如，如果项目中声明的 InitializerB 没有在 AndroidManifest 中进行声明，且也不包含在其它 Initializer 的依赖项列表里时，通过 Lint 检查就可以看到如下的警告语句：
 
@@ -161,17 +171,17 @@ public final class StartupLogger {
         // Does nothing.
     }
 
-    /**
+    /
      * The log tag.
      */
     private static final String TAG = "StartupLogger";
 
-    /**
+    /
      * To enable logging set this to true.
      */
     static final boolean DEBUG = false;
 
-    /**
+    /
      * Info level logging.
      *
      * @param message The message being logged
@@ -180,7 +190,7 @@ public final class StartupLogger {
         Log.i(TAG, message);
     }
 
-    /**
+    /
      * Error level logging
      *
      * @param message   The message being logged
@@ -219,7 +229,7 @@ Initiaizer 是 Startup 提供的用于声明初始化逻辑和初始化顺序的
 ```java
 public interface Initializer<T> {
 
-    /**
+    /
      * Initializes and a component given the application {@link Context}
      * 
      * @param context The application context.
@@ -227,7 +237,7 @@ public interface Initializer<T> {
     @NonNull
     T create(@NonNull Context context);
 
-    /**
+    /
      * @return A list of dependencies that this {@link Initializer} depends on. This is
      * used to determine initialization order of {@link Initializer}s.
      * <br/>
@@ -241,9 +251,9 @@ public interface Initializer<T> {
 
 #### 4、InitializationProvider
 
-InitializationProvider 就是需要我们主动声明在 AndroidManifest.xml 文件中的 ContentProvider，Startup 的整个初始化逻辑都是在这里进行统一触发的
+InitializationProvider 就是需要我们主动声明在 AndroidManifest 文件中的 ContentProvider，Startup 的整个初始化逻辑都是在这里进行统一触发的
 
-由于 InitializationProvider 的作用仅是用于统一多个依赖项的初始化入口并获得 Context 对象，所以除了 `onCreate()` 方法会由系统自动调用外，query、getType、insert、delete、update 等方法本身是没有意义的，如果开发者调用了这几个方法就会直接抛出异常
+由于 InitializationProvider 的作用仅是用于统一多个依赖项的初始化入口并获得 Context 对象，所以除了 `onCreate()` 方法会由系统自动调用外，其它方法是没有意义的，如果开发者调用了这几个方法就会直接抛出异常
 
 ```java
 public final class InitializationProvider extends ContentProvider {
@@ -304,23 +314,23 @@ public final class InitializationProvider extends ContentProvider {
 
 AppInitializer 是 Startup 整个库的核心重点，整体代码量不足两百行，AppInitializer 的整体流程是：
 
-- 由 InitializationProvider 传入 Context 对象以此来获得 AppInitializer 唯一实例，并调用 `discoverAndInitialize()` 函数完成所有的自动初始化逻辑
-- `discoverAndInitialize()` 函数会先对 InitializationProvider 进行解析，获取到包含的所有 metadata，然后按声明顺序依次反射构建每个 metadata 指向的 Initializer 对象
-- 当在初始化某个 Initializer 对象之前，会首先判断其关联的依赖项 **dependencies** 是否为空。如果为空的话则直接调用其 `create(Context)` 函数进行初始化。如果不为空的话则先对 **dependencies** 进行初始化，对每个 **dependency** 均重复此遍历操作，直到不包含  **dependencies** 的 Initializer 最先初始化完成后才原路返回依次进行初始化，从而保证了 Initializer 之间初始化顺序的有序性
-- 当存在这几种情况时，Startup 会抛出异常：Initializer 实现类不包含无参构造函数、Initializer 之间存在循环依赖关系、Initializer 的初始化过程（`create(Context)` 函数）抛出了异常
+- 由 InitializationProvider 传入 Context 对象以此来获得 AppInitializer 唯一实例，并调用 `discoverAndInitialize()` 方法完成所有的自动初始化逻辑
+- `discoverAndInitialize()` 方法会先对 InitializationProvider 进行解析，获取到包含的所有 metadata，然后按声明顺序依次反射构建每个 metadata 指向的 Initializer 对象
+- 当在初始化某个 Initializer 对象之前，会首先判断其关联的依赖项 dependencies 是否为空。如果为空的话则直接调用其 `create(Context)` 方法进行初始化。如果不为空的话则先对 dependencies 进行初始化，对每个 dependency 均重复此遍历操作，直到不包含  dependencies 的 Initializer 最先初始化完成后才原路返回依次进行初始化，从而保证了 Initializer 之间初始化顺序的有序性
+- 当存在这几种情况时，Startup 会抛出异常：Initializer 实现类不包含无参构造方法、Initializer 之间存在循环依赖关系、Initializer 的初始化过程（`create(Context)` 方法）抛出了异常
 
 AppInitializer 对外开放了 `getInstance(@NonNull Context context)` 方法用于获取唯一的静态实例
 
 ```java
 public final class AppInitializer {
 
-    /**
+    /
      * 唯一的静态实例
      * The {@link AppInitializer} instance.
      */
     private static AppInitializer sInstance;
 
-    /**
+    /
      * 同步锁
      * Guards app initialization.
      */
@@ -333,7 +343,7 @@ public final class AppInitializer {
     @NonNull
     final Context mContext;
 
-    /**
+    /
      * Creates an instance of {@link AppInitializer}
      *
      * @param context The application context
@@ -343,7 +353,7 @@ public final class AppInitializer {
         mInitialized = new HashMap<>();
     }
 
-    /**
+    /
      * @param context The Application {@link Context}
      * @return The instance of {@link AppInitializer} after initialization.
      */
@@ -413,7 +423,7 @@ public final class AppInitializer {
     }
 ```
 
-`doInitialize()` 函数是实际调用了 Initializer 的 `create(context: Context)`的地方，其主要逻辑就是通过嵌套调用的方式来完成所有依赖项的初始化，当判断出存在循环依赖的情况时将抛出异常
+`doInitialize()` 方法是实际调用了 Initializer 的 `create(context: Context)`的地方，其主要逻辑就是通过嵌套调用的方式来完成所有依赖项的初始化，当判断出存在循环依赖的情况时将抛出异常
 
 ```java
 	@NonNull
@@ -442,7 +452,7 @@ public final class AppInitializer {
                     //说明 component 指向的 Initializer 还未进行初始化
                     initializing.add(component);
                     try {
-                        //通过反射调用 component 的无参构造函数并初始化
+                        //通过反射调用 component 的无参构造方法并初始化
                         Object instance = component.getDeclaredConstructor().newInstance();
                         Initializer<?> initializer = (Initializer<?>) instance;
                         //获取 initializer 的依赖项
@@ -487,10 +497,10 @@ public final class AppInitializer {
     }
 ```
 
-### 五、App Startup 的不足点
+### 五、不足点
 
-App Startup 的优点我在上边已经列举了，最后再来列举下它的几个不足点
+Startup 的优点我在上边已经列举了，最后再来列举下它的几个不足点
 
-1. InitializationProvider 的 `onCreate()` 函数是在主线程被调用的，导致我们的每个 Initializer 默认就都是运行在主线程，这对于某些初始化时间过长，需要运行在子线程的组件来说就不太适用了。且 Initializer 的 `create(context: Context)` 函数的本意是完成组件的初始化并返回初始化的结果值，如果在此处通过主动 new Thread 来运行耗时组件的初始化，那么我们就无法返回有意义的结果值，间接导致后续也无法通过 AppInitializer 获取到缓存的初始化结果值
-2. 如果某组件的初始化需要依赖于其它耗时组件（初始化时间过长，需要运行在子线程）的结果值，此时 App Startup  一样不适用
-3. 对于已经使用 ContentProvider 完成初始化逻辑的第三方依赖库，我们一般也无法直接修改其初始化逻辑（除非 clone 该项目导到本地直接修改源码），所以在初始阶段 App Startup 的意义主要在于统一项目本地组件的初始化入口，需要等到  App Startup 被大多数开发者接受并使用后，才更加具有性能优势
+1. InitializationProvider 的 `onCreate()` 方法是在主线程被调用的，导致我们的每个 Initializer 默认就都是运行在主线程，这对于某些初始化时间过长，需要运行在子线程的组件来说就不太适用了。且 Initializer 的 `create(context: Context)` 方法的本意是完成组件的初始化并返回初始化的结果值，如果在此处通过主动 new Thread 来运行耗时组件的初始化，那么我们就无法返回有意义的结果值，间接导致后续也无法通过 AppInitializer 获取到缓存的初始化结果值
+2. 如果某组件的初始化需要依赖于其它耗时组件（初始化时间过长，需要运行在子线程）的结果值，此时 Startup 一样不适用
+3. 对于已经使用 ContentProvider 完成初始化逻辑的第三方依赖库，我们一般也无法直接修改其初始化逻辑（除非 clone 该项目导到本地直接修改源码），所以在初始阶段 Startup 的意义主要在于统一项目本地组件的初始化入口，需要等到 Startup 被大多数开发者接受并使用后，才更加具有性能优势
