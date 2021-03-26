@@ -4,10 +4,10 @@
 
 系列文章导航
 
-- [从源码看 Jetpack（1）- Lifecycle 源码解析](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码解析](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码解析](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码解析](https://juejin.cn/post/6847902222353858567)
+- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
+- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
+- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
+- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
 - [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
 - [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
 - [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
