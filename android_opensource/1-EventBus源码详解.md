@@ -1,23 +1,37 @@
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 >
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
 
-我们知道，EventBus 在有消息被发送出来时，可以直接为我们回调该消息的所有监听方法，回调操作是通过反射 `method.invoke` 来实现的。那么 EventBus 在回调之前也必须先拿到所有的监听方法才行，这样才知道该消息类型对应什么监听方法以及对应多少监听方法
+系列文章导航：
 
-EventBus 获取监听方法的方式有两种：
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
 
-- 不配置注解处理器。在 subscriber 进行 register 时通过反射获取到，这种方式是在运行时实现的
-- 配置注解处理器。预先解析监听方法到辅助文件中，在运行时就可以直接拿到所有的解析结果而不必依靠反射来实现，这种方式是在编译阶段实现的，相比第一种方式性能会高很多
+我们知道，EventBus 在发送了消息后，就会直接回调该消息类型的所有监听方法，回调操作是通过反射 `method.invoke` 来实现的，那么在回调之前也必须先拿到应用内所有的监听方法才行。EventBus 获取监听方法的方式有两种：
+
+- 不配置注解处理器。在 subscriber 进行 register 时通过反射获取到 subscriber 的所有监听方法，这种方式是在运行时实现的
+- 配置注解处理器。预先将所有的监听方法的方法签名信息保存到辅助文件中，在运行时就可以直接拿到所有的解析结果而不必依靠反射来获取，这种方式是在编译阶段实现的，相比第一种方式性能上会高很多
 
 这里先介绍第一种方式，这种方式只需要导入如下依赖即可
 
 ```groovy
-implementation "org.greenrobot:eventbus:3.2.0"
+	implementation "org.greenrobot:eventbus:3.2.0"
 ```
 
 ### 一、注册
 
-#### EventBus.java
+EventBus 通过 `EventBus.register(Object)`方法来进行注册的。该方法会对 subscriber 进行解析，通过 SubscriberMethodFinder 的 `findSubscriberMethods` 方法将 subscriber 包含的所有声明了`@Subscribe`注解的方法的签名信息保存到内存中，当有消息被 Post 时就可以直接在内存中查找到目标方法了
 
 ```java
     public void register(Object subscriber) {
@@ -31,16 +45,17 @@ implementation "org.greenrobot:eventbus:3.2.0"
     }
 ```
 
-EventBus 的注册操作是通过 `register(Object)`方法来完成的。该方法会对注册类进行解析，将注册类包含的所有声明了 `@Subscribe` 注解的方法的签名信息保存到内存中，这样当有消息被 Post 时，就可以直接在内存中查找到目标方法了
-
-从 `SubscriberMethod` 类包含的所有参数可以看出来，它包含了我们对 `@Subscribe` 的配置信息以及对应的方法签名信息
+从 SubscriberMethod 包含的所有参数可以看出来，它包含了 `@Subscribe` 的参数信息以及对应的方法签名信息
 
 ```java
 public class SubscriberMethod {
     final Method method;
     final ThreadMode threadMode;
+    //消息类型
     final Class<?> eventType;
+    //消息优先级
     final int priority;
+    //是否属于黏性消息
     final boolean sticky;
     /** Used for efficient comparison */
     String methodString;
@@ -50,11 +65,7 @@ public class SubscriberMethod {
 }
 ```
 
-这个查找的过程是通过 `SubscriberMethodFinder` 类来完成的
-
-#### SubscriberMethodFinder
-
-这里来看下 `SubscriberMethodFinder`是如何遍历获取到所有声明了`@Subscribe` 注解的方法
+SubscriberMethodFinder 会将每次的查找结果缓存到 `METHOD_CACHE`中，这对某些会先后经历**多次注册和反注册**操作的 subscriber 来说比较有用，因为每次查找可能需要依靠多次循环遍历和反射操作，会稍微有点消耗性能，但缓存也会占用一部分内存空间
 
 ```java
     private static final Map<Class<?>, List<SubscriberMethod>> METHOD_CACHE = new ConcurrentHashMap<>();
@@ -71,7 +82,7 @@ public class SubscriberMethod {
             subscriberMethods = findUsingInfo(subscriberClass);
         }
         if (subscriberMethods.isEmpty()) {
-         	//如果为空，说明不包含使用 @Subscribe 注解的方法，那么 register 操作就是没有意义的，直接抛出异常
+         	//如果为空，说明没找到使用 @Subscribe 方法，那么 register 操作就是没有意义的，直接抛出异常
             throw new EventBusException("Subscriber " + subscriberClass
                     + " and its super classes have no public methods with the @Subscribe annotation");
         } else {
@@ -81,18 +92,17 @@ public class SubscriberMethod {
     }
 ```
 
-`SubscriberMethodFinder` 会将每次的查找结果缓存到 `METHOD_CACHE`中，这对某些会先后经历**多次注册和反注册**操作的页面来说会比较有用，因为每次查找可能需要依靠多次循环遍历和反射操作，会稍微有点消耗性能
-
-因为`ignoreGeneratedIndex`默认值是 false，所以这里直接看 `findUsingInfo(subscriberClass)` 方法
+因为`ignoreGeneratedIndex`默认是 false，所以这里直接看 `findUsingInfo(subscriberClass)` 方法
 
 其主要逻辑是：
 
-1. 通过 `prepareFindState()` 方法从对象池 `FIND_STATE_POOL` 中获取空闲的 `FindState` 对象，如果不存在则初始化一个新的，并在使用过后通过 `getMethodsAndRelease` 方法将对象还给对象池。通过对象池来避免无限制地创建 `FindState` 对象，这也算做是一个优化点
-2. 在不使用注解处理器的情况下 `findState.subscriberInfo` 和 `subscriberInfoIndexes`默认都是等于 null 的，所以主要看 `findUsingReflectionInSingleClass` 方法即可，从该方法名可知是通过反射操作来进行解析的。解析结果会被存到 `findState`中
-3. 因为父类注册的监听方法会被子类继承到，而解析过程是会从子类向其父类依次遍历的，所以在解析完子类后需要通过 `findState.moveToSuperclass()` 方法将下一个查找的 class 对象指向父类
+1. 通过 `prepareFindState()` 方法从对象池 `FIND_STATE_POOL` 中获取空闲的 FindState 对象，如果不存在则初始化一个新的，并在使用过后通过 `getMethodsAndRelease` 方法将对象还给对象池。通过对象池来避免无限制地创建 `FindState` 对象，这也算做是一个优化点。FindState 用于在反射遍历过程中保存各种中间状态值
+2. 在不使用注解处理器的情况下 `findState.subscriberInfo` 和 `subscriberInfoIndexes`默认都是等于 null，所以主要看 `findUsingReflectionInSingleClass` 方法即可，从该方法名可知是通过反射操作来进行解析的，解析结果会被存到 `findState`中
+3. 因为父类声明的监听方法会被子类所继承，而解析过程是会从子类向其父类依次遍历的，所以在解析完子类后需要通过 `findState.moveToSuperclass()` 方法将下一个查找的 class 对象指向父类
 
 ```java
     private static final int POOL_SIZE = 4;
+
     private static final FindState[] FIND_STATE_POOL = new FindState[POOL_SIZE];
 
 	private List<SubscriberMethod> findUsingInfo(Class<?> subscriberClass) {
@@ -148,7 +158,7 @@ public class SubscriberMethod {
     }
 ```
 
-这里来主要看下 `findUsingReflectionInSingleClass` 方法是如何完成反射操作的。如果解析到的方法签名不符合要求，则会在开启了**严格检查**的情况下会直接抛出异常；如果方法签名符合要求，则会将方法签名保存到`subscriberMethods`中
+这里来主要看下 `findUsingReflectionInSingleClass` 方法是如何完成反射操作的。如果解析到的方法签名不符合要求，则在开启了**严格检查**的情况下直接抛出异常；如果方法签名符合要求，则会将方法签名保存到`subscriberMethods`中
 
 ```java
 	private void findUsingReflectionInSingleClass(FindState findState) {
@@ -207,11 +217,9 @@ public class SubscriberMethod {
     }
 ```
 
-#### SubscriberMethodFinder.FindState
+`findUsingReflectionInSingleClass`方法的一个重点是 `findState.checkAdd`方法。如果往简单了想，只要把 subscriber 每个声明了 Subscribe 注解的方法都给保存起来就可以了，可是还需要考虑一些特殊情况：
 
-`findUsingReflectionInSingleClass`方法的一个重点是 `findState.checkAdd`方法。如果往简单了想，只要把注册类每个声明了 Subscribe 注解的方法都给保存起来就可以了，可是还需要考虑一些特殊情况：
-
-1. Java 中类是可以有继承关系的，如果父类声明了 Subscribe 方法，那么就相当于子类也持有了该监听方法，那么子类在 register 后就需要拿到父类的所有 Subscribe 方法
+1. Java 中的类是具有继承关系的，如果父类声明了 Subscribe 方法，那么就相当于子类也持有了该监听方法，那么子类在 register 后就需要拿到父类的所有 Subscribe 方法
 2. 如果子类继承并重写了父类的 Subscribe 方法，那么子类在 register 后就需要以自己重写后的方法为准，忽略父类的相应方法
 
 `checkAdd` 方法就用于进行上述判断
@@ -278,11 +286,9 @@ public class SubscriberMethod {
         }
 ```
 
-#### EventBus
+进行上述操作后，就找到了 subscriber 包含的所有监听方法了，这些方法都会保存到 `List<SubscriberMethod>` 中。拿到所有方法后，`register` 方法就需要对 subscriber 及其所有监听方法进行归类了
 
-进行上述操作后，就到了注册类所有的包含了注解声明的方法了，这些方法都会保存到 `List<SubscriberMethod>` 中。拿到所有方法后，就需要对注册者及其所有监听方法进行归类了
-
-归类的目的是既是为了方便后续操作也是为了提高效率。 因为在同个页面或者多个页面间可能存在多个对同种类型消息的监听方法，那么就需要将每种消息类型和其当前的所有监听方法对应起来，提高消息的发送效率。而且在 subscriber 解除注册时，也需要将 subscriber 包含的所有监听方法都给移除掉，那么就需要预先进行归类。监听方法也可以设定自己对消息处理的优先级顺序，所以需要预先对监听方法进行排序
+归类的目的是既是为了方便后续操作也是为了提高效率。 因为可能同时存在多个 subscriber 声明了多个对同种类型消息的监听方法，那么就需要将每种消息类型和其当前的所有监听方法对应起来，提高消息的发送效率。而且在 subscriber 解除注册时，也需要将 subscriber 包含的所有监听方法都给移除掉，那么也需要预先进行归类。监听方法也可以设定自己对消息处理的优先级顺序，所以需要预先对监听方法进行排序
 
 ```java
 	public void register(Object subscriber) {
@@ -296,6 +302,7 @@ public class SubscriberMethod {
     }
     
     private final Map<Class<?>, CopyOnWriteArrayList<Subscription>> subscriptionsByEventType;
+
     private final Map<Object, List<Class<?>>> typesBySubscriber;
 
     // Must be called in synchronized block
@@ -356,11 +363,11 @@ public class SubscriberMethod {
     }
 ```
 
-### 二、发送消息
+### 二、消息
 
 #### 1、消息的执行策略
 
-在介绍消息的具体发送步骤前，先来了解下 EventBus 几种不同的消息执行策略。执行策略由枚举 `ThreadMode` 来执行，在 `Subscribe` 注解中进行声明。执行策略决定了消息接收方是在哪一个线程接收到消息的
+在介绍消息的具体发送步骤前，先来了解下 EventBus 几种不同的消息执行策略。执行策略由枚举 ThreadMode 来定义，在 `@Subscribe` 注解中进行声明。执行策略决定了消息接收方是在哪一个线程接收到消息的
 
 | ThreadMode   | 执行线程                 |                                                              |
 | ------------ | ------------------------ | ------------------------------------------------------------ |
@@ -370,7 +377,7 @@ public class SubscriberMethod {
 | BACKGROUND   | 在后台线程中按顺序执行   | 如果事件是在主线程发送的，则提交给 backgroundPoster 处理，否则直接调用消息接收方 |
 | ASYNC        | 提交给空闲的后台线程执行 | 将消息提交到 asyncPoster 进行处理                            |
 
-执行策略的具体细分逻辑是在 `postToSubscription` 方法完成的
+执行策略的具体细分逻辑是在 EventBus 类的`postToSubscription` 方法完成的
 
 ```java
  	private void postToSubscription(Subscription subscription, Object event, boolean isMainThread) {
@@ -407,10 +414,9 @@ public class SubscriberMethod {
                 throw new IllegalStateException("Unknown thread mode: " + subscription.subscriberMethod.threadMode);
         }
     }
-
 ```
 
-例如，对于 `AsyncPoster` 来说，其每接收到一个消息，都会直接在 `enqueue` 方法中将自己（Runnable）提交给线程池进行处理，而使用的线程池默认是 `Executors.newCachedThreadPool()`，该线程池每接收到一个任务都会马上交由线程进行处理，所以 `AsyncPoster`并不保证消息处理的有序性，但在消息处理的及时性方面会比较高，且每次提交给 `AsyncPoster` 的消息可能都是由不同的线程来处理
+例如，对于 AsyncPoster 来说，其每接收到一个消息，都会直接在 `enqueue` 方法中将自己（Runnable）提交给线程池进行处理，而使用的线程池默认是 `Executors.newCachedThreadPool()`，该线程池每接收到一个任务都会马上交由线程进行处理，所以 AsyncPoster 并不保证消息处理的有序性，但在消息处理的及时性方面会比较高，且每次提交给 AsyncPoster 的消息可能都是由不同的线程来处理
 
 ```java
 class AsyncPoster implements Runnable, Poster {
@@ -439,10 +445,9 @@ class AsyncPoster implements Runnable, Poster {
     }
 
 }
-
 ```
 
-而 `BackgroundPoster` 只会在当前自己并没有正在处理消息的情况下才会将自己（Runnable）提交给线程池进行处理，所以 `BackgroundPoster` 会保证消息队列在处理时的有序性，但在消息处理的及时性方面相比 `AsyncPoster` 要低一些
+而 BackgroundPoster 会将任务依次缓存到 PendingPostQueue 中，每次只取出一个任务交由线程池来执行，所以 BackgroundPoster 会保证消息队列在处理时的有序性，但在消息处理的及时性方面相比 AsyncPoster 要低一些
 
 ```java
 final class BackgroundPoster implements Runnable, Poster {
@@ -470,10 +475,9 @@ final class BackgroundPoster implements Runnable, Poster {
 
     ···
 }
-
 ```
 
-而不管是使用什么消息处理策略，最终都是通过调用以下方法来完成监听方法的反射调用
+而不管是使用什么消息处理策略，最终都是通过调用以下方法来反射调用监听方法
 
 ```java
     void invokeSubscriber(PendingPost pendingPost) {
@@ -498,7 +502,7 @@ final class BackgroundPoster implements Runnable, Poster {
 
 #### 2、发送非黏性消息
 
-`EventBus.getDefault().post(Any)`方法用于发送非黏性消息。EventBus 会通过 `ThreadLocal` 为每个发送消息的线程维护一个 `PostingThreadState` 对象，用于为每个线程维护一个消息队列及其它辅助参数
+`EventBus.getDefault().post(Any)`方法用于发送非黏性消息。EventBus 会通过 ThreadLocal 为每个发送消息的线程维护一个 PostingThreadState 对象，用于为每个线程维护一个消息队列及其它辅助参数
 
 ```java
 	/**
@@ -557,7 +561,7 @@ final class BackgroundPoster implements Runnable, Poster {
 1. 假设 EventA 继承于 EventB，那么当发送的消息类型是 EventA 时，就需要考虑 EventB 的监听方法是否可以接收到 EventA，即需要考虑消息类型是否具有继承关系
 2. 具有继承关系。此时就需要拿到 EventA 的所有父类型，然后根据 EventA 本身和其父类型关联到的所有监听方法依次进行消息发送
 3. 不具有继承关系。此时只需要向 EventA 的监听方法进行消息发送即可
-4. 如果发送的消息最终没有找到任何接收者，且 `sendNoSubscriberEvent` 为 true，那么就主动发送一个 `NoSubscriberEvent` 事件，用于向外通知消息没有找到任何接收者
+4. 如果发送的消息最终没有找到任何接收者，且 `sendNoSubscriberEvent` 为 true，那么就主动发送一个 NoSubscriberEvent 事件，用于向外通知消息没有找到任何接收者
 5. 监听方法之间可以设定消息处理的优先级高低，高优先级的方法可以通过调用 `cancelEventDelivery` 方法来拦截事件，不再继续向下发送。但只有在 `POSTING` 模式下才能拦截事件，因为只有在这个模式下才能保证监听方法是按照严格的先后顺序被执行的
 
 最终，发送的消息都会通过 `postToSubscription`方法来完成，根据接收者方法不同的处理策略进行处理
@@ -624,7 +628,7 @@ final class BackgroundPoster implements Runnable, Poster {
 
 #### 3、发送黏性消息
 
-黏性消息的意义是为了使得在消息发出来后，即使是后续再进行 `register` 的 `subscriber` 也可以收到之前发送的消息，这需要 `@Subscribe` 注解的 `sticky` 属性设为 true，即表明消息接收方希望接收黏性消息
+黏性消息的意义是为了使得在消息发出来后，即使是后续再进行 `register` 的 subscriber 也可以收到之前发送的消息，这需要将 `@Subscribe` 注解的 `sticky` 属性设为 true，即表明消息接收方希望接收黏性消息
 
 `EventBus.getDefault().postSticky(Any)`方法就用于发送黏性消息。黏性事件会被保存到 `stickyEvents` 这个 Map 中，key 是 event 的 Class 对象，value 是 event 本身，这也说明对于同一类型的黏性消息来说，只会保存其最后一个消息
 
@@ -728,9 +732,9 @@ final class BackgroundPoster implements Runnable, Poster {
 
 ### 三、解除注册
 
-解除注册的目的是为了避免内存泄露，EventBus 使用了单例模式，如果不主动解除注册的话，EventBus 就会一直持有注册对象。解除注册的操作是通过 `unregister`方法来实现的，该方法逻辑也比较简单，只是将 subscriber 以及其关联的所有 method 对象从集合中移除而已
+解除注册的目的是为了避免内存泄露，EventBus 使用了单例模式，如果不主动解除注册的话，EventBus 就会一直持有 subscriber。解除注册是通过 `unregister`方法来实现的，该方法逻辑也比较简单，只是将 subscriber 以及其关联的所有 method 对象从集合中移除而已
 
-而此处虽然会将关于 subscriber 的信息均给移除掉，但是在 `SubscriberMethodFinder` 中的静态成员变量 `METHOD_CACHE` 依然会缓存着已经注册过的 subscriber 的信息，这也是为了在某些页面会先后多次注册 EventBus 时可以做到信息复用，避免多次循环反射
+而此处虽然会将关于 subscriber 的信息均给移除掉，但是在 SubscriberMethodFinder 中的静态成员变量 `METHOD_CACHE` 依然会缓存着已经注册过的 subscriber 的信息，这也是为了在某些 subscriber 会先后多次注册 EventBus 时可以做到信息复用，避免多次循环反射
 
 ```java
 	/**
@@ -770,11 +774,9 @@ final class BackgroundPoster implements Runnable, Poster {
 
 ### 四、注解处理器
 
-使用注解处理器可以避免 subscriber 进行注册时的多次循环反射操作，极大提升了 EventBus 的运行效率
+使用注解处理器（Annotation Processing Tool）可以避免 subscriber 进行注册时的多次循环反射操作，极大提升了 EventBus 的运行效率。注解处理器是一种注解处理工具，用来在编译期扫描和处理注解，通过注解来生成 Java 文件。即以注解作为桥梁，通过预先规定好的代码生成规则来自动生成 Java 文件。此类注解框架的代表有 ButterKnife、Dragger2、EventBus 等
 
-APT(**Annotation Processing Tool**) 即注解处理器，是一种注解处理工具，用来在编译期扫描和处理注解，通过注解来生成 Java 文件。即以注解作为桥梁，通过预先规定好的代码生成规则来自动生成 Java 文件。此类注解框架的代表有 **ButterKnife、Dragger2、EventBus** 等
-
-Java API 已经提供了扫描源码并解析注解的框架，开发者可以通过继承 **AbstractProcessor** 类来实现自己的注解解析逻辑。APT 的原理就是在注解了某些代码元素（如字段、函数、类等）后，在编译时编译器会检查 **AbstractProcessor** 的子类，并且自动调用其 **process()** 方法，然后将添加了指定注解的所有代码元素作为参数传递给该方法，开发者再根据注解元素在编译期输出对应的 Java 代码
+Java API 已经提供了扫描源码并解析注解的框架，开发者可以通过继承 AbstractProcessor 类来实现自己的注解解析逻辑。APT 的原理就是在注解了某些代码元素（如字段、函数、类等）后，在编译时编译器会检查 AbstractProcessor 的子类，并且自动调用其 `process()` 方法，然后将添加了指定注解的所有代码元素作为参数传递给该方法，开发者再根据注解元素在编译期输出对应的 Java 代码
 
 关于 APT 技术的原理和应用可以看这篇文章：[Android APT 实例讲解](https://juejin.im/post/6844903753108160525)
 
@@ -795,11 +797,11 @@ dependencies {
 }
 ```
 
-当中，`github.leavesc.demo.MyEventBusIndex` 就是生成的辅助文件的包名路径，可以由我们自己定义
+当中，MyEventBusIndex 就是在编译阶段将生成的辅助文件，`github.leavesc.demo.MyEventBusIndex` 就是生成的辅助文件的包名路径，可以由我们自己定义
 
 原始文件：
 
-```java
+```kotlin
 /**
  * 作者：leavesC
  * 时间：2020/10/01 12:17
@@ -826,7 +828,7 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-生成的辅助文件如下所示。可以看出，MyEventBusIndex 文件中封装了 subscriber 和其所有监听方法的签名信息，这样我们就无需在运行时再来进行解析了，而是直接在编译阶段就拿到了
+编译过后生成的辅助文件如下所示。可以看出，MyEventBusIndex 文件中封装了 subscriber 和其所有监听方法的签名信息，这样我们就无需在运行时再来进行解析了，而是直接在编译阶段就生成好了
 
 ```java
 /** This class is generated by EventBus, do not edit. */
@@ -861,11 +863,11 @@ public class MyEventBusIndex implements SubscriberInfoIndex {
 
 需要注意的是，在生成了辅助文件后，还需要通过这些类文件来初始化 EventBus
 
-```java
+```kotlin
 EventBus.builder().addIndex(MyEventBusIndex()).installDefaultEventBus()
 ```
 
-注入的辅助文件会被保存到 `SubscriberMethodFinder` 类的成员变量 `subscriberInfoIndexes` 中，`findUsingInfo` 方法会先尝试从辅助文件中获取 SubscriberMethod，只有在获取不到的时候才会通过性能较低的反射操作来完成
+注入的辅助文件会被保存到 SubscriberMethodFinder 类的成员变量 `subscriberInfoIndexes` 中，`findUsingInfo` 方法会先尝试从辅助文件中获取 SubscriberMethod，只有在获取不到的时候才会通过性能较低的反射操作来完成
 
 ```java
 	private List<SubscriberMethod> findUsingInfo(Class<?> subscriberClass) {
@@ -912,6 +914,8 @@ EventBus.builder().addIndex(MyEventBusIndex()).installDefaultEventBus()
         return null;
     }
 ```
+
+使用了注解处理器后也有一定的弊端。由于 MyEventBusIndex 是通过静态常量类型的 Map 来保存所有的方法签名信息，当在初始化 EventBus 时该 Map 就同时被初始化了，这就相当于在一开始就进行了全量加载，而某些 subscriber 我们可能不会使用到，这就造成了内存浪费。而如果是通过反射来获取，那就相当于在按需加载，只有 subscriber 进行注册了才会去缓存 subscriber 带有的监听方法
 
 ### 五、一些坑
 
@@ -995,13 +999,13 @@ class MainActivity : BaseActivity() {
         }
 ```
 
-EventBus 中有一个 issues 也反馈了这个问题：[issues](https://github.com/greenrobot/EventBus/issues/539)，该问题在 2018 年时就已经存在了，EeventBus 的作者也只是回复说：**只在子类进行方法监听**
+EventBus 有一个 issues 也反馈了这个问题：[issues](https://github.com/greenrobot/EventBus/issues/539)，该问题在 2018 年时就已经存在了，EeventBus 的作者也只是回复说：**只在子类进行方法监听**
 
 #### 2、移除黏性消息
 
 `removeStickyEvent` 方法会有一个比较让人误解的点：对于通过 `EventBus.getDefault().postSticky(XXX)`方法发送的黏性消息无法通过 `removeStickyEvent` 方法来使现有的监听者拦截该事件
 
-例如，假设下面的两个方法都已经处于注册状态了，postSticky 后，即使在 fun1 方法中移除了黏性消息，fun2 方法也可以接收到消息。这是因为 `postSticky` 方法最终也是要靠调用 post 方法来完成消息发送，而 post 方法并不受 `stickyEvents` 的影响
+例如，假设下面的两个方法都已经处于注册状态了，`postSticky` 后，即使在 `fun1` 方法中移除了黏性消息，`fun2` 方法也可以接收到消息。这是因为 `postSticky` 方法最终也是要靠调用 `post` 方法来完成消息发送，而 `post` 方法并不受 `stickyEvents` 的影响
 
 ```java
     @Subscribe(sticky = true)
@@ -1015,7 +1019,7 @@ EventBus 中有一个 issues 也反馈了这个问题：[issues](https://github.
     }
 ```
 
-而如果 EventBus 中已经存储了黏性事件，那么在上述两个方法刚 register 时，fun1 方法就可以拦截住消息使 fun2 方法接收不到消息。这是因为 register 方法是在 for 循环中遍历 method，如果之前的方法已经移除了黏性消息的话，那么后续方法就没有黏性消息需要处理了
+而如果 EventBus 中已经存储了黏性事件，那么在上述两个方法刚 register 时，`fun1` 方法就可以拦截住消息使 `fun2` 方法接收不到消息。这是因为 `register` 方法是在 for 循环中遍历 method，如果之前的方法已经移除了黏性消息的话，那么后续方法就没有黏性消息需要处理了
 
 ```java
     public void register(Object subscriber) {
@@ -1034,9 +1038,9 @@ EventBus 中有一个 issues 也反馈了这个问题：[issues](https://github.
 
 EventBus 的源码解析到这里就结束了，本文所讲的内容应该也已经涵盖了大部分内容了。这里再来为 EventBus 的实现流程做一个总结
 
-1. EventBus 包含 register 和 unregister 方法用于标记当前 subscriber 是否需要接收消息，内部对应**向 CopyOnWriteArrayList 添加和移除元素**这两个操作
+1. EventBus 包含 register 和 unregister 两个方法用于标记当前 subscriber 是否需要接收消息，内部对应向 CopyOnWriteArrayList 添加和移除元素这两个操作
 2. 每当有 event 被 post 出来时，就需要根据 eventClass 对象找到所有所有声明了 @Subscribe 注解且对这种消息类型进行监听的方法，这些方法都是在 subscriber 进行 register 的时候，从 subscriber 中获取到的
-3. 从 subscriber 中获取所有声明了 @Subscribe 注解的方法有两种。第一种是通过反射的方式拿到 subscriber 这个类中包含的所有声明了 @Subscribe 注解的方法，对应的是没有配置注解处理器的情况。第二种对应的是有配置注解处理器的情况，通过在编译阶段全局扫描  @Subscribe 注解并生成辅助文件，从而在 register 的时候省去了效率低下的反射操作。不管是通过什么方式进行获取，拿到所有方法后都会将 methods 按照消息类型 eventType 进行归类，方便后续遍历
+3. 从 subscriber 中获取所有监听方法的方式有两种。第一种是在运行阶段通过反射来拿到，对应的是没有配置注解处理器的情况。第二种对应的是有配置注解处理器的情况，通过在编译阶段全局扫描  @Subscribe 注解并生成辅助文件，从而在 register 的时候省去效率低下的反射操作。不管是通过什么方式进行获取，拿到所有方法后都会将 methods 按照消息类型 eventType 进行归类，方便后续遍历
 4. 每当有消息被发送出来时，就根据 event 对应的 Class 对象找到相应的监听方法，然后通过反射的方式来回调方法。外部可以在初始化 EventBus 的时候选择是否要考虑 event 的继承关系，即在 event 被 Post 出来时，对 event 的父类型进行监听的方法是否需要被回调
 
-EventBus 的实现思路并不算多难，难的是在实现的时候可以方方面面都考虑周全，做到稳定高效，从 2018 年到现在 2020 年也才发布了两个版本（也许是作者懒得更新？）。原理懂了，那么下一篇就进入实战篇，自己来动手实现一个 EventBus 😁😁
+EventBus 的实现思路并不算多难，难的是在实现的时候可以方方面面都考虑周全，做到稳定高效，从 2018 年到 2020 年也才发布了两个版本（也许是作者懒得更新？）原理懂了，那么下一篇就进入实战篇，自己来动手实现一个 EventBus 😇😇

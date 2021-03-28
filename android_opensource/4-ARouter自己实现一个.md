@@ -1,10 +1,26 @@
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 >
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
 
-上一篇文章中对 ARouter 的源码进行了一次全面解析，原理懂得了，那么就也需要进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理、懂得如何改造甚至自己实现。本文就来自己动手实现一个路由框架，因为自己实现的目的不在于做到和 ARouter 一样功能完善，而只是一个练手项目，目的是在于加深对 ARouter 的原理理解，所以自己的自定义实现就叫做 EasyArouter 吧 😁😁
+系列文章导航：
 
-EasyArouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需要指定一个字符串 path 即可：
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
+
+上一篇文章中对 ARouter 的源码进行了一次全面解析，原理懂得了，那么就也需要进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理、懂得如何改造甚至自己实现。本文就来自己动手实现一个路由框架，自己实现的目的不在于做到和 ARouter 一样功能完善，而只是一个练手项目，目的是在于加深对 ARouter 的原理理解，所以自己的自定义实现就叫 EasyRouter 吧 😂😂
+
+EasyRouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需要指定一个字符串 path 即可：
 
 ```kotlin
 	EasyRouter.navigation(EasyRouterPath.PATH_HOME)
@@ -14,18 +30,16 @@ EasyArouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需�
 
 ![](https://s1.ax1x.com/2020/10/06/0tcEPP.gif)
 
-EasyArouter 的实现及使用一共涉及以下几个模块：
+EasyRouter 的实现及使用一共涉及以下几个模块：
 
 1. app。即项目的主模块，从这里跳到子模块
 2. base。用于在多个模块间共享 path
-3. easyrouter-annotation。用于定义和 EasyArouter 实现相关的**注解**和 **Bean 对象**
-4. easyrouter-api。用于定义和 EasyArouter 实现相关的 API 入口
-5. easyrouter-processor。用于定义和 EasyArouter 实现相关的注解处理器，在编译阶段使用
-6. easyrouter-test。子模块，用于测试 app 模块跳转到子模块是否正常
+3. easyrouter-annotation。用于定义和 EasyRouter 实现相关的**注解**和 **Bean 对象**
+4. easyrouter-api。用于定义和 EasyRouter 实现相关的 API 入口
+5. easyrouter-processor。用于定义和 EasyRouter 实现相关的注解处理器，在编译阶段使用
+6. easyrouter_demo。子模块，用于测试 app 模块跳转到子模块是否正常
 
-![](https://s1.ax1x.com/2020/10/06/0tcexS.png)
-
-EasyArouter 的实现思路和 ARouter 略有不同。EasyArouter 将同个模块下的所有路由信息通过静态方法块来进行存储并初始化，最终会生成以下的辅助文件：
+EasyRouter 的实现思路和 ARouter 略有不同。EasyArouter 将同个模块下的所有路由信息通过静态方法块来进行存储并初始化，最终会生成以下的辅助文件：
 
 ```java
 package github.leavesc.easyrouter;
@@ -50,9 +64,9 @@ public class EasyRouterappLoader {
 }
 ```
 
-由于静态变量和静态方法块在类被加载前是不会被初始化的，所以也可以做到按需加载。即只有在外部发起跳转到 app 这个模块的请求的时候，EasyArouter 才会去实例化 `EasyRouterappLoader` 类，此时才会去加载 app 模块的所有路由表信息，从而避免了内存浪费
+由于静态变量和静态方法块在类被加载前是不会被初始化的，所以也可以做到按需加载。即只有在外部发起跳转到 app 这个模块的请求的时候，EasyRouter 才会去实例化 EasyRouterappLoader 类，此时才会去加载 app 模块的所有路由表信息，从而避免了内存浪费
 
-下面再来简单介绍下 EasyArouter 的实现过程
+下面再来简单介绍下 EasyRouter 的实现过程
 
 ### 一、前置准备
 
@@ -91,16 +105,15 @@ public class EasyRouterRouterTestLoader {
 }
 ```
 
-`@Router` 用于对 `Activity` 进行标注，仅需要设置一个参数 `path` 即可，`path` 包含的第一个单词就是 `group`
+`@Router` 用于对 Activity 进行标注，仅需要设置一个参数 `path` 即可，`path` 包含的第一个单词就是 `group`
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/5 22:08
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/6 1:08
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
- 
 @MustBeDocumented
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
 @Target(AnnotationTarget.CLASS)
@@ -111,14 +124,14 @@ data class RouterBean(val targetClass: Class<*>, val path: String, val group: St
 
 ### 二、注解处理器
 
-声明一个 `EasyRouterProcessor` 类继承于 `AbstractProcessor`，在编译阶段通过扫描代码元素从而拿到 `@Router` 注解的信息
+声明一个 EasyRouterProcessor 类继承于 AbstractProcessor，在编译阶段通过扫描代码元素从而拿到 `@Router` 注解的信息
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/5 22:17
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/5 22:17
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 class EasyRouterProcessor : AbstractProcessor() {
 
@@ -187,7 +200,7 @@ class EasyRouterProcessor : AbstractProcessor() {
     }
 ```
 
-之后就需要生成静态方法块。拿到 `@Router` 注解包含的 path 属性，及被注解的类对应的 Class 对象，以此来构建一个 `RouterBean` 对象并存到 `routerMap`中
+之后就需要生成静态方法块。拿到 `@Router` 注解包含的 path 属性，及被注解的类对应的 Class 对象，以此来构建一个 RouterBean 对象并存到 `routerMap`中
 
 ```kotlin
 	//生成静态方法块
@@ -245,14 +258,14 @@ class EasyRouterProcessor : AbstractProcessor() {
 
 ### 三、EasyRouter
 
-`EasyRouter` 这个单例对象即最终提供给外部的调用入口，总代码行数不到五十行。外部通过调用 `navigation` 方法并传入目标页面 path 来实现跳转，通过 path 来判断其所属 group，并尝试加载其所在模块生成的辅助文件，如果加载成功则能成功跳转，否则就 Toast 提示
+EasyRouter 这个单例对象即最终提供给外部的调用入口，总代码行数不到五十行。外部通过调用 `navigation` 方法并传入目标页面 path 来实现跳转，通过 path 来判断其所属 group，并尝试加载其所在模块生成的辅助文件，如果加载成功则能成功跳转，否则就 Toast 提示
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/5 23:45
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/5 23:45
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 object EasyRouter {
 
@@ -304,6 +317,6 @@ object EasyRouter {
 }
 ```
 
-### 四、结尾
+### 四、GitHub
 
-由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyArouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😁😁，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyRouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😂😂 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

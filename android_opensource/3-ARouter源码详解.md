@@ -1,10 +1,26 @@
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 >
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
+
+系列文章导航：
+
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
 
 ### 一、ARouter
 
-路由框架在大型项目中比较常见，特别是在项目中拥有多个 moudle 的时候。为了实现组件化，多个 module 间的通信就不能直接以模块间的引用来实现，此时就需要依赖路由框架来实现模块间的通信和解耦:sunglasses:
+路由框架在大型项目中比较常见，特别是在项目中拥有多个 moudle 的时候。为了实现组件化，多个 module 间的通信就不能直接以模块间的引用来实现，此时就需要依赖路由框架来实现模块间的通信和解耦
 
 而 ARouter 就是一个用于帮助 Android App 进行组件化改造的框架，支持模块间的路由、通信、解耦
 
@@ -25,6 +41,7 @@
 13. 支持第三方 App 加固(使用 arouter-register 实现自动注册)
 14. 支持生成路由文档
 15. 提供 IDE 插件便捷的关联路径和目标类
+16. 支持增量编译(开启文档生成后无法增量编译)
 
 #### 2、典型应用
 
@@ -35,7 +52,7 @@
 
 以上介绍来自于 ARouter 的 Github 官网：[README_CN](https://github.com/alibaba/ARouter/blob/master/README_CN.md)
 
-本文就基于其当前（2020/10/04）ARouter 的最新版本，对 ARouter 进行一次全面的源码解析和原理介绍，做到知其然也知其所以然，希望对你有所帮助😁😁
+本文就基于其当前（2020/10/04）ARouter 的最新版本，对 ARouter 进行一次全面的源码解析和原理介绍，做到知其然也知其所以然，希望对你有所帮助 😂😂
 
 ```groovy
 dependencies {
@@ -71,9 +88,7 @@ class UserHomeActivity : AppCompatActivity() {
 ARouter.getInstance().build(RoutePath.USER_HOME).navigation()
 ```
 
-只根据一个 path，ARouter 是如何定位到特定的 Activity 的呢？
-
-这就需要通过在**编译阶段**生成辅助代码来实现了。我们都知道，想要跳转到某个 Activity，那么就需要拿到该 Activity 的 Class 对象才行。在编译阶段，ARouter 会根据我们设定的路由跳转规则来自动生成映射文件，映射文件中就包含了 path 和 ActivityClass 之间的对应关系
+只根据一个 path，ARouter 是如何定位到特定的 Activity 的呢？这就需要通过在**编译阶段**生成辅助代码来实现了。我们知道，想要跳转到某个 Activity，那么就需要拿到该 Activity 的 Class 对象才行。在编译阶段，ARouter 会根据我们设定的路由跳转规则来自动生成映射文件，映射文件中就包含了 path 和 ActivityClass 之间的对应关系
 
 例如，对于 `UserHomeActivity`，在编译阶段就会自动生成以下辅助文件。可以看到，`ARouter$$Group$$account` 类中就将 path 和 ActivityClass 作为键值对保存到了 Map 中。ARouter 就是依靠此来进行跳转的
 
@@ -94,13 +109,13 @@ public class ARouter$$Group$$account implements IRouteGroup {
 
 ARouter 的基本实现思路就是：
 
-1. 开发者自己维护**特定 path** 和**特定的目标类**之间的对应关系，ARouter 只要求开发者使用包含了 path 的 `@Route` 注解修饰**目标类**
+1. 开发者自己维护**特定 path** 和**特定的目标类**之间的对应业务关系，ARouter 只要求开发者使用包含了 path 的 `@Route` 注解修饰**目标类**
 2. ARouter 在**编译阶段**通过**注解处理器**来自动生成 path 和特定的目标类之间的对应关系，即将 path 作为 key，将目标类的 Class 对象作为 value 之一存到 Map 之中
-3. 在运行阶段，应用通过 path 来发起请求，ARouter 根据 path 从 Map 中取值，从而拿到目标类
+3. 在运行阶段，应用通过 path 来发起请求，ARouter 根据 path 从 Map 中取值，从而拿到目标类，以此来完成跳转
 
 ### 三、初始化
 
-ARouter 的一般是放在 `Application` 中调用 `init` 方法来完成初始化的，这里先来看下其初始化流程
+ARouter 的一般是放在 Application 中调用 `init` 方法来完成初始化的，这里先来看下其初始化流程
 
 ```kotlin
 /**
@@ -123,7 +138,7 @@ class MyApp : Application() {
 }
 ```
 
-`ARouter` 类使用了单例模式，逻辑比较简单，因为 `ARouter` 类只是负责对外暴露可以由外部调用的 API，大部分的实现逻辑还是转交由 `_ARouter` 类来完成
+ARouter 类使用了单例模式，逻辑比较简单，因为 ARouter 类只是负责对外暴露可以由外部调用的 API，大部分的实现逻辑还是转交由 `_ARouter` 类来完成
 
 ```java
 public final class ARouter {
@@ -215,7 +230,7 @@ final class _ARouter {
 
 `LogisticsCenter` 就实现了前文说的**扫描特定包名路径拿到所有自动生成的辅助文件**的逻辑，即在进行初始化的时候，我们就需要加载到当前项目一共包含的所有 group，以及每个 group 对应的路由信息表，其主要逻辑是：
 
-1. 如果当前开启了 debug 模式或者通过本地 SP 缓存判断出 app 的版本前后发生了变化，那么就重新获取全局路由信息，否则就从使用之前缓存到 SP 中的数据
+1. 如果当前开启了 debug 模式或者通过本地 SP 缓存判断出 app 的版本前后发生了变化，那么就重新获取全局路由信息，否则就还是使用之前缓存到 SP 中的数据
 2. 获取全局路由信息是一个比较耗时的操作，所以 ARouter 就通过将全局路由信息缓存到 SP 中来实现复用。但由于在开发阶段开发者可能随时就会添加新的路由表，而每次发布新版本正常来说都是会加大应用的版本号的，所以 ARouter 就只在开启了 debug 模式或者是版本号发生了变化的时候才会重新获取路由信息
 3. 获取到的路由信息中包含了在 `com.alibaba.android.arouter.routes` 这个包下自动生成的辅助文件的全路径，通过判断路径名的前缀字符串，就可以知道该类文件对应什么类型，然后通过反射构建不同类型的对象，通过调用对象的方法将路由信息存到 `Warehouse` 的 Map 中。至此，整个初始化流程就结束了
 
@@ -289,7 +304,7 @@ public class LogisticsCenter {
 }
 ```
 
-对于第三步，可以举个例子来加强理解。对于上文所讲的 `UserHomeActivity`，其对应的 path 是 `/account/userHome`，ARouter 默认会将 path 的第一个单词即 `account` 作为其 `group`，而且 `UserHomeActivity` 是放在名为 `user` 的 module 中
+对于第三步，可以举个例子来加强理解。对于上文所讲的 UserHomeActivity，其对应的 path 是 `/account/userHome`，ARouter 默认会将 path 的第一个单词即 `account` 作为其 `group`，而且 UserHomeActivity 是放在名为 `user` 的 module 中
 
 而 ARouter 在通过注解处理器生成辅助文件的时候，类名就会根据以上信息来生成，所以最终就会生成以下两个文件：
 
@@ -320,9 +335,9 @@ public class ARouter$$Group$$account implements IRouteGroup {
 
 ```
 
-`LogisticsCenter` 的 `init` 方法就会根据文件名的固定前缀 `ARouter$$Root$$` 定位到 `ARouter$$Root$$user` 这个类，然后通过反射构建出该对象，然后通过调用其 `loadInto` 方法将键值对保存到 `Warehouse.groupsIndex` 中。等到后续需要跳转到 `group` 为 `account` 的页面时，就会再来反射调用 `ARouter$$Group$$account` 的 `loadInto` 方法，即按需加载，等到需要的时候再来获取详细的路由对应信息
+LogisticsCenter 的 `init` 方法就会根据文件名的固定前缀 `ARouter$$Root$$` 定位到 `ARouter$$Root$$user` 这个类，然后通过反射构建出该对象，然后通过调用其 `loadInto` 方法将键值对保存到 `Warehouse.groupsIndex` 中。等到后续需要跳转到 `group` 为 `account` 的页面时，就会再来反射调用 `ARouter$$Group$$account` 的 `loadInto` 方法，即按需加载，等到需要的时候再来获取详细的路由对应信息
 
-因为对于一个大型的 App 来说，可能包含一百或者几百个页面，如果一次性将所有路由信息都加载到内存中，对于内存的压力是比较大的，而用户每次使用可能也只会打开十几个页面，所以这里必须是按需加载
+因为对于一个大型的 App 来说，可能包含几十甚至几百个页面，如果一次性将所有路由信息都加载到内存中，对于内存的压力是比较大的，而用户每次使用可能也只会打开十几个页面，所以这里必须是按需加载
 
 ### 四、跳转到 Activity
 
@@ -334,7 +349,7 @@ public class ARouter$$Group$$account implements IRouteGroup {
 	ARouter.getInstance().build(RoutePath.USER_HOME).navigation()
 ```
 
-`build()` 方法会通过 `ARouter` 中转调用到 `_ARouter` 的 `build()` 方法，最终返回一个 `Postcard` 对象
+`build()` 方法会通过 `ARouter` 中转调用到 `_ARouter` 的 `build()` 方法，最终返回一个 Postcard 对象
 
 ```java
     /**
@@ -372,7 +387,7 @@ public class ARouter$$Group$$account implements IRouteGroup {
     }
 ```
 
-返回的 `Postcard` 对象可以用于传入一些跳转配置参数，例如：携带参数 `mBundle`、开启绿色通道 `greenChannel` 、跳转动画 `optionsCompat` 等
+返回的 Postcard 对象可以用于传入一些跳转配置参数，例如：携带参数 `mBundle`、开启绿色通道 `greenChannel` 、跳转动画 `optionsCompat` 等
 
 ```java
 public final class Postcard extends RouteMeta {
@@ -389,7 +404,7 @@ public final class Postcard extends RouteMeta {
 }
 ```
 
-`Postcard` 的 `navigation()` 方法又会调用到 `_ARouter` 的以下方法来完成 Activity 的跳转。该方法逻辑上并不复杂，注释也写得很清楚了
+Postcard 的 `navigation()` 方法又会调用到 `_ARouter` 的以下方法来完成 Activity 的跳转。该方法逻辑上并不复杂，注释也写得很清楚了
 
 ```java
 final class _ARouter {
@@ -666,7 +681,7 @@ public class UserHomeActivity$$ARouter$$Autowired implements ISyringe {
 
 ```
 
-因为在跳转到 Activity 时携带的参数也是需要放到 `Intent` 里的，所以 `inject` 方法也只是帮我们实现了从 `Intent` 取值然后向变量赋值的逻辑而已，这就要求相应的变量必须是 `public` 的，这就是在 Kotlin 代码中需要同时向变量加上 `@JvmField`注解的原因
+因为在跳转到 Activity 时携带的参数也是需要放到 Intent 里的，所以 `inject` 方法也只是帮我们实现了从 Intent 取值然后向变量赋值的逻辑而已，这就要求相应的变量必须是 `public` 的，这就是在 Kotlin 代码中需要同时向变量加上 `@JvmField`注解的原因
 
 现在来看下 ARouter 是如何实现**参数自动注入**的，其起始方法就是：`ARouter.getInstance().inject(this)`，其最终会调用到以下方法
 
@@ -683,9 +698,9 @@ final class _ARouter {
 }
 ```
 
-ARouter 通过控制反转的方式拿到 `AutowiredService` 对应的实现类 `AutowiredServiceImpl`的实例对象，然后调用其 `autowire` 方法完成参数注入
+ARouter 通过控制反转的方式拿到 AutowiredService 对应的实现类 AutowiredServiceImpl 的实例对象，然后调用其 `autowire` 方法完成参数注入
 
-由于生成的**参数注入辅助类**的类名具有**固定的包名和类名**，即包名和目标类所在包名一致，类名是**目标类类名**+ `$$ARouter$$Autowired`，所以在 `AutowiredServiceImpl` 中就可以根据传入的 `instance` 参数和反射来生成辅助类对象，最终调用其 `inject` 方法完成参数注入
+由于生成的**参数注入辅助类**的类名具有**固定的包名和类名**，即包名和目标类所在包名一致，类名是**目标类类名**+ `$$ARouter$$Autowired`，所以在 AutowiredServiceImpl 中就可以根据传入的 `instance` 参数和反射来生成辅助类对象，最终调用其 `inject` 方法完成参数注入
 
 ```java
 @Route(path = "/arouter/service/autowired")
@@ -726,7 +741,7 @@ public class AutowiredServiceImpl implements AutowiredService {
 
 上一节所讲的**跳转到 Activity 并自动注入参数**属于**依赖注入**的一种，ARouter 同时也支持**控制反转**：通过接口来获取其实现类实例
 
-例如，假设存在一个 `ISayHelloService` 接口，我们需要拿到其实现类实例，但是不希望在使用的时候和特定的实现类 `SayHelloService` 绑定在一起从而造成强耦合，此时就可以使用 ARouter 的控制反转功能，但这也要求 `ISayHelloService` 接口继承了 `IProvider` 接口才行
+例如，假设存在一个 ISayHelloService 接口，我们需要拿到其实现类实例，但是不希望在使用的时候和特定的实现类 SayHelloService 绑定在一起从而造成强耦合，此时就可以使用 ARouter 的控制反转功能，但这也要求 ISayHelloService 接口继承了 `IProvider` 接口才行
 
 ```kotlin
 /**
@@ -755,7 +770,7 @@ class SayHelloService : ISayHelloService {
 }
 ```
 
-在使用的时候直接传递 `ISayHelloService` 的 Class 对象即可，ARouter 会将 `SayHelloService` 以单例模式的形式返回，无需开发者手动去构建 `SayHelloService` 对象，从而达到解耦的目的
+在使用的时候直接传递 ISayHelloService 的 Class 对象即可，ARouter 会将 SayHelloService 以单例模式的形式返回，无需开发者手动去构建 SayHelloService 对象，从而达到解耦的目的
 
 ```kotlin
 ARouter.getInstance().navigation(ISayHelloService::class.java).sayHello()
@@ -796,7 +811,7 @@ public class ARouter$$Root$$user implements IRouteRoot {
 
 这里再来看下其具体的实现原理
 
-在讲初始化流程的时候有讲到，`LogisticsCenter` 实现了**扫描特定包名路径拿到所有自动生成的辅助文件**的逻辑。所以，最终 Warehouse 中就会在初始化的时候拿到以下数据
+在讲初始化流程的时候有讲到，LogisticsCenter 实现了**扫描特定包名路径拿到所有自动生成的辅助文件**的逻辑。所以，最终 Warehouse 中就会在初始化的时候拿到以下数据
 
 Warehouse.groupsIndex：
 
@@ -1170,9 +1185,9 @@ public class InterceptorServiceImpl implements InterceptorService {
 
 通篇读下来，读者应该能够感受到注解处理器在 ARouter 中起到了很大的作用，依靠注解处理器生成的辅助文件，ARouter 才能完成**参数自动注入**等功能。这里就再来介绍下 ARouter 关于注解处理器的实现原理
 
-APT(**Annotation Processing Tool**) 即注解处理器，是一种注解处理工具，用来在编译期扫描和处理注解，通过注解来生成 Java 文件。即以注解作为桥梁，通过预先规定好的代码生成规则来自动生成 Java 文件。此类注解框架的代表有 **ButterKnife、Dragger2、EventBus** 等
+注解处理器（Annotation Processing Tool）是一种注解处理工具，用来在编译期扫描和处理注解，通过注解来生成 Java 文件。即以注解作为桥梁，通过预先规定好的代码生成规则来自动生成 Java 文件。此类注解框架的代表有 ButterKnife、Dragger2、EventBus 等
 
-Java API 已经提供了扫描源码并解析注解的框架，开发者可以通过继承 **AbstractProcessor** 类来实现自己的注解解析逻辑。APT 的原理就是在注解了某些代码元素（如字段、函数、类等）后，在编译时编译器会检查 **AbstractProcessor** 的子类，并且自动调用其 **process()** 方法，然后将添加了指定注解的所有代码元素作为参数传递给该方法，开发者再根据注解元素在编译期输出对应的 Java 代码
+Java API 已经提供了扫描源码并解析注解的框架，开发者可以通过继承 AbstractProcessor 类来实现自己的注解解析逻辑。APT 的原理就是在注解了某些代码元素（如字段、函数、类等）后，在编译时编译器会检查 AbstractProcessor 的子类，并且自动调用其 `process()` 方法，然后将添加了指定注解的所有代码元素作为参数传递给该方法，开发者再根据注解元素在编译期输出对应的 Java 代码
 
 关于 APT 技术的原理和应用可以看这篇文章：[Android APT 实例讲解](https://juejin.im/post/6844903753108160525)
 
@@ -1397,4 +1412,4 @@ public class InterceptorProcessor extends BaseProcessor {
 
 ### 九、结尾
 
-ARouter 的实现原理和源码解析都讲得差不多了，文本应该讲得挺全面的了，那么下一篇就再来进入实战篇吧，自己来动手实现一个 ARouter 😁😁
+ARouter 的实现原理和源码解析都讲得差不多了，自认还是讲得挺全面的，那么下一篇就再来进入实战篇吧，自己来动手实现一个简易版本的 ARouter 😂😂

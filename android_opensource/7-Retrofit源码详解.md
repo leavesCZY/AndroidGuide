@@ -1,10 +1,26 @@
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 >
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
+
+系列文章导航：
+
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
 
 ### 一、前言
 
-Retrofit 也是现在 Android 应用开发中的标配之一了吧？笔者使用 Retrofit 蛮久的了，一直以来用着也挺舒心的，没遇到啥大的坑。总这样用着不来了解下其实现原理也好像不太好，趁着动笔写 [**三方库源码笔记**](https://github.com/leavesC/AndroidGuide/tree/gitbook/android_opensource) 系列文章就来对 Retrofit 进行一次（自我感觉的）全面的源码解析吧
+Retrofit 也是现在 Android 应用开发中的标配之一了吧？笔者使用 Retrofit 蛮久的了，一直以来用着也挺舒心的，没遇到啥大的坑。总这样用着不来了解下其实现原理也好像不太好，趁着动笔写 [**三方库源码笔记**](https://juejin.cn/user/923245496518439/posts) 系列文章就来对 Retrofit 进行一次（自我感觉的）全面的源码解析吧
 
 Retrofit 的源码并不算太复杂，但由于应用了很多种设计模式，所以在流程上会比较绕。笔者从 **2020/10/10** 开始看源码，陆陆续续看了几天源码后就开始动笔，但总感觉没法阐述得特别清晰，写着写着就成了目前的样子。读者如果觉得我有哪里写得不太好的地方也欢迎给下建议😂😂
 

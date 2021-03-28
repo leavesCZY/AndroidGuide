@@ -1,46 +1,62 @@
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 >
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
 
-上一篇文章中对 EventBus 的源码进行了一次全面解析，原理懂得了，那么就也需要进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理、懂得如何改造甚至自己实现。本篇文章就来自己动手实现一个 EventBus，不求功能多齐全，就来实现简单的**注册、反注册、发送消息、接收消息**这些功能即可😁😁
+系列文章导航：
+
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
+
+上一篇文章中对 EventBus 进行了一次全面的源码解析，原理懂得了，那么也需要来进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理，懂得如何改造甚至是自己实现。本篇文章就来自己动手实现一个 EventBus，不求功能多齐全，就来实现简单的**注册、反注册、发送消息、接收消息**这些功能即可 😇😇
 
 先来看下最终的实现效果
 
-对于以下两个监听者：`EasyEventBusActivity` 和 `EasyBusEventTest`，通过标注 `@Event`注解来修饰监听方法，然后使用 `EasyEventBus` 这个自定义类来进行**注册、反注册和发送消息**
+对于以下两个监听者：EasyEventBusMainActivity 和 EasyEventBusTest，通过标注 `@Event`注解来修饰监听方法，然后使用 EasyEventBus 这个自定义类来进行**注册、反注册和发送消息**
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/2 13:14
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2021/1/15 23:42
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
-class EasyEventBusActivity : BaseActivity() {
+class EasyEventBusMainActivity : BaseActivity() {
 
-    private val eventTest = EasyBusEventTest()
+    override val bind by getBind<ActivityEasyEventBusMainBinding>()
+
+    private val eventTest = EasyEventBusTest()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_easy_event_bus)
         EasyEventBus.register(this)
         eventTest.register()
-
-        btn_postString.setOnClickListener {
+        bind.btnPostString.setOnClickListener {
             EasyEventBus.post("Hello")
         }
-        btn_postBean.setOnClickListener {
+        bind.btnPostBean.setOnClickListener {
             EasyEventBus.post(HelloBean("hi"))
         }
     }
 
     @Event
     fun stringFun(msg: String) {
-        showToast("$msg EasyEventBusActivity")
+        showToast("$msg ${this.javaClass.simpleName}")
     }
 
     @Event
     fun benFun(msg: HelloBean) {
-        showToast("${msg.data} EasyEventBusActivity")
+        showToast("${msg.data} ${this.javaClass.simpleName}")
     }
 
     override fun onDestroy() {
@@ -51,16 +67,16 @@ class EasyEventBusActivity : BaseActivity() {
 
 }
 
-class EasyBusEventTest {
+class EasyEventBusTest {
 
     @Event
     fun stringFun(msg: String) {
-        showToast("$msg EasyBusEventTest")
+        showToast("$msg ${this.javaClass.simpleName}")
     }
 
     @Event
     fun benFun(msg: HelloBean) {
-        showToast("${msg.data} EasyBusEventTest")
+        showToast("${msg.data} ${this.javaClass.simpleName}")
     }
 
     fun register() {
@@ -84,10 +100,10 @@ data class HelloBean(val data: String)
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/3 11:44
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/3 11:44
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 object EasyEventBus {
 
@@ -143,24 +159,25 @@ object EasyEventBus {
 }
 ```
 
-### 一、需要做什么
+### 一、怎么实现
 
 这里先来想下这个自定义的 EasyEventBus 应该实现什么功能，以及怎么实现
 
-EasyEventBus 的核心重点就在于其通过**注解处理器**生成辅助文件这个过程，这个过程使用者是感知不到的，这块逻辑也只会在编译阶段被触发到。我们希望在编译阶段就能够拿到所有声明了 `@Event` 的方法，免得在运行时才来反射。即在编译阶段就希望能够生成以下的辅助文件：
+EasyEventBus 的核心重点就在于其通过**注解处理器**生成辅助文件这个过程，这个过程使用者是感知不到的，这块逻辑也只会在编译阶段被触发到。我们希望在编译阶段就能够拿到所有声明了 `@Event` 的方法，免得在运行时才来反射，即在编译阶段就希望能够生成以下的辅助文件：
 
 ```java
 /**
  * 这是自动生成的代码 by leavesC
  */
 public class EventBusInject {
+
     private static final Map<Class<?>, SubscriberInfo> subscriberIndex = new HashMap<Class<?>, SubscriberInfo>();
 
     {
         List<EventMethodInfo> eventMethodInfoList = new ArrayList<EventMethodInfo>();
         eventMethodInfoList.add(new EventMethodInfo("stringFun", String.class));
         eventMethodInfoList.add(new EventMethodInfo("benFun", HelloBean.class));
-        SubscriberInfo subscriberInfo = new SubscriberInfo(EasyBusEventTest.class, eventMethodInfoList);
+        SubscriberInfo subscriberInfo = new SubscriberInfo(EasyEventBusMainActivity.class, eventMethodInfoList);
         putIndex(subscriberInfo);
     }
 
@@ -168,7 +185,7 @@ public class EventBusInject {
         List<EventMethodInfo> eventMethodInfoList = new ArrayList<EventMethodInfo>();
         eventMethodInfoList.add(new EventMethodInfo("stringFun", String.class));
         eventMethodInfoList.add(new EventMethodInfo("benFun", HelloBean.class));
-        SubscriberInfo subscriberInfo = new SubscriberInfo(EasyEventBusActivity.class, eventMethodInfoList);
+        SubscriberInfo subscriberInfo = new SubscriberInfo(EasyEventBusTest.class, eventMethodInfoList);
         putIndex(subscriberInfo);
     }
 
@@ -182,14 +199,14 @@ public class EventBusInject {
 }
 ```
 
-可以看到，`subscriberIndex`中存储了所有的监听方法的签名信息，在应用运行时我们我们只需要通过 `getSubscriberInfo` 方法就可以拿到 `subscriberClass` 的所有监听方法
+可以看到，`subscriberIndex`中存储了所有监听方法的签名信息，在应用运行时我们我们只需要通过 `getSubscriberInfo` 方法就可以拿到 `subscriberClass` 的所有监听方法
 
-最后，还需要向外提供一个 API 调用入口，即上面贴出来的自定义的 EasyEventBus 这个自定义类，是提供给使用者运行时调用的，在有消息需要发送的时候通过外部传入的 `subscriberClass` 从 `EventBusInject` 取出所有监听方法进行反射回调
+最后，还需要向外提供一个 API 调用入口，即上面贴出来的自定义的 EasyEventBus 这个自定义类，是提供给使用者运行时调用的，在有消息需要发送的时候通过外部传入的 `subscriberClass` 从 EventBusInject 取出所有监听方法进行反射回调
 
 所以，EasyEventBus 逻辑上会拆分为两个 moudle：
 
-- event-api。向外暴露 API 调用入口
-- evnet-processor。不对外暴露，只在编译阶段生效
+- easyeventbus_api。向外暴露 EasyEventBus 和 @Event
+- easyeventbus_processor。不对外暴露，只在编译阶段生效
 
 ### 二、注解处理器
 
@@ -206,10 +223,10 @@ annotation class Event
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/3 17:33
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/3 17:33
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 data class EventMethodInfo(val methodName: String, val eventType: Class<*>)
 
@@ -219,14 +236,14 @@ data class SubscriberInfo(
 )
 ```
 
-然后声明一个 `EasyEventBusProcessor` 类继承于 `AbstractProcessor`，由编译器在编译阶段传入我们关心的代码元素
+然后声明一个 EasyEventBusProcessor 类继承于 AbstractProcessor，由编译器在编译阶段传入我们关心的代码元素
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/3 15:55
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/3 15:55
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 class EasyEventBusProcessor : AbstractProcessor() {
 
@@ -263,7 +280,7 @@ class EasyEventBusProcessor : AbstractProcessor() {
 }
 ```
 
-通过 `collectSubscribers`方法拿到所有的监听方法，保存到 `methodsByClass`中，同时需要对方法签名进行校验：**只能是实例方法，且必须是 public 的，最多且只能包含一个入参参数**
+通过 `collectSubscribers`方法拿到所有的监听方法，保存到 `methodsByClass`中，同时需要对方法签名进行校验：**只能是实例方法，且必须是 public 的，最多且至少包含一个入参参数**
 
 ```kotlin
 override fun process(
@@ -429,7 +446,7 @@ override fun process(
     }
 ```
 
-完成以上方法的定义后，就可以在 `process` 完成 `EventBusInject` 整个类文件的构建了
+完成以上方法的定义后，就可以在 `process` 方法中完成 EventBusInject 整个类文件的构建了
 
 ```kotlin
 	override fun process(
@@ -462,14 +479,14 @@ override fun process(
 
 ### 三、EasyEventBus
 
-EasyEventBus 的逻辑就很简单了，主要是通过反射来生成 `EventBusInject` 对象，拿到 `subscriber` 关联的 `SubscriberInfo`，然后在有消息被 Post 出来的时候进行遍历调用即可
+EasyEventBus 的逻辑就很简单了，主要是通过反射来生成 EventBusInject 对象，拿到 `subscriber` 关联的 SubscriberInfo，然后在有消息被 Post 出来的时候进行遍历调用即可
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/3 11:44
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesC
+ * @Date: 2020/10/3 11:44
+ * @Desc:
+ * @Github：https://github.com/leavesC
  */
 object EasyEventBus {
 
@@ -525,6 +542,6 @@ object EasyEventBus {
 }
 ```
 
-### 四、结尾
+### 四、GitHub
 
-文本实现的 EasyEventBus 挺简陋的😁😁，因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+文本实现的 EasyEventBus 挺简陋的😂😂因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

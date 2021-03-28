@@ -1,10 +1,26 @@
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
+>
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
+
+系列文章导航：
+
+- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
+- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
+- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
+- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
+- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
+- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
+- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
+- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
+- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
+- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
+- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
+- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
+- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
+
 ![](https://s3.ax1x.com/2020/11/17/DV7Na6.png)
 
-> 对于 Android Developer 来说，很多开源库都是**面试必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等几个，希望对你有所帮助 😁😁
->
-> 公众号：**[字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)**
-
-Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://github.com/leavesC/AndroidGuide) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧😂😂
+Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源码笔记](https://juejin.cn/user/923245496518439/posts) 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章我从国庆写到现在也是要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧😂😂
 
 Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的，Coil 在2020年10月22日才发布了 1.0.0 版本，还热乎着呢。我在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而且本文写好的时候离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 的源码分析文章** ~~~
 
@@ -1764,34 +1780,6 @@ class VolleyFetcher(private val application: Application) : Fetcher<Uri> {
     }
 ```
 
-### 十三、Demo 下载
+### 十三、GitHub
 
 上述的所有示例代码我都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
-
-### 十四、系列文章导航
-
-[三方库源码笔记（1）-EventBus 源码详解](https://juejin.im/post/6881265680465788936)
-
-[三方库源码笔记（2）-EventBus 自己实现一个？](https://juejin.im/post/6881808026647396366)
-
-[三方库源码笔记（3）-ARouter 源码详解](https://juejin.im/post/6882553066285957134)
-
-[三方库源码笔记（4）-ARouter 自己实现一个？](https://juejin.im/post/6883105868326862856)
-
-[三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.im/post/6884225131015569421)
-
-[三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.im/post/6884526739646185479)
-
-[三方库源码笔记（7）-超详细的 Retrofit 源码解析](https://juejin.im/post/6886121327845965838)
-
-[三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.im/post/6887408273213882375)
-
-[三方库源码笔记（9）-超详细的 Glide 源码详解](https://juejin.im/post/6891307560557608967)
-
-[三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.im/post/6892751013544263687)
-
-[三方库源码笔记（11）-OkHttp 源码详解](https://juejin.im/post/6895369745445748749)
-
-[三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.im/post/6895740949025177607)
-
-[三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
