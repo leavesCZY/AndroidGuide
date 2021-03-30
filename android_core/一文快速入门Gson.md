@@ -1,10 +1,8 @@
-Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库有 Gson 和 FastJson 两种，这里要介绍的是 Gson
+Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库就是 Gson，GitHub 主页点击这里：[Gson](https://github.com/google/gson)
 
-Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
+### 一、基本用法
 
-### 一、Gson的基本用法
-
-#### 1.1、Gson对象
+#### 1、Gson
 
 在进行序列化与反序列操作前，需要先实例化一个 `com .google.gson.Gson` 对象，获取 Gson 对象的方法有两种
 
@@ -14,7 +12,7 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
         //通过 GsonBuilder 来获取，可以进行多项特殊配置
         Gson gson = new GsonBuilder().create();
 ```
-#### 1.2、生成 Json
+#### 2、生成 Json
 
 利用 Gson 可以很方便地生成 Json 字符串，通过使用 `addProperty` 的四个重载方法
 
@@ -22,15 +20,17 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
     public static void main(String[] args) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("String", "leavesC");
+        jsonObject.addProperty("StringMore", "https://juejin.cn/user/923245496518439/posts");
         jsonObject.addProperty("Number_Integer", 23);
         jsonObject.addProperty("Number_Double", 22.9);
         jsonObject.addProperty("Boolean", true);
         jsonObject.addProperty("Char", 'c');
-        System.out.println();
         System.out.println(jsonObject);
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-34a0b15a688e264b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"String":"leavesC","StringMore":"https://juejin.cn/user/923245496518439/posts","Number_Integer":23,"Number_Double":22.9,"Boolean":true,"Char":"c"}
+```
 
 
 `addProperty` 方法底层调用的是 `add(String property, JsonElement value)` 方法，即将基本数据类型转化为了 **JsonElement** 对象，JsonElement 是一个抽象类，而 **JsonObject** 继承了 JsonElement ，因此我们可以通过 JsonObject 自己来构建一个 JsonElement 
@@ -39,6 +39,7 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
     public static void main(String[] args) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("String", "leavesC");
+        jsonObject.addProperty("StringMore", "https://juejin.cn/user/923245496518439/posts");
         jsonObject.addProperty("Number", 23);
         jsonObject.addProperty("Number", 22.9);
         jsonObject.addProperty("Boolean", true);
@@ -49,22 +50,23 @@ Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
         jsonElement.addProperty("Double", 25.9);
         jsonElement.addProperty("Char", 'c');
         jsonObject.add("JsonElement", jsonElement);
-
-        System.out.println();
+        
         System.out.println(jsonObject);
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-94b04476e4417dfa.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"String":"leavesC","StringMore":"https://juejin.cn/user/923245496518439/posts","Number":22.9,"Boolean":true,"Char":"c","JsonElement":{"Boolean":false,"Double":25.9,"Char":"c"}}
+```
 
-#### 1.3、Json与数组、List的转化
+#### 3、数组、List的转化
 
-Json数组 与 字符串数组
+Json数组与字符串数组
 
 ```java
     public static void main(String[] args) {
         //Json数组 转为 字符串数组
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesC\",\"https://juejin.cn/user/923245496518439/posts\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         String[] strings = gson.fromJson(jsonArray, String[].class);
         System.out.println("Json数组 转为 字符串数组: ");
         for (String string : strings) {
@@ -76,7 +78,18 @@ Json数组 与 字符串数组
         System.out.println(jsonArray);
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-db61b425994fefcc.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+Json数组 转为 字符串数组: 
+https://github.com/leavesC
+https://juejin.cn/user/923245496518439/posts
+Java
+Kotlin
+Git
+GitHub
+
+字符串数组 转为 Json数组: 
+["https://github.com/leavesC","https://juejin.cn/user/923245496518439/posts","Java","Kotlin","Git","GitHub"]
+```
 
 Json数组 与 List
 
@@ -84,7 +97,7 @@ Json数组 与 List
     public static void main(String[] args) {
         //Json数组 转为 List
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesC\",\"https://juejin.cn/user/923245496518439/posts\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         List<String> stringList = gson.fromJson(jsonArray, new TypeToken<List<String>>() {
         }.getType());
         System.out.println("\nJson数组 转为 List: ");
@@ -98,9 +111,20 @@ Json数组 与 List
         System.out.println(jsonArray);
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-211daa95353ae2c9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+Json数组 转为 List: 
+https://github.com/leavesC
+https://juejin.cn/user/923245496518439/posts
+Java
+Kotlin
+Git
+GitHub
 
-#### 1.4、序列化与反序列化
+List 转为 Json数组: 
+["https://github.com/leavesC","https://juejin.cn/user/923245496518439/posts","Java","Kotlin","Git","GitHub"]
+```
+
+#### 4、序列化与反序列化
 
 Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与 Json，前者实现了序列化，后者实现了反序列化
 
@@ -151,7 +175,9 @@ public class User {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-db69cdae3d1e7522.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"name":"leavesC","age":24,"sex":true}
+```
 
 反序化的方式也类似
 
@@ -200,7 +226,9 @@ public class User {
 ```
 name 属性值解析不到，所以为 null
 
-![](https://upload-images.jianshu.io/upload_images/2552605-c080c99d65d13a92.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+User{name='null', age=24, sex=true}
+```
 
 
 此时为了兼顾多种格式的数据，就需要使用 **SerializedName** 注解
@@ -252,7 +280,9 @@ public class User {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-61eeeef2fe623457.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+User{name='leavesC', age=24, sex=true}
+```
 
 在反序列化时也一样，能够解析到正确的属性值
 
@@ -267,7 +297,9 @@ public class User {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-227fb3c46d8df821.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+User{name='leavesC', age=24, sex=true}
+```
 
 还有个问题没解决，为了应对多种属性名不一致的情况，难道我们要声明多个 User 类吗？这显然是不现实的，所以还需要为 User 类设置多个备选属性名，这就需要用到 SerializedName 注解的另一个属性值 **alternate** 了。
 
@@ -312,13 +344,19 @@ public class User {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-144d6020aa12a5d1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+User{name='leavesC', age=24, sex=true}
+
+User{name='leavesC', age=24, sex=true}
+
+User{name='leavesC', age=24, sex=true}
+```
 
 ### 三、字段过滤
 
 有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求
 
-#### 3.1、基于@Expose注解
+#### 1、基于注解
 
 Expose 注解包含两个属性值，且均声明了默认值。Expose 的含义即为“暴露”，即用于对外暴露字段，serialize 用于指定是否进行序列化，deserialize 用于指定是否进行反序列化。如果字段不声明 Expose 注解，则意味着不进行序列化和反序列化操作，相当于两个属性值均为 false 。此外，Expose 注解需要和 GsonBuilder 构建的 Gson 对象一起使用才能生效
 
@@ -401,9 +439,13 @@ public class User {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-eb392c57b8976ca1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"a":"A","c":"C"}
 
-#### 3.2、基于版本
+User{a='A', b='B', c='null', d='null', e='null'}
+```
+
+#### 2、基于版本
 
 Gson 提供了 @Since 和 @Until 两个注解基于版本对字段进行过滤，@Since 和 @Until 都包含一个 Double 属性值，用于设置版本号。Since 的意思是“自……开始”，Until 的意思是“到……为止”，一样要和 GsonBuilder 配合使用。
 
@@ -486,9 +528,13 @@ public class User {
         System.out.println(user.toString());
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-00e4d2edc0450ff2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"a":"A","b":"B","e":"E"}
 
-#### 3.3、基于访问修饰符
+User{a='A', b='B', c='null', d='null', e='E'}
+```
+
+#### 3、基于访问修饰符
 
 访问修饰符由 **java.lang.reflect.Modifier** 提供 int 类型的定义，而 GsonBuilder 对象的 `excludeFieldsWithModifiers`方法接收一个 int 类型可变参数，指定不进行序列化和反序列化操作的访问修饰符字段
 
@@ -525,9 +571,11 @@ public class ModifierSample {
     }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-95103080e1ad3096.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"publicField":"public","protectedField":"protected","defaultField":"default","finalField":"final"}
+```
 
-#### 3.4、基于策略
+#### 4、基于策略
 
 GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`方法用于传入不定长参数的策略方法，用于直接排除指定字段名或者指定字段类型
 
@@ -592,7 +640,12 @@ public static void main(String[] args) {
     }
 ```
 字段名为 "intField" 和字段类型为 double 的字段都会被排除掉
-![](https://upload-images.jianshu.io/upload_images/2552605-e7905690d16b9435.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+```java
+{"stringField":"stringField"}
+
+Strategies{stringField='stringField', intField=0, doubleField=0.0}
+```
 
 `setExclusionStrategies` 方法在序列化和反序列化时都会生效，如果只是想指定其中一种情况下的排除策略或分别指定排除策略，可以改为使用以下两个方法
 
@@ -604,7 +657,7 @@ addDeserializationExclusionStrategy(ExclusionStrategy strategy);
 
 ### 四、个性化配置
 
-#### 4.1、输出 null
+#### 1、输出 null
 
 对于 Gson 而言，在序列化时如果某个属性值为 null 的话，那么在序列化时该字段不会参与进来，如果想要显示输出该字段的话，可以通过 GsonBuilder 进行配置
 
@@ -635,9 +688,11 @@ public class Strategies {
         System.out.println(gson.toJson(strategies));
  }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-2f47be27f5d8149f.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"stringField":null,"intField":24,"doubleField":22.333}
+```
 
-#### 4.2、格式化输出Json
+#### 2、格式化输出
 
 默认的序列化后的 Josn 字符串并不太直观，可以选择格式化输出
 
@@ -652,9 +707,15 @@ public class Strategies {
         System.out.println(gson.toJson(strategies));
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-2ecc59dd76da8ee9.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{
+  "stringField": null,
+  "intField": 24,
+  "doubleField": 22.333
+}
+```
 
-#### 4.3、格式化时间
+#### 3、格式化时间
 
 Gson 也可以对时间值进行格式化
 
@@ -685,7 +746,6 @@ public class Strategies {
     }
 
 }
-
 ```
 
 ```java
@@ -708,7 +768,14 @@ public static void main(String[] args) {
         System.out.println(gson.fromJson(json, Strategies.class));
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-a13f38169f04324b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{
+  "date": "2021-03-30 22:11:14:254",
+  "date2": "2021-03-30 22:27:54:254"
+}
+
+Strategies{date=2018-03-17 19:38:50:033, date2=2018-03-17 19:55:30:033}
+```
 
 ### 五、TypeAdapter
 
@@ -819,7 +886,11 @@ public class UserTypeAdapter extends TypeAdapter<User> {
 ```
 可以看到 User 类按照预定义的策略来完成序列化和反序列化了
 
-![](https://upload-images.jianshu.io/upload_images/2552605-df0c57707991228c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"Name":"leavesC","Age":24,"Sex":true}
+
+User{name='leavesC', age=24, sex=true}
+```
 
 ### 六、JsonSerializer 和 JsonDeserializer
 
@@ -844,7 +915,9 @@ TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还�
         System.out.println(gson.toJson(user));
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-12d00d781a5955eb.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+{"NameHi":"leavesC","Sex":true,"Age":24}
+```
 
 相对应的，JsonDeserializer 接口提供了反序列化的接口
 
@@ -877,7 +950,11 @@ public static void main(String[] args) {
         System.out.println(user);
     }
 ```
-![](https://upload-images.jianshu.io/upload_images/2552605-9061eb60511c7d07.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+```java
+User{name='leavesC', age=24, sex=true}
+
+User{name='leavesC', age=24, sex=true}
+```
 
 这里有个比较麻烦的地方，那就是在使用 **TypeAdapter 、JsonSerializer** 和 **JsonDeserializer** 时，总需要调用 **registerTypeAdapter** 方法进行注册，那有没有更简单的注册方法呢？
 

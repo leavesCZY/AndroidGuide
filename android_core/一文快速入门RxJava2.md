@@ -116,7 +116,7 @@ RxJava 有以下三个最基本的元素：
 
 ### 二、创建操作符
 
-#### 2.1、create()
+#### 1、create()
 
 用于创建一个 `Observable`。一个正确的 `Observable` 必须尝试调用观察者的 `onCompleted` 方法或者 `onError` 方法**有且仅有一次**，而且此后不能再调用`Observable` 的任何其它方法
 
@@ -134,7 +134,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.2、just()
+#### 2、just()
 
 创建一个 `Observable`并发送事件，发送的事件总数不可以超出十个
 
@@ -170,7 +170,7 @@ RxJava 有以下三个最基本的元素：
     onComplete
 ```
 
-#### 2.3、fromArray 
+#### 3、fromArray 
 
 和 `just()` 类似，但 `fromArray` 可以传入多于十个的变量，并且可以传入一个数组
 
@@ -199,7 +199,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.4、fromCallable
+#### 4、fromCallable
 
 这里的 `Callable` 是指 `java.util.concurrent` 中的 `Callable`，`Callable` 和 `Runnable` 的用法基本一致，只是它包含一个返回值，这个结果值就是发给观察者的
 
@@ -212,7 +212,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.5、fromFuture
+#### 5、fromFuture
 
 这里的 `Future` 是指 `java.util.concurrent` 中的 `Future`，`Future` 的作用是增加了 `cancel()` 等方法操作 `Callable`，它可以通过 `get()` 方法来获取 `Callable` 返回的值
 
@@ -236,7 +236,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.6、fromIterable()
+#### 6、fromIterable()
 
 用于发送一个 `List` 集合数据给观察者
 
@@ -253,7 +253,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.7、defer()
+#### 7、defer()
 
 `defer` 操作符会一直等待直到有观察者订阅它，然后它使用 `Observable` 工厂方法生成一个 `Observable`。它对每个观察者都这样做，因此尽管每个订阅者都以为自己订阅的是同一个 `Observable` ，实际上每个订阅者获取到的都是它们自己的单独的数据序列。在某些情况下，直到发生订阅时才生成 `Observable` 可以确保 `Observable` 包含最新的数据
 
@@ -290,7 +290,7 @@ RxJava 有以下三个最基本的元素：
 
 `defer()` 操作符能使得每次订阅操作都创建被观察者，因此两次订阅操作会创建不同的被观察者对象，因此两次打印操作返回的值并不一样
 
-#### 2.8、timer()
+#### 8、timer()
 
 延迟指定时间后会发送一个大小为 `0L` 的值给观察者
 
@@ -304,7 +304,7 @@ RxJava 有以下三个最基本的元素：
            });
 ```
 
-#### 2.9、interval()
+#### 9、interval()
 
 每隔一段时间就发送一个事件，传递的值从 0 开始并不断增 1
 
@@ -318,7 +318,7 @@ RxJava 有以下三个最基本的元素：
         });
 ```
 
-#### 2.10、intervalRange()
+#### 10、intervalRange()
 
 可以指定发送事件的开始值和数量，其他与 `interval()` 的功能一样
 
@@ -357,7 +357,7 @@ RxJava 有以下三个最基本的元素：
 10-06 10:48:54.017 17976-17990/leavesc.hello.rxjavademo E/MainActivity: onComplete
 ```
 
-#### 2.11、range()
+#### 11、range()
 
 发送指定范围的事件序列
 
@@ -379,7 +379,7 @@ RxJava 有以下三个最基本的元素：
     values is :6
 ```
 
-#### 2.12、rangeLong()
+#### 12、rangeLong()
 
 作用与 `range()` 一样，只是数据类型是 `Long`
 
@@ -393,7 +393,7 @@ RxJava 有以下三个最基本的元素：
                 });
 ```
 
-#### 2.13、empty() & never() & error()
+#### 13、empty() & never() & error()
 
 `empty()` 直接发送 `onComplete()` 事件
 
@@ -467,7 +467,7 @@ Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
 
 ### 三、转换操作符
 
-#### 3.1、map()
+#### 1、map()
 
 `map()` 用于将被观察者发送的数据类型转变成其他的类型
 
@@ -493,7 +493,7 @@ Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
 10-06 10:53:16.364 18099-18099/leavesc.hello.rxjavademo E/MainActivity: I'm 3
 ```
 
-#### 3.2、flatMap()
+#### 2、flatMap()
 
 用于将事件序列中的元素进行整合加工，返回一个新的被观察者
 
@@ -532,7 +532,7 @@ Observable.error(new Throwable("Hello")).subscribe(new Observer<Object>() {
 10-06 11:02:47.246 18230-18230/leavesc.hello.rxjavademo E/MainActivity: value is: B_1
 ```
 
-#### 3.3、concatMap()
+#### 3、concatMap()
 
 `concatMap()` 和 `flatMap()` 基本一样，只不过 `concatMap()` 转发出来的事件是有序的，而 `flatMap()` 是无序的
 
@@ -566,7 +566,7 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 
 使用 `concatMap()` 则顺序将保持一致
 
-#### 3.4、buffer()
+#### 4、buffer()
 
 从需要发送的事件当中获取指定数量的事件，并将这些事件放到缓冲区当中一并发出。`buffer` 有两个参数，参数一`count`用于指点缓冲区大小，参数二 `skip`用指定当缓冲区满了时，发送下一次事件序列的时候要跳过多少元素
 
@@ -613,7 +613,7 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
  onComplete
 ```
 
-#### 3.5、groupBy()
+#### 5、groupBy()
 
 用于将数据进行分组，每个分组都会返回一个被观察者。`groupBy()` 方法的返回值用于指定分组名，每返回一个新值就代表会创建一个分组
 
@@ -695,7 +695,7 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 10-06 11:16:35.616 19015-19015/? E/MainActivity: onComplete
 ```
 
-#### 3.6、scan()
+#### 6、scan()
 
 `scan()` 操作符对原始 `Observable` 发射的第一条数据应用一个函数，然后将那个函数的结果作为自己的第一项数据发射。它将函数的结果同第二项数据一起填充给这个函数来产生它自己的第二项数据。它持续进行这个过程来产生剩余的数据序列
 
@@ -730,7 +730,7 @@ Observable.fromIterable(listArrayList).flatMap(new Function<List<String>, Observ
 
 ### 四、组合操作符
 
-#### 4.1、concat() & concatArray()
+#### 1、concat() & concatArray()
 
 用于将多个观察者组合在一起，然后按照参数的传入顺序发送事件，`concat()` 最多只可以发送4个事件
 
@@ -759,7 +759,7 @@ accept: 8
 
 `concatArray()` 作用与 `concat()` 作用一样，不过前者可以发送多于 4 个的被观察者
 
-#### 4.2、merge() & mergeArray()
+#### 2、merge() & mergeArray()
 
 这个方法与 `concat()` 作用基本一样，只是 `concat()` 是串行发送事件，而 `merge()` 并行发送事件
 
@@ -800,7 +800,7 @@ Test_B_5
 
 `mergeArray()` 可以发送 4 个以上的被观察者
 
-#### 4.3、concatArrayDelayError()  &  mergeArrayDelayError()
+#### 3、concatArrayDelayError()  &  mergeArrayDelayError()
 
 在 `concatArray()` 和 `mergeArray()` 两个方法当中，如果其中有一个被观察者发送了一个 `Error` 事件，那么就会停止发送事件，如果想 `onError()` 事件延迟到所有被观察者都发送完事件后再执行的话，可以使用  `concatArrayDelayError()` 和 `mergeArrayDelayError()`
 
@@ -856,7 +856,7 @@ onError: Normal Exception
 
 从结果可以看到，`onError` 事件是在所有被观察者发送完事件才发送的
 
-#### 4.4、zip()
+#### 4、zip()
 
 `zip()` 操作符返回一个 `Obversable`，它使用这个函数按顺序结合两个或多个 Observables 发射的数据项，然后它发射这个函数返回的结果。它按照严格的顺序应用这个函数。它只发射与发射数据项最少的那个 Observable 一样多的数据
 
@@ -883,7 +883,7 @@ accept: 3_7
 accept: 4_8
 ```
 
-#### 4.5、combineLatest() & combineLatestDelayError()
+#### 5、combineLatest() & combineLatestDelayError()
 
 `combineLatest()` 的作用与 `zip()` 类似，`combineLatest()` 发送事件的序列是与发送的时间线有关的，当两个 `Observables` 中的任何一个发射了一个数据时，通过一个指定的函数组合每个 `Observable` 发射的最新数据，然后发射这个函数的结果
 
@@ -939,7 +939,7 @@ Observable.zip(
 
  `combineLatestDelayError()` 多了延迟发送 `onError()` 的功能
 
-#### 4.6、reduce()
+#### 6、reduce()
 
 与 `scan()` 操作符的作用类似，也是将发送数据以一定逻辑聚合起来，区别在于 `scan()` 每处理一次数据就会将事件发送给观察者，而 `reduce()` 会将所有数据聚合在一起才会发送事件给观察者
 
@@ -969,7 +969,7 @@ integer2 : 7
 accept : 16
 ```
 
-#### 4.7、collect()
+#### 7、collect()
 
 `collect()` 与 `reduce()` 类似，但它的目的是收集原始 Observable 发射的所有数据到一个可变的数据结构
 
@@ -998,7 +998,7 @@ Observable.just(1, 2, 3, 4)
 accept : [1, 2, 3, 4]
 ```
 
-#### 4.8、startWith()  &  startWithArray()
+#### 8、startWith()  &  startWithArray()
 
 在发送事件之前追加事件，`startWith()` 追加一个事件，`startWithArray()` 可以追加多个事件，追加的事件会先发出
 
@@ -1022,7 +1022,7 @@ accept : [1, 2, 3, 4]
 10-06 05:38:21.081 8033-8033/leavesc.hello.rxjavademo E/MainActivity: accept : 5
 ```
 
-#### 4.9、count()
+#### 9、count()
 
 返回被观察者发送事件的数量
 
@@ -1043,7 +1043,7 @@ aLong : 3
 
 ### 五、功能操作符
 
-#### 5.1、delay()
+#### 1、delay()
 
 延迟一段事件再发送事件
 
@@ -1058,7 +1058,7 @@ aLong : 3
                 });
 ```
 
-#### 5.2、doOnEach()
+#### 2、doOnEach()
 
 `Observable` 发送一次事件之前都会回调这个方法
 
@@ -1088,7 +1088,7 @@ Observable.just(1, 2, 3)
 10-06 05:53:28.510 8645-8645/? E/MainActivity: integerNotification value : null
 ```
 
-#### 5.3、doOnNext()
+#### 3、doOnNext()
 
 `Observable` 发送 `onNext()` 之前都会先回调这个方法
 
@@ -1117,7 +1117,7 @@ Observable.just(1, 2, 3)
 10-06 05:55:25.618 8758-8758/leavesc.hello.rxjavademo E/MainActivity: accept : 3
 ```
 
-#### 5.4、doAfterNext()
+#### 4、doAfterNext()
 
 `Observable` 发送 `onNext()` 之后都会回调这个方法
 
@@ -1146,7 +1146,7 @@ Observable.just(1, 2, 3)
 10-06 05:57:09.357 8872-8872/leavesc.hello.rxjavademo E/MainActivity: doOnNext accept : 3
 ```
 
-#### 5.5、doOnComplete()
+#### 5、doOnComplete()
 
 `Observable` 调用 `onComplete()` 之前都会回调这个方法
 
@@ -1173,7 +1173,7 @@ Observable.just(1, 2, 3)
 10-06 06:08:43.688 8982-8982/leavesc.hello.rxjavademo E/MainActivity: doOnComplete run()
 ```
 
-#### 5.6、doOnError()
+#### 6、doOnError()
 
 `Observable` 发送 `onError()` 之前都会回调这个方法
 
@@ -1220,15 +1220,15 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:14:17.894 9230-9230/? E/MainActivity: onError : Normal Exception
 ```
 
-#### 5.7、doOnSubscribe()
+#### 7、doOnSubscribe()
 
 `Observable` 发送 `onSubscribe()` 之前会回调这个方法
 
-#### 5.8、doOnDispose()
+#### 8、doOnDispose()
 
 当调用 `Disposable` 的 `dispose()` 之后会回调该方法
 
-#### 5.9、doOnLifecycle()
+#### 9、doOnLifecycle()
 
 在回调 `onSubscribe` 之前回调该方法的第一个参数的回调方法，可以使用该回调方法决定是否取消订阅，`doOnLifecycle()` 第二个参数的回调方法的作用与 `doOnDispose()` 一样
 
@@ -1285,7 +1285,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:31:45.011 9602-9602/leavesc.hello.rxjavademo E/MainActivity: doOnLifecycle run
 ```
 
-#### 5.10、doOnTerminate() & doAfterTerminate()
+#### 10、doOnTerminate() & doAfterTerminate()
 
 `doOnTerminate` 是在 `onError` 或者 `onComplete` 发送之前回调，而 `doAfterTerminate` 则是 `onError` 或者 `onComplete` 发送之后回调
 
@@ -1340,11 +1340,11 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:34:55.968 9713-9713/? E/MainActivity: doAfterTerminate run
 ```
 
-#### 5.11、doFinally()
+#### 11、doFinally()
 
 在所有事件发送完毕之后回调该方法。 `doFinally()` 和 `doAfterTerminate()` 的区别在于取消订阅时，如果取消订阅，之后 `doAfterTerminate()` 就不会被回调，而 `doFinally()` 无论怎么样都会被回调，且都会在事件序列的最后
 
-#### 5.12、onErrorReturn()
+#### 12、onErrorReturn()
 
 当接受到一个 `onError()` 事件之后回调，返回的值会回调 `onNext()` 方法，并正常结束该事件序列
 
@@ -1393,7 +1393,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:43:13.712 9946-9946/leavesc.hello.rxjavademo E/MainActivity: onComplete
 ```
 
-#### 5.13、onErrorResumeNext()
+#### 13、onErrorResumeNext()
 
 当接收到 `onError()` 事件时，返回一个新的 `Observable`，并正常结束事件序列
 
@@ -1446,7 +1446,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:46:36.650 10243-10243/leavesc.hello.rxjavademo E/MainActivity: onComplete
 ```
 
-#### 5.14、 onExceptionResumeNext()
+#### 14、 onExceptionResumeNext()
 
 与 `onErrorResumeNext()` 作用基本一致，但是这个方法只能捕捉 `Exception`，不能捕获 `Error`
 
@@ -1509,7 +1509,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:53:21.655 10479-10479/leavesc.hello.rxjavademo E/MainActivity: onError : Normal Exception
 ```
 
-#### 5.15、retry()
+#### 15、retry()
 
 如果出现错误事件，则会重新发送所有事件序列指定次数
 
@@ -1556,7 +1556,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 06:55:17.273 10591-10591/? E/MainActivity: onError : Normal Exception
 ```
 
-#### 5.16、retryUntil()
+#### 16、retryUntil()
 
 出现错误事件之后，可以通过此方法判断是否继续发送事件
 
@@ -1615,7 +1615,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 07:19:07.675 11433-11433/leavesc.hello.rxjavademo E/MainActivity: onError : Normal Exception
 ```
 
-#### 5.17、repeat()
+#### 17、repeat()
 
 以指定次数重复发送被观察者的事件
 
@@ -1660,7 +1660,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 07:38:47.690 12155-12155/? E/MainActivity: onComplete
 ```
 
-#### 5.18、repeatWhen()
+#### 18、repeatWhen()
 
 返回一个新的被观察者来决定是否重复发送事件。如果新的被观察者返回 `onComplete` 或者 `onError` 事件，则旧的被观察者不会发送事件。如果新的被观察者返回其他事件，则旧的观察者会发送事件
 
@@ -1724,7 +1724,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 14:30:33.220 21135-21135/leavesc.hello.rxjavademo E/MainActivity: onComplete
 ```
 
-#### 5.19、subscribeOn() & observeOn()
+#### 19、subscribeOn() & observeOn()
 
 `subscribeOn()` 用于指定被观察者的线程，要注意的时，如果多次调用此方法，只有第一次有效
 
@@ -1783,7 +1783,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 
 ### 六、过滤操作符
 
-#### 6.1、filter()
+#### 1、filter()
 
 通过一定逻辑来过滤被观察者发送的事件，如果返回 `true` 则会发送事件，否则不会发送
 
@@ -1806,7 +1806,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 07:57:48.196 12753-12753/? E/MainActivity: accept : 4
 ```
 
-#### 6.2、ofType()
+#### 2、ofType()
 
 过滤不符合该类型的事件
 
@@ -1826,7 +1826,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 07:59:41.265 12857-12857/leavesc.hello.rxjavademo E/MainActivity: accept : 4
 ```
 
-#### 6.3、skip()
+#### 3、skip()
 
 以正序跳过指定数量的事件
 
@@ -1844,7 +1844,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:01:09.183 12971-12971/leavesc.hello.rxjavademo E/MainActivity: accept : 4
 ```
 
-#### 6.4、skipLast()
+#### 4、skipLast()
 
 以反序跳过指定数量的事件
 
@@ -1862,7 +1862,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:02:00.753 13079-13079/leavesc.hello.rxjavademo E/MainActivity: accept : 2
 ```
 
-#### 6.5、distinct()
+#### 5、distinct()
 
 过滤事件序列中的重复事件
 
@@ -1882,7 +1882,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:03:27.402 13189-13189/leavesc.hello.rxjavademo E/MainActivity: accept : 4
 ```
 
-#### 6.6、distinctUntilChanged()
+#### 6、distinctUntilChanged()
 
 过滤掉连续重复的事件
 
@@ -1904,7 +1904,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:04:44.541 13294-13294/leavesc.hello.rxjavademo E/MainActivity: accept : 3
 ```
 
-#### 6.7、take()
+#### 7、take()
 
 控制观察者接收事件的数量
 
@@ -1923,7 +1923,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:05:43.520 13397-13397/? E/MainActivity: accept : 2
 ```
 
-#### 6.8、debounce()
+#### 8、debounce()
 
 如果两个事件发送的时间间隔小于设定的时间间隔，则前一件事件不会发送给观察者
 
@@ -1947,7 +1947,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
 10-06 08:08:59.337 13509-13523/leavesc.hello.rxjavademo E/MainActivity: accept : 2
 ```
 
-#### 6.9、firstElement() && lastElement()
+#### 9、firstElement() && lastElement()
 
 `firstElement()` 取事件序列的第一个元素，`lastElement()` 取事件序列的最后一个元素
 
@@ -1960,7 +1960,7 @@ Observable.create(new ObservableOnSubscribe<Integer>() {
         });
 ```
 
-#### 6.10、elementAt() & elementAtOrError()
+#### 10、elementAt() & elementAtOrError()
 
 `elementAt()` 可以指定取出事件序列中事件，但是输入的 `index` 超出事件序列的总数的话就不会触发任何调用，想触发异常信息的话就用 `elementAtOrError()` 
 
@@ -2003,7 +2003,7 @@ Process: leavesc.hello.rxjavademo, PID: 13948
 
 ### 七、条件操作符
 
-#### 7.1、all()
+#### 1、all()
 
 判断事件序列是否全部满足某个事件，如果都满足则返回 `true`，反之则返回 `false`
 
@@ -2025,7 +2025,7 @@ Process: leavesc.hello.rxjavademo, PID: 13948
 10-06 08:16:10.212 14043-14043/leavesc.hello.rxjavademo E/MainActivity: accept: false
 ```
 
-#### 7.2、takeWhile()
+#### 2、takeWhile()
 
 发射原始 `Observable`，直到指定的某个条件不成立的那一刻，它停止发射原始 `Observable`，并终止自己的 `Observable`
 
@@ -2049,7 +2049,7 @@ Observable.just(1, 2, 3, 4, 5, 1, 2).takeWhile(new Predicate<Integer>() {
 10-06 14:03:42.110 20095-20095/leavesc.hello.rxjavademo E/MainActivity: accept: 3
 ```
 
-#### 7.3、skipWhile()
+#### 3、skipWhile()
 
 订阅原始的 `Observable`，但是忽略它的发射物，直到指定的某个条件变为 false 时才开始发射原始 Observable
 
@@ -2079,7 +2079,7 @@ Observable.just(1, 2, 3, 4, 5, 1, 2).takeWhile(new Predicate<Integer>() {
 10-06 13:59:40.593 19764-19764/leavesc.hello.rxjavademo E/MainActivity: integer 5
 ```
 
-#### 7.4、takeUntil()
+#### 4、takeUntil()
 
 用于设置一个条件，当事件满足此条件时，此事件会被发送，但之后的事件就不会被发送了
 
@@ -2105,7 +2105,7 @@ Observable.just(1, 2, 4, 1, 3, 4, 5, 1, 5)
 10-06 08:54:24.833 17208-17208/? E/MainActivity: integer 4
 ```
 
-#### 7.5、skipUntil()
+#### 5、skipUntil()
 
 当 `skipUntil()` 中的 `Observable` 发送事件了，原始的 `Observable` 才会发送事件给观察者
 
@@ -2145,7 +2145,7 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 10-06 08:51:21.946 16877-16892/leavesc.hello.rxjavademo E/MainActivity: onComplete
 ```
 
-#### 7.6、sequenceEqual()
+#### 6、sequenceEqual()
 
 判断两个 `Observable` 发送的事件是否相同，如果两个序列是相同的（相同的数据，相同的顺序，相同的终止状态），它就发射 true，否则发射 false
 
@@ -2163,7 +2163,7 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 10-06 08:46:59.369 16492-16492/leavesc.hello.rxjavademo E/MainActivity: accept aBoolean : true
 ```
 
-#### 7.7、contains()
+#### 7、contains()
 
 判断事件序列中是否含有某个元素，如果有则返回 true，如果没有则返回 false
 
@@ -2180,7 +2180,7 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 10-06 08:45:58.100 16386-16386/leavesc.hello.rxjavademo E/MainActivity: accept aBoolean : true
 ```
 
-#### 7.8、isEmpty()
+#### 8、isEmpty()
 
 判断事件序列是否为空
 
@@ -2202,7 +2202,7 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 10-06 08:43:43.201 16278-16278/leavesc.hello.rxjavademo E/MainActivity: accept aBoolean: true
 ```
 
-#### 7.9、amb()
+#### 9、amb()
 
 `amb()` 接收一个 `Observable` 集合，但是只会发送最先发送事件的 `Observable` 中的事件，不管发射的是一项数据还是一个 `onError` 或 `onCompleted` 通知，其余 `Observable` 将会被丢弃
 
@@ -2224,7 +2224,7 @@ Observable.intervalRange(1, 6, 0, 1, TimeUnit.SECONDS)
 10-06 08:41:47.783 16053-16068/leavesc.hello.rxjavademo E/MainActivity: accept: 12
 ```
 
-#### 7.10、defaultIfEmpty()
+#### 10、defaultIfEmpty()
 
 如果 Observable 没有发射任何值，则可以利用这个方法发送一个默认值
 
