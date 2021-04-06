@@ -131,6 +131,7 @@ public class GenericTest3 {
     public static void main(String[] args) {
         NodeA nodeA = new NodeA("业志陈");
         NodeB<String> nodeB = new NodeB<>("业志陈");
+        System.out.println(nodeB.obj);
     }
 
 }
@@ -158,7 +159,12 @@ public class generic.GenericTest3 {
       14: ldc           #3                  // String 业志陈
       16: invokespecial #6                  // Method generic/GenericTest3$NodeB."<init>":(Ljava/lang/Object;)V
       19: astore_2
-      20: return
+      20: getstatic     #7                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      23: aload_2
+      24: invokestatic  #8                  // Method generic/GenericTest3$NodeB.access$000:(Lgeneric/GenericTest3$NodeB;)Ljava/lang/Object;
+      27: checkcast     #9                  // class java/lang/String
+      30: invokevirtual #10                 // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      33: return
 }
 ```
 
@@ -190,6 +196,7 @@ public class GenericTest3 {
     public static void main(String[] args) {
         NodeA nodeA = new NodeA("业志陈");
         NodeB<String> nodeB = new NodeB<>("业志陈");
+        System.out.println(nodeB.obj);
     }
 
 }
@@ -217,7 +224,11 @@ public class generic.GenericTest3 {
       14: ldc           #3                  // String 业志陈
       16: invokespecial #6                  // Method generic/GenericTest3$NodeB."<init>":(Ljava/lang/String;)V
       19: astore_2
-      20: return
+      20: getstatic     #7                  // Field java/lang/System.out:Ljava/io/PrintStream;
+      23: aload_2
+      24: invokestatic  #8                  // Method generic/GenericTest3$NodeB.access$000:(Lgeneric/GenericTest3$NodeB;)Ljava/lang/String;
+      27: invokevirtual #9                  // Method java/io/PrintStream.println:(Ljava/lang/String;)V
+      30: return
 }
 ```
 
@@ -279,7 +290,13 @@ fieldTypeName: java.lang.String
 
 那既然在运行时不存在任何类型相关的信息，泛型又为什么能够实现**类型检查**和**类型自动转换**等功能呢？
 
-其实，类型检查是编译器在编译前帮我们完成的，编译器知道我们声明的具体的类型实参，所以类型擦除并不影响类型检查功能。而类型自动转换其实是通过内部强制转换来实现的，例如 ArrayList 虽然实际上存储数据的是 Object 数组，但 get 方法内部会自动完成类型强转
+其实，类型检查是编译器在编译前帮我们完成的，编译器知道我们声明的具体的类型实参，所以类型擦除并不影响类型检查功能。而类型自动转换其实是通过内部强制类型转换来实现的，上面给出的字节码中也可以看到有一条类型强转 checkcast 的语句
+
+```java
+	27: checkcast     #9                  // class java/lang/String
+```
+
+例如，ArrayList 虽然实际上存储数据的是 Object 数组，但 get 方法内部会自动完成类型强转
 
 ```java
 	transient Object[] elementData;
@@ -302,7 +319,7 @@ fieldTypeName: java.lang.String
 
 Java 泛型对于类型的约束只在编译期存在，运行时仍然会按照 Java 5 之前的机制来运行，泛型的具体类型在运行时已经被删除了，所以 JVM 是识别不到我们在代码中指定的具体的泛型类型的
 
-例如，虽然`List<String>`只能用于添加字符串，但我们只能泛化地识别到它属于 `List<?>`类型，但无法具体识别到该 List 内部包含的具体类型
+例如，虽然`List<String>`只能用于添加字符串，但我们只能**泛化地**识别到它属于 `List<?>`类型，但无法具体识别到该 List 内部包含的具体类型
 
 ```java
         List<String> stringList = new ArrayList<>();
@@ -342,6 +359,35 @@ Java 泛型对于类型的约束只在编译期存在，运行时仍然会按照
 
     public void filter(List<Integer> stringList) {
 
+    }
+```
+
+### 泛型与反射
+
+既然 Java 泛型存在编译期类型擦除，导致我们无法在运行时获取到具体类型，但为什么我们又可以通过反射在运行时获取到 Class 类型呢？它们一个获取不到，一个可以获取到，这是不是存在矛盾呢？
+
+就像上文所介绍的，以下例子中的 nodeA 和 nodeA2 的 obj 对象在编译过后都会被转换为 Object 类型，两者的字节码是完全相同的，实际上都相当于 `Node<Object>` ，泛型声明存在与否对于 JVM 来说是完全无感知的，这使得`nodeA instanceof NodeA<String>`和`nodeA2 instanceof NodeA<String>`这两条语句都无法编译通过
+
+```java
+    public static class NodeA<T> {
+
+        private T obj;
+
+        public NodeA(T obj) {
+            this.obj = obj;
+        }
+
+    }
+
+    public static void main(String[] args) {
+        NodeA<String> nodeA = new NodeA<>("业志陈");
+        NodeA nodeA2 = new NodeA("https://juejin.cn/user/923245496518439");
+        System.out.println(nodeA instanceof NodeA);
+        System.out.println(nodeA instanceof NodeA<?>);
+        System.out.println(nodeA2 instanceof NodeA);
+        System.out.println(nodeA2 instanceof NodeA<?>);
+//        System.out.println(nodeA instanceof NodeA<String>);
+//        System.out.println(nodeA2 instanceof NodeA<String>);
     }
 ```
 
@@ -827,6 +873,7 @@ fun main() {
 | ------ | -------------------------------------------------- | ------------------------------------------------------------ | --------------------------- |
 | Kotlin | `<out T>`，只能作为消费者，只能读取不能添加        | `<in T>`，只能作为生产者，只能添加，读取出的值只能当做 Any 类型 | `<T>`，既可以添加也可以读取 |
 | Java   | `<?  extends T>`，只能作为消费者，只能读取不能添加 | `<? super T>`，只能作为生产者，只能添加，读取出的值只能当做 Object 类型 | `<T>`，既可以添加也可以读取 |
+
 
 ### 参考资料
 

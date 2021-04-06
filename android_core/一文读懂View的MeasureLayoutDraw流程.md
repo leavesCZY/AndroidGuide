@@ -768,7 +768,7 @@ ViewGroup 的 `dispatchDraw` 方法会循环遍历所有 childView，使用同�
     }
 ```
 
-### 四、面试环节
+### 四、提问环节
 
 #### 1、ViewGroup 和 View 的绘制顺序
 
@@ -1310,6 +1310,190 @@ ViewGroup 包含以下三个没有传入 LayoutParams 的 `addView` 方法，可
 
     protected LayoutParams generateDefaultLayoutParams() {
         return new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+    }
+```
+
+#### 7、requestLayout 方法调用后的流程
+
+当我们动态改变了一个 View 的位置或者宽高大小的时候，就可以通过调用`requestLayout()`方法来重新触发 View 的绘制流程，使得我们的修改可以生效。该方法会触发其自身与父容器回调 `onMeasure` 和 `onLayout` 两个方法，但不会回调 `onDraw` 方法。这里来看下该方法的主干流程
+
+我们知道，除了视图树的根布局 DecorView 外，每个 View 都是承载于其父容器 ViewGroup 中的，那么当 View 需要进行重新布局时，其父容器也肯定是需要进行重新布局的，所以 `requestLayout()`方法会先为本 View 设置 `PFLAG_FORCE_LAYOUT` 标记位，然后调用 `mParent` 的相同方法
+
+```java
+    public void requestLayout() {
+        ···
+        //设置强制布局的标记位
+        mPrivateFlags |= PFLAG_FORCE_LAYOUT;
+        mPrivateFlags |= PFLAG_INVALIDATED;
+        if (mParent != null && !mParent.isLayoutRequested()) {
+            //触发父容器进行重新布局
+            mParent.requestLayout();
+        }
+        if (mAttachInfo != null && mAttachInfo.mViewRequestingLayout == this) {
+            mAttachInfo.mViewRequestingLayout = null;
+        }
+    }
+```
+
+通过层层向上传递，最终 DecorView 会收到 requestLayout 的请求，而 DecorView 的 `mParent`指向的是 ViewRootImpl，ViewRootImpl 最终又会调用 `scheduleTraversals()` 方法去重新触发视图树的绘制流程
+
+```java
+    @Override
+    public void requestLayout() {
+        if (!mHandlingLayoutInLayoutRequest) {
+            checkThread();
+            mLayoutRequested = true;
+            scheduleTraversals();
+        }
+    }
+```
+
+因为本次发生变化的可能只是一小部分 View 而已，如果强制让整个视图树都进行刷新操作那肯定是比较浪费资源的，所以实际上系统有针对 `requestLayout()` 方法进行了一些优化措施，View 会通过 `PFLAG_FORCE_LAYOUT` 标记位来参与判断当前是否需要执行绘制流程
+
+View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当前有设置 `PFLAG_FORCE_LAYOUT` 标记位，如果 View 的视图没有发生变化又没有设置该标记位的话就不会参与此次绘制流程
+
+```java
+	public final void measure(int widthMeasureSpec, int heightMeasureSpec) {
+        ···
+        final boolean forceLayout = (mPrivateFlags & PFLAG_FORCE_LAYOUT) == PFLAG_FORCE_LAYOUT;
+        ···
+        if (forceLayout || needsLayout) {
+            ···
+            onMeasure(widthMeasureSpec, heightMeasureSpec);
+            ···
+            mPrivateFlags |= PFLAG_LAYOUT_REQUIRED;
+        }
+        ···
+    }
+```
+
+当调用了 `onMeasure` 方法后又会设置 `PFLAG_LAYOUT_REQUIRED` 标记位，该标记位又会参与判断是否需要调用 `onLayout` 方法
+
+```java
+	public void layout(int l, int t, int r, int b) {
+        ···
+        boolean changed = isLayoutModeOptical(mParent) ?
+                setOpticalFrame(l, t, r, b) : setFrame(l, t, r, b);
+
+        if (changed || (mPrivateFlags & PFLAG_LAYOUT_REQUIRED) == PFLAG_LAYOUT_REQUIRED) {
+            onLayout(changed, l, t, r, b);
+
+            ···
+        }
+    	···
+    }
+```
+
+#### 8、属性动画会触发绘制流程吗
+
+会，但可能只会执行一部分流程
+
+例如，如果我们动态改变的是 View 的 MinimumWidth 大小，`setMinimumWidth` 方法只会回调 `onMeasure` 和 `onLayout` 两个方法，但不会回调 `onDraw` 方法
+
+```java
+    public void setMinimumWidth(int minWidth) {
+        mMinWidth = minWidth;
+        requestLayout();
+    }
+```
+
+如果我们动态改变的是 View 的 BackgroundColor，则会根据当前 View 的宽高大小或者位置是否发生了变化来决定是否调用 `requestLayout()` 方法，但最终一定会调用 `invalidate(true)` 方法来回调 `onDraw` 方法
+
+```java
+	public void setBackgroundDrawable(Drawable background) {
+        ···
+        boolean requestLayout = false;
+        ···
+        if (requestLayout) {
+            requestLayout();
+        }
+        mBackgroundSizeChanged = true;
+        invalidate(true);
+        invalidateOutline();
+    }
+```
+
+#### 9、parent 是 wrap_content，child 是 match_parent，会怎么显示
+
+假设 Activity 的布局如下所示，FrameLayout 的宽高都是 wrap_content，View 的宽高都是 match_parent。试验下就可以知道 View 视图将占满整个屏幕
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="#FF5722"
+    tools:context=".MainActivity">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFC107" />
+
+</FrameLayout>
+```
+
+从 ViewGroup 的 `getChildMeasureSpec` 方法也可以得出该结果，该方法用于根据 ViewGroup 的 MeasureSpec 和 childView 的 LayoutParams 来一起生成 childView 的 MeasureSpec
+
+FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整个屏幕大小。childDimension 等于 WRAP_CONTENT，所以 childView 最终对应的 specSize 就是屏幕大小，specMode 就是 AT_MOST
+
+```java
+	public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
+        int specMode = MeasureSpec.getMode(spec);
+        int specSize = MeasureSpec.getSize(spec);
+
+        int size = Math.max(0, specSize - padding);
+
+        int resultSize = 0;
+        int resultMode = 0;
+
+        switch (specMode) {
+        ···
+
+        // Parent has imposed a maximum size on us
+        case MeasureSpec.AT_MOST:
+            if (childDimension >= 0) {
+                // Child wants a specific size... so be it
+                resultSize = childDimension;
+                resultMode = MeasureSpec.EXACTLY;
+            } else if (childDimension == LayoutParams.MATCH_PARENT) {
+                // Child wants to be our size, but our size is not fixed.
+                // Constrain child to not be bigger than us.
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            } else if (childDimension == LayoutParams.WRAP_CONTENT) {
+                // Child wants to determine its own size. It can't be
+                // bigger than us.
+                //直接使用 ViewGroup 能够占据的最大尺寸值
+                resultSize = size;
+                resultMode = MeasureSpec.AT_MOST;
+            }
+            break;
+        ···
+        }
+        //noinspection ResourceType
+        return MeasureSpec.makeMeasureSpec(resultSize, resultMode);
+    }
+```
+
+而 View 对于 AT_MOST 就是默认使用其 specSize，从而使得 View 占据整个屏幕空间
+
+```java
+    public static int getDefaultSize(int size, int measureSpec) {
+        int result = size;
+        int specMode = MeasureSpec.getMode(measureSpec);
+        int specSize = MeasureSpec.getSize(measureSpec);
+        switch (specMode) {
+        case MeasureSpec.UNSPECIFIED:
+            result = size;
+            break;
+        case MeasureSpec.AT_MOST:
+        case MeasureSpec.EXACTLY:
+            result = specSize;
+            break;
+        }
+        return result;
     }
 ```
 
