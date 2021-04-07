@@ -375,7 +375,7 @@ public void addView(View view, ViewGroup.LayoutParams params,
 
 此外，由于`sRunQueues` 是静态成员变量，主线程会一直对应同一个 RunQueue 对象，如果我们是在主线程中调用`View.post(Runnable)`方法的话，那么该 Runnable 就会被添加到和主线程关联的 RunQueue 中，后续主线程就会取出该 Runnable 来执行
 
-即使该 View 是我们直接 new 出来的对象（就像以下的示例），以上结论依然生效，当系统需要绘制其它视图的时候就会顺便取出该任务，一般很快就会执行到。当然，由于此时 View 并没有 AttachedToWindow，所以获取到的宽高值肯定也是 0
+即使该 View 是我们直接 new 出来的对象（就像以下的示例），以上结论依然生效，当系统需要绘制其它视图的时候就会顺便取出该任务，一般很快就会执行到。当然，由于此时 View 并没有 attachedToWindow，所以获取到的宽高值肯定也是 0
 
 ```kotlin
         val view = View(Context)
@@ -389,3 +389,22 @@ public void addView(View view, ViewGroup.LayoutParams params,
 - 当 API < 24 时，如果是在主线程进行调用，那么不管 View 是否有 AttachedToWindow，提交的 Runnable 均会被执行。但只有在 View 被 AttachedToWindow 的情况下才可以获取到 View 的真实宽高
 - 当 API < 24 时，如果是在子线程进行调用，那么不管 View 是否有 AttachedToWindow，提交的 Runnable 都将永远不会被执行
 - 当 API >= 24 时，不管是在主线程还是子线程进行调用，只要 View 被 AttachedToWindow 后，提交的 Runnable 都会被执行，且都可以获取到 View 的真实宽高值。如果没有被 AttachedToWindow 的话，Runnable 也将永远不会被执行
+
+### 五、总结
+
+Activity 的 `onResume` 方法在第一次被调用后，绘制视图树的 Runnable 才会被 Post 到和主线程关联的 MessageQueue 中，虽然该 Runnable 和**回调 Activity 的 `onResume` 方法**的操作都是在主线程中执行的，但是该 Runnable 只有等到主线程后续将其从 MessageQueue 取出来后才会被执行，所以这两者其实是构成了异步行为，因此我们在`onCreate` 和`onResume` 这两个方法里才无法直接获取到 View 的宽高大小
+
+当 View 还未绘制完成时，通过 `View.post(Runnable)`提交的 Runnable 会等到 `View.dispatchAttachedToWindow`方法被调用后才会被保存到 MessageQueue 中，这样也依然保证了该 Runnable 一定是会在 View 绘制完成后才会被执行，所以此时我们才能获取到 View 的宽高大小
+
+除了`View.post(Runnable)`外，我们还可以通过 OnGlobalLayoutListener 来获取 View 的宽高属性，`onGlobalLayout` 方法会在视图树发生变化的时候被调用，在该方法中我们就可以来获取 View 的宽高大小
+
+```kotlin
+        view.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
+            override fun onGlobalLayout() {
+                view.viewTreeObserver.removeOnGlobalLayoutListener(this)
+                val width = view.width
+            }
+        })
+```
+
+按照我自己的想法，系统提供`View.post(Runnable)`这个方法的目的不仅仅是为了用来获取 View 的宽高等属性这么简单，有可能是为了提供一种优化手段，使得我们可以在整个视图树均绘制完毕后才去执行一些**不紧急又必须执行（或者是相对耗时）**的操作，使得整个视图树可以尽快地呈现出来，优化用户体验
