@@ -12,8 +12,6 @@
 
 ![公众号：字节数组](https://s3.ax1x.com/2021/02/18/yRiE4K.png)
 
-
-
 * [语言教程]()
   * [两万六千字带你 Kotlin 入门](kotlin_core/两万六千字带你Kotlin入门.md)
   * [Dart 入门](dart/Dart入门教程.md)
@@ -25,6 +23,7 @@
   * [一文读懂 Handler 机制全家桶](android_core/一文读懂Handler机制全家桶.md)
   * [一文读懂 SharedPreferences 的缺陷及一点点思考](https://github.com/leavesC/KVHolder/wiki/%E4%B8%80%E6%96%87%E8%AF%BB%E6%87%82-SharedPreferences-%E7%9A%84%E7%BC%BA%E9%99%B7%E5%8F%8A%E4%B8%80%E7%82%B9%E7%82%B9%E6%80%9D%E8%80%83)
   * [一文读懂 Java & Kotlin 泛型难点](android_core/一文读懂Java&Kotlin泛型难点.md)
+  * [一文读懂 AsyncTask](android_core/一文读懂AsyncTask.md)
   * [一文快速入门 Kotlin 协程](android_core/一文快速入门Kotlin协程.md)
   * [一文快速入门 ConstraintLayout](android_core/一文快速入门ConstraintLayout.md)
   * [一文快速入门 Gson](android_core/一文快速入门Gson.md)
@@ -90,5 +89,5 @@
   * [通过 Wifi 实现无网络传输文件](https://github.com/leavesC/WifiFileTransfer)
   * [通过 Wifi Direct 实现无网络传输文件](https://github.com/leavesC/WifiP2P)
   * [linux 环境编译 ijkplayer so 库实践](https://github.com/leavesC/ijkplayer-so-extend)
-  * [运行时权限封装](https://github.com/leavesC/PermissionSteward)
+  * [Android 6.0 运行时权限封装](https://github.com/leavesC/PermissionSteward)
   * [解决软键盘和表情面板切换时的跳闪问题](https://github.com/leavesC/Keyboard)

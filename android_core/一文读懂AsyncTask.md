@@ -1,4 +1,4 @@
-AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler ，实现了线程的复用，后台任务执行顺序的控制、子线程和 UI 线程的切换，使得开发者可以以简单的方法来执行一些耗时任务
+AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler 实现了线程的复用、后台任务执行顺序的控制、子线程和主线程的切换，使得开发者可以通过很简单的方法来执行一些耗时任务
 
 此篇文章就基于 Android API 27 版本的源码来对 AsyncTask 进行一次整体分析，以便对其底层工作流程有所了解
 
@@ -75,7 +75,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
         exec.execute(mFuture);
 ```
 
-`executeOnExecutor(Executor, Params)`方法可以从外部传入自定义的任务执行器对象，例如可以传入 **AsyncTask.THREAD_POOL_EXECUTOR** 使 AsyncTask 中的任务队列以并行的方式来完成
+`executeOnExecutor(Executor, Params)`方法可以从外部传入自定义的任务执行器对象，例如可以传入 `AsyncTask.THREAD_POOL_EXECUTOR` 使 AsyncTask 中的任务队列以并行的方式来完成
 
 这里先来看下默认的串行任务执行器是如何执行的
 
@@ -167,7 +167,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     private static volatile Executor sDefaultExecutor = SERIAL_EXECUTOR;
 ```
 
-看到线程池，这里就又引出了另外一个问题，后台任务是在子线程中调用的，那 AsyncTask 又是如何在 UI 线程中回调 `onPreExecute()、onPostExecute(Result)、onProgressUpdate(Progress)`这几个方法的呢？
+看到线程池，这里就又引出了另外一个问题，后台任务是在子线程中调用的，那 AsyncTask 又是如何在主线程中回调 `onPreExecute()、onPostExecute(Result)、onProgressUpdate(Progress)`这几个方法的呢？
 
 先看几个相关方法的声明
 
@@ -176,26 +176,26 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     @WorkerThread
     protected abstract Result doInBackground(Params... params);
 
-    //在 UI 线程中被调用，在 doInBackground() 方法之前调用，用于在后台任务开始前做一些准备工作
+    //在主线程中被调用，在 doInBackground() 方法之前调用，用于在后台任务开始前做一些准备工作
     @MainThread
     protected void onPreExecute() {
     }
 
-    //在 UI 线程中被调用，在 doInBackground() 方法之后调用，用于处理后台任务的执行结果
+    //在主线程中被调用，在 doInBackground() 方法之后调用，用于处理后台任务的执行结果
     //参数 result 是 doInBackground() 方法的返回值
     @SuppressWarnings({"UnusedDeclaration"})
     @MainThread
     protected void onPostExecute(Result result) {
     }
 
-    //在 UI 线程中被调用，当调用了 publishProgress() 方法后被触发
+    //在主线程中被调用，当调用了 publishProgress() 方法后被触发
     //用于更新任务进度值
     @SuppressWarnings({"UnusedDeclaration"})
     @MainThread
     protected void onProgressUpdate(Progress... values) {
     }
 
-    //在 UI 线程中被调用
+    //在主线程中被调用
     //当调用了 cancel(boolean) 方法取消后台任务后会被调用
     //在 doInBackground() 方法结束时也会被调用
     //方法内部默认调用了 onCancelled() 方法
@@ -205,27 +205,27 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
         onCancelled();
     }
 
-    //在 UI 线程中被调用，被 onCancelled(Result) 方法调用
+    //在主线程中被调用，被 onCancelled(Result) 方法调用
     @MainThread
     protected void onCancelled() {
     }
 ```
 
-`onPreExecute()`在 `executeOnExecutor(Executor, Params)`中有被调用，因为 `executeOnExecutor()`方法被要求在 UI 线程中调用，因此 `onPreExecute()`自然也会在 UI 线程中被执行
+`onPreExecute()`在 `executeOnExecutor(Executor, Params)`中有被调用，因为 `executeOnExecutor()`方法被要求在主线程中调用，因此 `onPreExecute()`自然也会在主线程中被执行
 
-其它方法的调用则涉及到了 **Handler、Looper 与 MessageQueue** 的相关知识点，关于这些可以从这里获取详细介绍： [**AndroidGuide**](https://github.com/leavesC/AndroidGuide) ，这里就简单介绍下
+其它方法的调用则涉及到了 Handler、Looper 与 MessageQueue 的相关知识点，关于这些可以从这里获取详细介绍： [**AndroidGuide**](https://github.com/leavesC/AndroidGuide) ，这里就简单介绍下
 
 看下 AsyncTask 类的三个构造函数。当中，除了无参构造函数，其他两个构造函数都使用 `@hide`注解隐藏起来了，因此我们在一般情况下只能使用调用无参构造函数来初始化 AsyncTask
 
 ```java
-	//创建一个新的异步任务，必须在UI线程上调用此构造函数
+	//创建一个新的异步任务，必须在主线程上调用此构造函数
     public AsyncTask() {
         this((Looper) null);
     }
     
     /**
      * 隐藏的构造函数
-     * 创建一个新的异步任务，必须在UI线程上调用此构造函数
+     * 创建一个新的异步任务，必须在主线程上调用此构造函数
      *
      * @hide
      */
@@ -235,7 +235,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     
     /**
      * 隐藏的构造函数
-     * 创建一个新的异步任务，必须在UI线程上调用此构造函数
+     * 创建一个新的异步任务，必须在主线程上调用此构造函数
      * @hide
      */
     public AsyncTask(@Nullable Looper callbackLooper) {
@@ -278,15 +278,15 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
         };
     }
 ```
-因此我们传给构造函数 `AsyncTask(Looper)` 的参数为 **null** ，因为 **mHandler** 变量其实是赋值为绑定了 UI 线程 **Looper** 的 **InternalHandler** 变量
+因此我们传给构造函数 `AsyncTask(Looper)` 的参数为 null ，因为 `mHandler` 变量其实是赋值为绑定了主线程 Looper 的 InternalHandler 变量
 
-因为 InternalHandler 绑定了 UI 线程的 Looper 对象，因此 `handleMessage(Message)`方法其实是在 UI 线程被执行，从而实现了子线程和 UI 线程之间的切换
+因为 InternalHandler 绑定了主线程的 Looper 对象，因此 `handleMessage(Message)`方法其实是在主线程被执行，从而实现了子线程和主线程之间的切换
 
 ```java
 	
     //按照正常情况来说，在初始化 AsyncTask 时我们使用的都是其无参构造函数
     //因此 InternalHandler 绑定的 Looper 对象即是与主线程关联的 Looper 对象
-    //所以 InternalHandler 可以用来在 UI 线程回调某些抽象方法，例如 onProgressUpdate() 方法
+    //所以 InternalHandler 可以用来在主线程回调某些抽象方法，例如 onProgressUpdate() 方法
     private static InternalHandler sHandler;
 
     //等于 sHandler
@@ -316,7 +316,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     }    
 
 	//获取与主线程关联的 Looper 对象，以此为参数构建一个 Handler 对象
-    //所以在 Task 的运行过程中，能够通过此 Handler 在 UI 线程执行操作
+    //所以在 Task 的运行过程中，能够通过此 Handler 在主线程执行操作
     private static Handler getMainHandler() {
         synchronized (AsyncTask.class) {
             if (sHandler == null) {
@@ -327,7 +327,7 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
     }
 ```
 
-例如，在通过 `publishProgress(Progress)` 方法更新后台任务的执行进度时，在内部就会将进度值包装到 **Message** 中，然后传递给 **Handler** 进行处理
+例如，在通过 `publishProgress(Progress)` 方法更新后台任务的执行进度时，在内部就会将进度值包装到 Message 中，然后传递给 Handler 进行处理
 
 ```java
     //运行于工作线程，此方法用于更新任务的进度值
