@@ -362,35 +362,6 @@ Java 泛型对于类型的约束只在编译期存在，运行时仍然会按照
     }
 ```
 
-### 泛型与反射
-
-既然 Java 泛型存在编译期类型擦除，导致我们无法在运行时获取到具体类型，但为什么我们又可以通过反射在运行时获取到 Class 类型呢？它们一个获取不到，一个可以获取到，这是不是存在矛盾呢？
-
-就像上文所介绍的，以下例子中的 nodeA 和 nodeA2 的 obj 对象在编译过后都会被转换为 Object 类型，两者的字节码是完全相同的，实际上都相当于 `Node<Object>` ，泛型声明存在与否对于 JVM 来说是完全无感知的，这使得`nodeA instanceof NodeA<String>`和`nodeA2 instanceof NodeA<String>`这两条语句都无法编译通过
-
-```java
-    public static class NodeA<T> {
-
-        private T obj;
-
-        public NodeA(T obj) {
-            this.obj = obj;
-        }
-
-    }
-
-    public static void main(String[] args) {
-        NodeA<String> nodeA = new NodeA<>("业志陈");
-        NodeA nodeA2 = new NodeA("https://juejin.cn/user/923245496518439");
-        System.out.println(nodeA instanceof NodeA);
-        System.out.println(nodeA instanceof NodeA<?>);
-        System.out.println(nodeA2 instanceof NodeA);
-        System.out.println(nodeA2 instanceof NodeA<?>);
-//        System.out.println(nodeA instanceof NodeA<String>);
-//        System.out.println(nodeA2 instanceof NodeA<String>);
-    }
-```
-
 ### Kotlin 泛型
 
 Kotlin 泛型在大体上和 Java 一致，毕竟两者需要保证兼容性
