@@ -16,6 +16,8 @@
   * [两万六千字带你 Kotlin 入门](kotlin_core/两万六千字带你Kotlin入门.md)
   * [Dart 入门](dart/Dart入门教程.md)
 * [Android 精讲]()
+  * [简单聊聊 Activity 的启动模式](android_core/简单聊聊Activity的启动模式.md)
+  * [简单聊聊 Bitmap 的一些知识点](android_core/简单聊聊Bitmap的一些知识点.md)
   * [一文读懂 View & Window 机制](android_core/一文读懂View&Window机制.md)
   * [一文读懂 View 事件分发机制](android_core/一文读懂View事件分发机制.md)
   * [一文读懂 View 的 Measure、Layout、Draw 流程](android_core/一文读懂View的MeasureLayoutDraw流程.md)
