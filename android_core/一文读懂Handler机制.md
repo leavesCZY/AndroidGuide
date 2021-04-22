@@ -1,6 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
-Handler 在整个 Android 开发体系中占据着很重要的地位，对开发者来说起到的作用很明确，就是为了实现线程切换或者是执行延时任务，稍微更高级一点的用法可能是为了保证多个任务在执行时的有序性。由于 Android 系统中的主线程有特殊地位，所以像 EventBus 和 Retrofit 这类并非 Android 独有的三方库，都是通过 Handler 来实现对 Android 系统的特殊平台支持。大部分开发者都已经对如何使用 Handler 很熟悉了，这里就再来了解下其内部具体是如何实现的
+Handler 在整个 Android 开发体系中占据着很重要的地位，是一种标准的事件驱动模型，对开发者来说起到的作用很明确，就是为了实现线程切换或者是执行延时任务，稍微更高级一点的用法可能是为了保证多个任务在执行时的有序性。由于 Android 系统中的主线程有特殊地位，所以像 EventBus 和 Retrofit 这类并非 Android 独有的三方库，都是通过 Handler 来实现对 Android 系统的特殊平台支持。大部分开发者都已经对如何使用 Handler 很熟悉了，这里就再来了解下其内部具体是如何实现的，希望对你有所帮助 😇😇
 
 **本文基于 Android API 30（即 Android 11）的系统源码进行讲解**
 
@@ -911,19 +911,34 @@ MessageQueue 支持两种方式来退出 Loop：
 
 #### 7、IdleHandler
 
-IdleHandler 是 MessageQueue 的一个内部接口，可以用于在 Loop 线程处于空闲状态的时候执行一些优先级不高的操作
+IdleHandler 是 MessageQueue 的一个内部接口，可以用于在 Loop 线程处于空闲状态的时候执行一些优先级不高的操作，通过 MessageQueue 的 `addIdleHandler` 方法来提交要执行的操作
 
 ```java
     public static interface IdleHandler {
         boolean queueIdle();
     }
-```
 
-MessageQueue 在获取队头消息时，如果发现当前没有需要执行的 Message 的话，那么就会去遍历 mIdleHandlers，依次执行 IdleHandler
-
-```java
 	private final ArrayList<IdleHandler> mIdleHandlers = new ArrayList<IdleHandler>();
 
+    public void addIdleHandler(@NonNull IdleHandler handler) {
+        if (handler == null) {
+            throw new NullPointerException("Can't add a null IdleHandler");
+        }
+        synchronized (this) {
+            mIdleHandlers.add(handler);
+        }
+    }
+
+    public void removeIdleHandler(@NonNull IdleHandler handler) {
+        synchronized (this) {
+            mIdleHandlers.remove(handler);
+        }
+    }
+```
+
+MessageQueue 在执行 `next()` 方法时，如果发现当前队列是空的或者队头消息需要延迟处理的话，那么就会去尝试遍历 `mIdleHandlers`来依次执行 IdleHandler
+
+```java
 	@UnsupportedAppUsage
     Message next() {
         ···
@@ -1868,31 +1883,3 @@ public final class ViewRootImpl implements ViewParent,
             }
         }
 ```
-
-### 六、文章推荐
-
-[三方库源码笔记（1）-EventBus 源码详解](https://juejin.im/post/6881265680465788936)
-
-[三方库源码笔记（2）-EventBus 自己实现一个？](https://juejin.im/post/6881808026647396366)
-
-[三方库源码笔记（3）-ARouter 源码详解](https://juejin.im/post/6882553066285957134)
-
-[三方库源码笔记（4）-ARouter 自己实现一个？](https://juejin.im/post/6883105868326862856)
-
-[三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.im/post/6884225131015569421)
-
-[三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.im/post/6884526739646185479)
-
-[三方库源码笔记（7）-超详细的 Retrofit 源码解析](https://juejin.im/post/6886121327845965838)
-
-[三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.im/post/6887408273213882375)
-
-[三方库源码笔记（9）-超详细的 Glide 源码详解](https://juejin.im/post/6891307560557608967)
-
-[三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.im/post/6892751013544263687)
-
-[三方库源码笔记（11）-OkHttp 源码详解](https://juejin.im/post/6895369745445748749)
-
-[三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.im/post/6895740949025177607)
-
-[三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)

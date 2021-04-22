@@ -1,3 +1,9 @@
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享一些原创文章，希望对你有所帮助 😇😇
+
+开头先说一下，我不是标题党，本教程真的有两万六千字（严格点说应该是两万六千五百八十四），但由于掘金单篇文章文字总数限制，所以只能发出来一部分，完整文章请看 Github：[两万六千字带你 Kotlin 入门](https://github.com/leavesC/AndroidGuide) 
+
+以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以国庆期间就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 😇😇
+
 ### 一、Hello World
 
 按照国际惯例，学习一门新的语言通常都是要从打印 Hello World 开始的

@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
 很多开发者都了解这么一个知识点：在 Activity 的 `onCreate` 方法里我们无法直接获取到 View 的宽高信息，但通过 `View.post(Runnable)`这种方式就可以，那背后的具体原因你是否有了解过呢？
 

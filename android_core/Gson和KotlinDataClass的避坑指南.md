@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
 在蛮久前有同事问过我关于一个 Gson 和 Kotlin dataClass 的问题，当时答不上来也没去细究，但一直都放在心底，今天就认真探究下原因，也输出总结了一下，希望能帮助你避开这个坑😂😂
 

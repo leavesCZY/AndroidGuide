@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享一些原创文章
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
 Activity 的启动模式本身是一个挺难理解的知识点，大多数开发者对这个概念的了解可能只限于四种 launchMode 属性值，但启动模式其实还需要受 Intent flag 的影响。而且 Activity 启动模式并不只是单纯地用来启动一个 Activity，实际上还会直接影响到用户的直观感受和使用体验，因为启动模式直接就决定了应用的任务栈和返回栈，这都是用户能直接接触到的
 

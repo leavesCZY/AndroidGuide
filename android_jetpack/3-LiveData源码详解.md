@@ -485,3 +485,8 @@ LiveData 在其构造方法内部就开始了新旧值的记录，主要是根�
         observer.mObserver.onChanged((T) mData);
     }
 ```
+
+### 四、改进 LiveData
+
+LiveData 只会在 LifecycleOwner 处于活跃状态的时候才进行事件分发，这是 LiveData 的优点， 但同时也会给我们带来一些使用上的困扰，我通过复刻 LiveData 的源码对其进行了自定义，更多详情请看：[Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
+

@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享 Android 系统源码解析，Jetpack 源码解析、热门开源库源码解析等面试必备的知识点
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
 ConstraintLayout 目前是 Android Studio 的默认布局，其优势就是可以使用扁平化的视图层次结构（无嵌套视图组）来创建复杂多变的大型布局，在绘制效率上相对其它布局有很大优势。ConstraintLayout 与 RelativeLayout 相似，其中所有的视图均根据同级视图与父布局之间的关系来进行定位，但其灵活性要高于 RelativeLayout，并且更易于与 Android Studio 的布局编辑器配合使用
 
