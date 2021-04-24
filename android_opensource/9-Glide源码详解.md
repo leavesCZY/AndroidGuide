@@ -1,6 +1,6 @@
-> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助  😇😇
 >
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助  😇😇
 
 系列文章导航：
 
@@ -42,7 +42,7 @@ Glide 的缓存机制分为**内存缓存**和**磁盘缓存**两级。默认情
 3. 检查本地磁盘缓存 DiskCache 中是否有符合条件的图片，如果存在则进行解码取值，否则就执行下一步
 4. 联网请求图片。当加载到图片后，会将图片缓存到内存和磁盘中，以便后续复用
 
-所以说，Glide 的内存缓存分为 ActiveResources 和 MemoryCache 两级
+所以说，Glide 的内存缓存又分为了 ActiveResources 和 MemoryCache 两级
 
 此外，Glide 最终会缓存到磁盘的图片类型可以分为两类，一类是原始图片，一类是将原始图片进行各种压缩裁剪变换等各种转换操作后得到的图片。Glide 的磁盘缓存策略（DiskCacheStrategy）就分为以下五种，用于决定如何对这两类图片进行磁盘保存
 
@@ -75,45 +75,14 @@ Glide 实现**生命周期监听**涉及到的类包含以下几个：
 首先，LifecycleListener 定义了三种事件通知回调，用于通知容器的活跃状态（是处于前台、后台、还是已经退出了）。Lifecycle 用于注册和移除 LifecycleListener 
 
 ```java
-/**
- * An interface for listener to {@link android.app.Fragment} and {@link android.app.Activity}
- * lifecycle events.
- */
 public interface LifecycleListener {
-
-  /**
-   * Callback for when {@link android.app.Fragment#onStart()}} or {@link
-   * android.app.Activity#onStart()} is called.
-   */
   void onStart();
-
-  /**
-   * Callback for when {@link android.app.Fragment#onStop()}} or {@link
-   * android.app.Activity#onStop()}} is called.
-   */
   void onStop();
-
-  /**
-   * Callback for when {@link android.app.Fragment#onDestroy()}} or {@link
-   * android.app.Activity#onDestroy()} is called.
-   */
   void onDestroy();
 }
-```
 
-```java
-/** An interface for listening to Activity/Fragment lifecycle events. */
 public interface Lifecycle {
-  /** Adds the given listener to the set of listeners managed by this Lifecycle implementation. */
   void addListener(@NonNull LifecycleListener listener);
-
-  /**
-   * Removes the given listener from the set of listeners managed by this Lifecycle implementation,
-   * returning {@code true} if the listener was removed successfully, and {@code false} otherwise.
-   *
-   * <p>This is an optimization only, there is no guarantee that every added listener will
-   * eventually be removed.
-   */
   void removeListener(@NonNull LifecycleListener listener);
 }
 ```
@@ -129,17 +98,6 @@ class ActivityFragmentLifecycle implements Lifecycle {
   private boolean isStarted;
   private boolean isDestroyed;
 
-  /**
-   * Adds the given listener to the list of listeners to be notified on each lifecycle event.
-   *
-   * <p>The latest lifecycle event will be called on the given listener synchronously in this
-   * method. If the activity or fragment is stopped, {@link LifecycleListener#onStop()}} will be
-   * called, and same for onStart and onDestroy.
-   *
-   * <p>Note - {@link com.bumptech.glide.manager.LifecycleListener}s that are added more than once
-   * will have their lifecycle methods called more than once. It is the caller's responsibility to
-   * avoid adding listeners multiple times.
-   */
   @Override
   public void addListener(@NonNull LifecycleListener listener) {
     lifecycleListeners.add(listener);
@@ -265,8 +223,7 @@ public class RequestManagerRetriever implements Handler.Callback {
         (SupportRequestManagerFragment) fm.findFragmentByTag(FRAGMENT_TAG);
     if (current == null) {
       //current 为 null 说明还未注入过 SupportRequestManagerFragment
-      //那么就构建一个 SupportRequestManagerFragment 实例并添加到 FragmentManager 中
-        
+      //那么就构建一个 SupportRequestManagerFragment 实例并添加到 FragmentManager 中 
       current = pendingSupportRequestManagerFragments.get(fm);
       if (current == null) {
         current = new SupportRequestManagerFragment();
@@ -382,7 +339,7 @@ public class RequestManagerRetriever implements Handler.Callback {
   }
 ```
 
-如果不注入 SupportRequestManagerFragment，那么最终使用的 RequestManager 对象就属于全员唯一的 Application 级别的 RequestManager 
+如果不注入 SupportRequestManagerFragment，那么最终使用的 RequestManager 对象就属于全局唯一的 Application 级别的 RequestManager 
 
 ```java
   /** The top application level RequestManager. */
@@ -898,7 +855,7 @@ public <R> LoadStatus load(
   }
 ```
 
-ActiveResources 是通过弱引用的方式来保存当前所有正在被使用的图片资源。我们知道，当一个对象只具有弱引用而不再被强引用，那么当发生 GC 时，弱引用中持有的引用就会被直接置空，同时弱引用对象本身就会被存入关联的 ReferenceQueue 中
+ActiveResources 是通过弱引用的方式来保存当前所有正在被使用的图片资源。我们知道，如果一个对象只具有弱引用而不再被强引用，那么当发生 GC 时，弱引用中持有的引用就会被直接置空，同时弱引用对象本身就会被存入关联的 ReferenceQueue 中
 
 当有一张新图片加载成功且被使用了，且当前配置项允许内存缓存，那么该图片资源就会通过 `activate`方法保存到 activeEngineResources 中。当一张图片资源的引用计数 acquired 变为 0 时，说明该资源当前已经不再被外部使用了，此时就会通过 `deactivate`方法将其从 activeEngineResources 中移除，消除对资源的引用，如果当前允许内存缓存的话则还会将该资源存入到 MemoryCache 中
 
@@ -986,8 +943,8 @@ public class LruResourceCache extends LruCache<Key, Resource<?>> implements Memo
 
 1. ActiveResources 通过弱引用来保存当前处于使用状态的图片资源，当一张图片被加载成功且还处于使用状态时 ActiveResources 就会一直持有着对其的引用，当图片不再被使用时就会从 ActiveResources 中移除并存入到 MemoryCache 中
 2. MemoryCache 使用了 Lrc 算法在内存中缓存图片资源，仅用于缓存当前并非处于使用状态的图片资源。当缓存在 MemoryCache 中的图片被外部重用时，该图片就会从 MemoryCache 中移除并再次存入 ActiveResources 中
-3. ActiveResources 中保存的图片是当前处于强引用状态的资源，正常来说即使系统当前可用内存不足，系统即使抛出 OOM 也不会回收强引用，所以 Glide 的内存缓存先从 ActiveResources 取值就不会增大当前的已用内存。而硬件内存大小是有限的，MemoryCache 使用 Lrc 算法就是为了尽量节省内存且尽量让最大概率还会被重用的图片可以被保留下来
-4. Glide 将内存缓存分为 ActiveResources 和 MemoryCache 两级而不是全都放到 MemoryCache 中，就避免了误将当前正处于活跃状态的图片资源给移除队列。且 ActiveResources 内部也一直在循环判断保存的图片资源是否已经不再被外部使用了，从而可以及时更新 MemoryCache，提高了 MemoryCache 的利用率和准确度
+3. ActiveResources 中保存的图片是当前处于强引用状态的资源，正常来说即使系统当前可用内存不足，系统即使抛出 OOM 也不会回收强引用，所以 Glide 的内存缓存先从 ActiveResources 取值就不会增大当前的已用内存。而系统内存大小是有限的，MemoryCache 使用 Lrc 算法就是为了尽量节省内存且尽量让最大概率还会被重用的图片可以被保留下来
+4. Glide 将内存缓存分为 ActiveResources 和 MemoryCache 两级，而不是全都放到 MemoryCache 中，就避免了误将当前正处于活跃状态的图片资源给移除队列。且 ActiveResources 内部也一直在循环判断保存的图片资源是否已经不再被外部使用了，从而可以及时更新 MemoryCache，提高了 MemoryCache 的利用率和准确度
 
 #### 2、磁盘缓存
 
@@ -1351,7 +1308,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
 }
 ```
 
-### 七、一共包含几个线程池
+### 七、包含几个线程池
 
 先说结论，如果我没看遗漏的话，Glide 是一共包含七个线程池。**此处我所指的线程池的概念不单单指 ThreadPoolExecutor 类，而是指 `java.util.concurrent.Executor` 接口的任意实现类**
 
@@ -1498,7 +1455,7 @@ public final class Executors {
 }
 ```
 
-### 八、如何自定义网络请求库
+### 八、自定义网络请求库
 
 默认情况下，Glide 是通过 HttpURLConnection 来联网加载图片的，相对于我们常用的 OkHttp 来说比较原始低效。而 Glide 也提供了 Registry 类，允许外部来自定义实现特定的请求逻辑
 
