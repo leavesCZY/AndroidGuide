@@ -967,7 +967,101 @@ protected void afterExecute(Runnable r, Throwable t) { }
 protected void terminated() { }
 ```
 
-### 四、线程池故障
+### 四、Executors
+
+Executors 是 JDK 提供的一个线程池创建工具类，封装了很多个创建 ExecutorService 实例的方法，这里就来介绍下这几个方法，这些线程池的差别主要都是由于选择了不同的任务队列导致的，读者需要先认识下以下几种任务队列
+
+![](https://p0.meituan.net/travelcube/725a3db5114d95675f2098c12dc331c3316963.png)
+
+`newFixedThreadPool`方法创建的线程池，核心线程数和最大线程数都是 nThreads，所以线程池在任何时候最多也只会有 nThreads 个线程在同时运行，且在停止线程池前所有线程都不会被回收。LinkedBlockingQueue 的默认容量是 Integer.MAX_VALUE，近乎无限，在线程繁忙的情况下有可能导致等待处理的任务持续堆积，使得系统频繁 GC，最终导致 OOM
+
+此类线程池适合用于希望所有任务都能够被执行的情况
+
+```java
+    public static ExecutorService newFixedThreadPool(int nThreads) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>());
+    }
+
+    public static ExecutorService newFixedThreadPool(int nThreads, ThreadFactory threadFactory) {
+        return new ThreadPoolExecutor(nThreads, nThreads,
+                                      0L, TimeUnit.MILLISECONDS,
+                                      new LinkedBlockingQueue<Runnable>(),
+                                      threadFactory);
+    }
+```
+
+`newSingleThreadExecutor`方法创建的线程池，核心线程数和最大线程数都是 1，所以线程池在任何时候最多也只会有 1 个线程在同时运行，且在停止线程池前所有线程都不会被回收。由于使用了 LinkedBlockingQueue，所以在极端情况下也是有发生 OOM 的可能
+
+此类线程池适合用于执行需要串行处理的任务，或者是任务的提交间隔比任务的执行时间长的情况
+
+```java
+    public static ExecutorService newSingleThreadExecutor() {
+        return new FinalizableDelegatedExecutorService
+            (new ThreadPoolExecutor(1, 1,
+                                    0L, TimeUnit.MILLISECONDS,
+                                    new LinkedBlockingQueue<Runnable>()));
+    }
+
+    public static ExecutorService newSingleThreadExecutor(ThreadFactory threadFactory) {
+        return new FinalizableDelegatedExecutorService
+            (new ThreadPoolExecutor(1, 1,
+                                    0L, TimeUnit.MILLISECONDS,
+                                    new LinkedBlockingQueue<Runnable>(),
+                                    threadFactory));
+    }
+```
+
+`newCachedThreadPool`方法创建的线程池，核心线程数是 0，最大线程数是 Integer.MAX_VALUE，所以允许同时运行的线程数量近乎无限。再加上 SynchronousQueue 是一个不储存元素的阻塞队列，每当有新任务到来时，如果当前没有空闲线程的话就会马上启动一个新线程来执行任务，这使得任务总是能够很快被执行，提升了响应速度，但同时也存在由于要执行的任务过多导致一直创建线程的可能性，这在任务耗时过长且任务量过多的情况下也可能导致 OOM
+
+此类线程池适合用于对任务的处理速度要求比较高的情况
+
+```java
+    public static ExecutorService newCachedThreadPool() {
+        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                      60L, TimeUnit.SECONDS,
+                                      new SynchronousQueue<Runnable>());
+    }
+
+    public static ExecutorService newCachedThreadPool(ThreadFactory threadFactory) {
+        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,
+                                      60L, TimeUnit.SECONDS,
+                                      new SynchronousQueue<Runnable>(),
+                                      threadFactory);
+    }
+```
+
+`newScheduledThreadPool`方法创建的线程池对应的是 ScheduledThreadPoolExecutor，其继承于 ThreadPoolExecutor 并实现了 ScheduledExecutorService 接口，在线程池的基础上扩展实现了执行定时任务的能力。ScheduledThreadPoolExecutor 的核心线程数由入参 corePoolSize 决定，最大线程数是 Integer.MAX_VALUE，keepAliveTime 是 0 秒，所以该线程池可能同时运行近乎无限的线程，但一旦当前没有待执行的任务的话，线程就会马上被回收
+
+此类线程池适合用于需要定时多次执行特定任务的情况
+
+```java
+    public static ScheduledExecutorService newScheduledThreadPool(int corePoolSize) {
+        return new ScheduledThreadPoolExecutor(corePoolSize);
+    }
+
+    public static ScheduledExecutorService newScheduledThreadPool(
+            int corePoolSize, ThreadFactory threadFactory) {
+        return new ScheduledThreadPoolExecutor(corePoolSize, threadFactory);
+    }
+```
+
+`newSingleThreadScheduledExecutor`方法 `newScheduledThreadPool` 方法基本一样，只是直接指定了核心线程数为 1
+
+```java
+    public static ScheduledExecutorService newSingleThreadScheduledExecutor() {
+        return new DelegatedScheduledExecutorService
+            (new ScheduledThreadPoolExecutor(1));
+    }
+
+    public static ScheduledExecutorService newSingleThreadScheduledExecutor(ThreadFactory threadFactory) {
+        return new DelegatedScheduledExecutorService
+            (new ScheduledThreadPoolExecutor(1, threadFactory));
+    }
+```
+
+### 五、线程池故障
 
 #### 1、线程池死锁
 
@@ -979,7 +1073,7 @@ protected void terminated() { }
 
 **线程泄漏**指由于某种原因导致线程池中实际可用的线程变少的一种异常情况。如果线程泄漏持续存在，那么线程池中的线程会越来越少，最终使得线程池再也无法处理任务。导致线程泄露的原因可能有两种：由于线程异常自动终止或者由于程序缺陷导致线程处于非有效运行状态。前者通常是由于 `Thread.run()` 方法中没有捕获到任务抛出的 Exception 或者 Error 导致的，使得相应线程被提前终止而没有相应更新线程池当前的线程数量，ThreadPoolExecutor 内部已经对这种情形进行了预防。后者可能是由于客户端提交的任务包含阻塞操作（Object.wait() 等操作），而该操作又没有相应的时间或者条件方面的限制，那么就有可能导致线程一直处于等待状态而无法执行其它任务，这样最终也是形成了线程泄漏
 
-### 五、总结
+### 六、总结
 
 线程池通过复用一定数量的线程来执行不断被提交的任务，除了可以节约线程这种有限而昂贵的资源外，还包含以下好处：
 
@@ -988,6 +1082,6 @@ protected void terminated() { }
 - 封装了任务的具体执行过程。线程池封装了每个线程在创建、管理、复用、回收等各个阶段的逻辑，使得客户端代码只需要提交任务和获取任务的执行结果，而无须关心任务的具体执行过程。即使后续想要将任务的执行方式从并发改为串行，往往也只需要修改线程池内部的处理逻辑即可，而无需修改客户端代码
 - 减少销毁线程的开销。JVM 在销毁一个已经停止的线程时也有着资源和时间方面的开销，采用线程池可以避免频繁地创建线程，从而减少了销毁线程的次数，减少了相应开销
 
-### 六、参考资料
+### 七、参考资料
 
 [Java线程池实现原理及其在美团业务中的实践](https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html)
