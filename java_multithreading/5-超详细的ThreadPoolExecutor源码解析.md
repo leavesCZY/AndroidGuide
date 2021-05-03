@@ -4,6 +4,14 @@
 >
 > 公众号：**[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)**
 
+系列文章导航：
+
+- [聊聊 Java 多线程（1）-什么是多线程](https://juejin.cn/post/6899452217528025095)
+- [聊聊 Java 多线程（2）-怎么实现多线程同步](https://juejin.cn/post/6900428838497419278)
+- [聊聊 Java 多线程（3）-线程活性故障有哪些](https://juejin.cn/post/6900458045197778952)
+- [聊聊 Java 多线程（4）-锁的分类有这么多](https://juejin.cn/post/6900958860454920205)
+- [聊聊 Java 多线程（5）-超详细的 ThreadPoolExecutor 源码解析](https://juejin.cn/post/6901317365561032712)
+
 线程池（ThreadPool）面对的是外部复杂多变的多线程环境，既需要保证多线程环境下的状态同步，也需要最大化对每个线程的利用率，还需要留给子类足够多的余地来实现功能扩展。所以说，线程池的难点在于如何实现，而在概念上其实还是挺简单的。在 Java 中，线程池这个概念一般都认为对应的是 JDK 中的 ThreadPoolExecutor 类及其各种衍生类，本篇文章就从实现思路出发，探索 ThreadPoolExecutor 的源码到底是如何实现的以及为什么这么实现
 
 ### 一、线程池
