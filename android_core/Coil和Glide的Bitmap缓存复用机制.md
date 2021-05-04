@@ -1,5 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，热衷于分享一些原创文章，希望对你有所帮助 😇😇
->
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
 Android 开发者最熟悉的图片加载框架应该是 Glide 和 Picasso 这两个了，最近两年也出现了一个后起之秀：Coil
 
@@ -210,7 +209,7 @@ internal class RealBitmapPool(
 上文说了，Bitmap 的回收与复用机制在不同的系统版本上有着一些差异，而 BitmapPoolStrategy 就完全屏蔽了在不同 Android 系统版本中 Bitmap 复用规则的差异性，其内部会根据系统版本来决定采用哪种复用机制，使得外部可以通过统一的方法进行存取而无需关心内部实现。这里使用到了**策略模式**
 
 - 在 Android 4.4 之前就采用 AttributeStrategy。AttributeStrategy 将 `bitmapWidth、bitmapHeight、bitmapConfig` 这三者作为 Bitmap 的唯一标识，只有和这三个属性完全相等的 Bitmap 才能拿来复用
-- 从 Android 4.4 开始则采用 SizeStrategy。SizeStrategy 将 `bitmapSize` 作为 Bitmap 的唯一标识，只有不小于目标大小且大小不会超出四倍的 Bitmap 才能拿来复用。之所以有最大值的限制，因为也是为了节约内存，毕竟如果拿来复用的 bitmap 太大的话也比较浪费
+- 从 Android 4.4 开始则采用 SizeStrategy。SizeStrategy 将 `bitmapSize` 作为 Bitmap 的唯一标识，只有不小于目标大小且大小不会超出四倍的 Bitmap 才能拿来复用。之所以有最大值的限制，应该也是为了节约内存，毕竟如果拿来复用的 bitmap 太大的话也比较浪费
 
 ```kotlin
 internal interface BitmapPoolStrategy {
