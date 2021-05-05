@@ -1,6 +1,6 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
-View 的事件分发机制一直是 Android 开发中比较难啃的一块知识点，想要理顺 MotionEvent 在 ViewGroup 和 View 这两者之间流转的规则十分不容易，整个过程涉及分发、拦截、消费三个过程，每个过程根据返回值的不同在流程就会有很大差别，且 Activity 也会参与进这个过程，不参照源码进行分析的话就很难明白触摸事件的分发规则。在很久前我就想过要来动笔写这一块知识点，过年期间就熬夜肝了一篇，希望对你有所帮助😇😇
+View 的事件分发机制一直是 Android 开发中比较难啃的一块知识点，想要理顺 MotionEvent 在 ViewGroup 和 View 这两者之间流转的规则十分不容易，整个过程涉及分发、拦截、消费三个过程，每个过程根据返回值的不同在流程就会有很大差别，且 Activity 也会参与进这个过程，不参照源码进行分析的话就很难明白触摸事件的分发规则。在很久前我就想过要来动笔写这一块知识点，熬夜肝了一篇，希望对你有所帮助 😇😇
 
 ### 一、坐标系
 
@@ -1098,7 +1098,7 @@ class InsideScrollView @JvmOverloads constructor(
 }
 ```
 
-### 十一、面试环节
+### 十一、提问环节
 
 #### 1、事件为什么是由外向内？
 
@@ -1114,9 +1114,9 @@ class InsideScrollView @JvmOverloads constructor(
 
 mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View，每个层级的 ViewGroup 都通过 mFirstTouchTarget 来指向下游，这样当后续事件到来时，就不必通过 DFS 算法再次进行遍历了，通过 mFirstTouchTarget 将后续事件层层往下传递给最终的消费者
 
-此外，TouchTarget 中的静态成员变量 sRecycleBin 就用于提供对象复用功能，以链表的形式最多缓存 MAX_RECYCLED 个对象，调用 obtain 方法的时候就会以切换 next 引用的形式来获取一个独立的 TouchTarget 对象
+此外，TouchTarget 中的静态成员变量 sRecycleBin 就用于提供对象复用功能，以链表的形式最多缓存 MAX_RECYCLED 个对象，调用 `obtain` 方法的时候就会以切换 next 引用的形式来获取一个独立的 TouchTarget 对象
 
-```kotlin
+```java
 	private static final class TouchTarget {
         private static final int MAX_RECYCLED = 32;
         private static final Object sRecycleLock = new Object[0];
@@ -1181,7 +1181,7 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 
 按照正常情况来说，每个事件序列应该是都只交由一个 View 或者 ViewGroup 进行消费的，可是还存在一种特殊情况，即 View 消费了 ACTION_DOWN 事件，而后续的 ACTION_MOVE 和 ACTION_UP 事件被其上层容器 ViewGroup 拦截了，导致 View 接收不到后续事件。这会导致一些异常问题， 例如，Button 在接收到 ACTION_DOWN 事件后 UI 后呈现按压状态，如果接收不到 ACTION_UP 这个结束事件的话可能就无法恢复 UI 状态了。为了解决这个问题，Android 系统就通过 ACTION_CANCEL 事件来作为事件序列的另外一种结束消息
 
-当存在上诉情况时，ViewGroup 就会通过 dispatchTransformedTouchEvent 方法构造一个 ACTION_CANCEL 事件并将之下发给 View，从而使得 View 即使没有接受到 ACTION_UP 事件也可以知道本次事件序列已经结束了
+当存在上诉情况时，ViewGroup 就会通过 `dispatchTransformedTouchEvent` 方法构造一个 ACTION_CANCEL 事件并将之下发给 View，从而使得 View 即使没有接受到 ACTION_UP 事件也可以知道本次事件序列已经结束了
 
 ```java
 	private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
@@ -1209,10 +1209,10 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 
 #### 4、onUserInteraction 方法的作用？
 
-前文有讲到，Activity 提供了一个空实现的 onUserInteraction 方法，向子类提供了 ACTION_DOWN 事件的触发通知，那么该方法能够用来做什么呢？
+前文有讲到，Activity 提供了一个空实现的 `onUserInteraction` 方法，向子类提供了 ACTION_DOWN 事件的触发通知，那么该方法能够用来做什么呢？
 
-onUserInteraction 方法在 Activity 接收到 ACTION_DOWN 事件的时候才会被调用，这可以用于某些需要知道 Activity 是否处于长期“闲置”状态的需求。例如，如果我们需要在 Activity 没有被操作一段时间后自动隐藏标题栏的话，就可以用该方法来设置一个定时任务控制标题栏的隐藏状态
+`onUserInteraction` 方法在 Activity 接收到 ACTION_DOWN 事件的时候才会被调用，这可以用于某些需要知道 Activity 是否处于长期“闲置”状态的需求。例如，如果我们需要在 Activity 没有被操作一段时间后自动隐藏标题栏的话，就可以用该方法来设置一个定时任务控制标题栏的隐藏状态
 
 ### 十二、Demo 下载
 
-上述的所有示例代码我都放到了 Github 上，按需自取，[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo) ：https://github.com/leavesC/AndroidOpenSourceDemo
+上述的所有示例代码我都放到了 Github 上，按需自取：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
