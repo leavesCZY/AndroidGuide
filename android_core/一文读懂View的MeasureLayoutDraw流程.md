@@ -1436,7 +1436,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
 
 从 ViewGroup 的 `getChildMeasureSpec` 方法也可以得出该结果，该方法用于根据 ViewGroup 的 MeasureSpec 和 childView 的 LayoutParams 来一起生成 childView 的 MeasureSpec
 
-FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整个屏幕大小。childDimension 等于 WRAP_CONTENT，所以 childView 最终对应的 specSize 就是屏幕大小，specMode 就是 AT_MOST
+FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整个屏幕大小。childDimension 等于 MATCH_PARENT，所以 childView 最终对应的 specSize 就是屏幕大小，specMode 就是 AT_MOST
 
 ```java
 	public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
@@ -1460,12 +1460,12 @@ FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整�
             } else if (childDimension == LayoutParams.MATCH_PARENT) {
                 // Child wants to be our size, but our size is not fixed.
                 // Constrain child to not be bigger than us.
+                //直接使用 ViewGroup 能够占据的最大尺寸值
                 resultSize = size;
                 resultMode = MeasureSpec.AT_MOST;
             } else if (childDimension == LayoutParams.WRAP_CONTENT) {
                 // Child wants to determine its own size. It can't be
                 // bigger than us.
-                //直接使用 ViewGroup 能够占据的最大尺寸值
                 resultSize = size;
                 resultMode = MeasureSpec.AT_MOST;
             }

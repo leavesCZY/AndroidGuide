@@ -125,9 +125,9 @@ data class UserBean(val userName: String, val userAge: Int) : Person()
 
 前两种都无法满足，再来看 `newUnsafeAllocator` 是如何进行兜底的
 
-Unsafe 是位于 `sun.misc` 包下的一个类，主要提供一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升Java运行效率、增强Java语言底层资源操作能力方面起到了很大的作用。但由于Unsafe 类使 Java 语言拥有了类似 C 语言指针一样操作内存空间的能力，这无疑也增加了程序发生相关指针问题的风险。在程序中过度、不正确使用 Unsafe 类会使得程序出错的概率变大，使得Java这种安全的语言变得不再“安全”，因此对 Unsafe 的使用一定要慎重
+Unsafe 是位于 `sun.misc` 包下的一个类，主要提供一些用于执行低级别、不安全操作的方法，如直接访问系统内存资源、自主管理内存资源等，这些方法在提升 Java 运行效率、增强 Java 语言底层资源操作能力方面起到了很大的作用。但由于 Unsafe 类使 Java 语言拥有了类似 C 语言指针一样操作内存空间的能力，这无疑也增加了程序发生相关指针问题的风险。在程序中过度、不正确使用 Unsafe 类会使得程序出错的概率变大，使得 Java 这种安全的语言变得不再安全，因此对 Unsafe 的使用一定要慎重
 
-Unsafe 提供了一个非常规实例化对象的方法。Unsafe 中包含一个 `allocateInstance` 方法，仅通过 Class 对象就可以创建此类的实例对象，而且不需要调用其构造函数、初始化代码、JVM安全检查等。它抑制修饰符检测，也就是即使构造器是 private 修饰的也能通过此方法实例化，只需提类对象即可创建相应的对象
+Unsafe 提供了一个非常规实例化对象的方法：`allocateInstance`，该方法提供了通过 Class 对象就可以创建出相应实例的功能，而且不需要调用其构造函数、初始化代码、JVM 安全检查等，即使构造函数是 private 的也能通过此方法进行实例化
 
 Gson 的 UnsafeAllocator 类中就通过 `allocateInstance` 方法来完成了 UserBean 的初始化，因此也不会调用到其构造函数
 
@@ -269,7 +269,7 @@ Exception in thread "main" com.squareup.moshi.JsonDataException: Non-null value 
 
 ### 四、扩展知识
 
-**再来看以下例子，和 Gson 无直接关联，但是在开发中也是蛮重要的一个知识点**
+**再来看个扩展知识，和 Gson 无直接关联，但是在开发中也是蛮重要的一个知识点**
 
 json 为空字符串，此时 Gson 可以成功反序列化，且得到的 userBean 为 null
 
@@ -312,7 +312,3 @@ Exception in thread "main" java.lang.NullPointerException: Gson().fromJson(json,
 因此，当我们从 Kotlin 承接 Gson 这个 Java 类返回的变量时，既可以将其当做 UserBean 类型，也可以当做 UserBean? 类型。而如果我们直接显式声明为 UserBean 类型，就说明我们确信返回的是非空类型，当返回的是 null 时就会触发 Kotlin 的 null 检查，导致直接抛出 NullPointerException
 
 关于平台类型的知识点摘抄自我的另一篇 Kotlin 教程文章：[两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438#heading-36)
-
-### 五、参考资料
-
-- https://tech.meituan.com/2019/02/14/talk-about-java-magic-class-unsafe.html
