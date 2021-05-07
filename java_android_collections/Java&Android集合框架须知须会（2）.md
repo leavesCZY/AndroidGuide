@@ -10,16 +10,17 @@ HashMap 实际上是**数组+链表+红黑树**的结合体，其底层包含一
 
 #### 1、哈希
 
-Hash，一般翻译做哈希或者散列，是把输入的任意对象通过散列算法变换成固定长度的输出，该输出就是散列值。不同的输入可能会散列成相同的输出，所以不可能从散列值来确定唯一的输入值，但可以将散列值作为这个对象的一个特征
+Hash，一般翻译做哈希或者散列，是把输入的任意对象通过哈希算法变换成固定长度的输出，该输出就是哈希值。不同的输入可能会哈希成相同的输出，所以不可能从哈希值来确定唯一的输入值，但可以将哈希值作为这个对象的一个特征
 
 哈希的作用可以通过举一个例子来说明。假设存在一千个单词，现在需要从中找到“hello”这个单词的位置索引，那么最直观的做法就是将这些单词存储到一个长度为一千的数组中并进行遍历，最坏的结果就需要遍历一千次。如果单词数量越多，那么需要的数组空间就会越多，平均需要进行遍历的次数也会越高。为了节省内存空间并减少遍历次数，我们可以通过哈希算法拿到每个单词的哈希值，将这些哈希值映射为一个长度为一百的数组内的索引值，在该索引位置上保存对应的单词。如果采用的哈希算法足够优秀，不同的单词得到的哈希值就具有很大的随机性，这样一千个单词就可以均匀地分布到数组内了，最好的情况就是每个数组位置只保存十个单词，这十个单词再按照链表或者其它数据结构串联起来。这样我们在查找的时候只需要计算出“hello”对应的索引值，然后在这个索引位置遍历十个单词即可。如果数组空间足够大，哈希算法得到的索引值足够均匀，那么最好的情况就是只需要进行一次查找就可以得到目标结果，最坏的结果也只是需要查找该位置上的所有单词即可，大大减少了遍历次数
 
-HashMap 内部就采用了哈希算法来存储元素。但由于哈希算法对于不同的输入有可能会散列成相同的输出，而且数组空间不可能是无限大的，所以在同个数组位置上就不可避免的需要存储多个元素了，这种情况就叫做**哈希冲突**。此外，HashMap 不保证元素的存储顺序和迭代顺序，因为根据需要 HashMap 会对元素重新哈希，元素的顺序也会被再次打乱，因此在不同时间段其存储顺序和迭代顺序都可能会发现变化。此外，HashMap 也不保证线程安全，如果有多个线程同时进行写操作的话可能会导致数据错乱甚至线程死锁
+HashMap 内部就采用了哈希算法来存储元素。但由于哈希算法对于不同的输入有可能会哈希成相同的输出，而且数组空间不可能是无限大的，所以在同个数组位置上就不可避免的需要存储多个元素了，这种情况就叫做**哈希冲突**。此外，HashMap 不保证元素的存储顺序和迭代顺序，因为根据需要 HashMap 会对元素重新哈希，元素的顺序也会被再次打乱，因此在不同时间段其存储顺序和迭代顺序都可能会发现变化。此外，HashMap 也不保证线程安全，如果有多个线程同时进行写操作的话可能会导致数据错乱甚至线程死锁
 
 #### 2、类声明
 
 ```java
-	public class HashMap<K, V> extends AbstractMap<K, V> implements Map<K, V>, Cloneable, Serializable
+	public class HashMap<K, V> extends AbstractMap<K, V> 
+        implements Map<K, V>, Cloneable, Serializable
 ```
 
 #### 3、常量
@@ -114,7 +115,7 @@ HashMap 中的全局常量主要看以下几个
 
 在上边说过，HashMap 是 **数组+链表+红黑树** 的结合体，数组中每一项元素的类型分为四种可能：**null、单独一个结点、链表、红黑树**
 
-每一个要插入的键值对都会被包装为 Node 对象，根据 key 的哈希值来决定 Node 对象在数组中的位置。如果计算出的位置此时不包含值，即为 null，则直接将 Node 对象放到该位置即可；如果不为 null ，则说明发生了哈希碰撞，此时就需要将 Node 对象插入到链表或者是红黑树中。如果 key 与链表或红黑树中某个已有结点的 key 相等（hash 值相等且两者 equals 成立），则新添加的 Node 对象将覆盖原有数据
+每一个要插入的键值对都会被包装为 Node 对象，根据 key 的哈希值来决定 Node 对象在数组中的位置。如果计算出的位置此时不包含值则直接将 Node 对象放到该位置即可；如果包含值则说明发生了哈希碰撞，此时就需要将 Node 对象插入到链表或者是红黑树中。如果 key 与链表或红黑树中某个已有结点的 key 相等（hash 值相等且两者 equals 成立），则新添加的 Node 对象将覆盖原有数据
 
 **当哈希算法的计算结果越分散均匀，发生哈希碰撞的概率就越小，HashMap 的存取效率就会越高**
 
@@ -179,7 +180,7 @@ Node 类的声明如下所示
     }
 ```
 
-putVal 方法较为复杂，因为该方法要考虑以下几种情况：
+`putVal` 方法较为复杂，因为该方法要考虑以下几种情况：
 
 1. 如果 table 还未初始化或者容量为 0 则进行初始化和扩容
 2. 判断是否存在哈希冲突
@@ -405,13 +406,20 @@ putVal 方法较为复杂，因为该方法要考虑以下几种情况：
     }
 ```
 
-确定键值对在哈希桶数组的位置的步骤分为三步：
+可以看到，key 的哈希值是按照 `(h = key.hashCode()) ^ (h >>> 16)`的算法来得到的，该算法可以拆解为三步：
 
-1. 计算 key 的 hashCode：h = key.hashCode()
-2. 高位运算：h >>> 16
-3. 取模运算：（n - 1) & hash
+- 通过 key.hashCode() 拿到 key 的 hashCode，即 h
+- 通过 h >>> 16 将 h 的高 16 位迁移到低 16 位，高 16 位全变成 0
+- 将以上两步得到的值进行异或运算，最终得到的结果值的高 16 位和 h 的高 16 位一样，低 16 位即 **h的高16位**和 **h的低16位** 的异或运算结果
 
-我也不懂这么取值的优点在于哪里，就不多说了
+key 在哈希桶数组的位置索引则是通过 `(n - 1) & hash` 来计算得到的，n 即哈希桶数组的容量。HashMap 要求哈希桶数组的容量是 2 的幂次方，即要求 n 是 16、32、64、128 这种格式，相对应的 n -1 的二进制位是：
+
+- n 等于 16，n -1 就等于 1111
+- n 等于 32，n -1 就等于 11111
+- n 等于 64，n -1 就等于 111111
+- n 等于 128，n -1 就等于 1111111
+
+可以看出来，不管 hash 值是多少，通过 `(n - 1) & hash` 计算得到的索引值的大小都不会超出 n 本身，大于等于 0 且小于等于 n - 1，这也符合我们对数组索引值范围的要求。再加上 hash 值的生成规则同时使用到了 hashCode 的高 16 位和低 16 位，在 hashCode 的基础上加大了随机性，使得最终通过 `(n - 1) & hash` 计算得到的索引值的随机性也比较大，从而使得元素可以比较均匀地分布在哈希桶数组中，减少了哈希冲突的概率
 
 #### 10、扩容
 
@@ -419,9 +427,9 @@ putVal 方法较为复杂，因为该方法要考虑以下几种情况：
 
 当 HashMap 中的元素越来越多时，因为数组的容量是固定的，所以哈希冲突的几率也会越来越高，为了提高效率，此时就需要对 HashMap 中的数组进行扩容，而扩容操作最消耗性能的地方就在于：**原数组中的数据必须重新计算其在新数组中的位置并迁移到新数组中**
 
-那么 HashMap 扩容操作的触发时机是什么时候呢？当 HashMap 中的元素个数超出 threshold 时（数组容量 与 loadFactor 的乘积），就会进行数组扩容。例如，假设数组当前大小是16，loadFactor 值是0.75，那么当 HashMap 中的元素个数达到12个时，就会自动触发扩容操作，把数组的大小扩充到 2 * 16 = 32，即扩大一倍，然后重新计算每个元素在新数组中的位置，这是一个非常消耗性能的操作，所以如果已经预知到待存入 HashMap 的数据量，那么在初始化 HashMap 时直接指定初始化大小会是一种更为高效的做法
+那么 HashMap 扩容操作的触发时机是什么时候呢？当 HashMap 中的元素个数超出 threshold 时（数组容量 与 loadFactor 的乘积），就会进行数组扩容。例如，假设数组当前大小是 16，loadFactor 值是 0.75，那么当 HashMap 中的元素个数达到 12 个时，就会自动触发扩容操作，把数组的大小扩充到 2 * 16 = 32，即扩大一倍，然后重新计算每个元素在新数组中的位置，这是一个非常消耗性能的操作，所以如果已经预知到待存入 HashMap 的数据量，那么在初始化 HashMap 时直接指定初始化大小会是一种更为高效的做法
 
-默认情况下，数组的容量是 16，loadFactor 是 0.75，这是**平衡空间利用率和时间效率两者**之后的结果
+默认情况下，哈希数组的容量是 16，loadFactor 是 0.75，这是**平衡空间利用率和时间效率两者**之后的结果
 
 初始化数组和扩容数组这两个操作对应的是 `resize()`方法
 
@@ -620,10 +628,11 @@ HashMap 并不保证元素的存储顺序和迭代顺序能够和存入顺序保
 
 #### 1、类声明
 
-LinkedHashMap 是 HashMap 的子类，它保留了元素的插入顺序，其内部维护着一个**按照元素插入顺序**或者**元素访问顺序**来排列的链表，默认是按照元素的插入顺序来排列，就像使用 ArrayList 一样；如果是按照元素的访问顺序来排列，那么每次访问元素后该元素将移至链表的尾部，可以靠此来实现 LRUcache 缓存算法
+LinkedHashMap 是 HashMap 的子类，它保留了元素的插入顺序，其内部维护着一个按照**元素插入顺序**或者**元素访问顺序**来排列的链表，默认是按照**元素的插入顺序**来排列，就像使用 ArrayList 一样；如果是按照**元素的访问顺序**来排列，那么每次访问元素后该元素将移至链表的尾部，可以靠此来实现 LRUcache 缓存算法
 
 ```java
-	public class LinkedHashMap<K,V> extends HashMap<K,V> implements Map<K,V>
+	public class LinkedHashMap<K,V> extends HashMap<K,V> 
+        implements Map<K,V>
 ```
 
 #### 2、结点类
@@ -645,6 +654,28 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
         LinkedHashMap.Entry<K,V> p = new LinkedHashMap.Entry<K,V>(hash, key, value, e);
         linkNodeLast(p);
         return p;
+    }
+
+    /**
+     * The head (eldest) of the doubly linked list.
+     */
+    transient LinkedHashMap.Entry<K,V> head;
+
+    /**
+     * The tail (youngest) of the doubly linked list.
+     */
+    transient LinkedHashMap.Entry<K,V> tail;
+
+    // link at the end of list
+    private void linkNodeLast(LinkedHashMap.Entry<K,V> p) {
+        LinkedHashMap.Entry<K,V> last = tail;
+        tail = p;
+        if (last == null)
+            head = p;
+        else {
+            p.before = last;
+            last.after = p;
+        }
     }
 ```
 
@@ -757,7 +788,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
     }
 ```
 
-当 put 方法被调用时`afterNodeInsertion` 方法也会被调用，该方法用于判断是否移除最近最少使用的元素，依此可以来构建 LRUcache 缓存
+当 `put` 方法被调用时`afterNodeInsertion` 方法也会被调用，该方法用于判断是否移除最近最少使用的元素，依此可以来构建 LRUcache 缓存
 
 ```java
     //在插入元素后调用，此方法可用于 LRUcache 算法中移除最近最少使用的元素
@@ -801,7 +832,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
 
 #### 6、LRUCache
 
-在 Android 端的应用开发中，LRUCache 算法（最近最少使用算法）是很常见的，一种典型的用途就是用来在内存中缓存 Bitmap，因为从 IO 流中读取 Bitmap 的资源消耗较大，为了防止多次从磁盘中读取某张图片，所以通常会在内存中缓存 Bitmap。但内存空间也是有限的，所以也不能每张图片都进行缓存，需要有选择性地缓存一定数量的图片，LRUCache 就是最常见的缓存方案之一
+在 Android 端的应用开发中，LRUCache 算法（最近最少使用算法）是很常见的，一种典型的用途就是用来在内存中缓存 Bitmap，因为从 IO 流中读取 Bitmap 的资源消耗较大，为了防止多次从磁盘中读取某张图片，所以通常会在内存中 Bitmap。但内存空间也是有限的，所以也不能每张图片都进行缓存，需要有选择性地缓存一定数量的图片，LRUCache 就是最常见的缓存方案之一
 
 这里利用 LinkedHashMap 可以按照元素使用顺序进行排列的特点，来实现一个 LRUCache 策略的缓存
 
@@ -861,7 +892,7 @@ public class LRUCache {
 
 HashSet 实现了 Set 接口，不允许插入重复的元素，允许包含 null 元素，且不保证元素的迭代顺序，源码十分简单，去掉注释后不到两百行，因为其底层也是通过 HashMap 来实现的，看了上面关于 HashMap 源码的解析后再来看 HashSet 就会有一种“不过如此”的感觉了
 
-向 HashSet 添加的值都会被转换为一个键值对，key 即外部传入的值，value 则由 HashSet 来提供。如果 HashMap 中存在某个 key 值与外部传入的值相等（hashCode() 方法返回值相等， equals() 方法也返回 true），那么待添加的键值对的 value 会覆盖原有数据，但 key 不会改变，即如果向 HashSet 添加一个已存在的元素时，并不会被存到 HashMap 中，从而实现了 HashSet 元素不重复的特性
+我们知道，当向 HashMap 中插入一个存在相同 key 的键值对时，HashMap 中旧 key 不会被改动到，但旧 value 可能会被新 value 所覆盖，HashSet 就依靠这个特性来实现自身的不可重复性。HashSet 中包含一个 HashMap，向 HashSet 添加的值都会被包装为一个键值对保存到 HashMap 中，key 即外部传入的值，value 则由 HashSet 来提供，当 key 不重复时则正常保存，当 key 重复时则也只会改动到 value，从而实现了 HashSet 元素不重复的特性
 
 在此就直接贴出源代码了
 
@@ -941,7 +972,7 @@ public class HashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, jav
 
 LinkedHashSet 其内部源码十分简单，简单到只有几十行代码，从其名字就可以猜出它是 HashSet 的子类，并且是依靠链表来实现有序的 HashSet
 
-HashSet 为 LinkedHashSet 预留了一个构造函数，其 dummy 参数并没有实际意义，只是为了和其它构造函数区分开。其它构造函数会将 map 变量初始化为 HashMap 类型变量，特意预留的构造函数则是会初始化为 LinkedHashMap 类型变量，从而通过 LinkedHashMap 内部的双向链表来实现 LinkedHashSet 自身存取有序，元素唯一的特性
+HashSet 为 LinkedHashSet 预留了一个构造函数，其 dummy 参数并没有实际意义，只是为了和其它构造函数区分开。其它构造函数会将 map 变量初始化为 HashMap 类型，特意预留的构造函数则是会初始化为 LinkedHashMap 类型变量，从而通过 LinkedHashMap 内部的双向链表来实现 LinkedHashSet 自身存取有序，元素唯一的特性
 
 ```java
 public class HashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, java.io.Serializable {
