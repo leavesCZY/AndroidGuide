@@ -1,14 +1,14 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
-Java & Kotlin 中的泛型算作是一块挺大的知识难点了，涉及到很多很难理解的概念：**泛型型参、泛型实参、类型参数、不变、型变、协变、逆变、内联**等等。本篇文章就将 Java 和 Kotlin 结合着一起讲，按照我的个人理解来阐述泛型的各个知识难点，希望对你有所帮助 😇😇
+Java 和 Kotlin 的泛型算作是一块挺大的知识难点了，涉及到很多很难理解的概念：**泛型型参、泛型实参、类型参数、不变、型变、协变、逆变、内联**等等。本篇文章就将 Java 和 Kotlin 结合着一起讲，按照我的个人理解来阐述泛型的各个知识难点，希望对你有所帮助 😇😇
 
-### 泛型类型
+### 一、泛型类型
 
 泛型允许你定义带**类型形参**的数据类型，当这种类型的实例被创建出来后，**类型形参**便被替换为称为**类型实参**的具体类型。例如，对于 `List<T>`，List 称为**基础类型**，T 便是**类型型参**，T 可以是任意类型，当没有指定 T 的具体类型时，我们只能知道`List<T>`是一个集合列表，但不知道承载的具体数据类型。而对于 `List<String>`，当中的 String 便是**类型实参**，我们可以明白地知道该列表承载的都是字符串，在这里 String 就相当于一个参数传递给了 List，在这语义下 String 也称为**类型参数**
 
-此外，在 Kotlin 中我们可以实现**实化类型参数**，在运行时的**内联函数**中拿到作为**类型实参**的具体类型，即实现 `T::class.java`，但在 Java 中我们无法实现，因为**内联函数**是 Kotlin 中的概念，Java 中并不存在
+此外，在 Kotlin 中我们可以实现**实化类型参数**，在运行时的**内联函数**中拿到作为**类型实参**的具体类型，即可以实现 `T::class.java`，但在 Java 中却无法实现，因为**内联函数**是 Kotlin 中的概念，Java 中并不存在
 
-### 为什么需要泛型
+### 二、为什么需要泛型
 
 泛型是在 Java 5 版本开始引入的，先通过几个小例子来明白泛型的重要性
 
@@ -83,22 +83,22 @@ Exception in thread "main" java.lang.ClassCastException: java.lang.Integer canno
 - 自动类型转换，在取值时无需进行手动类型转换
 - 能够将逻辑抽象出来，使得代码更加具有通用性
 
-### 类型擦除
+### 三、类型擦除
 
 泛型是在 Java 5 版本开始引入的，所以在 Java 4 中 ArrayList 还不属于泛型类，其内部通过 **Object 向上转型**和**外部强制类型转换**来实现数据存储和逻辑复用，此时开发者的项目中已经充斥了大量以下类型的代码：
 
 ```java
-        List stringList = new ArrayList();
-        stringList.add("业志陈");
-        stringList.add("https://juejin.cn/user/923245496518439");
-        String str = (String) stringList.get(0);
+List stringList = new ArrayList();
+stringList.add("业志陈");
+stringList.add("https://juejin.cn/user/923245496518439");
+String str = (String) stringList.get(0);
 ```
 
 而在推出泛型的同时，Java 官方也必须保证二进制的向后兼容性，用 Java 4 编译出的 Class 文件也必须能够在 Java 5 上正常运行，即 Java 5 必须保证以下两种类型的代码能够在 Java 5 上共存且正常运行
 
 ```java
-	List stringList = new ArrayList();
-	List<String> stringList = new ArrayList();
+List stringList = new ArrayList();
+List<String> stringList = new ArrayList();
 ```
 
 为了实现这一目的，Java 就通过**类型擦除**这种比较别扭的方式来实现泛型。编译器在编译时会擦除类型实参，在运行时不存在任何类型相关的信息，泛型对于 JVM 来说是透明的，有泛型和没有泛型的代码通过编译器编译后所生成的二进制代码是完全相同的
@@ -296,7 +296,7 @@ fieldTypeName: java.lang.String
 27: checkcast     #9                  // class java/lang/String
 ```
 
-例如，ArrayList 虽然实际上存储数据的是 Object 数组，但 get 方法内部会自动完成类型强转
+例如，ArrayList 内部虽然用于存储数据的是 Object 数组，但 get 方法内部会自动完成类型强转
 
 ```java
 transient Object[] elementData;
@@ -315,54 +315,54 @@ E elementData(int index) {
 
 所以 Java 的泛型可以看做是一种特殊的语法糖，因此也被人称为**伪泛型**
 
-### 类型擦除的后遗症
+### 四、类型擦除的后遗症
 
 Java 泛型对于类型的约束只在编译期存在，运行时仍然会按照 Java 5 之前的机制来运行，泛型的具体类型在运行时已经被删除了，所以 JVM 是识别不到我们在代码中指定的具体的泛型类型的
 
 例如，虽然`List<String>`只能用于添加字符串，但我们只能**泛化地**识别到它属于`List<?>`类型，而无法具体判断出该 List 内部包含的具体类型
 
 ```java
-        List<String> stringList = new ArrayList<>();
-        //正常
-        if (stringList instanceof ArrayList<?>) {
+List<String> stringList = new ArrayList<>();
+//正常
+if (stringList instanceof ArrayList<?>) {
 
-        }
-        //报错
-        if (stringList instanceof ArrayList<String>) {
+}
+//报错
+if (stringList instanceof ArrayList<String>) {
 
-        }
+}
 ```
 
 我们只能对具体的对象实例进行类型校验，但无法判断出泛型形参的具体类型
 
 ```java
-    public <T> void filter(T data) {
-        //正常
-        if (data instanceof String) {
+public <T> void filter(T data) {
+	//正常
+	if (data instanceof String) {
 
-        }
-        //报错
-        if (T instanceof String) {
+	}
+	//报错
+	if (T instanceof String) {
 
-        }
-        //报错
-        Class<T> tClass = T::getClass;
-    }
+	}
+	//报错
+	Class<T> tClass = T::getClass;
+}
 ```
 
 此外，类型擦除也会导致 Java 中出现多态问题。例如，以下两个方法的方法签名并不完全相同，但由于类型擦除的原因，入参参数的数据类型都会被看成 `List<Object>`，从而导致两者无法共存在同一个区域内
 
 ```java
-    public void filter(List<String> stringList) {
+public void filter(List<String> stringList) {
 
-    }
+}
 
-    public void filter(List<Integer> stringList) {
+public void filter(List<Integer> stringList) {
 
-    }
+}
 ```
 
-### Kotlin 泛型
+### 五、Kotlin 泛型
 
 Kotlin 泛型在大体上和 Java 一致，毕竟两者需要保证兼容性
 
@@ -423,7 +423,7 @@ fun printSum(c: Collection<*>) {
 }
 ```
 
-而在以下例子中抛出的却是 ClassCastException，这是因为在运行时不会判断且无法判断出类型实参到底是否是 Int，而只会判断基础类型 List 是否相符，所以 `as?` 操作会成功，等到要执行相加操作时才会发现拿到的是 String 而非 Int
+而在以下例子中抛出的却是 ClassCastException，这是因为在运行时不会判断且无法判断出类型实参到底是否是 Int，而只会判断基础类型 List 是否相符，所以 `as?` 操作会成功，等到要执行相加操作时才会发现拿到的是 String 而非 Number
 
 ```kotlin
 printSum(listOf("1", "2", "3"))
@@ -431,7 +431,7 @@ printSum(listOf("1", "2", "3"))
 Exception in thread "main" java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Number
 ```
 
-### 上界约束
+### 六、上界约束
 
 泛型本身已经带有类型约束的作用，我们也可以进一步细化其支持的具体类型
 
@@ -473,7 +473,7 @@ fun main() {
 
 此外，没有指定上界约束的类型形参会默认使用 Any? 作为上界，即我们可以使用 String 或 String? 作为具体的类型实参。如果想确保最终的类型实参一定是非空类型，那么就需要主动声明上界约束为 Any
 
-### 类型通配符 & 星号投影
+### 七、类型通配符 & 星号投影
 
 假设现在有个需求，需要我们提供一个方法用于遍历所有类型的 List 集合并打印元素
 
@@ -529,7 +529,7 @@ val list: MutableList<*> = ArrayList<Number>() //正常
 val list2: MutableList<*> = ArrayList<*>() //报错
 ```
 
-### 协变 & 不变
+### 八、协变 & 不变
 
 看以下例子。Apple 和 Banana 都是 Fruit 的子类，可以发现 Apple[] 类型的对象是可以赋值给 Fruit[] 的，且 Fruit[] 可以容纳 Apple 对象和 Banana 对象，这种设计就被称为**协变**，即如果 A 是 B 的子类，那么 A[] 就是 B[] 的子类型。相对的，Object[] 就是所有数组对象的父类型
 
@@ -603,7 +603,7 @@ public class Arrays {
 }
 ```
 
-此外，Kotlin 中的数组和 Java 中的数组并不一样，Kotlin 数组并不支持协变，Kotlin 数组类似于集合框架，具有对应的实现类 Array，Array 属于泛型类，支持了泛型因此也不再协变
+需要注意的是，Kotlin 中的数组和 Java 中的数组并不一样，Kotlin 数组并不支持协变，Kotlin 数组类似于集合框架，具有对应的实现类 Array，Array 属于泛型类，支持了泛型因此也不再协变
 
 ```kotlin
 val stringArray = arrayOfNulls<String>(3)
@@ -612,7 +612,7 @@ val anyArray: Array<Any?> = stringArray //报错
 
 > Java 的泛型也并非完全**不变**的，只是实现**协变**需要满足一些条件，甚至也可以实现**逆变**，下面就来介绍下泛型如何实现**协变**和**逆变**
 
-### 泛型协变
+### 九、泛型协变
 
 假设我们定义了一个`copyAll`希望用于 List 数据迁移。那以下操作在我们看来就是完全安全的，因为 Integer 是 Number 的子类，按道理来说是能够将 Integer 保存为 Number 的，但由于泛型不变性，`List<Integer>`并不是`List<Number>`的子类型，所以实际上该操作将报错
 
@@ -653,7 +653,7 @@ private static <T> void copyAll(List<T> to, List<? extends T> from) {
 
 简而言之，带 **extends** 限定了上界的通配符类型使得**泛型参数类型是协变的**，即如果 A 是 B 的子类，那么 `Generic<A>` 就是`Generic<? extends B>`的子类型
 
-### 泛型逆变
+### 十、泛型逆变
 
 **协变**所能做到的是：如果 A 是 B 的子类，那么 `Generic<A>` 就是`Generic<? extends B>`的子类型。**逆变**相反，其代表的是：如果 A 是 B 的子类，那么 `Generic<B>` 就是 `Generic<? super A>` 的子类型
 
@@ -672,7 +672,7 @@ private static <T> void copyAll(List<? super T> to, List<T> from) {
 简而言之，带 **super** 限定了下界的通配符类型使得**泛型参数类型是逆变的**，即如果 A 是 B 的子类，那么 `Generic<B>` 就是 `Generic<? super A>` 的子类型
 
 
-### out  &  in
+### 十一、out  &  in
 
 Java 中关于泛型的困境在 Kotlin 中一样存在，out 和 in 都是 Kotlin 的关键字，其作用都是为了来应对泛型问题。`in` 和 `out` 是一个对立面，同时它们又与泛型**不变**相对立，统称为**型变**
 
@@ -719,7 +719,7 @@ fun <T> copyAll(to: MutableList<in T>, from: MutableList<T>) {
 
 > 从这也可以联想到，`MutableList<*>` 就相当于 `MutableList<out Any?>`了，两者都带有相同的限制条件：不允许写值操作，允许读值操作，且读取出来的值只能当做 `Any?`进行处理
 
-### 支持协变的 List
+### 十二、支持协变的 List
 
 在上述例子中，想要实现协变还有另外一种方式，那就是使用 List
 
@@ -753,7 +753,7 @@ public interface List<out E> : Collection<E> {
 
 > 虽然 List 接口中有几个方法也接收了 E 类型的入参参数，但该方法本身不会进行写值操作，所以实际上可以正常使用，Kotlin 也使用 `@UnsafeVariance`抑制了编译器警告
 
-### reified  &  inline
+### 十三、reified  &  inline
 
 上文讲了，由于类型擦除，Java 和 Kotlin 的泛型类型实参都会在编译阶段被擦除，在 Kotlin 中存在一个额外手段可以来解决这个问题，即**内联函数**
 
@@ -834,7 +834,7 @@ fun main() {
 
 我也利用 Kotlin 的这个强大特性写了一个用于简化 Java / Kotlin 平台的序列化和反序列化操作的库：[JsonHolder](https://github.com/leavesC/JsonHolder)
 
-### 总结
+### 十四、总结
 
 最后来做个简单的总结
 
@@ -842,22 +842,3 @@ fun main() {
 | ------ | -------------------------------------------------- | ------------------------------------------------------------ | --------------------------- |
 | Kotlin | `<out T>`，只能作为消费者，只能读取不能添加        | `<in T>`，只能作为生产者，只能添加，读取出的值只能当做 Any 类型 | `<T>`，既可以添加也可以读取 |
 | Java   | `<?  extends T>`，只能作为消费者，只能读取不能添加 | `<? super T>`，只能作为生产者，只能添加，读取出的值只能当做 Object 类型 | `<T>`，既可以添加也可以读取 |
-
-
-### 参考资料
-
-- 《Kotlin 核心编程》 
-
-- 《Kotlin in Action》
-
-  这两本书都挺好的，不局限于基础语法，还会对背后的设计理念进行深度解读，不可多得的好书
-
-### 相关文章推荐
-
-- [两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438)
-
-  😇 这是我写的一份 Kotlin 入门教程，内容自认还是挺全面的，稍稍遗漏了一点关于泛型的知识点，本篇文章也算作对该教程的补充
-
-- [Java & Android 集合框架须知须会（1）](https://juejin.cn/post/6930632285301669895)
-
-  😇 本文蛮多地方都讲到了 ArrayList，想要了解其内部源码的就看这篇文章，里面分别介绍了 ArrayList 和 LinkedList 的内部源码实现，帮助读者了解这两者在**数据结构、适用场景、优势点**上的不同

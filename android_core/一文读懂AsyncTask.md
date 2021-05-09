@@ -1,3 +1,5 @@
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+
 AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler 实现了线程的复用、后台任务执行顺序的控制、子线程和主线程的切换，使得开发者可以通过很简单的方法来执行一些耗时任务
 
 此篇文章就基于 Android API 27 版本的源码来对 AsyncTask 进行一次整体分析，以便对其底层工作流程有所了解
@@ -340,5 +342,4 @@ AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 Thr
         }
     }
 ```
-
 

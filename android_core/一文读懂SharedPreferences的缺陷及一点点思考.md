@@ -8,11 +8,7 @@ SharedPreferences 是系统提供的一个适合用于存储少量键值对数�
 
 #### SP 数据会一直占用内存
 
-SharedPreferences 本身是一个接口，其具体的实现类是 SharedPreferencesImpl，而 Context 的各个和 SharedPreferences 相关的方法则是由 ContextImpl 来实现的。我们项目中的每个 SP 或多或少都是保存着一些键值对数据，而每当我们获取到一个 SharedPreferences 对象，其对应的键值对数据就会一直被保留在内存中，直到应用进程被终结，因为每个 SharedPreferences 对象都被系统作为静态变量缓存起来了，这块逻辑可以从 ContextImpl 中看到
-
-每个 SP 都对应一个本地磁盘中的 xmlFile，fileName 则是由开发者来显式指定的，每个 xmlFile 都对应一个 SharedPreferencesImpl。所以 ContextImpl 的逻辑是先根据 fileName 拿到 xmlFile，再根据 xmlFile 拿到 SharedPreferencesImpl，最终应用内所有的 SharedPreferencesImpl 都会被缓存在 `sSharedPrefsCache` 这个静态变量中
-
-此外，由于 SharedPreferencesImpl 在初始化后就会自动去加载 xmlFile 中的所有键值对数据，而 ContextImpl 内部并没有看到有清理 `sSharedPrefsCache` 缓存的逻辑，所以 `sSharedPrefsCache` 会被一直保留在内存中直到进程终结，其内存大小会随着我们引用到的 SharedPreferences 增多而加大，这就可能会持续占用很大一块内存空间
+SharedPreferences 本身是一个接口，其具体的实现类是 SharedPreferencesImpl，而 Context 的各个和 SharedPreferences 相关的方法则是由 ContextImpl 来实现的。我们项目中的每个 SP 或多或少都是保存着一些键值对数据，而每当我们获取到一个 SharedPreferences 对象，其对应的键值对数据就会一直被保留在内存中，直到应用进程被终结，因为每个 SharedPreferences 对象都被系统作为静态变量缓存起来了，对应 ContextImpl 中的静态变量 `sSharedPrefsCache`
 
 ```java
 class ContextImpl extends Context {
@@ -22,8 +18,16 @@ class ContextImpl extends Context {
 
     //根据 fileName 拿到对应的 xmlFile
     private ArrayMap<String, File> mSharedPrefsPaths;
-    
-    @Override
+
+}
+```
+
+每个 SP 都对应一个本地磁盘中的 xmlFile，fileName 则是由开发者来显式指定的，每个 xmlFile 都对应一个 SharedPreferencesImpl。所以 ContextImpl 的逻辑是先根据 fileName 拿到 xmlFile，再根据 xmlFile 拿到 SharedPreferencesImpl，最终应用内所有的 SharedPreferencesImpl 都会被缓存在 `sSharedPrefsCache` 这个静态变量中
+
+此外，由于 SharedPreferencesImpl 在初始化后就会自动去加载 xmlFile 中的所有键值对数据，而 ContextImpl 内部并没有看到有清理 `sSharedPrefsCache` 缓存的逻辑，所以 `sSharedPrefsCache` 会被一直保留在内存中直到进程终结，其内存大小会随着我们引用到的 SharedPreferences 增多而加大，这就可能会持续占用很大一块内存空间
+
+```java
+	@Override
     public SharedPreferences getSharedPreferences(String name, int mode) {
         ···
         File file;
@@ -70,13 +74,11 @@ class ContextImpl extends Context {
         }
         return packagePrefs;
     }
-    
-}
 ```
 
 #### getValue 可能导致线程阻塞
 
-SharedPreferencesImpl 在构造函数中直接就启动了一个子线程去加载磁盘文件，这意味着该操作是一个异步操作（~~我好像在说废话~~），如果文件很大或者线程调度系统没有马上启动该线程的话，那么该操作就可能需要一小段时间后才能执行完毕
+SharedPreferencesImpl 在构造函数中直接就启动了一个子线程去加载磁盘文件，这意味着该操作是一个异步操作（~~我好像在说废话~~），如果文件很大或者线程调度系统没有马上启动该线程的话，那么该操作就需要一小段时间后才能执行完毕
 
 ```java
 final class SharedPreferencesImpl implements SharedPreferences {
@@ -179,12 +181,12 @@ final class SharedPreferencesImpl implements SharedPreferences {
 以下代码在编译阶段是完全正常的，但在运行时就会抛出异常：`java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String`。很明显，这是由于同个 key 先后对应了不同数据类型导致的，SharedPreferences 没有办法对这种操作做出限制，完全需要依赖于开发者自己的代码规范来进行限制
 
 ```kotlin
-        val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-        val key = "userName"
-        val edit = sharedPreferences.edit()
-        edit.putInt(key, 11)
-        edit.apply()
-        val name = sharedPreferences.getString(key, "")
+val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+val key = "userName"
+val edit = sharedPreferences.edit()
+edit.putInt(key, 11)
+edit.apply()
+val name = sharedPreferences.getString(key, "")
 ```
 
 #### SP 不支持多进程数据共享
@@ -192,7 +194,7 @@ final class SharedPreferencesImpl implements SharedPreferences {
 SharedPreferences 在创建的时候需要传入一个 int 类型的 mode 标记位参数，存在一个和多进程相关的标记位 MODE_MULTI_PROCESS，该标记位能起到一定程度的多进程数据同步的保障，但作用不大，且并不保证多进程并发安全性
 
 ```kotlin
-		val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_MULTI_PROCESS)
+val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_MULTI_PROCESS)
 ```
 
 上文有讲到，SharedPreferencesImpl 在被加载后就会一直保留在内存中，之后每次获取都是直接使用缓存数据，通常情况下也不会再次去加载磁盘文件。而 MODE_MULTI_PROCESS 起到的作用就是每当再一次去获取 SharedPreferences 实例时，会判断当前磁盘文件相对最后一次内存修改是否被改动过了，如果是的话就主动去重新加载磁盘文件，从而可以做到在多进程环境下一定的数据同步
@@ -355,10 +357,10 @@ public final class EditorImpl implements Editor {
 看以下例子。按照语义分析的话，最终 SharedPreferences 中应该是只剩下 blog 一个键值对才符合直觉，而实际上最终两个键值对都会被保留，且只有这两个键值对被保留下来
 
 ```kotlin
-            val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
-            val edit = sharedPreferences.edit()
-            edit.putString("name", "业志陈").clear().putString("blog", "https://juejin.cn/user/923245496518439")
-            edit.apply()
+val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
+val edit = sharedPreferences.edit()
+edit.putString("name", "业志陈").clear().putString("blog", "https://juejin.cn/user/923245496518439")
+edit.apply()
 ```
 
 造成该问题的原因还需要看`commitToMemory()`方法。`clear()`会将 mClear 置为 true，所以在执行到第一步的时候就会将内存中的所有键值对数据 mapToWriteToDisk 清空。当执行到第二步的时候，mModified 中的所有数据就都会同步到 mapToWriteToDisk 中，从而导致最终 name 和 blog 两个键值对都会被保留下来，其它键值对都被移除了
@@ -720,18 +722,18 @@ ActivityThread 为什么要主动去触发执行所有的磁盘写入任务我�
 
 SharedPreferencesImpl 在不同的系统版本中有着比较大的差别，例如 writeToFile 方法对于任务版本号的校验也是从 8.0 系统开始的，在 8.0 系统之前对于连续的 commit 和 apply 每次都会触发 I/O 操作，所以在 8.0 系统之前 ANR 问题会更加容易复现。我们需要根据系统版本来看待以上列举出来的各个缺陷
 
-此外，需要强调的是，SharedPreferences 本身的定位是**轻量级数据存储**，设计初衷是用于存储**简单的数据结构**（基本数据类型），且提供了按模块分区存储的功能。如果开发者能够严格遵守这一个规范的话，那么其实以上所述的很多“缺陷”都是可以避免的。而 SharedPreferences 之所以现在看起来问题很多，也是因为如今大部分应用的业务比以前复杂太多了，有些时候为了方便就直接用 SharedPreferences 来存储非常复杂的数据结构，或者是没有做好数据分区存储，导致单个文件过大，这才是造成问题的主要原因
+需要强调的是，SharedPreferences 本身的定位是**轻量级数据存储**，设计初衷是用于存储**简单的数据结构**（基本数据类型），且提供了按模块分区存储的功能。如果开发者能够严格遵守这一个规范的话，那么其实以上所述的很多“缺陷”都是可以避免的。而 SharedPreferences 之所以现在看起来问题很多，也是因为如今大部分应用的业务比以前复杂太多了，有些时候为了方便就直接用 SharedPreferences 来存储非常复杂的数据结构，或者是没有做好数据分区存储，导致单个文件过大，这才是造成问题的主要原因
 
 ### 如何做好持久化
 
 以下的示例代码估计是很多开发者的噩梦
 
 ```kotlin
-        val sharedPreference = getSharedPreferences("user_preference", Context.MODE_PRIVATE)
-        val name = sharedPreference.getString("name", "")
+val sharedPreference = getSharedPreferences("user_preference", Context.MODE_PRIVATE)
+val name = sharedPreference.getString("name", "")
 ```
 
-以上代码存在什么问题呢？至少有五点：
+以上代码存在什么问题呢？我觉得至少有五点：
 
 - 强引用到了 SharedPreferences，导致后续需要切换存储库时需要全局搜索替换，工作量非常大
 - key 值难维护，每次获取 value 时都需要显式声明 key 值
@@ -741,9 +743,7 @@ SharedPreferencesImpl 在不同的系统版本中有着比较大的差别，例�
 
 开发者往往是会声明出各种 SpUtils 类进行多一层封装，但也没法彻底解决以上问题。SharedPreferences 的确是存在着一些设计缺陷，但对于大部分应用开发者来说其实并没有多少选择，我们只能选择用或者不用，并没有多少余地可以来解决或者避免其存在的问题，我们往往只能在遇到问题后切换到其它的持久化存储方案
 
-目前有两个比较知名的持久化存储方案：Jetpack DataStore 和腾讯的 MMKV，我们当然可以选择将项目中的 SharedPreferences 切换为这两个库，但这也不禁让人想到一个问题，如果以后这两个库也遇到了问题甚至是直接被废弃了，难道我们又需要再来全局替换一遍吗？我们应该如何设计才能使得每次的替换成本降到最低呢？
-
-在我看来，开发者在为项目引入一个新的依赖库之前就应该为以后移除该库做好准备，做好接口隔离，屏蔽具体的使用逻辑（当然，也不是每个依赖库都可以做到）。笔者的项目之前也是使用 SharedPreferences 来存储配置信息，后来我也将其切换到了 MMKV，下面就来介绍下笔者当时是如何设计存储结构避免硬编码的
+目前有两个比较知名的持久化存储方案：Jetpack DataStore 和腾讯的 MMKV，我们当然可以选择将项目中的 SharedPreferences 切换为这两个库，但这也不禁让人想到一个问题，如果以后这两个库也遇到了问题甚至是直接被废弃了，难道我们又需要再来全局替换一遍吗？我们应该如何设计才能使得每次的替换成本降到最低呢？在我看来，开发者在为项目引入一个新的依赖库之前就应该为以后移除该库做好准备，做好接口隔离，屏蔽具体的使用逻辑（当然，也不是每个依赖库都可以做到）。笔者的项目之前也是使用 SharedPreferences 来存储配置信息，后来我也将其切换到了 MMKV，下面就来介绍下笔者当时是如何设计存储结构避免硬编码的
 
 #### 目前的效果
 
@@ -979,7 +979,7 @@ class MMKVKVFinalHolder constructor(selfGroup: String, encryptKey: String = "") 
 
 通过接口隔离，UserKV 就完全不会接触到具体的存储实现机制了，对于开发者来说也只是在读写 UserKV 的一个属性字段而已，当后续我们需要替换存储方案时，也只需要去改动 MMKVKVHolder 的内部实现即可，上层应用完全不需要进行任何改动
 
-#### GitHub
+#### KVHolder
 
 KVHolder 的实现思路还是十分简单的，再用上 Kotlin 本身强大的语法特性就进一步提高了易用性和可读性😇😇欢迎留言讨论
 
@@ -997,9 +997,3 @@ KVHolder 的实现思路还是十分简单的，再用上 Kotlin 本身强大的
 	     implementation 'com.github.leavesC:KVHolder:latest_version'
 	}
 ```
-
-### 参考资料
-
-- [剖析 SharedPreference apply 引起的 ANR 问题](https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247484387&idx=1&sn=e3c8d6ef52520c51b5e07306d9750e70&scene=21#wechat_redirect)
-- [[Google] 再见 SharedPreferences 拥抱 Jetpack DataStore](https://juejin.cn/post/6881442312560803853)
-- [MMKV](https://github.com/Tencent/MMKV/wiki)

@@ -68,7 +68,7 @@ MotionEvent 包含了该次触摸事件发生的坐标点，分为两组不同�
 此外，系统内置了一个最小滑动距离值，只有先后两个坐标点之间的距离超出该值，才会认为属于滑动事件
 
 ```kotlin
-	ViewConfiguration.get(Context).getScaledTouchSlop()	
+ViewConfiguration.get(Context).getScaledTouchSlop()	
 ```
 
 ### 三、事件分发的三个阶段
@@ -525,7 +525,7 @@ View 的 dispatchTouchEvent 方法逻辑上还比较简单，可以总结为：
 1. 对应第一步。如果 View 是 ENABLED 状态，既处于可用状态，且当前是通过鼠标设备输出的 ScrollBarDragging 事件并被处理了，那么就说明当前 View 消耗了本次触摸事件
 2. 对应第二步。如果 View 是 ENABLED 状态，且此时外部设置的 OnTouchListener 返回了 true，那么就说明当前 View 交由外部消耗了本次触摸事件
 3. 对应第三步。如果以上几步均不成立，那么就会再调用 onTouchEvent 方法，如果该方法返回了 true，那么也说明当前 View 消耗了本次触摸事件
-4. 所以说，外部设置的 OnTouchListener 的优先级会高于自身的 onTouchEvent 方法，OnTouchListener 可以依靠返回值使得 onTouchEvent 方法不被调用
+4. 所以说，外部设置的 OnTouchListener 的优先级会高于自身的 onTouchEvent 方法，OnTouchListener 可以通过返回 true 使得 onTouchEvent 方法不被调用
 
 ```java
     public boolean dispatchTouchEvent(MotionEvent event) {
@@ -561,10 +561,10 @@ View 的 dispatchTouchEvent 方法逻辑上还比较简单，可以总结为：
 
 onTouchEvent 方法就比较复杂了，我们只看其主干思路即可，可以总结为：
 
-1. 对应第一步。如果当前 View 处于禁用 DISABLED 状态，且当前是可点击 clickable 状态，即 CLICKABLE、LONG_CLICKABLE、CONTEXT_CLICKABLE 这三个条件至少有一个满足的话，那么就返回 true。这三个条件分别对应着：可点击、可长按点击、可上下文点击
+1. 对应第一步。如果当前 View 处于禁用状态 DISABLED 的话，当前 View 是否会消耗触摸事件都由 clickable 来决定，即 CLICKABLE、LONG_CLICKABLE、CONTEXT_CLICKABLE 这三个条件至少有一个满足的话，那么就返回 true。这三个条件分别对应着：可点击、可长按点击、可上下文点击
 2. 对应第二步。如果 TouchDelegate 存在且消耗了触摸事件，那么就返回 true
-3. 对应第三步。如果当前处于 clickable 状态或者 `(viewFlags & TOOLTIP) == TOOLTIP` 成立的话，那么也会消耗当前事件。TOOLTIP 可以通过添加 `android:tooltipText="tips"`来开启，开启后长按 TextView 会显示一个悬浮窗形式的提示文本
-4. 对应第四步。onTouchEvent 内部在接收到 ACTION_UP 事件的时候，会判断是否回调外部设置的 OnClickListener，因此如果外部设置的 OnTouchListener 返回了 true，那么 OnClickListener 就不会被回调。这也导致了如果上层视图消耗了 ACTION_UP 事件的话，OnClickListener 就不会被回调
+3. 对应第三步。如果当前 View 处于 clickable 状态或者 `(viewFlags & TOOLTIP) == TOOLTIP` 成立的话，那么也会消耗当前事件。TOOLTIP 可以通过添加 `android:tooltipText="tips"`来开启，开启后长按 TextView 会显示一个悬浮窗形式的提示文本
+4. 对应第四步。在接收到 ACTION_UP 事件的时候，判断是否回调外部设置的 OnClickListener。因此如果外部设置的 OnTouchListener 返回了 true，那么 OnClickListener 就根本没有机会被调用，且如果上层视图消耗了 ACTION_UP 事件或者是当前 View 处于禁用状态 DISABLED 的话，OnClickListener 也不会被调用
 
 ```java
     public boolean onTouchEvent(MotionEvent event) {
@@ -623,18 +623,6 @@ ViewGroup 直接继承于 View，其逻辑是在 View 的基础上来做扩展�
 #### dispatchTouchEvent
 
 ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因为 View 在整个视图体系中处于最基础的底层，只需要管理好自己就可以，而 ViewGroup 还需要管理其内嵌的布局，可能会包含多个子 ViewGroup 和子 View
-
-该方法的主要流程可以总结为：
-
-1. 对应第一步。如果当前接收到的是 ACTION_DOWN 事件，说明是一次新的事件序列，则清除掉 mFirstTouchTarget 的引用。在每次事件序列中，如果 child 消费了 ACTION_DOWN 事件，那么 ViewGroup 就会通过 mFirstTouchTarget 来指向 child，后续事件就可以通过该引用来直接传递而不需再次进行遍历
-2. 对应第二步。此步骤用来判断是否要拦截事件。如果 if 条件成立，说明当前处理的是**新的一次事件序列**或者是 **ACTION_DOWN 之后的事件且之前的 ACTION_DOWN 已经被 child 消费了**，那么就通过调用 onInterceptTouchEvent 方法来决定是否拦截。而如果 child 主动通过调用 `mParent.requestDisallowInterceptTouchEvent` 请求当前 ViewGroup 不进行拦截的话（既 disallowIntercept 为 true），那么就直接将 intercepted 置为 false，不进行拦截。这就说明了，除非 child 主动要求 ViewGroup 不拦截，否则属于 child  的事件序列父布局都还是有机会进行拦截的
-3. 在第二步中，需要注意 ACTION_DOWN 事件不受 FLAG_DISALLOW_INTERCEPT 这个标记的控制，即 child 无法主动阻止 ViewGroup 不拦截 ACTION_DOWN 事件，ViewGroup 的 onInterceptTouchEvent 方法依然会被调用
-4. 在第二步中，假设 ViewGroup 在接收到 ACTION_DOWN 的时候进行了拦截，那么 mFirstTouchTarget 就不会被赋值，这也导致了在接收后续事件时 if 语句不成立，这样在整个事件序列中 onInterceptTouchEvent 方法只会执行一次，这也是上文给出的总结内容之一
-5. 对应第三步。ACTION_DOWN 事件会走到这里，由于当前 intercepted 为 false，即不拦截事件，因此此时就会去遍历 children，判断触摸点坐标系是落在哪个 child 内，找得到的话就用 mFirstTouchTarget 指向该 child
-6. 对应第四步。此时 mFirstTouchTarget 为 null，说明 ViewGroup 没有找到下一个可以接收事件的 child，也许是没有 child，也许是 child 均不处理该事件，也可能是 ViewGroup 自己拦截了该事件，那么就将当前 ViewGroup 当做一个普通的 View 子类，通过调用 dispatchTransformedTouchEvent 方法来执行父类 View 的 dispatchTouchEvent 方法，按照原始的 View 分发逻辑进行执行。因此 ViewGroup 在主动拦截事件后就会去调用 onTouchEvent 方法
-7. 在第四步中，如果此 ViewGroup 最终消费了该事件，那么在接收到后续事件的时候，此时 mFirstTouchTarget 没有指向 child，还是为 null，所以就会直接走第二步的 else 语句，从而不去遍历 children。这就意味着后续事件既不会回调 onInterceptTouchEvent 方法，也不会去遍历 child，这也是上文给出的总结内容之一
-8. 对应第五步。此时 mFirstTouchTarget 不为 null，那么就会去调用 child 的 dispatchTouchEvent 方法，重复以上步骤，从而得知 child 对该事件的处理结果 handled
-9. 所以说，ViewGroup 通过这种递归调用，最终就会为上层视图 Activity 返回最终的事件处理结果
 
 ```java
     @Override
@@ -741,6 +729,18 @@ ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因�
         return handled;
     }
 ```
+
+该方法的主要流程可以总结为：
+
+1. 对应第一步。如果当前接收到的是 ACTION_DOWN 事件，说明是一次新的事件序列，则清除掉 mFirstTouchTarget 的引用。在每次事件序列中，如果 child 消费了 ACTION_DOWN 事件，那么 ViewGroup 就会通过 mFirstTouchTarget 来指向 child，后续事件就可以通过该引用来直接传递而不需再次进行遍历
+2. 对应第二步。此步骤用来判断是否要拦截事件。如果 if 条件成立，说明当前处理的是**新的一次事件序列**或者是 **ACTION_DOWN 之后的事件且之前的 ACTION_DOWN 已经被 child 消费了**，那么就通过调用 onInterceptTouchEvent 方法来决定是否拦截。而如果 child 主动通过调用 `mParent.requestDisallowInterceptTouchEvent` 请求当前 ViewGroup 不进行拦截的话（既 disallowIntercept 为 true），那么就直接将 intercepted 置为 false，不进行拦截。这就说明了，除非 child 主动要求 ViewGroup 不拦截，否则属于 child  的事件序列父布局都还是有机会进行拦截的
+3. 在第二步中，需要注意 ACTION_DOWN 事件不受 FLAG_DISALLOW_INTERCEPT 这个标记的控制，即 child 无法主动阻止 ViewGroup 不拦截 ACTION_DOWN 事件，ViewGroup 的 onInterceptTouchEvent 方法依然会被调用
+4. 在第二步中，假设 ViewGroup 在接收到 ACTION_DOWN 的时候进行了拦截，那么 mFirstTouchTarget 就不会被赋值，这也导致了在接收后续事件时 if 语句不成立，这样在整个事件序列中 onInterceptTouchEvent 方法只会执行一次，这也是上文给出的总结内容之一
+5. 对应第三步。ACTION_DOWN 事件会走到这里，由于当前 intercepted 为 false，即不拦截事件，因此此时就会去遍历 children，判断触摸点坐标系是落在哪个 child 内，找得到的话就用 mFirstTouchTarget 指向该 child
+6. 对应第四步。此时 mFirstTouchTarget 为 null，说明 ViewGroup 没有找到下一个可以接收事件的 child，也许是没有 child，也许是 child 均不处理该事件，也可能是 ViewGroup 自己拦截了该事件，那么就将当前 ViewGroup 当做一个普通的 View 子类，通过调用 dispatchTransformedTouchEvent 方法来执行父类 View 的 dispatchTouchEvent 方法，按照原始的 View 分发逻辑进行执行。因此 ViewGroup 在主动拦截事件后就会去调用 onTouchEvent 方法
+7. 在第四步中，如果此 ViewGroup 最终消费了该事件，那么在接收到后续事件的时候，此时 mFirstTouchTarget 没有指向 child，还是为 null，所以就会直接走第二步的 else 语句，从而不去遍历 children。这就意味着后续事件既不会回调 onInterceptTouchEvent 方法，也不会去遍历 child，这也是上文给出的总结内容之一
+8. 对应第五步。此时 mFirstTouchTarget 不为 null，那么就会去调用 child 的 dispatchTouchEvent 方法，重复以上步骤，从而得知 child 对该事件的处理结果 handled
+9. 所以说，ViewGroup 通过这种递归调用，最终就会为上层视图 Activity 返回最终的事件处理结果
 
 #### onInterceptTouchEvent
 

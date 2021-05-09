@@ -1,3 +1,5 @@
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+
 ### 一、开篇
 
 dart 语言具有如下特性
