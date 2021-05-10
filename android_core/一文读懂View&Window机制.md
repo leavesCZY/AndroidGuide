@@ -1,6 +1,6 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
 
-Android 系统中，Window 在代码层次上是一个抽象类，在概念上表示的是一个窗口。Android 中所有的视图都是通过 Window 来呈现的，例如 Activity、Dialog 和 Toast 等，它们实际上都是挂载在 Window 上的。大部分情况下应用层开发者很少需要来和 Window 打交道，Activity 已经隐藏了 Window 的具体实现逻辑了，但我觉得来了解 Window 机制的一个比较大的好处是**可以加深我们对 View 绘制流程以及事件分发机制的了解**，这两个操作就涉及到我们的日常开发了，实现自定义 View 和解决 View 的滑动冲突时都需要我们掌握这方面的知识点，而这两个操作和 Window 机制有很大的关联。视图树只有被挂载到 Window 后才会触发视图树的绘制流程，之后视图树才有机会接收到用户的触摸事件。所以说，视图树被挂载到了 Window 上是 Activity 和 Dialog 等视图能够展示到屏幕上且和用户做交互的前置条件
+Android 系统中，Window 在代码层次上是一个抽象类，在概念上表示的是一个窗口。Android 中所有的视图都是通过 Window 来呈现的，例如 Activity、Dialog 和 Toast 等，它们实际上都是挂载在 Window 上的。大部分情况下应用层开发者很少需要来和 Window 打交道，Activity 已经隐藏了 Window 的具体实现逻辑了，但我觉得来了解 Window 机制的一个比较大的好处是**可以加深我们对 View 绘制流程以及事件分发机制的了解**，这两个操作就涉及到我们的日常开发了，实现自定义 View 和解决 View 的滑动冲突时都需要我们掌握这方面的知识点，而这两个操作和 Window 机制有很大的关联。视图树只有被挂载到 Window 后才会触发视图树的绘制流程，之后视图树才有机会接收到用户的触摸事件。也就是说，视图树被挂载到了 Window 上是 Activity 和 Dialog 能够展示到屏幕上且和用户做交互的前置条件
 
 本文就以 Activity 为例子，展开讲解 Activity 是如何挂载到 Window 上的，基于 Android API 30 进行分析，希望对你有所帮助 😇😇
 
@@ -8,14 +8,14 @@ Android 系统中，Window 在代码层次上是一个抽象类，在概念上�
 
 Window 存在的意义是什么呢？
 
-大部分情况下，用户都是在和应用的 Activity 做交互，应用在 Activity 上接收用户的输入并在 Activity 上向用户做出交互反馈。例如，在 Activity 中显示了一个 Button，当用户点击后就会触发 OnClickListener，这个过程中用户就是在和 Activity 中的视图树做交互，此时还没有什么问题。可是，当需要在 Activity 上弹出 Dialog 时，系统需要确保 Dialog 是会覆盖在 Activity 之上的，有触摸事件时也需要确保 Dialog 是先于 Activity 接收到的；当启动一个新的 Activity 时又需要覆盖住上一个 Activity 显示的 Dialog；在弹出 Toast 时，又需要确保 Toast 是覆盖在 Dialog 之上的
+大部分情况下，用户都是在和应用的 Activity 做交互，应用在 Activity 上接收用户的输入并在 Activity 上向用户做出交互反馈。例如，在 Activity 中显示了一个 Button，当用户点击后就会触发 OnClickListener，这个过程中用户就是在和 Activity 中的视图树做交互，此时还没有什么问题。可是，当需要在 Activity 上弹出 Dialog 时，系统需要确保 Dialog 是会覆盖在 Activity 之上的，有触摸事件时也需要确保 Dialog 是先于 Activity 接收到的；当启动一个新的 Activity 时又需要覆盖住上一个 Activity 以及其显示的 Dialog；在弹出 Toast 时，又需要确保 Toast 是覆盖在 Activity 和 Dialog 之上的
 
 这种种要求就涉及到了一个层次管理问题，系统需要对当前屏幕上显示的多个视图树进行统一管理，这样才能来**决定不同视图树的显示层次以及在接收触摸事件时的优先级**。系统就通过 Window 这个概念来实现上述目的
 
 想要在屏幕上显示一个 Window 并不算多复杂，代码大致如下所示
 
 ```kotlin
-	private val windowManager by lazy {
+    private val windowManager by lazy {
         context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     }
 
@@ -46,7 +46,7 @@ Window 存在的意义是什么呢？
 显示一个 Window 最基本的操作流程有：
 
 1. 声明希望显示的 View，即本例子中的 floatBallView，其承载了我们希望用户看到的视图界面
-2. 声明 View 的位置参数和交互逻辑，即本例子中的 floatBallWindowParams，其规定了 floatBallView 在屏幕上的位置，以及和用户之间的交互逻辑
+2. 声明 View 的位置参数和交互逻辑，即本例子中的 floatBallWindowParams，其规定了 floatBallView 在屏幕上的位置以及和用户的交互逻辑
 3. 通过 WindowManager 来添加 floatBallView，从而将 floatBallView 挂载到 Window 上，WindowManager 是外界访问 Window 的入口
 
 当中，WindowManager.LayoutParams 的 flags 属性就用于控制 Window 的显示特性和交互逻辑，常见的有以下几个：
@@ -57,9 +57,9 @@ Window 存在的意义是什么呢？
 
 3. WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED。表示当前 Window 希望显示在锁屏界面
 
-此外，WindowManager.LayoutParams 的 type 属性就用于表示 Window 的类型。Window 有三种类型：应用 Window、子 Window、系统 Window。应用类Window 对应 Activity。子 Window 具有依赖关系，不能单独存在，需要附属在特定的父 Window 之中，比如 Dialog 就是一个子 Window。系统 Window 是需要声明权限才能创建的 Window，比如 Toast 和 statusBar 都是系统 Window
+此外，WindowManager.LayoutParams 的 type 属性就用于表示 Window 的类型。Window 有三种类型：应用 Window、子 Window、系统 Window。应用类Window 对应 Activity。子 Window 具有依赖关系，不能单独存在，需要附属在特定的父 Window 之中，比如 Dialog 就是一个子 Window。系统 Window 是需要权限才能创建的 Window，比如 Toast 和 statusBar 都是系统 Window
 
-从这也可以看出，系统 Window 是处于最顶层的，所以说 type 属性也用于控制 Window 的显示层级，显示层级高的 Window 就会覆盖在显示层级低的 Window 之上。应用 Window 的层级范围是 1～99，子 Window 的层级范围是 1000～1999，系统 Window 的层级范围是 2000～2999。如果想要让我们创建的 Window 位于其它 Window 之上，那么就需要使用比较大的层级值了，但想要显示自定义的系统级 Window 的话就必须向系统动态申请权限
+从这也可以看出，系统 Window 是处于最顶层的，所以说 type 属性也用于控制 Window 的显示层级，显示层级高的 Window 就会覆盖在显示层级低的 Window 之上。应用 Window 的层级范围是 1～99，子 Window 的层级范围是 1000～1999，系统 Window 的层级范围是 2000～2999。如果想要让我们创建的 Window 位于其它 Window 之上，那么就需要使用比较大的层级值了，但想要显示自定义的系统级 Window 的话就必须向系统申请权限了
 
 WindowManager.LayoutParams 内就声明了这些层级值，我们可以择需选取。例如，系统状态栏本身也是一个 Window，其 type 值就是 TYPE_STATUS_BAR
 
@@ -133,7 +133,7 @@ public final class WindowManagerImpl implements WindowManager {
 首先，WindowManagerGlobal 会对入参参数进行校验，并对 LayoutParams 做下参数调整。例如，如果当前要显示的是子 Window 的话，那么就需要使其 LayoutParams 遵循父 Window 的要求才行
 
 ```java
-	public void addView(View view, ViewGroup.LayoutParams params,
+    public void addView(View view, ViewGroup.LayoutParams params,
             Display display, Window parentWindow, int userId) {
         if (view == null) {
             throw new IllegalArgumentException("view must not be null");
@@ -165,7 +165,7 @@ public final class WindowManagerImpl implements WindowManager {
 之后就会为当前的视图树（即 view）构建一个关联的 ViewRootImpl 对象，通过 ViewRootImpl 来绘制视图树并完成 Window 的添加过程。ViewRootImpl 的 `setView`方法会触发启动整个视图树的绘制流程，即完成视图树的 Measure、Layout、Draw 流程，具体流程可以看我的另一篇文章：[一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
 
 ```java
-	public void addView(View view, ViewGroup.LayoutParams params,
+    public void addView(View view, ViewGroup.LayoutParams params,
         			Display display, Window parentWindow, int userId) {
         ···
 
@@ -196,7 +196,7 @@ public final class WindowManagerImpl implements WindowManager {
     }
 ```
 
-ViewRootImpl 内部最终会通过 WindowSession 来完成 Window 的添加过程，`mWindowSession` 是一个Binder对象，真正的实现类是 Session，也就是说，Window 的添加过程涉及到了 IPC 调用。后面就比较复杂了，能力有限就不继续看下去了
+ViewRootImpl 内部最终会通过 WindowSession 来完成 Window 的添加过程，`mWindowSession` 是一个 Binder 对象，真正的实现类是 Session，也就是说，Window 的添加过程涉及到了 IPC 调用。后面就比较复杂了，能力有限就不继续看下去了
 
 ```java
         mOrigWindowType = mWindowAttributes.type;
@@ -213,7 +213,7 @@ ViewRootImpl 内部最终会通过 WindowSession 来完成 Window 的添加过�
         setFrame(mTmpFrame);
 ```
 
-需要注意的是，这里所讲的视图树代表的是很多种不同的视图形式。我们知道，在启动一个 Activity 或者显示一个 Dialog 的时候，都需要为它们指定一个布局文件，布局文件会通过 LayoutInflater 加载映射为一个具体的 View 对象，即最终 Activity 和 Dialog 都会被映射为一个 View 类型的视图树，它们都会通过 WindowManager 的 `addView` 方法来显示到屏幕上，WindowManager 对于 Activity 和 Dialog 来说具有统一的操作行为入口
+需要注意的是，这里所讲的视图树代表的是很多种不同的视图形式。在启动一个 Activity 或者显示一个 Dialog 的时候，我们都需要为它们指定一个布局文件，布局文件会通过 LayoutInflater 加载映射为一个具体的 View 对象，即最终 Activity 和 Dialog 都会被映射为一个 View 类型的视图树，它们都会通过 WindowManager 的 `addView` 方法来显示到屏幕上，WindowManager 对于 Activity 和 Dialog 来说具有统一的操作行为入口
 
 ### 三、Activity  &  Window 
 
@@ -302,7 +302,7 @@ public class Activity extends ContextThemeWrapper implements LayoutInflater.Fact
 Activity  的`attach` 方法又是在 ActivityThread 的 `performLaunchActivity` 方法中被调用的，在通过反射生成 Activity 实例后就会调用`attach` 方法，且可以看到该方法的调用时机是早于 Activity 的 `onCreate` 方法的。所以说，在生成 Activity 实例后不久其 Window 对象就已经被初始化了，而且早于各个生命周期回调函数
 
 ```java
-	private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
         ···
         Activity activity = null;
         try {
@@ -360,7 +360,7 @@ PhoneWindow 的 `setContentView` 方法的逻辑可以总结为：
 ```java
 public class PhoneWindow extends Window implements MenuBuilder.Callback {
     
-	private DecorView mDecor;
+    private DecorView mDecor;
 
     ViewGroup mContentParent;
     
@@ -393,7 +393,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
         mContentParentExplicitlySet = true;
     }
     
-	private void installDecor() {
+    private void installDecor() {
         mForceDecorInstall = false;
         if (mDecor == null) {
             mDecor = generateDecor(-1);
@@ -433,7 +433,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 2. 根据 features 来选择合适的布局文件，得到 `layoutResource`。之所以会有多种布局文件，是因为不同的 Activity 会有不同的显示要求，有的要求显示 title，有的要求显示 leftIcon，而有的可能全都不需要，为了避免控件冗余就需要来选择合适的布局文件。而虽然每种布局文件结构上略有不同，但均会包含一个 ID 名为`content`的 FrameLayout，`mContentParent` 就对应该 FrameLayout。DecorView 会拿到 `layoutResource` 并生成对应的 View 对象（对应 DecorView 中的 `mContentRoot`），并将其添加为`mContentParent`的 childView
 
 ```java
-	protected ViewGroup generateLayout(DecorView decor) {
+    protected ViewGroup generateLayout(DecorView decor) {
         // Apply data from current theme.
 
         TypedArray a = getWindowStyle();
@@ -523,10 +523,10 @@ public class DecorView extends FrameLayout implements RootViewSurfaceTaker, Wind
 
 完成以上步骤后，此时其实还只是完成了 Activity 整个视图树的加载工作，虽然 Activity 的 `attach`方法已经创建了 Window 对象，但还需要将 DecorView 提交给 WindowManager 后才能正式将视图树展示到屏幕上
 
-DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActivity` 方法，该方法用于回调 Activity 的 `onResume` 方法，里面就会回调到 Activity 的`makeVisible` 方法，从方法名就可以猜出来`makeVisible`就用于令 Activity 变为可见状态
+DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActivity` 方法，该方法用于回调 Activity 的 `onResume` 方法，里面还会回调到 Activity 的`makeVisible` 方法，从方法名可以猜出来`makeVisible`方法就用于令 Activity 变为可见状态
 
 ```java
-	@Override
+    @Override
     public void handleResumeActivity(IBinder token, boolean finalStateRequest, boolean isForward, String reason) {
         ···
         r.activity.makeVisible();    
@@ -552,11 +552,11 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
 对以上流程做下总结
 
 1. 每个 Activity 内部都包含一个 Window 对象，该对象的具体实现类是 PhoneWindow。Activity 的 `setContentView`、`findViewById` 等操作都会交由 Window 来实现，Window 是 Activity 和整个 View 系统交互的入口
-2. PhoneWindow 根据 theme 和 features 得知 Activity 的基本视图属性，由此来选择合适的根布局文件 `layoutResource`，每种 `layoutResource`虽然在布局结构上略有不同，但是均会包含一个 ID 名为`content`的 FrameLayout，`ContentParent` 即该 FrameLayout。我们可以通过 `Window.ID_ANDROID_CONTENT`来拿到该 ID，也可以在 Activity 中通过 `findViewById<View>(Window.ID_ANDROID_CONTENT)` 来获取到`ContentParent`
-3. PhoneWindow 并不直接管理视图树，而是交由 DecorView 去管理。DecorView 会根据`layoutResource`来生成对应的 rootView 并将开发者指定的 ContentView 添加为`ContentParent`的 childView，所以可以将 DecorView 看做是视图树的根布局。正因为如此，Activity 的 `findViewById` 操作实际上会先交由 Window，Window 再交由 DecorView 去完成，因为 DecorView 才是实际持有 ContentView 的容器类
-4. PhoneWindow 是 Window 这个抽象类的的唯一实现类，Activity 和 Dialog 内部其实都是使用 PhoneWindow 来加载视图树，因此 PhoneWindow 成为了上层类和视图树系统之间的交互入口，从而也将 Activity 和 Dialog 的共同视图逻辑给抽象出来了，减轻了上层类的负担，这也是 Window 机制存在的好处之一
-5. Activity 的视图树是在`makeVisible` 方法里提交给 WindowManager 的，之后 WindowManagerImpl 会通过 ViewRootImpl 来完成整个视图树的绘制流程，至此 Activity 才对用户可见
-6. View 通过 Canvas 绘制自身，定义了具体的 UI 效果。View 和 ViewGroup 共同组成一个具体的视图树，视图树的根布局则是 DecorView，DecorView 的存在使得视图树有了一个统一的容器，有利于统一系统的主题样式并对所有 childView 进行统一管理。Activity 通过 Window 和视图树进行交互，将具体的视图树处理逻辑抽取给 PhoneWindow 实现，减轻了自身负担。PhoneWindow 拿到 DecorView 后，又通过 ViewRootImpl 来对 DecorView 进行管理，由其来完成整个视图树的 Measure、Layout、Draw 流程。当整个视图树绘制完成后，就将 DecorView 提交给 WindowManager，从而将 Activity 显示到屏幕上
+2. PhoneWindow 是 Window 这个抽象类的的唯一实现类，Activity 和 Dialog 内部其实都是使用 PhoneWindow 来加载视图树，因此 PhoneWindow 成为了上层类和视图树系统之间的交互入口，从而也将 Activity 和 Dialog 的共同视图逻辑给抽象出来了，减轻了上层类的负担，这也是 Window 机制存在的好处之一
+3. PhoneWindow 根据 theme 和 features 得知 Activity 的基本视图属性，由此来选择合适的根布局文件 `layoutResource`，每种 `layoutResource`虽然在布局结构上略有不同，但是均会包含一个 ID 名为`content`的 FrameLayout，`ContentParent` 即该 FrameLayout。我们可以通过 `Window.ID_ANDROID_CONTENT`来拿到该 ID，也可以在 Activity 中通过 `findViewById<View>(Window.ID_ANDROID_CONTENT)` 来获取到`ContentParent`
+4. PhoneWindow 并不直接管理视图树，而是交由 DecorView 去管理。DecorView 会根据`layoutResource`来生成对应的 rootView 并将开发者指定的 ContentView 添加为`ContentParent`的 childView，所以可以将 DecorView 看做是视图树的根布局。正因为如此，Activity 的 `findViewById` 操作实际上会先交由 Window，Window 再交由 DecorView 去完成，因为 DecorView 才是实际持有 ContentView 的容器类
+5. View 通过 Canvas 绘制自身，定义了具体的 UI 效果。View 和 ViewGroup 共同组成一个具体的视图树，视图树的根布局则是 DecorView，DecorView 的存在使得视图树有了一个统一的容器，有利于统一系统的主题样式并对所有 childView 进行统一管理
+6. Activity 通过 Window 和视图树进行交互，将具体的视图树处理逻辑抽取给 PhoneWindow 实现，减轻了自身负担。Activity 的 DecorView 是在`makeVisible` 方法里提交给 WindowManager 的，之后 WindowManagerImpl 会通过 ViewRootImpl 来完成整个视图树的绘制流程，之后 Activity 才对用户可见
 
 ### 九、一个 Demo
 
