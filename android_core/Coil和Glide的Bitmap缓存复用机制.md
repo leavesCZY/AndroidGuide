@@ -37,19 +37,13 @@ Coil 有着一些独特的优势。例如，为了监听 UI 层的生命周期�
    - Glide 使用原生的 ThreadPoolExecutor 来完成后台任务，通过 Handler 来实现线程切换
    - Coil 使用 Coroutines 来完成后台任务及线程切换
 
-> 关于 Glide 和 Coil 的详细源码解析可以看我的这三篇文章：
->
-> - [三方库源码笔记（9）-超详细的 Glide 源码详解](https://juejin.im/post/6891307560557608967)
-> - [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.im/post/6892751013544263687)
-> - [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 之前在写关于 Glide 和 Coil 的源码解析文章的时候，对 Bitmap 的缓存复用逻辑没有特意做介绍，本文就再来补充下这一个知识点，希望对你有所帮助 😇😇
 
 本文基于 Glide 和 Coil 当前的最新版本进行分析
 
 ```groovy
-	implementation "com.github.bumptech.glide:glide:4.12.0"
-	implementation "io.coil-kt:coil:1.2.0"
+implementation "com.github.bumptech.glide:glide:4.12.0"
+implementation "io.coil-kt:coil:1.2.0"
 ```
 
 ### 一、BitmapPool 
@@ -118,11 +112,11 @@ public final class Message implements Parcelable {
 - 在 Android 2.3.3（API 级别 10）及更低版本上，建议通过 `bitmap.recycle()`来尽快回收 Bitmap，降低 `OutOfMemoryError`的概率。但只有当你确定 Bitmap 已不再使用时才应该使用 `recycle()`，否则如果调用了 `recycle()` 并在稍后尝试绘制 Bitmap，则会收到错误：`"Canvas: trying to use a recycled bitmap"`
 - 在 Android 3.0（API 级别 11）开始，系统引入了 `BitmapFactory.Options.inBitmap` 字段。如果设置了此选项，那么采用 `Options` 对象的解码方法会在生成目标 Bitmap 时尝试复用 inBitmap，这意味着 inBitmap 的内存得到了重复使用，从而提高了性能，同时移除了内存分配和取消分配。不过 inBitmap 的使用方式存在某些限制，在 Android 4.4（API 级别 19）之前系统仅支持复用大小相同的位图，4.4 之后只要 inBitmap 的大小比目标 Bitmap 大即可
 
-Glide 和 Coil 都在 BitmapPool 的基础上使用到了 inBitmap，从而进一步复用 Bitmap 
+Glide 和 Coil 都在 BitmapPool 的基础上使用到了 inBitmap，从而进一步提高了 Bitmap 的复用效率 
 
 ### 三、Coil 对 Bitmap 的复用
 
-Coil 的 BitmapPool 接口定义了缓存 Bitmap 的所有方法。BitmapPool 的存在意义是为了实现 Bitmap 的复用，那么自然就需要有相对应的存取方法，对应 `put` 方法和多个 `get` 方法。而缓存大小也不可能无限制增长，所以还需要有清理缓存的方法，对应 `trimMemory` 方法和 `clear` 方法。当中，`trimMemory`方法就用于根据应用或者系统当前的运行情况来决定如何清理缓存，例如，当应用退到后台时就可以通过该方法来主动减少内存占用，以此提升进程优先级，降低被系统杀死的概率
+Coil 的 BitmapPool 接口定义了缓存 Bitmap 的所有方法。BitmapPool 的存在意义是为了实现 Bitmap 的复用，那么自然就需要有相对应的存取方法，对应 `put` 方法和多个 `get` 方法。而缓存大小也不可能无限制增长，所以还需要有清理缓存的方法，对应 `trimMemory` 方法和 `clear` 方法。当中，`trimMemory`方法就用于根据应用或者系统当前的运行情况来决定如何清理缓存，例如，当应用退到后台时就可以通过该方法来主动减少内存占用，以此提升进程优先级，降低应用被系统杀死的概率
 
 此外，`invoke` 是运算符重载方法，maxSize 即允许使用的最大缓存空间，maxSize 等于 0 则代表不进行缓存，那就使用空实现 EmptyBitmapPool，否则就使用 RealBitmapPool
 
@@ -209,7 +203,7 @@ internal class RealBitmapPool(
 上文说了，Bitmap 的回收与复用机制在不同的系统版本上有着一些差异，而 BitmapPoolStrategy 就完全屏蔽了在不同 Android 系统版本中 Bitmap 复用规则的差异性，其内部会根据系统版本来决定采用哪种复用机制，使得外部可以通过统一的方法进行存取而无需关心内部实现。这里使用到了**策略模式**
 
 - 在 Android 4.4 之前就采用 AttributeStrategy。AttributeStrategy 将 `bitmapWidth、bitmapHeight、bitmapConfig` 这三者作为 Bitmap 的唯一标识，只有和这三个属性完全相等的 Bitmap 才能拿来复用
-- 从 Android 4.4 开始则采用 SizeStrategy。SizeStrategy 将 `bitmapSize` 作为 Bitmap 的唯一标识，只有不小于目标大小且大小不会超出四倍的 Bitmap 才能拿来复用。之所以有最大值的限制，应该也是为了节约内存，毕竟如果拿来复用的 bitmap 太大的话也比较浪费
+- 从 Android 4.4 开始则采用 SizeStrategy。SizeStrategy 将 `bitmapSize` 作为 Bitmap 的唯一标识，只有不小于目标大小且大小不会超出四倍的 Bitmap 才能拿来复用。之所以有最大值的限制，应该是为了节约内存，毕竟如果拿来复用的 bitmap 超出太多的话也比较浪费
 
 ```kotlin
 internal interface BitmapPoolStrategy {
@@ -233,7 +227,7 @@ internal class AttributeStrategy : BitmapPoolStrategy {
     private val entries = LinkedMultimap<Key, Bitmap>()
 
     override fun put(bitmap: Bitmap) {
-        //width、height、config 三者同时作为唯一标识 key
+        //将 width、height、config 三者同时作为唯一标识 key
         entries.put(Key(bitmap.width, bitmap.height, bitmap.config), bitmap)
     }
 
@@ -260,7 +254,7 @@ internal class SizeStrategy : BitmapPoolStrategy {
     private val sizes = TreeMap<Int, Int>()
 
     override fun put(bitmap: Bitmap) {
-        //根据 bitmap 的大小作为其唯一标识 key
+        //将 bitmap 的大小作为其唯一标识 key
         val size = bitmap.allocationByteCountCompat
         entries.put(size, bitmap)
 
@@ -436,7 +430,7 @@ class CircleCropTransformation : Transformation {
 
 ### 四、Glide 对 Bitmap 的复用
 
-理解了 Coil 对于 Bitmap 的缓存复用逻辑之后，再来看 Glide 就会简单很多了，两者在这方面的实现高度一致，甚至接口名和类名都很类似。准确来说应该是 Coil 借鉴了 Glide 的实现思路，Coil 作为一个后起之秀借鉴了很多 Glide 和 OkHttp 这两个开源库的实现思路，看 Coil 源码的时候就总能发现这两个开源库的影子
+理解了 Coil 对于 Bitmap 的缓存复用逻辑之后，再来看 Glide 就会简单很多了，两者在这方面的实现高度一致，甚至接口名和类名都很类似。准确来说应该是 Coil 借鉴了 Glide 的实现思路，Coil 作为一个后起之秀借鉴了 Glide 和 OkHttp 这两个开源库很多实现思路，看 Coil 源码的时候就总能发现这两个开源库的影子
 
 Glide 中也包含一个 BitmapPool 接口，其实现类有两个，一个是空实现 BitmapPoolAdapter，一个是有实际意义的 LruBitmapPool
 
@@ -500,7 +494,7 @@ interface LruPoolStrategy {
 LruPoolStrategy 包含两个实现类，和 Coil 的设计基本一样
 
 - AttributeStrategy。用于 Android 4.4 之前的系统，将 `bitmapWidth、bitmapHeight、bitmapConfig` 这三者作为 Bitmap 的唯一标识，只有和这三个属性完全相等的 Bitmap 才能拿来复用
-- SizeConfigStrategy。用于 Android 4.4 及之后的系统，将 `bitmapSize、bitmapConfig`这两者作为 Bitmap 的唯一标识，只有不小于目标大小且大小不会超出八倍的 Bitmap 才能拿来复用（Coil 则要求不超出四倍）
+- SizeConfigStrategy。用于 Android 4.4 及之后的系统，将 `bitmapSize、bitmapConfig`这两者作为 Bitmap 的唯一标识，只有不小于目标大小且大小不超出八倍的 Bitmap 才能拿来复用（Coil 则要求不超出四倍）
 
 Glide 在**加载网络图片**和**对图片进行变换**的时候也会从 BitmapPool 取出 Bitmap 来进行复用
 
@@ -580,7 +574,19 @@ private Bitmap decodeFromWrappedStreams(
   }
 ```
 
-此外，从系统中对 inBitmap 的注释说明可以看到，使用此字段在某些情况下是会导致抛出 IllegalArgumentException 的，Glide 的 `decodeStream` 方法就捕获了这个异常。如果在执行 `imageReader.decodeBitmap` 的过程中抛出了 IllegalArgumentException 且当前 inBitmap 不为 null 的话，那么就会捕获该异常，然后将 inBitmap 置为 null 再重新解码一次。如果 inBitmap 为 null 的情况下也发生了异常的话，`decodeStream`方法则会将异常直接抛出，即该方法最多进行两次解码。而 Coil 只会解码一次，没有 Glide 这种降级处理规则
+此外，从系统源码中对 inBitmap 的注释说明可以看到，设置了此字段后如果解码失败将导致抛出 IllegalArgumentException
+
+```java
+        /**
+         * If set, decode methods that take the Options object will attempt to
+         * reuse this bitmap when loading content. If the decode operation
+         * cannot use this bitmap, the decode method will throw an
+         * {@link java.lang.IllegalArgumentException}. 
+         */
+        public Bitmap inBitmap;
+```
+
+Glide 的 `decodeStream` 方法就捕获了这个异常。如果在执行 `imageReader.decodeBitmap` 的过程中抛出了 IllegalArgumentException 且当前 inBitmap 不为 null 的话，那么就会捕获该异常，然后将 inBitmap 置为 null 再重新解码一次。如果 inBitmap 为 null 的情况下也发生了异常的话，`decodeStream`方法则会将异常直接抛出，即该方法最多进行两次解码。而 Coil 只会解码一次，没有 Glide 这种降级处理规则
 
 ```kotlin
   private static Bitmap decodeStream(
@@ -671,7 +677,7 @@ public abstract class BitmapTransformation implements Transformation<Bitmap> {
 }
 ```
 
-### 五、相关联的文章
+### 五、相关联文章
 
 - [三方库源码笔记（9）-超详细的 Glide 源码详解](https://juejin.im/post/6891307560557608967)
 - [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.im/post/6892751013544263687)

@@ -186,7 +186,7 @@ limitations under the License.
 
 Coil 在我看来是一个比较“**激进**”的开源库，热衷于使用当前最为流行的技术，包括 Coroutines、OkHttp、Okio，以及 Google 官方的 Jetpack Lifecycles、AndroidX 等，代码不仅完全由 Kotlin 语言来实现，连 gradle 脚本也是全部使用 kts，而且 gradle 版本也升级得很快，我一开始由于使用的 Android Studio 不是 4.x 版本，连 Coil 代码都跑不起来 =_=
 
-**如果你的项目中已经大面积使用到了这些开源库和组件的话，那么 Coil 会更加契合你的项目**
+**如果你的项目中已经大面积使用到了 Jetpack、Kotlin Coroutines、OkHttp 的话，那么 Coil 会更加契合你的项目**
 
 当前在 Android 端最为流行的图片加载框架应该是 Glide 了，Coil 作为一个后起之秀相对 Glide 也有着一些独特的优势。例如，为了监听 UI 层的生命周期变化，Glide 是通过向 Activity 或者 Fragment 注入一个无 UI 界面的 Fragment 来实现间接监听的，而 Coil 则只需要直接监听 Lifecycle 即可，在实现方式上 Coil 会更加简单高效。此外，在联网请求图片的时候，Glide 需要通过线程池和多个回调来完成最终图片的显示，而 Coil 由于使用了 Kotlin 协程，可以很简洁地完成异步加载和线程切换，在流程上 Coil 会清晰很多。但实际上 Coil 也是借鉴了一些优秀开源库的实现思路，所以我看 Coil 的源码的时候就总会发现一些 Glide 和 OkHttp 的影子😅😅
 

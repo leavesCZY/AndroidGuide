@@ -15,9 +15,7 @@ Bitmap 应该是很多应用中最占据内存空间的一类资源了，Bitmap 
 
 在开始讲关于 Bitmap 的知识点前，需要先阐述一些基础概念作为预备知识
 
-我们知道，在不同手机屏幕上 1dp 所对应的 px 值可能是会有很大差异的。例如，在小屏幕手机上 1dp 可能对应 1px，在大屏幕手机上对应的可能是 3px，这也是我们的应用实现屏幕适配的原理基础之一
-
-想要知道在特定一台手机上 1dp 对应多少 px，或者是想要知道屏幕宽高大小，这些信息都可以通过 DisplayMetrics 来获取
+我们知道，在不同手机屏幕上 1dp 所对应的 px 值可能是会有很大差异的。例如，在小屏幕手机上 1dp 可能对应 1px，在大屏幕手机上对应的可能是 3px，这也是我们的应用实现屏幕适配的原理基础之一。想要知道在特定一台手机上 1dp 对应多少 px，或者是想要知道屏幕宽高大小，这些信息都可以通过 DisplayMetrics 来获取
 
 ```kotlin
 val displayMetrics = applicationContext.resources.displayMetrics
@@ -43,24 +41,24 @@ dpi 决定了应用在显示 drawable 时是选择哪一个文件夹内的切图
 | -------- | ------ | ------ | ------ | ------ | ------ | ------- |
 | dpi      | 120dpi | 160dpi | 240dpi | 320dpi | 480dpi | 640dpi  |
 
-对于本文所使用的模拟器来说，应用在选择图片时就会优先从 `drawable-xxhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxxhdpi -> xhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本的图片资源**
+对于本文所使用的 480dpi 的模拟器来说，应用在选择图片时就会优先从 `drawable-xxhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxxhdpi -> xhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本的图片资源**
 
 ### 2、内存大小的计算公式
 
 先将一张大小为 1920 x 1080 px 的图片保存到 `drawable-xxhdpi` 文件夹内，然后将其显示在一个宽高均为 180dp 的 ImageView 上，该 Bitmap 所占用的内存就通过 `bitmap.byteCount`来获取
 
 ```kotlin
-    val options = BitmapFactory.Options()
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-    log("imageView width: " + imageView.width)
-    log("imageView height: " + imageView.height)
-    log("bitmap width: " + bitmap.width)
-    log("bitmap height: " + bitmap.height)
-    log("bitmap config: " + bitmap.config)
-    log("inDensity: " + options.inDensity)
-    log("inTargetDensity: " + options.inTargetDensity)
-    log("bitmap byteCount: " + bitmap.byteCount)
+val options = BitmapFactory.Options()
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+log("imageView width: " + imageView.width)
+log("imageView height: " + imageView.height)
+log("bitmap width: " + bitmap.width)
+log("bitmap height: " + bitmap.height)
+log("bitmap config: " + bitmap.config)
+log("inDensity: " + options.inDensity)
+log("inTargetDensity: " + options.inTargetDensity)
+log("bitmap byteCount: " + bitmap.byteCount)
 ```
 
 ```kotlin
@@ -82,8 +80,6 @@ BitmapMainActivity: bitmap byteCount: 8294400
 - 8294400 就是 Bitmap 所占用的内存大小，单位是 byte
 
 从最终结果可以很容易地就逆推出 Bitmap 所占内存大小的计算公式：**bitmapWidth * bitmapHeight * 单位像素点所占用的字节数**，即 1920 * 1080 * 4 = 8294400
-
-此外，在 Android 2.3 版本之前，Bitmap 像素存储需要的内存是在 native 上分配的，并且生命周期不太可控，可能需要用户自己回收。2.3 - 7.1 之间，Bitmap 的像素存储在 Dalvik 的 Java 堆上，当然，4.4 之前的甚至能在匿名共享内存上分配（Fresco采用），而 8.0 之后的像素内存又重新回到 native 上去分配，不需要用户主动回收，8.0 之后图像资源的管理更加优秀，极大降低了 OOM
 
 ### 3、和 drawable 文件夹的关系
 
@@ -108,24 +104,22 @@ BitmapMainActivity: bitmap byteCount: 18662400
 
 模拟器的 dpi 是 480，拿到了 dpi 为 320 的`drawable-xhdpi`文件夹下的图片，在系统的理解中该文件夹存放的都是小图标，是为小屏幕手机准备的，现在要在大屏幕手机上展示的话就需要对其进行放大，放大的比例就是 480 / 320 = 1.5 倍，因此 Bitmap 的宽就会变为 1920 * 1.5 = 2880 px，高就会变为 1080 * 1.5 = 1620 px，最终占用的内存空间大小就是 2880 * 1620 * 4 = 18662400
 
-所以说，对于同一台手机，Bitmap 在不同 drawable 文件夹下对其最终占用的内存大小是有很大关系的，虽然计算公式没变，但是由于系统会进行自动缩放，Bitmap 的宽高都变为了原先的 1.5 倍，导致最终 Bitmap 的内存大小就变为了 8294400 * 1.5 * 1.5 = 18662400
-
-同理，对于同个 drawable 文件夹下的同一张图片，在不同的手机屏幕上也可能会占用不同的内存空间，因为不同的手机的 dpi 大小可能是不一样的，BitmapFactory 进行缩放的比例也就不一样
+所以说，对于同一台手机，Bitmap 在不同 drawable 文件夹下对其最终占用的内存大小是有很大关系的，虽然计算公式没变，但是由于系统会进行自动缩放，导致 Bitmap 的最终宽高都发生了变化，从而影响到了其占用的内存空间大小。同理，对于同个 drawable 文件夹下的同一张图片，在不同的手机屏幕上也可能会占用不同的内存空间，因为不同的手机的 dpi 大小可能是不一样的，BitmapFactory 进行缩放的比例也就不一样
 
 ### 4、和 ImageView 的宽高的关系
 
 在上一个例子里，Bitmap 的宽高是 2880 * 1620 px，ImageView 的宽高是 540 * 540 px，该 Bitmap 肯定是会显示不全的，读者可以试着自己改变 ImageView 的宽高大小来验证是否会对 Bitmap 的大小产生影响
 
-这里就不贴代码了，直接来说结论，答案是**没有关系**。原因也很简单，毕竟上述例子是先将 Bitmap 加载到内存中后再设置给 ImageView 的，ImageView 自然不会影响到 Bitmap 的加载过程，该 Bitmap 的大小只受**其所在的 drawable 文件夹类型**以及**手机的 dpi 大小**这两个因素的影响。但这个结论是需要考虑测试方式的，如果你是使用 Glide 来加载图片，Glide 内部实现了按需加载的机制，避免由于 Bitmap 过大而 ImageView 显示不全导致内存浪费的情况，这种情况下 ImageView 的宽高就会影响到 Bitmap 的内存大小了
+这里就不贴代码了，直接来说结论，答案是**没有关系**。原因也很简单，毕竟上述例子是先将 Bitmap 加载到内存中后再设置给 ImageView 的，ImageView 自然不会影响到 Bitmap 的加载过程，该 Bitmap 的大小也只受**其所在的 drawable 文件夹类型**以及**手机的 dpi 大小**这两个因素的影响。但这个结论是需要考虑测试方式的，如果你是使用 Glide 来加载图片，Glide 内部实现了按需加载的机制，会根据 ImageView 的大小对 Bitmap 进行自动缩放，避免内存浪费的情况，这种情况下 ImageView 的宽高就会影响到 Bitmap 的内存大小了
 
 ### 5、BitmapFactory
 
-BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile、decodeResourceStream、decodeResource、decodeByteArray、decodeStream` 等多个，但只有 `decodeResourceStream` 和 `decodeResource` 这两个方法才会根据 dpi 进行自动缩放
+BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile、decodeResourceStream、decodeResource、decodeByteArray、decodeStream` 等多个，但只有 `decodeResourceStream` 和 `decodeResource` 这两个方法才会根据 dpi 进行自动缩放。如果是从磁盘或者 assert 目录加载图片的话是不会进行自动缩放的，毕竟这些来源也不具备 dpi 信息，Bitmap 的分辨率也只能保持其原有大小
 
-`decodeResource` 方法也会调用到`decodeResourceStream`方法，`decodeResourceStream`方法如果判断到`inDensity` 和 `inTargetDensity` 两个属性外部没有主动赋值的话，就会根据实际情况进行赋值。如果是从磁盘或者 assert 目录加载图片的话是不会进行自动缩放的，毕竟这些来源也不具备 dpi 信息，Bitmap 的分辨率也只能保持其原有大小
+`decodeResource` 方法也会调用到`decodeResourceStream`方法，`decodeResourceStream`方法如果判断到`inDensity` 和 `inTargetDensity` 两个属性外部没有主动赋值的话，就会根据实际情况进行赋值
 
 ```java
-	@Nullable
+    @Nullable
     public static Bitmap decodeResourceStream(@Nullable Resources res, @Nullable TypedValue value,
             @Nullable InputStream is, @Nullable Rect pad, @Nullable Options opts) {
         validate(opts);
@@ -166,103 +160,104 @@ Bitmap.Config 定义了四种常见的编码格式，分别是：
 在一开始的情况下加载到的 Bitmap 的宽高是 1920 * 1080，占用的内存空间是 1920 * 1080 * 4 = 8294400，约 7.9 MB，这是优化前的状态
 
 ```kotlin
-    val options = BitmapFactory.Options()
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-    log("bitmap width: " + bitmap.width)
-    log("bitmap height: " + bitmap.height)
-    log("bitmap config: " + bitmap.config)
-    log("inDensity: " + options.inDensity)
-    log("inTargetDensity: " + options.inTargetDensity)
-    log("bitmap byteCount: " + bitmap.byteCount)
+val options = BitmapFactory.Options()
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+log("bitmap width: " + bitmap.width)
+log("bitmap height: " + bitmap.height)
+log("bitmap config: " + bitmap.config)
+log("inDensity: " + options.inDensity)
+log("inTargetDensity: " + options.inTargetDensity)
+log("bitmap byteCount: " + bitmap.byteCount)
 
-	BitmapMainActivity: bitmap width: 1920
-	BitmapMainActivity: bitmap height: 1080
-	BitmapMainActivity: bitmap config: ARGB_8888
-	BitmapMainActivity: inDensity: 480
-	BitmapMainActivity: inTargetDensity: 480
-	BitmapMainActivity: bitmap byteCount: 8294400
+BitmapMainActivity: bitmap width: 1920
+BitmapMainActivity: bitmap height: 1080
+BitmapMainActivity: bitmap config: ARGB_8888
+BitmapMainActivity: inDensity: 480
+BitmapMainActivity: inTargetDensity: 480
+BitmapMainActivity: bitmap byteCount: 8294400
 ```
 
 #### 1、inSampleSize
 
-由于 ImageView 的宽高只有 540 * 540 px，此时 Bitmap 也只能在 ImageView 上显示为一个像素缩略图，如果进行原图加载的话其实会造成很大的内存浪费，此时我们就可以通过 inSampleSize 属性来压缩图片尺寸
+由于 ImageView 的宽高只有 540 * 540 px，如果按照原图进行加载的话其实会造成很大的内存浪费，此时我们就可以通过 inSampleSize 属性来压缩图片尺寸
 
 例如，将 inSampleSize 设置为 2 后，Bitmap 的宽高就都会缩减为原先的一半，占用的内存空间就变成了原先的四分之一， 960 * 540 * 4 = 2073600，约 1.9 MB
 
 ```kotlin
-    val options = BitmapFactory.Options()
-	options.inSampleSize = 2
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-    log("bitmap width: " + bitmap.width)
-    log("bitmap height: " + bitmap.height)
-    log("bitmap config: " + bitmap.config)
-    log("inDensity: " + options.inDensity)
-    log("inTargetDensity: " + options.inTargetDensity)
-    log("bitmap byteCount: " + bitmap.byteCount)
+val options = BitmapFactory.Options()
+options.inSampleSize = 2
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+log("bitmap width: " + bitmap.width)
+log("bitmap height: " + bitmap.height)
+log("bitmap config: " + bitmap.config)
+log("inDensity: " + options.inDensity)
+log("inTargetDensity: " + options.inTargetDensity)
+log("bitmap byteCount: " + bitmap.byteCount)
 
-	BitmapMainActivity: bitmap width: 960
-	BitmapMainActivity: bitmap height: 540
-	BitmapMainActivity: bitmap config: ARGB_8888
-	BitmapMainActivity: inDensity: 480
-	BitmapMainActivity: inTargetDensity: 480
-	BitmapMainActivity: bitmap byteCount: 2073600
+BitmapMainActivity: bitmap width: 960
+BitmapMainActivity: bitmap height: 540
+BitmapMainActivity: bitmap config: ARGB_8888
+BitmapMainActivity: inDensity: 480
+BitmapMainActivity: inTargetDensity: 480
+BitmapMainActivity: bitmap byteCount: 2073600
 ```
 
-可以看到，inSampleSize 属性应该设置多少是需要根据 **Bitmap 的实际宽高**和 **ImageView 的实际宽高**这两个条件来一起决定的。我们在正式加载 Bitmap 前要先获取到 Bitmap 的实际宽高大小，这可以通过 inJustDecodeBounds 属性来实现。设置 inJustDecodeBounds  为 true 后 `decodeResource`方法只会去读取 Bitmap 的宽高属性而不会去进行实际加载，这个操作是比较轻量级的。然后通过每次循环对半折减，计算出 inSampleSize 需要设置为多少才能尽量接近到 ImageView 的实际宽高，之后将 inJustDecodeBounds 设置为 false 去实际加载 Bitmap
-
-```kotlin
-    val options = BitmapFactory.Options()
-    options.inJustDecodeBounds = true
-    BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    val inSampleSize = calculateInSampleSize(options, imageView.width, imageView.height)
-    options.inSampleSize = inSampleSize
-    options.inJustDecodeBounds = false
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-
-	fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
-        // Raw height and width of image
-        val (height: Int, width: Int) = options.run { outHeight to outWidth }
-        var inSampleSize = 1
-        if (height > reqHeight || width > reqWidth) {
-            val halfHeight: Int = height / 2
-            val halfWidth: Int = width / 2
-            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
-            // height and width larger than the requested height and width.
-            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
-                inSampleSize *= 2
-            }
-        }
-        return inSampleSize
-    }
-```
+可以看出来，inSampleSize 属性应该设置多少是需要根据 **Bitmap 的实际宽高**和 **ImageView 的实际宽高**这两个条件来一起决定的。我们在正式加载 Bitmap 前要先获取到 Bitmap 的实际宽高大小，这可以通过 inJustDecodeBounds 属性来实现。设置 inJustDecodeBounds  为 true 后 `decodeResource`方法只会去读取 Bitmap 的宽高属性而不会去进行实际加载，这个操作是比较轻量级的。然后通过每次循环对半折减，计算出 inSampleSize 需要设置为多少才能尽量接近到 ImageView 的实际宽高，之后将 inJustDecodeBounds 设置为 false 去实际加载 Bitmap
 
 需要注意的是，inSampleSize 使用的最终值将是向下舍入为最接近的 2 的幂，BitmapFactory 内部会自动会该值进行校验修正
+
+```kotlin
+val options = BitmapFactory.Options()
+options.inJustDecodeBounds = true
+BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+val inSampleSize = calculateInSampleSize(options, imageView.width, imageView.height)
+options.inSampleSize = inSampleSize
+options.inJustDecodeBounds = false
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+
+
+fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+    // Raw height and width of image
+    val (height: Int, width: Int) = options.run { outHeight to outWidth }
+    var inSampleSize = 1
+    if (height > reqHeight || width > reqWidth) {
+        val halfHeight: Int = height / 2
+        val halfWidth: Int = width / 2
+        // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+        // height and width larger than the requested height and width.
+        while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+            inSampleSize *= 2
+        }
+    }
+    return inSampleSize
+}
+```
 
 #### 2、inTargetDensity
 
 如果我们不主动设置 inTargetDensity 的话，`decodeResource` 方法会自动根据当前设备的 dpi 来对 Bitmap 进行缩放处理，我们可以通过主动设置 inTargetDensity 来控制缩放比例，从而控制 Bitmap 的最终宽高。最终宽高的生成规则： 180 / 480 * 1920 = 720，180 / 480 * 1080 = 405，占用的内存空间是 720 * 405 * 4 = 1166400，约 1.1 MB
 
 ```kotlin
-    val options = BitmapFactory.Options()
-	options.inTargetDensity = 180
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-    log("bitmap width: " + bitmap.width)
-    log("bitmap height: " + bitmap.height)
-    log("bitmap config: " + bitmap.config)
-    log("inDensity: " + options.inDensity)
-    log("inTargetDensity: " + options.inTargetDensity)
-    log("bitmap byteCount: " + bitmap.byteCount)
+val options = BitmapFactory.Options()
+options.inTargetDensity = 180
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+log("bitmap width: " + bitmap.width)
+log("bitmap height: " + bitmap.height)
+log("bitmap config: " + bitmap.config)
+log("inDensity: " + options.inDensity)
+log("inTargetDensity: " + options.inTargetDensity)
+log("bitmap byteCount: " + bitmap.byteCount)
 
-	BitmapMainActivity: bitmap width: 720
-	BitmapMainActivity: bitmap height: 405
-	BitmapMainActivity: bitmap config: ARGB_8888
-	BitmapMainActivity: inDensity: 480
-	BitmapMainActivity: inTargetDensity: 480
-	BitmapMainActivity: bitmap byteCount: 1166400
+BitmapMainActivity: bitmap width: 720
+BitmapMainActivity: bitmap height: 405
+BitmapMainActivity: bitmap config: ARGB_8888
+BitmapMainActivity: inDensity: 480
+BitmapMainActivity: inTargetDensity: 480
+BitmapMainActivity: bitmap byteCount: 1166400
 ```
 
 #### 3、Bitmap.Config
@@ -270,31 +265,21 @@ Bitmap.Config 定义了四种常见的编码格式，分别是：
 BitmapFactory 默认使用的编码图片格式是 ARGB_8888，每个像素点占用四个字节，我们可以按需改变要采用的图片格式。例如，如果要加载的 Bitmap 不包含透明通道的，我们可以使用 RGB_565，该格式每个像素点占用两个字节，占用的内存空间是 1920 * 1080 * 2 = 4147200，约 3.9 MB
 
 ```kotlin
-    val options = BitmapFactory.Options()
-	options.inPreferredConfig = Bitmap.Config.RGB_565
-    val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
-    imageView.setImageBitmap(bitmap)
-    log("bitmap width: " + bitmap.width)
-    log("bitmap height: " + bitmap.height)
-    log("bitmap config: " + bitmap.config)
-    log("inDensity: " + options.inDensity)
-    log("inTargetDensity: " + options.inTargetDensity)
-    log("bitmap byteCount: " + bitmap.byteCount)
+val options = BitmapFactory.Options()
+options.inPreferredConfig = Bitmap.Config.RGB_565
+val bitmap = BitmapFactory.decodeResource(resources, R.drawable.icon_awe, options)
+imageView.setImageBitmap(bitmap)
+log("bitmap width: " + bitmap.width)
+log("bitmap height: " + bitmap.height)
+log("bitmap config: " + bitmap.config)
+log("inDensity: " + options.inDensity)
+log("inTargetDensity: " + options.inTargetDensity)
+log("bitmap byteCount: " + bitmap.byteCount)
 
-	BitmapMainActivity: bitmap width: 1920
-	BitmapMainActivity: bitmap height: 1080
-	BitmapMainActivity: bitmap config: RGB_565
-	BitmapMainActivity: inDensity: 480
-	BitmapMainActivity: inTargetDensity: 480
-	BitmapMainActivity: bitmap byteCount: 4147200
+BitmapMainActivity: bitmap width: 1920
+BitmapMainActivity: bitmap height: 1080
+BitmapMainActivity: bitmap config: RGB_565
+BitmapMainActivity: inDensity: 480
+BitmapMainActivity: inTargetDensity: 480
+BitmapMainActivity: bitmap byteCount: 4147200
 ```
-
-### 8、参考资料
-
-- [Android中一张图片占据的内存大小是如何计算](https://juejin.cn/post/6844903693230276616)
-
-  作者提供了很多测试用例数据，读者可以看这篇文章来论证本文给出的结论
-
-- [Android Bitmap变迁与原理解析（4.x-8.x）](https://juejin.cn/post/6844903608887017485)
-
-  作者对 Bitmap 的内存分配机制进行了更加底层的分析，进阶知识
