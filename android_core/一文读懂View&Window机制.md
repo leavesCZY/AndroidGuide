@@ -81,7 +81,7 @@ WindowManager.LayoutParams 内就声明了这些层级值，我们可以择需�
         //系统 Window 的开始值
         public static final int FIRST_SYSTEM_WINDOW = 2000;
         //系统状态栏
-        public static final int TYPE_STATUS_BAR         = FIRST_SYSTEM_WINDOW;
+        public static final int TYPE_STATUS_BAR = FIRST_SYSTEM_WINDOW;
         //系统 Window 的结束值
         public static final int LAST_SYSTEM_WINDOW = 2999;
         
@@ -344,8 +344,6 @@ Activity  的`attach` 方法又是在 ActivityThread 的 `performLaunchActivity`
 
 此外，从 Activity 的`setContentView` 的方法签名来看，具体逻辑都交由了 Window 的同名方法来实现，传入的 `layoutResID` 就是我们希望在屏幕上呈现的布局，那么 PhoneWindow 自然就需要去加载该布局文件生成对应的 View。而为了能够有一个对 View 进行统一管理的入口，View 应该要包含在一个指定的 ViewGroup 中才行，该 ViewGroup 指的就是 DecorView
 
-下面就再来看下 PhoneWindow 是如何处理这一个流程的
-
 ### 五、PhoneWindow # setContentView
 
 PhoneWindow 的 `setContentView` 方法的逻辑可以总结为：
@@ -427,10 +425,11 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 }
 ```
 
-`mContentParent` 通过 `generateLayout` 方法来完成初始化，该方法主要完成的操作有两个：
+`mContentParent` 通过 `generateLayout` 方法来完成初始化，该方法的逻辑可以分为三步：
 
 1. 读取我们为 Activity 设置的 theme 属性，以此配置基础的 UI 风格。例如，如果我们设置了 `<item name="windowNoTitle">true</item>`的话，那么就会执行 `requestFeature(FEATURE_NO_TITLE)` 来隐藏标题栏
-2. 根据 features 来选择合适的布局文件，得到 `layoutResource`。之所以会有多种布局文件，是因为不同的 Activity 会有不同的显示要求，有的要求显示 title，有的要求显示 leftIcon，而有的可能全都不需要，为了避免控件冗余就需要来选择合适的布局文件。而虽然每种布局文件结构上略有不同，但均会包含一个 ID 名为`content`的 FrameLayout，`mContentParent` 就对应该 FrameLayout。DecorView 会拿到 `layoutResource` 并生成对应的 View 对象（对应 DecorView 中的 `mContentRoot`），并将其添加为`mContentParent`的 childView
+2. 根据 features 来选择合适的布局文件，得到 `layoutResource`。之所以会有多种布局文件，是因为不同的 Activity 会有不同的显示要求，有的要求显示 title，有的要求显示 leftIcon，而有的可能全都不需要，为了避免控件冗余就需要来选择合适的布局文件。而虽然每种布局文件结构上略有不同，但均会包含一个 ID 名为`content`的 FrameLayout，`mContentParent` 就对应该 FrameLayout
+3. DecorView 会拿到 `layoutResource` 生成对应的 View 对象并添加为自己的 childView，对应 DecorView 中的 `mContentRoot`，后续执行的 `findViewById(ID_ANDROID_CONTENT)` 操作就都是交由 DecorView 来实现的了，而正常来说每种 `layoutResource` 都会包含一个 ID 为 `content`的 FrameLayout，如果发现找不到的话就直接抛出异常，否则就成功返回拿到 `mContentParent`
 
 ```java
     protected ViewGroup generateLayout(DecorView decor) {
@@ -450,18 +449,12 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
         ···
 
-        // Inflate the window decor.
-
         //第二步
         int layoutResource;
-        int features = getLocalFeatures();
-        // System.out.println("Features: 0x" + Integer.toHexString(features));
         ···
-        //交由 DecorView 去生成 layoutResource 对应的 View
         mDecor.onResourcesLoaded(mLayoutInflater, layoutResource);
 
-        //正常来说每种 layoutResource 都会包含一个 ID 为 ID_ANDROID_CONTENT 的 ViewGroup
-        //如果找不到的话就直接抛出异常
+        //第三步
         ViewGroup contentParent = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
         if (contentParent == null) {
             throw new RuntimeException("Window couldn't find content container view");
@@ -474,7 +467,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 
 ### 六、DecorView
 
-DecorView 是 FrameLayout 的子类，其 `onResourcesLoaded` 方法在拿到 PhoneWindow 传递过来的 `layoutResource` 后，就会生成对应的 View 并添加为自己的 childView，就像普通的 ViewGroup 通过 `addView` 方法来添加 childView 一样，该 childView 就对应 `mContentRoot`，我们可以在 Activity 中通过`(window.decorView as ViewGroup).getChildAt(0)`来获取到 `mContentRoot`
+DecorView 是 FrameLayout 的子类，其 `onResourcesLoaded` 方法在拿到 PhoneWindow 传递过来的 `layoutResource` 后，就会生成对应的 View 并添加为自己的 childView，就像普通的 ViewGroup 执行 `addView` 方法一样，该 childView 就对应 `mContentRoot`，我们可以在 Activity 中通过`(window.decorView as ViewGroup).getChildAt(0)`来获取到 `mContentRoot`
 
 所以 DecorView 可以看做是 Activity 中整个视图树的根布局
 
@@ -534,7 +527,7 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
     }
 ```
 
-`makeVisible` 方法会判断当前 Activity 是否已经将 DecorView 提交给 WindowManager 了，如果还没的话就进行提交，最后将 DecorView 的可见状态设为 VISIBLE，至此才建立起 Activity 和 WindowManager 之间的关联关系，Activity 也才正式变为可见状态
+`makeVisible` 方法会判断当前 Activity 是否已经将 DecorView 提交给 WindowManager 了，如果还没的话就进行提交，最后将 DecorView 的可见状态设为 VISIBLE，至此才建立起 Activity 和 WindowManager 之间的关联关系，之后 Activity 才正式对用户可见
 
 ```java
     void makeVisible() {
@@ -551,12 +544,12 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
 
 对以上流程做下总结
 
-1. 每个 Activity 内部都包含一个 Window 对象，该对象的具体实现类是 PhoneWindow。Activity 的 `setContentView`、`findViewById` 等操作都会交由 Window 来实现，Window 是 Activity 和整个 View 系统交互的入口
-2. PhoneWindow 是 Window 这个抽象类的的唯一实现类，Activity 和 Dialog 内部其实都是使用 PhoneWindow 来加载视图树，因此 PhoneWindow 成为了上层类和视图树系统之间的交互入口，从而也将 Activity 和 Dialog 的共同视图逻辑给抽象出来了，减轻了上层类的负担，这也是 Window 机制存在的好处之一
-3. PhoneWindow 根据 theme 和 features 得知 Activity 的基本视图属性，由此来选择合适的根布局文件 `layoutResource`，每种 `layoutResource`虽然在布局结构上略有不同，但是均会包含一个 ID 名为`content`的 FrameLayout，`ContentParent` 即该 FrameLayout。我们可以通过 `Window.ID_ANDROID_CONTENT`来拿到该 ID，也可以在 Activity 中通过 `findViewById<View>(Window.ID_ANDROID_CONTENT)` 来获取到`ContentParent`
-4. PhoneWindow 并不直接管理视图树，而是交由 DecorView 去管理。DecorView 会根据`layoutResource`来生成对应的 rootView 并将开发者指定的 ContentView 添加为`ContentParent`的 childView，所以可以将 DecorView 看做是视图树的根布局。正因为如此，Activity 的 `findViewById` 操作实际上会先交由 Window，Window 再交由 DecorView 去完成，因为 DecorView 才是实际持有 ContentView 的容器类
-5. View 通过 Canvas 绘制自身，定义了具体的 UI 效果。View 和 ViewGroup 共同组成一个具体的视图树，视图树的根布局则是 DecorView，DecorView 的存在使得视图树有了一个统一的容器，有利于统一系统的主题样式并对所有 childView 进行统一管理
-6. Activity 通过 Window 和视图树进行交互，将具体的视图树处理逻辑抽取给 PhoneWindow 实现，减轻了自身负担。Activity 的 DecorView 是在`makeVisible` 方法里提交给 WindowManager 的，之后 WindowManagerImpl 会通过 ViewRootImpl 来完成整个视图树的绘制流程，之后 Activity 才对用户可见
+1. 每个 Activity 内部都包含一个 Window 对象，Activity 的 `setContentView`、`findViewById` 等操作都会交由 Window 来实现，Window 是 Activity 和整个 View 系统交互的入口
+2. PhoneWindow 是 Window 这个抽象类的的唯一实现类，Activity 和 Dialog 内部都是通过 PhoneWindow 来加载视图树，将具体的视图树处理逻辑交由 PhoneWindow 实现，并通过 PhoneWindow 和视图树进行交互，因此 PhoneWindow 成为了上层类和视图树系统之间的交互入口，从而也将 Activity 和 Dialog 共同的视图逻辑给抽象出来了，减轻了上层类的负担，这也是 Window 机制存在的好处之一
+3. PhoneWindow 根据 theme 和 features 得知 Activity 的基本视图属性，由此来选择合适的根布局文件 `layoutResource`，每种 `layoutResource`虽然在布局结构上略有不同，但是均会包含一个 ID 名为`content`的 FrameLayout，`contentParent` 即该 FrameLayout。我们可以通过 `Window.ID_ANDROID_CONTENT`来拿到该 ID，也可以在 Activity 中通过 `findViewById<View>(Window.ID_ANDROID_CONTENT)` 来获取到`contentParent`
+4. PhoneWindow 并不直接管理视图树，而是交由 DecorView 去管理。DecorView 会根据`layoutResource`来生成对应的 rootView 并将开发者指定的 contentView 添加为`contentParent`的 childView，所以可以将 DecorView 看做是视图树的根布局。正因为如此，Activity 的 `findViewById` 操作实际上会先交由 Window，Window 再交由 DecorView 去完成，因为 DecorView 才是实际持有 contentView 的容器类
+5. View 和 ViewGroup 共同组成一个具体的视图树，视图树的根布局则是 DecorView，DecorView 的存在使得视图树有了一个统一的容器，有利于统一系统的主题样式并对所有 childView 进行统一管理
+6. Activity 的 DecorView 是在`makeVisible` 方法里提交给 WindowManager 的，之后 WindowManagerImpl 会通过 ViewRootImpl 来完成整个视图树的绘制流程，之后 Activity 才正式对用户可见
 
 ### 九、一个 Demo
 

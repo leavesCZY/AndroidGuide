@@ -1,7 +1,9 @@
 ## 一、Git是什么
+
 Git 与CVS、Subversion 一类的集中式版本控制工具不同，它采用了分布式版本库的作法，不需要服务器端软件，就可以运作版本控制，使得源代码的发布和交流极其方便。Git 的速度很快，这对于诸如 Linux 内核这样的大项目来说自然很重要，Git 最为出色的是它的合并追踪（merge tracing）能力
 
 ## 二、Git的配置
+
 Git官网下载地址：https://git-scm.com/download/
 Git完成默认配置安装后，在桌面点击鼠标右键，会有两个选项
 
@@ -34,7 +36,9 @@ cat ~/.gitconfig
 ![](http://upload-images.jianshu.io/upload_images/2552605-3ea24abc85ee707d?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 三、仓库
+
 ### （1）创建仓库
+
 GitHub是以仓库（Repositories）的概念来管理一个项目的，仓库可以理解为一个目录，该目录下发生的所有文件变化，例如文件创建、文件修改、文件删除等都可以被Git所跟踪记录
 Git可以对每一个版本的修改进行记录，并保存各个版本号，在需要的时候可以对版本进行更迭回退
 
@@ -64,6 +68,7 @@ git init
 该文件夹用来记录版本变化的，不可以手动修改
 
 ### （2）向仓库提交文件
+
 首先在git文件夹下新建一个test.txt文本文件，随便输入一些内容，我这里输入：11111111111
 使用以下命令将之添加到暂存区中
 
@@ -129,6 +134,7 @@ $ git log --pretty=oneline
 ![](http://upload-images.jianshu.io/upload_images/2552605-5b36dfc37b46505a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 四、版本回退
+
 之前已经知道了如何提交文件并查看版本信息，这里再来学习如何回退到前一个版本
 当前test.txt是第二个版本，文本内容应该是
 
@@ -190,7 +196,9 @@ git reflog
 ![](http://upload-images.jianshu.io/upload_images/2552605-105f61541f634868?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 五、撤销操作
+
 ### （1）撤销修改操作
+
 在test.txt文件中再添加一行数据，现在的内容应该是：
 
 ```java
@@ -220,6 +228,7 @@ git checkout -- test.txt
 此时执行该命令是撤销在添加到暂存区后进行的修改操作
 
 ### （2）撤销删除操作
+
 在git文件夹下再新建一个one.txt文件，然后将之提交到仓库中
 
 ![](http://upload-images.jianshu.io/upload_images/2552605-2e7180cb231cfa7a?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -245,6 +254,7 @@ git checkout -- one.txt
 查看目录，可以看到文件已经恢复了
 
 ## 六、远程仓库
+
 这里来尝试将本地仓库提交到GitHub上，需要用户先有一个GitHub账号
 我的GitHub账号是：https://github.com/leavesC
 现在也是啥都没有，之后会逐渐把自己之前做的东西上传上去的
@@ -332,6 +342,7 @@ https://github.com/initobject/tets2
 ![](http://upload-images.jianshu.io/upload_images/2552605-3e966f0af6fbf64c?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 七、创建与合并分支
+
 到目前为止，本地工程中只包含有一条主分支，即master分支
 可以用以下命令查看所有分支，当前分支名的前边会有一个星号
 

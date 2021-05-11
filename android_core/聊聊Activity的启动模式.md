@@ -235,9 +235,9 @@ Intent 提供的设置 flag 的方法有以下两个，一个是覆盖设置，�
 通过如下方式来添加 flag 并启动 Activity
 
 ```kotlin
-        val intent = Intent(this, StandardActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        startActivity(intent)
+val intent = Intent(this, StandardActivity::class.java)
+intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
+startActivity(intent)
 ```
 
 如果 Activity 的启动模式只由 launchMode 定义的话，那么在运行时 Activity 的启动模式就再也无法改变了，相当于被写死了，所以 launchMode 适合于那些具有固定情景的业务。而 Intent flag 存在的意义就是为了改变或者补充 launchMode，适合于那些大部分情况下固定，少数情况下需要动态进行变化的场景，例如在某些情况下不希望 singleInstance 模式的 Activity 被重用，此时就可以通过 Intent flag 来动态实现
@@ -262,9 +262,9 @@ java.lang.RuntimeException: Unable to start service github.leavesc.launchmode.My
 从异常信息可以看出此时 Intent 需要添加一个 FLAG_ACTIVITY_NEW_TASK 才行，添加后 Activity 就可以正常启动了
 
 ```kotlin
-        val intent = Intent(this, StandardActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        startActivity(intent)
+val intent = Intent(this, StandardActivity::class.java)
+intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+startActivity(intent)
 ```
 
 FLAG_ACTIVITY_NEW_TASK 也有一个隐含的知识点，上文有讲到 **standard 和 singleTop 这两种模式下 taskAffinity 属性均不会生效**，但这个结论也只适用于没有主动添加 Intent flag 的情况

@@ -18,7 +18,7 @@
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-	implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
     implementation "androidx.lifecycle:lifecycle-livedata-core:2.2.0"
 ```
 

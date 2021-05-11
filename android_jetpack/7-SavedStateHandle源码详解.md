@@ -132,12 +132,6 @@ SavedStateHandle 整个数据重建流程主要涉及以下几个类和接口：
 
 下面就来详细介绍下其内部具体的实现原理
 
-
-
-
-
-
-
 ### 二、SavedStateRegistryOwner
 
 SavedStateRegistryOwner 是一个接口，用于标记其实现类（Activity/Fragment）拥有着数据重建的能力。`androidx.activity.ComponentActivity` 和`androidx.fragment.app.Fragment`就继承了 SavedStateRegistryOwner 接口，相当于所有子类都拥有一个 SavedStateRegistry 对象

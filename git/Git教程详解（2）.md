@@ -94,6 +94,7 @@ git diff head
 ![](http://upload-images.jianshu.io/upload_images/2552605-3e3e1e3ac3ddbcc3?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 二、分支操作
+
 master是git默认创建的分支，在进行并行开发的过程中，往往就需要创建多个分支，让多人同时进行开发
 不同的分支拥有不同的代码状态，同时进行完全不同的作业，等作业完成后就可以将分支合并
 
@@ -200,6 +201,7 @@ git log --graph
 ![](http://upload-images.jianshu.io/upload_images/2552605-4d96dfdd7f7c299b?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ## 三、修改操作
+
 前边的版本号也比较乱了，这里在**Git**文件夹下再来重新建立一个新的仓库
 然后手动建立一个1.txt文件，文本内容为，将之添加到仓库中
 

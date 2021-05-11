@@ -26,7 +26,7 @@
 这里先介绍第一种方式，这种方式只需要导入如下依赖即可
 
 ```groovy
-	implementation "org.greenrobot:eventbus:3.2.0"
+    implementation "org.greenrobot:eventbus:3.2.0"
 ```
 
 ### 一、注册

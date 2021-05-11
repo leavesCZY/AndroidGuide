@@ -24,7 +24,7 @@ LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到�
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-	implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
 ```
 
 ### 一、LiveData

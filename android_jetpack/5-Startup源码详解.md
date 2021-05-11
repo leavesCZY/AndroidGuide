@@ -17,7 +17,7 @@
 本文内容均基于 Startup 当前最新的 alpha 版本：
 
 ```java
-	implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
+    implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
 ```
 
 ### 一、Startup 的意义
