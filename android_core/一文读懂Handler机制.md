@@ -1,6 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-Handler 在整个 Android 开发体系中占据着很重要的地位，是一种标准的事件驱动模型，对开发者来说起到的作用很明确，就是为了实现线程切换或者是执行延时任务，稍微更高级一点的用法可能是为了保证多个任务在执行时的有序性。由于 Android 系统中的主线程有特殊地位，所以像 EventBus 和 Retrofit 这类并非 Android 独有的三方库，都是通过 Handler 来实现对 Android 系统的特殊平台支持。大部分开发者都已经对如何使用 Handler 很熟悉了，这里就再来了解下其内部具体是如何实现的，希望对你有所帮助 😇😇
+Handler 在整个 Android 开发体系中占据着很重要的地位，是一种标准的事件驱动模型，对开发者来说起到的作用很明确，就是为了实现线程切换或者是执行延时任务，稍微更高级一点的用法可能是为了保证多个任务在执行时的有序性。由于 Android 系统中的主线程有特殊地位，所以像 EventBus 和 Retrofit 这类并非 Android 独有的三方库，都是通过 Handler 来实现对 Android 系统的特殊平台支持。大部分开发者都已经对如何使用 Handler 很熟悉了，这里就再来了解下其内部具体是如何实现的，希望对你有所帮助 🤣🤣
 
 **本文基于 Android API 30（即 Android 11）的系统源码进行讲解**
 

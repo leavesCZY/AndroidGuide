@@ -1,6 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 😇😇
+> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
 系列文章导航
 
@@ -12,7 +12,7 @@
 - [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
 - [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
 
-Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单高效了许多，使得我们可以用一种统一的方式来监听 Activity、Fragment、Service、甚至是 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文就来对 Lifecycle 进行一次全面的源码解读，希望对你有所帮助  😇😇
+Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单高效了许多，使得我们可以用一种统一的方式来监听 Activity、Fragment、Service、甚至是 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文就来对 Lifecycle 进行一次全面的源码解读，希望对你有所帮助 🤣🤣
 
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 

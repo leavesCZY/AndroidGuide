@@ -1,6 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-开头先说一下，我不是标题党，本教程真的有两万六千字（严格点说应该是两万六千五百八十四），以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 😇😇
+开头先说一下，我不是标题党，本教程真的有两万六千字（严格点说应该是两万六千五百八十四），以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 🤣🤣
 
 ### 一、Hello World
 

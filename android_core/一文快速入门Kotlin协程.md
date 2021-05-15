@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 在今年的三月份，我因为需要为项目搭建一个新的网络请求框架开始接触 Kotlin 协程。那时我司项目中同时存在着两种网络请求方式，采用的技术栈各不相同，Java、Kotlin、RxJava、LiveData 各种混搭，技术栈的不统一长远来看肯定是会造成很多不便的，所以当时就打算封装一个新的网络请求框架来作为项目的统一规范（前面的人估计也是这么想的，所以就造成了同个项目中的网络请求方式越来越多😂😂），那么就需要考虑采用什么技术栈来实现了
 

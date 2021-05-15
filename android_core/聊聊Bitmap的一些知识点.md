@@ -1,8 +1,8 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 😇😇
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 Bitmap 应该是很多应用中最占据内存空间的一类资源了，Bitmap 也是导致应用 OOM 的常见原因之一。例如，Pixel 手机的相机拍摄的照片最大可达 4048 * 3036 像素（1200 万像素），如果使用的位图配置为 ARGB_8888（Android 2.3 及更高版本的默认设置），将单张照片加载到内存大约需要 48MB 内存（4048 * 3036 * 4 字节），如此庞大的内存需求可能会立即耗尽应用的所有可用内存
 
-本篇文章就来讲下 Bitmap 一些比较有用的知识点，希望对你有所帮助 😇😇
+本篇文章就来讲下 Bitmap 一些比较有用的知识点，希望对你有所帮助 🤣🤣
 
 全文可以概括为以下几个问题：
 

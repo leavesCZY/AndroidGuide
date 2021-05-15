@@ -1,16 +1,8 @@
 ### [AndroidGuide](https://github.com/leavesC/AndroidGuide)
 
-### 一、这是什么？
+🎁🎁🎁 这是一份给 Android Developer 的进阶不完整指南，喜欢写又长又臭的文章，希望对你有所帮助 🤣🤣 原创不易，觉得有用的话可以关注下公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-aacaa2893c0add99.png) 第一时间接收文章更新通知
 
-🎁🎁 一份给 Android Developer 的进阶不完整指南，包含 Android 系统源码解析、Jetpack 源码解析、开源库源码解析等多个面试必备的知识点，希望对你有所帮助 😇😇
-
-### 二、在哪里看？
-
-推荐关注公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image) 进行查看，本人经常会对文章进行修正，每次修改过后都会重新发布到公众号上
-
-掘金：[业志陈](https://juejin.cn/user/923245496518439/posts)
-
-![公众号：字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)
+![公众号：字节数组](https://upload-images.jianshu.io/upload_images/2552605-aacaa2893c0add99.png)
 
 * [语言教程]()
   * [两万六千字带你 Kotlin 入门](kotlin_core/两万六千字带你Kotlin入门.md)
