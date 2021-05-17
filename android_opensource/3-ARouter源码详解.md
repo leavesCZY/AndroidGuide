@@ -20,7 +20,7 @@
 
 ### 一、ARouter
 
-路由框架在大型项目中比较常见，特别是在项目中拥有多个 moudle 的时候。为了实现组件化，多个 module 间的通信就不能直接以模块间的引用来实现，此时就需要依赖路由框架来实现模块间的通信和解耦
+路由框架在大型项目中比较常见，特别是在项目中拥有多个 module 的时候。为了实现组件化，多个 module 间的通信就不能直接以模块间的引用来实现，此时就需要依赖路由框架来实现模块间的通信和解耦
 
 而 ARouter 就是一个用于帮助 Android App 进行组件化改造的框架，支持模块间的路由、通信、解耦
 
@@ -63,7 +63,7 @@ dependencies {
 
 ### 二、前言
 
-假设存在一个包含多个 moudle 的项目，在名为 **user** 的 moudle 中存在一个 `UserHomeActivity`，其对应的**路由路径**是 `/account/userHome`。那么，当我们要从其它 moudle 跳转到该页面时，只需要指定 path 来跳转即可
+假设存在一个包含多个 module 的项目，在名为 **user** 的 module 中存在一个 `UserHomeActivity`，其对应的**路由路径**是 `/account/userHome`。那么，当我们要从其它 module 跳转到该页面时，只需要指定 path 来跳转即可
 
 ```java
 package github.leavesc.user
@@ -115,7 +115,7 @@ ARouter 的基本实现思路就是：
 
 ### 三、初始化
 
-ARouter 的一般是放在 Application 中调用 `init` 方法来完成初始化的，这里先来看下其初始化流程
+ARouter 一般是通过在 Application 中调用 `init` 方法来完成初始化的，这里先来看下其初始化流程
 
 ```kotlin
 /**
@@ -138,7 +138,7 @@ class MyApp : Application() {
 }
 ```
 
-ARouter 类使用了单例模式，逻辑比较简单，因为 ARouter 类只是负责对外暴露可以由外部调用的 API，大部分的实现逻辑还是转交由 `_ARouter` 类来完成
+ARouter 类使用了单例模式，ARouter 类只是负责对外暴露可以由外部调用的 API，大部分的实现逻辑还是转交由 `_ARouter` 类来完成
 
 ```java
 public final class ARouter {
@@ -304,9 +304,21 @@ public class LogisticsCenter {
 }
 ```
 
-对于第三步，可以举个例子来加强理解。对于上文所讲的 UserHomeActivity，其对应的 path 是 `/account/userHome`，ARouter 默认会将 path 的第一个单词即 `account` 作为其 `group`，而且 UserHomeActivity 是放在名为 `user` 的 module 中
+对于第三步，可以举个例子来加强理解
 
-而 ARouter 在通过注解处理器生成辅助文件的时候，类名就会根据以上信息来生成，所以最终就会生成以下两个文件：
+对于上文所讲的 UserHomeActivity，放在名为 `user` 的 module 中，按照 ARouter 的要求，在 gradle 文件中为该 module 声明了以下配置，将 projectName 作为参数值。UserHomeActivity 对应的 path 是 `/account/userHome`，ARouter 默认会将 path 的第一个单词即 `account` 作为其 `group`
+
+```groovy
+javaCompileOptions {
+    kapt {
+        arguments {
+            arg("AROUTER_MODULE_NAME", project.getName())
+        }
+    }
+}
+```
+
+ARouter 在通过注解处理器生成辅助文件的时候，类名就会根据以上信息来生成，所以最终就会生成以下两个文件：
 
 ```java
 package com.alibaba.android.arouter.routes;
@@ -319,9 +331,7 @@ public class ARouter$$Root$$user implements IRouteRoot {
     routes.put("account", ARouter$$Group$$account.class);
   }
 }
-```
 
-```java
 package com.alibaba.android.arouter.routes;
 
 /**
@@ -332,21 +342,20 @@ public class ARouter$$Group$$account implements IRouteGroup {
     atlas.put("/account/userHome", RouteMeta.build(RouteType.ACTIVITY, UserHomeActivity.class, "/account/userhome", "account", null, -1, -2147483648));
   }
 }
-
 ```
 
-LogisticsCenter 的 `init` 方法就会根据文件名的固定前缀 `ARouter$$Root$$` 定位到 `ARouter$$Root$$user` 这个类，然后通过反射构建出该对象，然后通过调用其 `loadInto` 方法将键值对保存到 `Warehouse.groupsIndex` 中。等到后续需要跳转到 `group` 为 `account` 的页面时，就会再来反射调用 `ARouter$$Group$$account` 的 `loadInto` 方法，即按需加载，等到需要的时候再来获取详细的路由对应信息
+LogisticsCenter 的 `init` 方法就会根据文件名的固定前缀 `ARouter$$Root$$` 扫描到 `ARouter$$Root$$user` 这个类，然后通过反射构建出该对象，然后通过调用其 `loadInto` 方法将键值对保存到 `Warehouse.groupsIndex` 中。等到后续需要跳转到 `group` 为 `account` 的页面时，就会再来反射调用 `ARouter$$Group$$account` 的 `loadInto` 方法，即按需加载，等到需要用到的时候再来获取详细的路由对应信息
 
-因为对于一个大型的 App 来说，可能包含几十甚至几百个页面，如果一次性将所有路由信息都加载到内存中，对于内存的压力是比较大的，而用户每次使用可能也只会打开十几个页面，所以这里必须是按需加载
+因为对于一个大型的 App 来说，可能包含几十甚至几百个页面，如果一次性将所有路由信息都加载到内存中，对于内存的压力是比较大的，而用户每次使用可能也只会打开十几个页面，所以这是就实现了按需加载
 
 ### 四、跳转到 Activity
 
-讲完初始化流程，那就再来看下 ARouter 实现 Activity 跳转的流程
+讲完初始化流程，再来看下 ARouter 实现 Activity 跳转的流程
 
 跳转到 Activity 最简单的方式就是只指定 path：
 
 ```kotlin
-	ARouter.getInstance().build(RoutePath.USER_HOME).navigation()
+ARouter.getInstance().build(RoutePath.USER_HOME).navigation()
 ```
 
 `build()` 方法会通过 `ARouter` 中转调用到 `_ARouter` 的 `build()` 方法，最终返回一个 Postcard 对象
