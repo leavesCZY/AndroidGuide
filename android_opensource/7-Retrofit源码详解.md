@@ -87,7 +87,7 @@ Retrofit 是建立在 OkHttp 之上的一个网络请求封装库，内部依靠
 
 #### 1、converter-gson
 
-上述请求虽然简单，但还不够方便，因为既然 API 的返回值我们已知就是 Json 格式的了，那么我们自然就希望 `getUserData()` 方法的返回值直接就是一个 Bean 对象，而不是拿到一个 String 后还需要自己再去进行反序列化，可以通过引入`converter-gson`这个库来达到这个效果
+上述请求虽然简单，但还不够方便，因为既然 API 的返回值我们已知就是 Json 格式的了，那么我们自然就希望 `getUserData()` 方法的返回值直接就是一个 Bean 对象，而不是拿到一个 String 后还需要自己再去进行反序列化，这可以通过引入`converter-gson`这个库来达到这个效果
 
 ```groovy
 dependencies {
@@ -257,7 +257,7 @@ Retrofit 会根据 method 是否是**默认方法**来决定如何调用，这�
 
 ### 四、ServiceMethod
 
-从上面可知，`loadServiceMethod(method)`方法返回的是一个 ServiceMethod 对象，从名字上来看也可以猜出，每个 ServiceMethod 对象就对应一个接口方法，其内部就包含了对接口方法的解析结果。`loadServiceMethod(method).invoke(args)` 这个操作就对应**调用接口方法并传递网络请求参数**这个过程，即对应`service.getUserData()` 这个过程
+从上面可知，`loadServiceMethod(method)`方法返回的是一个 ServiceMethod 对象，从名字可以猜出来每个 ServiceMethod 对象就对应一个接口方法，其内部就包含了对接口方法的解析结果。`loadServiceMethod(method).invoke(args)` 这个操作就对应**调用接口方法并传递网络请求参数**这个过程，即对应`service.getUserData()` 这个过程
 
 ServiceMethod 是一个抽象类，仅包含一个抽象的 `invoke(Object[] args)`方法。ServiceMethod 使用到了**工厂模式**，由于网络请求最终的请求方式可能是多样化的，既可能是通过线程池来执行，也可能是通过 Kotlin 协程来执行，使用工厂模式的意义就在于可以将这种差异都隐藏在不同的 ServiceMethod 实现类中，而外部统一都是通过 `parseAnnotations` 方法来获取 ServiceMethod 的实现类
 
@@ -295,7 +295,9 @@ abstract class ServiceMethod<T> {
 
 ### 五、HttpServiceMethod
 
-通过查找引用，可以知道 ServiceMethod 这个抽象类的直接子类只有一个，即 HttpServiceMethod。HttpServiceMethod 也是一个抽象类，其包含两个泛型声明，`ResponseT` 表示的是 **接口方法返回值的外层包装类型**，`ReturnT` 表示的是我们**实际需要的数据类型**。例如，对于 `fun getUserData(): Call<UserBean>` 方法，`ResponseT` 对应的是 `Call`，`ReturnT` 对应的是 `UserBean`。此外，HttpServiceMethod 也实现了父类的 `invoke` 方法，并将操作转交给了另一个抽象方法 `adapt` 来完成，所以说，接口方法对应的网络请求具体的发起操作主要看 `adapt` 方法即可
+ServiceMethod 这个抽象类的直接子类只有一个，即 HttpServiceMethod。HttpServiceMethod 也是一个抽象类，其包含两个泛型声明，ResponseT 表示的是**接口方法返回值的外层包装类型**，ReturnT 表示的是我们**实际需要的数据类型**。例如，对于 `fun getUserData(): Call<UserBean>` 方法，ResponseT 对应的是 Call，ReturnT 对应的是 UserBean
+
+HttpServiceMethod 实现了父类的 `invoke` 方法，并将操作转交给了另一个抽象方法 `adapt` 来完成。可以看到，即使我们为接口方法声明的返回值类型是 `Observable<UserBean>`，`invoke` 方法内部其实还是需要创建出一个 Call 对象的，HttpServiceMethod 只是把 Call 转换为 Observable 的这个过程交由了 `adapt` 方法来完成
 
 ```java
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
@@ -313,15 +315,11 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
 }
 ```
 
-再来看 `HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory)`方法是如何构建出一个 HttpServiceMethod 对象的，并且该对象的`adapt`方法是如何实现的
+再来看`HttpServiceMethod.parseAnnotations()`方法是如何构建出一个 HttpServiceMethod 对象的，并且该对象的`adapt`方法是如何实现的
 
 ```java
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
-  /**
-   * Inspects the annotations on an interface method to construct a reusable service method that
-   * speaks HTTP. This requires potentially-expensive reflection so it is best to build each service
-   * method only once and reuse it.
-   */
+
   static <ResponseT, ReturnT> HttpServiceMethod<ResponseT, ReturnT> parseAnnotations(
       Retrofit retrofit, Method method, RequestFactory requestFactory) {
     //是否是 Suspend 函数，即是否以 Kotlin 协程的方式来进行请求
@@ -381,11 +379,11 @@ abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<Retur
 
 Retrofit 目前已经支持以 Kotlin 协程的方式来进行调用了，但本例子和协程无关，所以此处先忽略协程相关的处理逻辑，后面会再讲解，`parseAnnotations` 方法的主要逻辑是：
 
-1. 先通过`createCallAdapter(retrofit, method, adapterType, annotations` 方法拿到 CallAdapter 对象，CallAdapter 就用于实现接口方法的不同返回值**包装类**处理逻辑。例如，`getUserData()`方法的返回值**包装类**类型如果是 `Call` ，那么返回的 CallAdapter 对象就对应 `DefaultCallAdapterFactory` 包含的 Adapter；如果是 `Observable`，那么返回的就是 `RxJava2CallAdapterFactory`包含的 Adapter
-2. 再通过 `createResponseConverter(retrofit, method, responseType)`方法拿到 Converter 对象，Converter 就用于实现接口方法的不同返回值处理逻辑。例如，`getUserData()`方法的目标返回值类型如果是 `ResponseBody` ，那么 Converter 对象就对应 `BuiltInConverters`；如果是 `UserBean`，那么就对应 `GsonConverterFactory`
+1. 先通过`createCallAdapter(retrofit, method, adapterType, annotations` 方法拿到 CallAdapter 对象，CallAdapter 就用于实现接口方法的**返回值包装类**处理逻辑。例如，`getUserData()`方法的返回值**包装类**类型如果是 `Call` ，那么返回的 CallAdapter 对象就对应 DefaultCallAdapterFactory 包含的 Adapter；如果是 Observable，那么返回的就是 RxJava2CallAdapterFactory 包含的 Adapter
+2. 再通过 `createResponseConverter(retrofit, method, responseType)`方法拿到 Converter 对象，Converter 就用于实现接口方法的**返回值**处理逻辑。例如，`getUserData()`方法的目标返回值类型如果是 ResponseBody，那么 Converter 对象就对应 BuiltInConverters；如果是 UserBean，那么就对应 GsonConverterFactory
 3. 根据前两个步骤拿到的值，构造出一个 CallAdapted 对象并返回
 
-CallAdapted 正是 HttpServiceMethod 的子类，在 InvocationHandler 中通过`loadServiceMethod(method).invoke(args)`发起的调用链，会先创建出一个 OkHttpCall 对象，并最后调用到 `callAdapter.adapt(call)`方法
+CallAdapted 正是 HttpServiceMethod 的子类，在以上步骤中已经找到了可以实现将 Call 转换为 Observable 的 CallAdapter 了，所以对于 CallAdapted 来说，其 `adapt` 方法会直接将 Call 提交给 CallAdapter，由其去实现这种转换过程
 
 ```java
 abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
@@ -419,7 +417,7 @@ static final class CallAdapted<ResponseT, ReturnT> extends HttpServiceMethod<Res
 
 ### 六、OkHttpCall
 
-OkHttpCall 是实际发起 OkHttp 请求的地方。当我们调用 `fun getUserData(): Call<ResponseBody>` 方法时，返回的 Call 对象实际上是 OkHttpCall 类型，而当我们调用 `call.enqueue(Callback)`方法时，`enqueue` 方法中会发起一个 OkHttp 请求，传入的 Callback 对象就会由 `okhttp3.Callback`本身收到回调时再进行中转调用
+OkHttpCall 是实际发起 OkHttp 请求的地方。当我们调用 `fun getUserData(): Call<ResponseBody>` 方法时，返回的 Call 对象实际上是 OkHttpCall 类型，而当我们调用 `call.enqueue(Callback)`方法时，`enqueue` 方法就会发起一个 OkHttp 请求，传入的 `retrofit2.Callback` 对象就会由 `okhttp3.Callback`本身收到回调时再进行中转调用
 
 ```java
 final class OkHttpCall<T> implements Call<T> {
@@ -489,161 +487,11 @@ final class OkHttpCall<T> implements Call<T> {
 
 以上几个小节的内容讲了在发起如下请求的过程中涉及到的所有流程，但单纯这样看的话其实有点难把握各个小点，我自己看着都有点绕，所以这里就再来回顾下以上内容，把所有知识点给串联起来
 
-```kotlin
-/**
- * 作者：leavesC
- * 时间：2020/10/13 0:05
- * 描述：
- * GitHub：https://github.com/leavesC
- */
-interface ApiService {
-
-    @GET("getUserData")
-    fun getUserData(): Call<ResponseBody>
-
-}
-
-fun main() {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://mockapi.eolinker.com/9IiwI82f58c23411240ed608ceca204b2f185014507cbe3/")
-        .build()
-    val service = retrofit.create(ApiService::class.java)
-    val call: Call<ResponseBody> = service.getUserData()
-    call.enqueue(object : Callback<ResponseBody> {
-        override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
-            val userBean = response.body()?.string()
-            println("userBean: $userBean")
-        }
-
-        override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
-            println("onFailure: $t")
-        }
-    })
-}
-```
-
-首先，我们通过 `retrofit.create(ApiService::class.java)`得到一个 ApiService 的**动态实现类**，这是通过 Java 原生提供的`Proxy.newProxyInstance` 代表的动态代理功能来实现的。在拿到 ApiService 的实现类后，我们就可以直接调用 ApiService 中声明的所有方法了
-
-而当我们调用了`service.getUserData()`方法时，Retrofit 会将每一个接口方法都抽象封装为一个 ServiceMethod 对象并缓存起来，我们的操作会转交给 ServiceMethod 来完成，由 ServiceMethod 来负责返回我们的目标类型，对应的是 `ServiceMethod.invoke(Object[] args)`方法，args 代表的是我们调用接口方法时需要传递的参数，对应本例子就是一个空数组
-
-```java
-abstract class ServiceMethod<T> {
-  static <T> ServiceMethod<T> parseAnnotations(Retrofit retrofit, Method method) {
-    //requestFactory 包含了对 API 的注解信息进行解析后的结果
-    RequestFactory requestFactory = RequestFactory.parseAnnotations(retrofit, method);
-
-    Type returnType = method.getGenericReturnType();
-    //如果返回值包含未确定的泛型类型或者是包含通配符的话，那么就抛出异常
-    //因为 Retrofit 无法构造出一个不具有确定类型的对象作为返回值
-    if (Utils.hasUnresolvableType(returnType)) {
-      throw methodError(
-          method,
-          "Method return type must not include a type variable or wildcard: %s",
-          returnType);
-    }
-    //返回值类型不能是 void
-    if (returnType == void.class) {
-      throw methodError(method, "Service methods cannot return void.");
-    }
-	
-    //重点
-    return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
-  }
-
-  abstract @Nullable T invoke(Object[] args);
-}
-```
-
-而实际上，ServiceMethod 只具有一个唯一的直接子类，即 HttpServiceMethod，而 HttpServiceMethod 会在 `invoke` 方法中构建出一个 OkHttpCall 对象，然后调用其抽象方法 `adapt`
-
-此外，对于不同的请求方式，`ServiceMethod.parseAnnotations` 方法最终会返回不同的 HttpServiceMethod 子类。对应本例子，最终返回的会是 CallAdapted 对象
-
-```java
-abstract class HttpServiceMethod<ResponseT, ReturnT> extends ServiceMethod<ReturnT> {
- 
-  @Override
-  final @Nullable ReturnT invoke(Object[] args) {
-    Call<ResponseT> call = new OkHttpCall<>(requestFactory, args, callFactory, responseConverter);
-    return adapt(call, args);
-  }
-
-  protected abstract @Nullable ReturnT adapt(Call<ResponseT> call, Object[] args);
-    
-  ···
-
-}
-
-static final class CallAdapted<ResponseT, ReturnT> extends HttpServiceMethod<ResponseT, ReturnT> {
-    private final CallAdapter<ResponseT, ReturnT> callAdapter;
-
-    CallAdapted(
-        RequestFactory requestFactory,
-        okhttp3.Call.Factory callFactory,
-        Converter<ResponseBody, ResponseT> responseConverter,
-        CallAdapter<ResponseT, ReturnT> callAdapter) {
-      super(requestFactory, callFactory, responseConverter);
-      this.callAdapter = callAdapter;
-    }
-
-    @Override
-    protected ReturnT adapt(Call<ResponseT> call, Object[] args) {
-      return callAdapter.adapt(call);
-    }
-  }
-```
-
-所以，当我们调用 `val call: Call<ResponseBody> = service.getUserData()`时，返回的 `Call<ResponseBody>`实际上是 `OkHttpCall<ResponseBody>`
-
-而当我们调用 `call.enqueue`方法时，OkHttpCall 的 `enqueue` 方法内部就会发起一个 OkHttp 请求，并为这个请求设置一个回调对象 `okhttp3.Callback`，然后在这个回调中再来回调我们传递进去的 `retrofit2.Callback`。这样，外部也就可以收到网络请求成功或者失败的事件回调了
-
-```java
-final class OkHttpCall<T> implements Call<T> {
-
-  @Override
-  public void enqueue(final Callback<T> callback) { 
-    ···
-    okhttp3.Call call;
-    ··· 
-    call.enqueue( new okhttp3.Callback() {
-          @Override
-          public void onResponse(okhttp3.Call call, okhttp3.Response rawResponse) {
-            Response<T> response;
-            try {
-              response = parseResponse(rawResponse);
-            } catch (Throwable e) {
-              throwIfFatal(e);
-              callFailure(e);
-              return;
-            }
-
-            try {
-              callback.onResponse(OkHttpCall.this, response);
-            } catch (Throwable t) {
-              throwIfFatal(t);
-              t.printStackTrace(); // TODO this is not great
-            }
-          }
-
-          @Override
-          public void onFailure(okhttp3.Call call, IOException e) {
-            callFailure(e);
-          }
-
-          private void callFailure(Throwable e) {
-            try {
-              callback.onFailure(OkHttpCall.this, e);
-            } catch (Throwable t) {
-              throwIfFatal(t);
-              t.printStackTrace(); // TODO this is not great
-            }
-          }
-        });
-  }
- 
-   ···
-    
-}
-```
+- 首先，我们通过 `retrofit.create(ApiService::class.java)`得到一个 ApiService 的**动态实现类**，这是通过 Java 原生提供的`Proxy.newProxyInstance` 代表的动态代理功能来实现的。在拿到 ApiService 的实现类后，我们就可以直接调用 ApiService 中声明的所有方法了
+- 当我们调用了`service.getUserData()`方法时，Retrofit 会将每一个接口方法都抽象封装为一个 ServiceMethod 对象并缓存起来，我们的操作会转交给 ServiceMethod 来完成，由 ServiceMethod 来负责返回我们的目标类型，对应的是 `serviceMethod.invoke(Object[] args)`方法，args 代表的是我们调用接口方法时需要传递的参数，对应本例子就是一个空数组
+- ServiceMethod 使用到了**工厂模式**，由于网络请求最终的请求方式可能是多样化的，既可能是通过线程池来执行，也可能是通过 Kotlin 协程来执行，使用工厂模式的意义就在于可以将这种差异都隐藏在不同的 ServiceMethod 实现类中，而外部统一都是通过 `parseAnnotations` 方法来获取 ServiceMethod 的实现类
+- ServiceMethod 具有一个唯一的直接子类，即 HttpServiceMethod。HttpServiceMethod 自身已经找到了可以将 Call 转换为 Observable，ResponseBody 转换为 UserBean 的转换器，其`invoke`方法会构建出一个 OkHttpCall 对象，然后转发给抽象方法`adapt`，由`adapt`来发起实际的网络请求
+- 而不管外部的接口方法返回值类型是不是 `Observable<UserBean>`，最终的网络请求都是需要通过 OkHttpCall 来发起，HttpServiceMethod 依靠找到的转换器将 OkHttpCall 给隐藏在了内部
 
 ### 八、接口方法是如何解析的？
 
@@ -656,18 +504,7 @@ abstract class ServiceMethod<T> {
   static <T> ServiceMethod<T> parseAnnotations(Retrofit retrofit, Method method) {
     //重点
     RequestFactory requestFactory = RequestFactory.parseAnnotations(retrofit, method);
-
-    Type returnType = method.getGenericReturnType();
-    if (Utils.hasUnresolvableType(returnType)) {
-      throw methodError(
-          method,
-          "Method return type must not include a type variable or wildcard: %s",
-          returnType);
-    }
-    if (returnType == void.class) {
-      throw methodError(method, "Service methods cannot return void.");
-    }
-
+    ···
     return HttpServiceMethod.parseAnnotations(retrofit, method, requestFactory);
   }
 
@@ -677,21 +514,18 @@ abstract class ServiceMethod<T> {
 
 前文说了，Retrofit 是建立在 OkHttp 之上的一个网络请求封装库，内部依靠 OkHttp 来完成实际的网络请求。而 OkHttp 的一般请求方式如下所示
 
-```java
-OkHttpClient client = new OkHttpClient();
-
-String run(String url) throws IOException {
-  Request request = new Request.Builder()
-      .url(url)
-      .build();
-
-  try (Response response = client.newCall(request).execute()) {
-    return response.body().string();
-  }
+```kotlin
+fun run(url: String): String {
+    val request: Request = Request.Builder()
+        .url(url)
+        .build()
+    OkHttpClient().newCall(request).execute().use { response ->
+        return response.body!!.string()
+    }
 }
 ```
 
-OkHttp 需要构建一个 Request 对象来配置请求方式和请求参数，并以此来发起网络请求。所以，Retrofit 也需要一个构建 Request 对象的过程，这个过程就隐藏在 RequestFactory 中
+OkHttp 需要构建一个 Request 对象来配置请求方式和请求参数，以此来发起网络请求。所以，Retrofit 也需要一个构建 Request 对象的过程，这个过程就隐藏在 RequestFactory 中
 
 RequestFactory 采用了 Builder 模式，这里无需过多理会其构建过程，我们只要知道 RequestFactory 中包含了对 API 方法的各项解析结果即可。其 `create(Object[] args)`方法就会根据各项解析结果，最终返回一个 `okhttp3.Request` 对象
 
@@ -775,9 +609,7 @@ final class OkHttpCall<T> implements Call<T> {
 
 Retrofit 是如何将 API 的返回值映射为具体的 Bean 对象的呢？例如，ResponseBody 是如何映射为 UserBean 的呢？
 
-OkHttp 默认的接口返回值对象就是 ResponseBody，所以如果不引入`converter-gson`，我们只能将接口请求结果都定义为 ResponseBody，而不能是具体的 Bean 对象，因为 Retrofit 无法自动地完成 ResponseBody 到 UserBean 之间的转换操作，需要我们将这种转换规则告知 Retrofit
-
-这种转换规则被 Retrofit 定义为 Converter 接口，对应它的 `responseBodyConverter`方法
+OkHttp 默认的接口返回值对象是 ResponseBody，如果不引入`converter-gson`，我们只能将接口请求结果都定义为 ResponseBody，而不能是具体的 Bean 对象，因为 Retrofit 无法自动地完成 ResponseBody 到 UserBean 之间的转换操作，需要我们将这种转换规则告知 Retrofit。这种转换规则被 Retrofit 定义为 Converter 接口，对应它的 `responseBodyConverter`方法
 
 ```java
 public interface Converter<F, T> {
@@ -798,16 +630,7 @@ public interface Converter<F, T> {
 }
 ```
 
-为了能直接获取到 UserBean 对象，我们需要在构建 Retrofit 对象的时候添加 GsonConverterFactory 
-
-```kotlin
-val retrofit = Retrofit.Builder()
-        .baseUrl("https://mockapi.eolinker.com/9IiwI82f58c23411240ed608ceca204b2f185014507cbe3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-```
-
-GsonConverterFactory 会根据目标类型 type，通过 Gson 来进行反序列化出 UserBean 对象
+为了能直接获取到 UserBean 对象，我们需要在构建 Retrofit 对象的时候添加 GsonConverterFactory。GsonConverterFactory 会根据目标类型 type，通过 Gson 来进行反序列化出 UserBean 对象
 
 ```java
 public final class GsonConverterFactory extends Converter.Factory {
@@ -822,7 +645,6 @@ public final class GsonConverterFactory extends Converter.Factory {
   ···
       
 }
-
 
 final class GsonResponseBodyConverter<T> implements Converter<ResponseBody, T> {
   private final Gson gson;
@@ -936,15 +758,7 @@ public <T> Converter<ResponseBody, T> nextResponseBodyConverter(
 
 Retrofit 是如何抽象不同的接口返回值包装类的呢？例如，Call 是如何替换为 Observable 的？
 
-与上一节内容相类似，Retrofit 在默认情况下也只支持将 `retrofit2.Call` 作为接口接口的返回数据类型包装类，为了支持返回 `Observable` 类型，我们需要在构建 Retrofit 的时候添加 RxJava2CallAdapterFactory
-
-```kotlin
-val retrofit = Retrofit.Builder()
-        .baseUrl("https://mockapi.eolinker.com/9IiwI82f58c23411240ed608ceca204b2f185014507cbe3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-        .build()
-```
+与上一节内容相类似，Retrofit 在默认情况下也只支持将 `retrofit2.Call` 作为接口方法的返回值包装类，为了支持返回 `Observable` 类型，我们需要在构建 Retrofit 的时候添加 RxJava2CallAdapterFactory
 
 Retrofit 将`retrofit2.Call`转换为`Observable`的这种规则抽象为了 CallAdapter 接口
 
@@ -1105,47 +919,10 @@ final class CallExecuteObservable<T> extends Observable<Response<T>> {
 
 在默认情况下，我们从回调 Callback 中取到的最原始的返回值类型是 `Response<ResponseBody>`，而在引入了 `converter-gson` 和`adapter-rxjava2` 之后，我们可以直接拿到目标类型 UserBean
 
-```kotlin
-/**
- * 作者：leavesC
- * 时间：2020/10/22 1:11
- * 描述：
- * GitHub：https://github.com/leavesC
- */
-data class UserBean(val userName: String, val userAge: Long)
+Retrofit 为了达到这种转换效果，就要先后进行两个步骤：
 
-interface ApiService {
-
-    @GET("getUserData")
-    fun getUserData(): Observable<UserBean>
-
-}
-
-fun main() {
-    val retrofit = Retrofit.Builder()
-        .baseUrl("https://mockapi.eolinker.com/9IiwI82f58c23411240ed608ceca204b2f185014507cbe3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .addCallAdapterFactory(RxJava2CallAdapterFactory.createAsync())
-        .build()
-    val service = retrofit.create(ApiService::class.java)
-    val call: Observable<UserBean> = service.getUserData()
-    call.subscribe(object : Consumer<UserBean> {
-        override fun accept(userBean: UserBean?) {
-            println("userBean: $userBean")
-        }
-
-    }, object : Consumer<Throwable> {
-        override fun accept(t: Throwable?) {
-            println("onFailure: $t")
-        }
-    })
-}
-```
-
-那么，Retrofit 要达到这种转换效果，就要先后进行两个步骤：
-
-1. 将 `ResponseBody`转换为 `UserBean`，从而可以得到接口方法返回值 `Response<UserBean>`
-2. 将 `Call` 转换为 `Observable`，Observable 直接从 `Response<UserBean>` 中把 UserBean 取出来作为返回值来返回，从而直接得到目标类型 UserBean
+1. 将 ResponseBody 转换为 UserBean，从而可以得到接口方法返回值 `Response<UserBean>`
+2. 将 Call 转换为 Observable，Observable 直接从 `Response<UserBean>` 中把 UserBean 取出来作为返回值来返回，从而直接得到目标类型 UserBean
 
 第一个步骤即第九节所讲的内容，ResponseBody 转为 UserBean 的转换规则是通过 Converter 接口来定义的
 
@@ -1813,7 +1590,7 @@ final class DefaultCallAdapterFactory extends CallAdapter.Factory {
 
 ### 十四、动态代理模式
 
-在讲`retrofit.create`这一节内容的时候有提到动态代理。动态代理模式是 Retrofit 能够做到网络请求如此简洁方便的主要原因。有时候，对于某个既定的 interface，我们不希望直接声明并使用其实现类，而是希望实现类可以动态生成，并且提供实现 AOP 编程的机会，此时就可以通过 `Proxy.newProxyInstance`来实现这个目的
+在讲`retrofit.create`这一节内容的时候有提到**动态代理**。动态代理模式是 Retrofit 能够做到网络请求如此简洁方便的主要原因。有时候，对于某个既定的 interface，我们不希望直接声明并使用其实现类，而是希望实现类可以动态生成，并且提供实现 AOP 编程的机会，此时就可以通过 `Proxy.newProxyInstance`来实现这个目的
 
 ```kotlin
 /**

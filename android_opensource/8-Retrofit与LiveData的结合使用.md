@@ -40,7 +40,7 @@ interface ApiService {
 }
 ```
 
-我们在搭建项目的网络请求框架的时候，一个重要的设计环节就是要**避免由于网络请求结果的异步延时回调导致内存泄漏情况的发生**，所以在使用 RxJava 的时候我们往往是会搭配 RxLifecycle 来一起使用。而 Google 推出的 Jetpack 组件一个很大的亮点就是提供了生命周期安全保障的 LiveData：[从源码看 Jetpack（3）-LiveData源码解析](https://juejin.im/post/6847902222345633806)
+我们在搭建项目的网络请求框架的时候，一个重要的设计环节就是要**避免由于网络请求结果的异步延时回调导致内存泄漏情况的发生**，所以在使用 RxJava 的时候我们往往是会搭配 RxLifecycle 来一起使用。而 Google 推出的 Jetpack 组件一个很大的亮点就是提供了生命周期安全保障的 LiveData：[从源码看 Jetpack（3）-LiveData 源码解析](https://juejin.im/post/6847902222345633806)
 
 LiveData 是基于观察者模式来实现的，也完全符合我们在进行网络请求时的使用习惯。所以，本篇文章就来动手实现一个 **LiveDataCallAdapter**，即实现以下方式的网络请求回调
 
@@ -215,7 +215,7 @@ class LiveDataCallAdapterFactory private constructor() : CallAdapter.Factory() {
 }
 ```
 
-LiveDataCallAdapter 的逻辑也比较简单，如果**网络请求成功且状态码等于200**则直接返回接口值，否则就需要根据不同的失败原因构建出不同的 HttpWrapBean 对象
+LiveDataCallAdapter 的逻辑也比较简单，如果**网络请求成功且状态码等于 200 **则直接返回接口值，否则就需要根据不同的失败原因构建出不同的 HttpWrapBean 对象
 
 ```kotlin
 /**
