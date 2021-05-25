@@ -10,6 +10,7 @@
 * [Android 精讲]()
   * [聊聊 Activity 的启动模式](android_core/聊聊Activity的启动模式.md)
   * [聊聊 Bitmap 的一些知识点](android_core/聊聊Bitmap的一些知识点.md)
+  * [聊聊 Context 的一些知识点](android_core/聊聊Context的一些知识点.md)
   * [Gson 和 Kotlin data class 的避坑指南](android_core/Gson和KotlinDataClass的避坑指南.md)
   * [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717/)
   * [Coil 和 Glide 的 Bitmap 缓存复用机制](android_core/Coil和Glide的Bitmap缓存复用机制.md)
