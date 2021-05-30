@@ -1,6 +1,6 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-Context 在我们的日常开发中经常会使用到，在代码层次上指的是**一个抽象类**，在概念上指的是**上下文环境**，在功能上则起到了**访问系统服务及系统资源的作用**。Activity、Service 和 Application 都间接地继承于 Context，因此一个应用进程中包含的 Context 数量就等于 Activity 和 Service 的总个数再加一，一指的就是 Application 的数量。当然，对于那些使用到了多进程的应用来说，包含的 Application 数量也会相应变化
+Context 在我们的日常开发中经常会使用到，在代码层次上指的是**一个抽象类**，在概念上指的是**上下文环境**，在功能上则起到了**访问系统服务及系统资源的作用**。Activity、Service 和 Application 都间接地继承于 Context
 
 Context 是一个抽象类，像我们平时经常使用的 `startActivity、sendBroadcast、getSharedPreferences`等方法都是由其来定义的，Context 的大体继承关系如下图所示
 
