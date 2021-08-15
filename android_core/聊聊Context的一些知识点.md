@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 Context 在我们的日常开发中经常会使用到，在代码层次上指的是**一个抽象类**，在概念上指的是**上下文环境**，在功能上则起到了**访问系统服务及系统资源的作用**。Activity、Service 和 Application 都间接地继承于 Context
 

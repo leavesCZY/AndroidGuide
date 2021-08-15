@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 Activity 通过 Window 与 View 系统进行交互，Window 再通过 ViewRootImpl 与 DecorView（视图树的根布局） 进行交互。平时我们都是通过 `setContentView` 方法来指定 Activity 要承载的具体布局文件，布局文件中可能包含多个 ViewGroup 和 View，Activity 势必需要将所有 View 绘制到屏幕上，整个绘制流程就分为 measure、layout、draw 三大步骤。作为应用层的开发者，我们很多时候都需要通过实现自定义 View 来满足一些产品需求，这就要求我们对 View 的绘制流程有一个比较清晰的认知，本文就来介绍下这整个流程是如何流转的，希望对你有所帮助 🤣🤣
 

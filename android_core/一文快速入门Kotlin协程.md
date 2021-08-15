@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 在今年的三月份，我因为需要为项目搭建一个新的网络请求框架开始接触 Kotlin 协程。那时我司项目中同时存在着两种网络请求方式，采用的技术栈各不相同，Java、Kotlin、RxJava、LiveData 各种混搭，技术栈的不统一长远来看肯定是会造成很多不便的，所以当时就打算封装一个新的网络请求框架来作为项目的统一规范（前面的人估计也是这么想的，所以就造成了同个项目中的网络请求方式越来越多😂😂），那么就需要考虑采用什么技术栈来实现了
 
@@ -83,7 +83,7 @@ public suspend fun delay(timeMillis: Long)
 
 对于这句话我的理解是：`delay()` 函数类似于 Java 中的 `Thread.sleep()`，而之所以说 `delay()` 函数是非阻塞的，是因为它和单纯的线程休眠有着本质的区别。协程是运行于线程上的，一个线程可以运行多个（几千上万个）协程。线程的调度行为是由操作系统来管理的，而协程的调度行为是可以由开发者来指定并由编译器来实现的，协程能够细粒度地控制多个任务的执行时机和执行线程，当某个特定的线程上的所有协程被 suspend 后，该线程便可腾出资源去处理其他任务
 
-例如，当在 ThreadA 上运行的 CoroutineA 调用了`delay(1000L)`函数指定延迟一秒后再运行，ThreadA 会转而去执行 CoroutineB，等到一秒后再来继续执行 CoroutineA。所以，ThreadA 并不会因为 CoroutineA 的延时而阻塞，而是能继续去执行其它任务，所以挂起函数并不会阻塞其所在线程，这样就极大地提高线程的并发灵活度，最大化线程的利用效率。而如果是使用`Thread.sleep()`的话，线程就真的只是白白消耗 CPU 时间片而不会去执行其它任务
+例如，当在 ThreadA 上运行的 CoroutineA 调用了`delay(1000L)`函数指定延迟一秒后再运行，ThreadA 会转而去执行 CoroutineB，等到一秒后再来继续执行 CoroutineA。所以，ThreadA 并不会因为 CoroutineA 的延时而阻塞，而是能继续去执行其它任务，所以挂起函数并不会阻塞其所在线程，这样就极大地提高了线程的并发灵活度，最大化了线程的利用效率。而如果是使用`Thread.sleep()`的话，线程就只能干等着而不会去执行其它任务，降低了线程的利用效率
 
 ### 四、suspend function 的挂起与恢复
 

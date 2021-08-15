@@ -1,4 +1,4 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/36784c0d2b924b04afb5ee09eb16ca6f~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
 Bitmap 应该是很多应用中最占据内存空间的一类资源了，Bitmap 也是导致应用 OOM 的常见原因之一。例如，Pixel 手机的相机拍摄的照片最大可达 4048 * 3036 像素（1200 万像素），如果使用的位图配置为 ARGB_8888（Android 2.3 及更高版本的默认设置），将单张照片加载到内存大约需要 48MB 内存（4048 * 3036 * 4 字节），如此庞大的内存需求可能会立即耗尽应用的所有可用内存
 
@@ -41,7 +41,7 @@ dpi 决定了应用在显示 drawable 时是选择哪一个文件夹内的切图
 | -------- | ------ | ------ | ------ | ------ | ------ | ------- |
 | dpi      | 120dpi | 160dpi | 240dpi | 320dpi | 480dpi | 640dpi  |
 
-对于本文所使用的 480dpi 的模拟器来说，应用在选择图片时就会优先从 `drawable-xxhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxxhdpi -> xhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本的图片资源**
+举个例子。对于 320dpi 的设备来说，应用在选择图片时就会优先从 `drawable-xhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxhdpi -> xxxhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本，然后从中选择最接近当前屏幕密度的图片资源**
 
 ### 2、内存大小的计算公式
 
