@@ -18,6 +18,7 @@
   * [一文读懂 Handler 机制](https://juejin.cn/post/6901682664617705485)
   * [一文读懂 SharedPreferences 的缺陷及一点点思考](https://juejin.cn/post/6932277268110639112)
   * [一文读懂 Android 主流屏幕适配方案](https://juejin.cn/post/6999445137491230728)
+  * [一文读懂 Fragment 的方方面面](https://juejin.cn/post/7006970844542926855)
   * [一文读懂 Java 和 Kotlin 的泛型难点](https://juejin.cn/post/6935322686943920159)
   * [一文读懂 View 事件分发机制](https://juejin.cn/post/6931914294980411406)
   * [一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
