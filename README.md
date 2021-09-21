@@ -37,6 +37,7 @@
   * [聊聊 Context 的一些知识点](https://juejin.cn/post/6966223613057826852)
   * [两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438)
   * [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
+  * [探究 Kotlin 的隐藏性能开销与避坑指南](https://juejin.cn/post/7010367024916660237)
   * [Gson 和 Kotlin data class 的避坑指南](https://juejin.cn/post/6908391430977224718)
   * [Coil 和 Glide 的 Bitmap 缓存复用机制](https://juejin.cn/post/6956090846470995975)
 * [Jetpack 源码笔记]()
