@@ -2,26 +2,16 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
 上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 中几个开发者比较容易忽略的衍生产物，希望对你有所帮助 🤣🤣
 
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-    implementation "androidx.lifecycle:lifecycle-service:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-process:2.2.0"
+implementation "androidx.lifecycle:lifecycle-service:2.2.0"
+implementation "androidx.lifecycle:lifecycle-process:2.2.0"
 ```
 
-### 一、LifecycleService
+# 一、LifecycleService
 
 LifecycleOwner 接口用于标记其实现类具备 Lifecycle 对象，即具备生命周期。而四大组件之一的 Service 本身从被**启动/绑定**再到被**停止**，具有着类似 Activity / Fragment 从前台到退出页面之间的一系列行为，所以 Jetpack 也提供了 LifecycleService 这个 Service 的子类，用于监听 Service 的生命周期活动
 
@@ -184,7 +174,7 @@ public class ServiceLifecycleDispatcher {
 >
 > 我猜测应该是为了保证 LifecycleService 的各个生命周期回调函数能够尽快完成，系统对 Service 的生命周期函数的回调操作具有超时机制，为了避免由于外部 Observer 存在耗时操作而被阻塞住，所以就不直接回调 `handleLifecycleEvent` 方法。但是如果 Observer 存在耗时操作的话，转交给 Handler 也一样会导致 ANR，搞不太懂
 
-### 二、ProcessLifecycleOwner
+# 二、ProcessLifecycleOwner
 
 ProcessLifecycleOwner 是 `androidx.lifecycle:lifecycle-process:xxx` 库下的一个 LifecycleOwner 实现类，可用于监听整个应用的前后台变化，在一些场景下（比如消息推送时的跳转、数据埋点）是比较有用的
 
@@ -212,7 +202,7 @@ ProcessLifecycleOwner 使用到了单例模式，获取到其唯一实例后向�
 
 再来具体看下 ProcessLifecycleOwner 是如何实现的
 
-#### 1、EmptyActivityLifecycleCallbacks
+## EmptyActivityLifecycleCallbacks
 
 Application 包含一个很有用的方法：`registerActivityLifecycleCallbacks(ActivityLifecycleCallbacks)`，该方法用于向外部通知应用内所有 Activity 的生命周期回调事件通知，例如，在 Activity 的 `onCreate()` 函数被调用前（onActivityPreCreated）、被调用时（onActivityCreated）、被调用后（onActivityPostCreated）都提供了相应的监听回调
 
@@ -254,7 +244,7 @@ class EmptyActivityLifecycleCallbacks implements Application.ActivityLifecycleCa
 >
 > 需要注意的是，`onActivityPreCreated` 和 `onActivityPostCreated` 这两类函数都是 SDK 29 时新增的默认函数，在 SDK 29 之前只包含 `onActivityCreated` 这类函数，为了保证兼容性，最终用到的也只有 `onActivityCreated` 这类函数
 
-#### 2、LifecycleDispatcher
+## LifecycleDispatcher
 
 LifecycleDispatcher 的主要逻辑是用于向应用内所有 Activity 注入一个 ReportFragment，通过 ReportFragment 来辅助获取 Activity 的生命周期事件。由外部通过调用 `init(Context)` 方法来进行初始化
 
@@ -296,7 +286,7 @@ class LifecycleDispatcher {
 }
 ```
 
-#### 3、ProcessLifecycleOwner
+## ProcessLifecycleOwner
 
 ProcessLifecycleOwner 实现了 LifecycleOwner 接口，也用到了 LifecycleRegistry 作为其生命周期实现。其构造函数是私有的，通过静态常量来实现单例模式
 
@@ -545,7 +535,7 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
     }
 ```
 
-#### 4、ProcessLifecycleOwnerInitializer
+## ProcessLifecycleOwnerInitializer
 
 上文还有个小细节，就是 LifecycleDispatcher 和 ProcessLifecycleOwner 两个类都需要外部传入 Context 对象以便进行初始化，但开发者在使用时其实是不需要手动初始化的，因为这个初始化过程都被隐藏在了 ProcessLifecycleOwnerInitializer 这个 ContentProvider 内部了，Application 在启动的过程中就会自动调用其 `onCreate()`方法来完成初始化
 
@@ -584,7 +574,7 @@ public class ProcessLifecycleOwnerInitializer extends ContentProvider {
 </manifest>
 ```
 
-#### 5、总结
+## 总结
 
 - ProcessLifecycleOwner 一般是用于判断应用的前后台变化，依靠应用内所有 Activity 的生命周期变化来进行判断，所以对于那些完全无 UI 界面的应用来说使用 ProcessLifecycleOwner 是没有意义的
 - 由于 ReportFragment 本身的特性限制，ProcessLifecycleOwner 监听的只能是实现了 LifecycleOwner 接口的 Activity（例如 AppCompatActivity），直接继承于 `android.app.Activity` 的不参与判断

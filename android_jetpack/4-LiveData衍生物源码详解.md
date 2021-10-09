@@ -2,33 +2,22 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
-
 上篇文章介绍了 LiveData 的源码实现，本篇文章再来介绍下 LiveData 的一系列衍生类及衍生方法
 
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
-    implementation "androidx.lifecycle:lifecycle-livedata-core:2.2.0"
+implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+implementation "androidx.lifecycle:lifecycle-livedata-core:2.2.0"
 ```
 
-### 一、LiveData 子类
+# 一、LiveData 子类
 
 先来介绍下 LiveData 的几个子类
 
 LiveData 的 `setValue()` 和 `postValue()` 方法的访问权限都是 `protected`，因此我们在日常开发中要使用其子类才能来更新值
 
-#### 1、MutableLiveData
+## MutableLiveData
 
 MutableLiveData 的源码很简单，只是将 `setValue()` 和 `postValue()` 方法的访问权限提升为了 `public`，从而让外部可以直接调用这两个方法
 
@@ -63,14 +52,14 @@ public class MutableLiveData<T> extends LiveData<T> {
 }
 ```
 
-#### 2、MediatorLiveData
+## MediatorLiveData
 
 MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的也就一百行不到。MediatorLiveData 既可用于将其它 LiveData 作为数据源来进行监听，也可将其作为普通的 MutableLiveData 进行使用
 
-这里先来看个 MediatorLiveData 的简单用法示例。假设有一个 EditText 用于输入用户名，同时需要在界面上回显用户名的长度，此时就可以用 MediatorLiveData 将**用户名（String）**转换为我们需要的数据类型 **Int**，只要 `nameLiveData` 的数据发生变化 `nameLengthLiveData` 就能收到通知
+这里先来看个 MediatorLiveData 的简单用法示例。假设有一个 EditText 用于输入用户名，同时需要在界面上回显用户名的长度，此时就可以用 MediatorLiveData 将 **String 类型的用户名** 转换为我们需要的数据类型 **Int**，只要 `nameLiveData` 的数据发生变化 `nameLengthLiveData` 就能收到通知
 
 ```kotlin
-	/**
+    /**
      * @Author: leavesC
      * @Date: 2021/03/24 18:04
      * @Desc:
@@ -118,8 +107,8 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
         }
     }
 
-	//移除对数据源的监听行为
-	@MainThread
+    //移除对数据源的监听行为
+    @MainThread
     public <S> void removeSource(@NonNull LiveData<S> toRemote) {
         Source<?> source = mSources.remove(toRemote);
         if (source != null) {
@@ -133,7 +122,7 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
 再来看下 Source 类的定义。Source 本身也是一个 Observer，它会对外部传进来的 LiveData 进行监听，当接收到值的时候就直接回调外部传进来的 Observer，对数据进行中转转发
 
 ```java
-	 private static class Source<V> implements Observer<V> {
+    private static class Source<V> implements Observer<V> {
         final LiveData<V> mLiveData;
         final Observer<? super V> mObserver;
         int mVersion = START_VERSION;
@@ -185,11 +174,11 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
 
 以上就是 MediatorLiveData 的所有源码介绍，只要先理解了 LiveData 的内部实现原理，就可以很快明白 MediatorLiveData 的整个事件回调流程。MediatorLiveData 最为方便的一点就是允许通过多次调用 `addSource` 方法来添加多个不同的数据源，这使得我们可以将不同的数据渠道（例如：本地数据库缓存、网络请求结果等）进行汇总，最后再统一从一个出口进行分发
 
-### 二、Transformations
+# 二、Transformations
 
 Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具类型的方法类，提供了三个静态方法用于简化对 MediatorLiveData 的使用，这里再来依次介绍下
 
-#### 1、map
+## map
 
 `map(LiveData<X> , Function<X, Y>)` 方法用于简化向 MediatorLiveData 添加数据源的过程。大多数情况下，我们在使用 MediatorLiveData 时就是先将**数据源类型 X** 转换我们的**目标数据类型 Y**，然后再通过 `setValue` 方法进行数据回调。`map` 方法将这个数据类型转换过程抽象为了接口 `Function<I, O>`，将  `setValue` 过程隐藏在了 `map` 方法内部
 
@@ -242,7 +231,7 @@ Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具
     })
 ```
 
-#### 2、switchMap
+## switchMap
 
 `switchMap` 方法的逻辑相对来说会比较绕，在某些逻辑计算结果是通过 LiveData 来进行传递的情况下（比如 Room 数据库就支持将查询结果以 LiveData 的形式来返回）会比较有用。下面通过假设一个现实需求来理解其作用会更为简单
 
@@ -279,7 +268,7 @@ Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具
 理解了以上的需求后，再来看 `switchMap` 的实现逻辑就会简单许多，`switchMap` 也只是将对数据源的监听行为以及数据的变换过程给封装了起来而已，在某些特殊情况下（指结果以 LiveData 的形式来返回）多多少少也为开发者节省了代码量
 
 ```java
-	@MainThread
+    @MainThread
     @NonNull
     public static <X, Y> LiveData<Y> switchMap(
             @NonNull LiveData<X> source,
@@ -323,7 +312,7 @@ Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具
     }
 ```
 
-#### 3、distinctUntilChanged
+## distinctUntilChanged
 
 `distinctUntilChanged()` 方法用于过滤掉连续重复的回调值，只有本次的回调结果和上次不一致，本次的回调值才被认为是有效的
 
@@ -356,7 +345,7 @@ Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具
     }
 ```
 
-### 三、ComputableLiveData
+# 三、ComputableLiveData
 
 ComputableLiveData 是 `lifecycle-livedata` 这个依赖库下的类，虽然命名上带有 LiveData，但实际上并没有直接继承于任何类和接口。ComputableLiveData 可以说是提供了一种更加安全地执行耗时任务的思路，其特点是：带有生命周期监听、响应式的触发耗时任务、以 LiveData 作为中介获取任务执行结果
 
@@ -450,7 +439,7 @@ ComputableLiveData 有两个构造方法，主要是开放了由外部传入线�
 耗时任务的执行是放在 `mRefreshRunnable` 内部，通过两个 AtomicBoolean 变量来标记 `compute()`的执行状态，并将任务体放在 while 循环内部，在任务过时的时候自动重新执行
 
 ```java
-	@VisibleForTesting
+    @VisibleForTesting
     final Runnable mRefreshRunnable = new Runnable() {
         @WorkerThread
         @Override

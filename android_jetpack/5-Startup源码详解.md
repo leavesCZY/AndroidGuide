@@ -2,25 +2,15 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
 最近，Google Jetpack 官网上新增了一个名为 [Startup](https://developer.android.com/topic/libraries/app-startup) 的组件。根据官方文档的介绍，Startup 提供了一种直接高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
 
 本文内容均基于 Startup 当前最新的 alpha 版本：
 
 ```java
-    implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
+implementation "androidx.startup:startup-runtime:1.0.0-alpha01"
 ```
 
-### 一、Startup 的意义
+# 一、Startup 的意义
 
 Startup 允许 Library 开发者和 App 开发者共享同一个 ContentProvider 来完成各自的初始化逻辑，并支持设置组件之间的初始化先后顺序，避免为每个需要初始化的组件都单独定义一个 ContentProvider，从而大大缩短应用的启动时间
 
@@ -28,7 +18,7 @@ Startup 允许 Library 开发者和 App 开发者共享同一个 ContentProvider
 
 因此，Startup 的存在无疑是可以为很多依赖项（应用自身的组件和第三方组件）提供一个统一的初始化入口，当然这也需要等到 Startup 发布 release 版本并被大多数三方依赖组件采用之后了
 
-### 二、如何使用
+# 二、如何使用
 
 假设我们的项目中一共有三个 Library 需要进行初始化。当中，Library A 依赖于 Library B，Library B 依赖于 Library C，Library C 不需要其它依赖项，则此时可以分别为三个 Library 建立三个 `Initializer` 实现类
 
@@ -77,7 +67,7 @@ Initializer 是 Startup 提供的用于声明初始化逻辑和初始化顺序�
 
 Startup 提供了两种初始化方法，分别是自动初始化和手动初始化（延迟初始化）
 
-#### 1、自动初始化
+## 自动初始化
 
 在 AndroidManifest 文件中对 Startup 提供的 `InitializationProvider` 进行声明，并且用 meta-data 标签声明 Initializer 实现类的包名路径，value 必须是 `androidx.startup`。在这里我们只需要声明 InitializerA 即可，因为 InitializerB 和 InitializerC 均可以通过 InitializerA 的 `dependencies()`方法的返回值链式定位到
 
@@ -95,7 +85,7 @@ Startup 提供了两种初始化方法，分别是自动初始化和手动初始
 
 只要完成以上步骤，当应用启动时，Startup 就会自动按照我们规定的顺序依次进行初始化。需要注意的是，如果 Initializer 之间不存在依赖关系，且都希望由 InitializationProvider 为我们自动初始化的话，此时所有的 Initializer 就必须都进行显式声明，且 Initializer 的初始化顺序会和在 provider 中的声明顺序保持一致
 
-#### 2、手动初始化
+## 手动初始化
 
 大部分情况下自动初始化的方式都能满足我们的要求，但在某些情况下并不适用，例如：组件的初始化成本（性能消耗或者时间消耗）较高且该组件最终未必会使用到，此时就可以将之改为在使用到的时候再来对其进行初始化了，即懒加载组件
 
@@ -109,9 +99,9 @@ val result = AppInitializer.getInstance(this).initializeComponent(InitializerA::
 
 如果应用内的所有 Initializer 都不需要进行自动初始化的话，也可以不在 AndroidManifest 中声明 InitializationProvider 
 
-### 三、注意事项
+# 三、注意事项
 
-#### 1、移除 Initializer 
+## 移除 Initializer 
 
 假设我们在项目中引入的某个第三方依赖库自身使用到了 Startup 进行自动初始化，我们希望将之改为懒加载的方式，但我们无法直接修改第三方依赖库的 AndroidManifest 文件，此时就可以通过 AndroidManifest 的合并规则来移除指定的 Initializer 
 
@@ -130,7 +120,7 @@ val result = AppInitializer.getInstance(this).initializeComponent(InitializerA::
         </provider>
 ```
 
-#### 2、禁止自动初始化
+## 禁止自动初始化
 
 如果希望禁止 Startup 的所有自动初始化逻辑，但又不希望通过直接删除 provider 声明来实现的话，那么可以通过如上所述的方法来实现此目的
 
@@ -141,7 +131,7 @@ val result = AppInitializer.getInstance(this).initializeComponent(InitializerA::
     tools:node="remove" />
 ```
 
-#### 3、Lint 检查
+## Lint 检查
 
 Startup 包含一组 Lint 规则，可用于检查是否已正确定义了组件的初始化程序，可以通过运行 `./gradlew :app:lintDebug` 来执行检查规则
 
@@ -156,11 +146,11 @@ eInitializerMetadata]
   ^
 ```
 
-### 四、源码解析
+# 四、源码解析
 
 Startup 整个依赖库仅包含五个 Java 文件，整体逻辑比较简单，这里依次介绍下每个文件的作用
 
-#### 1、StartupLogger
+## StartupLogger
 
 StartupLogger 是一个日志工具类，用于向控制台输出日志
 
@@ -202,7 +192,7 @@ public final class StartupLogger {
 }
 ```
 
-#### 2、StartupException
+## StartupException
 
 StartupException 是一个自定义的 RuntimeException 子类，当 Startup 在初始化过程中遇到意外之外的情况时（例如，Initializer 存在循环依赖、Initializer 反射失败等情况），就会抛出 StartupException
 
@@ -222,7 +212,7 @@ public final class StartupException extends RuntimeException {
 }
 ```
 
-#### 3、Initializer
+## Initializer
 
 Initiaizer 是 Startup 提供的用于声明初始化逻辑和初始化顺序的接口，在 `create(context: Context)`方法中完成初始化过程并返回结果值，在`dependencies()`中指定初始化此 Initializer 前需要先初始化的其它 Initializer 
 
@@ -249,7 +239,7 @@ public interface Initializer<T> {
 }
 ```
 
-#### 4、InitializationProvider
+## InitializationProvider
 
 InitializationProvider 就是需要我们主动声明在 AndroidManifest 文件中的 ContentProvider，Startup 的整个初始化逻辑都是在这里进行统一触发的
 
@@ -310,7 +300,7 @@ public final class InitializationProvider extends ContentProvider {
 }
 ```
 
-#### 5、AppInitializer
+## AppInitializer
 
 AppInitializer 是 Startup 整个库的核心重点，整体代码量不足两百行，AppInitializer 的整体流程是：
 
@@ -497,7 +487,7 @@ public final class AppInitializer {
     }
 ```
 
-### 五、不足点
+# 五、不足点
 
 Startup 的优点我在上边已经列举了，最后再来列举下它的几个不足点
 

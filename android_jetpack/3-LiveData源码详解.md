@@ -2,16 +2,6 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
 LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到其身影。LiveData 可以和生命周期绑定，当 Activity 和 Fragment 处于活跃状态时才进行数据回调，并在 Lifecycle 处于销毁状态（DESTROYED）时自动移除数据监听行为，从而避免了常见的内存泄露和 NPE 问题
 
 本文就来介绍下 LiveData 的内部实现源码，让读者能了解其实现原理和以下几点比较容易忽略的重要特性：
@@ -24,10 +14,10 @@ LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到�
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
 
 ```groovy
-    implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
+implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"
 ```
 
-### 一、LiveData
+# 一、LiveData
 
 LiveData 包含两个用于添加 Observer 的方法：
 
@@ -36,7 +26,7 @@ LiveData 包含两个用于添加 Observer 的方法：
 
 两个方法的区别只在于是否提供了生命周期安全的保障
 
-#### 1、observe
+## observe
 
 `observe(LifecycleOwner , Observer)` 方法传入的 LifecycleOwner 参数意味着携带了 Lifecycle 对象，LiveData 内部会判断 Lifecycle 是否处于活跃状态，是的话才会进行数据回调，在 Lifecycle 对象处于 DESTROYED 状态时也会自动移除 Observer，这是 LiveData 避免内存泄漏的重要基础
 
@@ -75,7 +65,7 @@ LiveData 包含两个用于添加 Observer 的方法：
 上面的代码使用到了 LifecycleBoundObserver，它是抽象类 ObserverWrapper 的实现类。ObserverWrapper 用于包装外部传进来的 Observer 对象，为子类定义好特定的抽象方法和共用逻辑，主要是提供了共用的状态分发方法
 
 ```java
-	private abstract class ObserverWrapper {
+    private abstract class ObserverWrapper {
     	
     	//外部传进来的对 LiveData 进行数据监听的 Observer
         final Observer<? super T> mObserver;
@@ -183,7 +173,7 @@ LifecycleBoundObserver 也实现了 LifecycleEventObserver 接口，从而可以
     }
 ```
 
-#### 2、observeForever
+## observeForever
 
 `observeForever` 方法则不会考虑外部所处的生命周期状态，只要数据发生变化了就会进行数据回调，因此该方法是非生命周期安全的
 
@@ -226,7 +216,7 @@ LifecycleBoundObserver 也实现了 LifecycleEventObserver 接口，从而可以
     }
 ```
 
-#### 3、removeObserver
+## removeObserver
 
 LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `removeObserver` 的方法
 
@@ -256,14 +246,14 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
     }
 ```
 
-### 二、更新值
+# 二、更新值
 
 更新 LiveData 值的方法一共有两个，分别是：
 
 - setValue(T value)
 - postValue(T value)
 
-#### 1、setValue
+## setValue
 
 `setValue` 方法被限定在只能主线程进行调用
 
@@ -272,7 +262,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
 
     private int mVersion;
 
-	@MainThread
+    @MainThread
     protected void setValue(T value) {
         assertMainThread("setValue");
     	//更新当前 value 的版本号，即 value 的新旧程度
@@ -286,15 +276,15 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
 
 ```java
     //用于标记当前是否正处于向 mObservers 发布 value 的过程
-	private boolean mDispatchingValue;
-	//用于标记当前正在发布的 value 是否已经失效
-	//在 value 还未向所有 Observer 发布完成的时候，新 value 已经到来，此时旧 value 就是处于失效状态
+    private boolean mDispatchingValue;
+    //用于标记当前正在发布的 value 是否已经失效
+    //在 value 还未向所有 Observer 发布完成的时候，新 value 已经到来，此时旧 value 就是处于失效状态
     @SuppressWarnings("FieldCanBeLocal")
     private boolean mDispatchInvalidated;
 	
-	//initiator 为 null 则说明需要遍历回调整个 mObservers
-	//initiator 不为 null 则说明仅回调 initiator 本身
-	@SuppressWarnings("WeakerAccess") /* synthetic access */
+    //initiator 为 null 则说明需要遍历回调整个 mObservers
+    //initiator 不为 null 则说明仅回调 initiator 本身
+    @SuppressWarnings("WeakerAccess") /* synthetic access */
     void dispatchingValue(@Nullable ObserverWrapper initiator) {
         if (mDispatchingValue) {
             //如果 mDispatchingValue 为 true，说明当前正处于向 mObservers 发布 mData 的过程中
@@ -334,11 +324,6 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
         if (!observer.mActive) {
             return;
         }
-        // Check latest state b4 dispatch. Maybe it changed state but we didn't get the event yet.
-        //
-        // we still first check observer.active to keep it as the entrance for events. So even if
-        // the observer moved to an active state, if we've not received that event, we better not
-        // notify for a more predictable notification order.
         //此处判断主要是为了照顾 LifecycleBoundObserver
         //由于 Lifecycle 有可能状态值 State 已经切换到了非活跃状态，但 LifecycleBoundObserver 还未收到事件通知
         //所以为了避免意外情况，此处主动检查 observer 的活跃状态并判断是否需要更新其活跃状态
@@ -356,7 +341,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
     }
 ```
 
-#### 2、postValue
+## postValue
 
 `postValue` 方法不限定调用者所在线程，不管是主线程还是子线程都可以调用，因此是存在多线程竞争的可能性的，`postValue` 方法的重点就在于需要理解其从子线程切换到主线程之间的状态变化
 
@@ -410,7 +395,7 @@ LiveData 开放了两个方法用于添加 Observer ，那么自然会有 `remov
     }
 ```
 
-### 三、判断是否是新值
+# 三、判断是否是新值
 
 再来介绍下 LiveData 是如何判断是否需要向 Observer 回调值的。之所以需要进行这个判断而不能每次接收到新值时都直接进行回调，这是基于以下两个原因的：
 
@@ -464,11 +449,6 @@ LiveData 在其构造方法内部就开始了新旧值的记录，主要是根�
         if (!observer.mActive) {
             return;
         }
-        // Check latest state b4 dispatch. Maybe it changed state but we didn't get the event yet.
-        //
-        // we still first check observer.active to keep it as the entrance for events. So even if
-        // the observer moved to an active state, if we've not received that event, we better not
-        // notify for a more predictable notification order.
         //此处判断主要是为了照顾 LifecycleBoundObserver
         //由于 Lifecycle 有可能状态值 State 已经切换到了非活跃状态，但 LifecycleBoundObserver 还未收到事件通知
         //所以为了避免意外情况，此处主动检查 observer 的活跃状态并判断是否需要更新其活跃状态
@@ -486,7 +466,7 @@ LiveData 在其构造方法内部就开始了新旧值的记录，主要是根�
     }
 ```
 
-### 四、改进 LiveData
+# 四、改进 LiveData
 
 LiveData 只会在 LifecycleOwner 处于活跃状态的时候才进行事件分发，这是 LiveData 的优点， 但同时也会给我们带来一些使用上的困扰，我通过复刻 LiveData 的源码对其进行了自定义，更多详情请看：[Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
 

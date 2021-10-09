@@ -2,16 +2,6 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
 在两个多月前我开始写 **从源码看 Jetpack** 系列文章，从源码角度介绍了 Jetpack 多个组件的实现原理，写了一半就停笔去写 **Java 多线程编程** 的文章去了，本篇文章就再来补上 ViewModel 这一个最为基础也最为开发者熟悉的组件
 
 本文所讲的源码基于以下依赖库当前最新的 release 版本：
@@ -23,7 +13,11 @@ implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
 implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0"
 ```
 
-ViewModel 基本是按照如下方式来进行初始化和使用的。ViewModelStoreOwner（Activity/Fragment）通过 ViewModelProvider 来得到一个 ViewModel 实例，并通过和 LifecycleOwner 绑定的方式来监听 LiveData 中数据的变化从而做出各种响应。当 Activity 由于意外情况被销毁重建时，Activity 依然能拿到同个 ViewModel 实例，并依靠之前已经保存的数据来进行状态还原，这也是 ViewModel 最大的特点和优势
+ViewModel 基本是按照如下方式来进行初始化和使用的：
+
+- ViewModelStoreOwner（Activity/Fragment）通过 ViewModelProvider 来得到一个 ViewModel 实例
+- 通过和 LifecycleOwner 绑定的方式来监听 LiveData 数据的变化从而做出各种响应
+- 当 Activity 由于意外情况被销毁重建时，Activity 依然能拿到同个 ViewModel 实例，并依靠之前已经保存的数据来进行状态还原，这也是 ViewModel 最大的特点和优势
 
 ```kotlin
 /**
@@ -63,14 +57,14 @@ class MyViewModel : ViewModel() {
 
 下面就通过提问的方式来拆解 ViewModel 的各个知识点，一步步介绍其实现逻辑
 
-### 一、如何初始化
+# 一、如何初始化
 
 在上面的例子中，我们并没有看到 ViewModel 是如何进行初始化的，也没有手动调用 ViewModel 的构造函数来创建 ViewModel 实例，这是因为这个操作都隐藏在了 ViewModelProvider 内部，由 ViewModelProvider 自己来通过反射构建出 ViewModel 实例
 
 ViewModelProvider 一共包含三个构造函数，可以看到，不管是哪种方式，最终都是要拿到两个构造参数：ViewModelStore 和 Factory，且都不能为 null
 
 ```java
-	private final Factory mFactory;
+    private final Factory mFactory;
 
     private final ViewModelStore mViewModelStore;
 
@@ -100,7 +94,7 @@ Factory 是 ViewModelProvider 的内部接口，用于实现初始化 ViewModel 
         <T extends ViewModel> T create(@NonNull Class<T> modelClass);
     }
 
-	public static class NewInstanceFactory implements Factory {
+    public static class NewInstanceFactory implements Factory {
 
         private static NewInstanceFactory sInstance;
 
@@ -135,7 +129,7 @@ ComponentActivity 的 `getDefaultViewModelProviderFactory()` 方法返回的是 
 ```java
     private ViewModelProvider.Factory mDefaultFactory;
 
-	@NonNull
+    @NonNull
     @Override
     public ViewModelProvider.Factory getDefaultViewModelProviderFactory() {
         if (getApplication() == null) {
@@ -196,7 +190,7 @@ ComponentActivity 的 `getDefaultViewModelProviderFactory()` 方法返回的是 
     }
 ```
 
-### 二、如何保持不变
+# 二、如何保持不变
 
 Activity 每次获取 ViewModel 实例都会先尝试从 `mViewModelStore` 中取值，只有在取不到值的时候才会去重新构建一个新的 ViewModel 实例，且构建后的 ViewModel 实例也会被保存在`mViewModelStore` 中。那既然 Activity 可以在页面销毁重建的情况下获取到之前的 ViewModel 实例，那么不也就间接说明了在这种情况下 ViewModelStore 也是一直被保留着而没有被回收吗？
 
@@ -323,7 +317,7 @@ NonConfigurationInstances 是 ComponentActivity 的一个静态内部类，其�
 通过查找方法引用，可以知道 `onRetainNonConfigurationInstance()` 又是被父类 `android.app.Activity` 的以下方法所调用，由父类去负责保留 NonConfigurationInstances 对象
 
 ```java
-	NonConfigurationInstances retainNonConfigurationInstances() {
+    NonConfigurationInstances retainNonConfigurationInstances() {
         //拿到子类需要保存的数据
         Object activity = onRetainNonConfigurationInstance();
         
@@ -430,7 +424,7 @@ NonConfigurationInstances 是 ComponentActivity 的一个静态内部类，其�
     }
 ```
 
-### 三、如何调用构造函数
+# 三、如何调用构造函数
 
 ViewModelProvider 提供的 Factory 接口实现类有两个：
 
@@ -576,7 +570,7 @@ E/myViewModelA: github.leavesc.demo.MyViewModel@e24ac80 age: 10
 E/myViewModelB: github.leavesc.demo.MyViewModel@9abd6fe age: 20
 ```
 
-### 四、什么时候回收
+# 四、什么时候回收
 
 要知道 ViewModel 是在何时回收的，那么就只要看 ViewModelStore 是在什么时候清空 HashMap 就可以了
 
@@ -622,7 +616,7 @@ public class ViewModelStore {
 }
 ```
 
-### 五、初始化陷阱
+# 五、初始化陷阱
 
 看以下代码，观察当应用启动时日志的输出结果
 

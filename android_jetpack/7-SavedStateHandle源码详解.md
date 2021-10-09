@@ -2,24 +2,14 @@
 
 > 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
 
-系列文章导航
-
-- [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-- [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-- [从源码看 Jetpack（3）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-- [从源码看 Jetpack（4）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-- [从源码看 Jetpack（5）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-- [从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-- [从源码看 Jetpack（7）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
-
 本文所讲的源码基于以下依赖库当前的最新版本：
 
 ```groovy
-    compileSdkVersion 30
+compileSdkVersion 30
 
-    implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
-    implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
-    implementation "androidx.savedstate:savedstate:1.1.0"
+implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
+implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
+implementation "androidx.savedstate:savedstate:1.1.0"
 ```
 
 我们知道，Activity 意外销毁的情况可以分为两种：
@@ -42,7 +32,7 @@ Google 官方也对这两种情况进行了对比：
 
 为了解决这个问题，Jetpack 提供了 SavedStateHandle 这么一个组件，可以看做是对 ViewModel 的功能扩展，使得开发者可以直接在 ViewModel 中直接操作整个数据的重建过程
 
-### 一、使用示例
+# 一、使用示例
 
 SavedStateHandle 的引入使得开发者无需直接使用 `onSaveInstanceState(Bundle)` 等方法来完成数据的保存和重建，而只需要在 ViewModel 里来完成即可
 
@@ -132,7 +122,7 @@ SavedStateHandle 整个数据重建流程主要涉及以下几个类和接口：
 
 下面就来详细介绍下其内部具体的实现原理
 
-### 二、SavedStateRegistryOwner
+# 二、SavedStateRegistryOwner
 
 SavedStateRegistryOwner 是一个接口，用于标记其实现类（Activity/Fragment）拥有着数据重建的能力。`androidx.activity.ComponentActivity` 和`androidx.fragment.app.Fragment`就继承了 SavedStateRegistryOwner 接口，相当于所有子类都拥有一个 SavedStateRegistry 对象
 
@@ -143,7 +133,7 @@ public interface SavedStateRegistryOwner extends LifecycleOwner {
 }
 ```
 
-### 三、SavedStateRegistryController
+# 三、SavedStateRegistryController
 
 ComponentActivity 将数据的**保存和恢复**逻辑都转发给了 SavedStateRegistryController 来处理，在 `onSaveInstanceState` 方法里通过调用 `performSave` 方法来保存数据，在 `onCreate` 方法里通过调用 `performRestore` 方法来恢复数据
 
@@ -231,9 +221,9 @@ public final class SavedStateRegistryController {
 }
 ```
 
-### 四、SavedStateRegistry
+# 四、SavedStateRegistry
 
-#### 1、拿数据的入口
+## 拿数据的入口
 
 SavedStateRegistry 是实际进行保存和恢复数据的地方，那么很自然地，SavedStateRegistry 就需要有一个入口可以从外部（例如，ViewModel ）取数据，这个入口就是 `registerSavedStateProvider` 方法
 
@@ -259,7 +249,7 @@ SavedStateRegistry 是实际进行保存和恢复数据的地方，那么很自�
     }
 ```
 
-#### 2、保存数据
+## 保存数据
 
 既然已经指定了拿数据的入口，那么就来看下 `performSave` 方法是如何保存数据的，其主要逻辑是：
 
@@ -292,7 +282,7 @@ SavedStateRegistry 是实际进行保存和恢复数据的地方，那么很自�
     }
 ```
 
-#### 3、恢复数据
+## 恢复数据
 
 再来看下 `performRestore` 是如何恢复数据的，其主要逻辑是：
 
@@ -334,7 +324,7 @@ SavedStateRegistry 是实际进行保存和恢复数据的地方，那么很自�
     }
 ```
 
-#### 4、消费数据
+## 消费数据
 
 数据被恢复了并不意味着 Activity 已经恢复到了被销毁前的状态，被恢复的数据还存在 Bundle 里，此时还需要开发者通过取**键值对**的方式来消费数据，将**用户数据或者 UI 状态**恢复到销毁前的状态
 
@@ -360,11 +350,11 @@ SavedStateRegistry 是实际进行保存和恢复数据的地方，那么很自�
     }
 ```
 
-#### 5、联系
+## 联系
 
 可以看到，SavedStateRegistry 已经代理了 Activity 的 `onCreate(Bundle)` 和`onSaveInstanceState(Bundle)`这两个方法，已经串联起了整个流程，后面我们只需要看是谁向 SavedStateRegistry 提供了数据，又是被谁消费了数据即可，即主要就看是谁调用了 `registerSavedStateProvider` 和 `consumeRestoredStateForKey` 这两个方法
 
-### 五、SavedStateHandle
+# 五、SavedStateHandle
 
 SavedStateHandle 包含两个构造函数，`initialState` 中保存的即是 Activity 重建时保留下来的的键值对数据，`mRegular` 中保存的即是最终要持久化保存的键值对数据。在最开始展示的例子里，SavedStateHandle 是作为 ViewModel 的构造参数而存在的，而我们自己并没有来显式调用其构造函数，SavedStateHandle 的初始化都交由组件内部来自动完成了。如果最终调用的是有参构造函数，则代表着此次初始化是 Activity 被销毁重建的情况，如果调用的是无参构造函数，则代表着此次初始化是 Activity 全新启动的情况
 
@@ -527,7 +517,7 @@ SavedStateHandle 也提供了另外一种声明需要缓存的键值对数据的
     }
 ```
 
-### 六、关联上
+# 六、关联上
 
 这里来做个小小的总结
 
