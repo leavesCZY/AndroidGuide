@@ -37,9 +37,14 @@ dpi 是一个很重要的值，指的是在系统软件上指定的单位尺寸�
 
 dpi 决定了应用在显示 drawable 时是选择哪一个文件夹内的切图。每个 drawable 文件夹都对应不同的 dpi 大小，Android 系统会自动根据当前手机的实际 dpi 大小从合适的 drawable 文件夹内选取图片，不同的后缀名对应的 dpi 大小就如以下表格所示。**如果 drawable 文件夹名不带后缀，那么该文件夹就对应 160dpi**
 
-| drawable | ldpi   | mdpi   | hdpi   | xhdpi  | xxhdpi | xxxhdpi |
-| -------- | ------ | ------ | ------ | ------ | ------ | ------- |
-| dpi      | 120dpi | 160dpi | 240dpi | 320dpi | 480dpi | 640dpi  |
+| drawable | dpi     |
+| -------- | ------- |
+| ldpi     | 120 dpi |
+| mdpi     | 160 dpi |
+| hdpi     | 240 dpi |
+| xhdpi    | 320 dpi |
+| xxhdpi   | 480 dpi |
+| xxxhdpi  | 640 dpi |
 
 举个例子。对于 320dpi 的设备来说，应用在选择图片时就会优先从 `drawable-xhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxhdpi -> xxxhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本，然后从中选择最接近当前屏幕密度的图片资源**
 
@@ -144,7 +149,7 @@ BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile�
     }
 ```
 
-### 6、Bitmap.Config
+### 6、BitmapConfig
 
 Bitmap.Config 定义了四种常见的编码格式，分别是：
 

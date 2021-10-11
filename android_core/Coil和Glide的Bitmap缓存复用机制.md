@@ -46,7 +46,7 @@ implementation "com.github.bumptech.glide:glide:4.12.0"
 implementation "io.coil-kt:coil:1.2.0"
 ```
 
-### 一、BitmapPool 
+# 一、BitmapPool 
 
 JDK 中的 ThreadPoolExecutor 相信大多数开发者都很熟悉，我们一般将之称为“线程池”。**池化**是一个很常见的概念，其目的都是为了实现对象复用，例如 ThreadPoolExecutor 就实现了线程的复用机制
 
@@ -105,7 +105,7 @@ public final class Message implements Parcelable {
 
 相对应的，BitmapPool 就是为了实现 Bitmap 的复用，目前所有流行的图片加载框架都需要使用到 BitmapPool 来减少内存消耗。而 Bitmap 应该是很多应用中最占据内存空间的一类资源了，也是导致应用 OOM 的常见原因之一，BitmapPool 对于应用来说是提升性能的一种很重要的手段
 
-### 二、Bitmap 的回收与复用
+# 二、Bitmap 的回收与复用
 
 根据 Google 官方的介绍：[管理位图内存](https://developer.android.google.cn/topic/performance/graphics/manage-memory#kotlin)  我们可以采取一些措施来促进 Bitmap 垃圾回收和复用，但具体的的策略需要取决于系统版本：
 
@@ -114,7 +114,7 @@ public final class Message implements Parcelable {
 
 Glide 和 Coil 都在 BitmapPool 的基础上使用到了 inBitmap，从而进一步提高了 Bitmap 的复用效率 
 
-### 三、Coil 对 Bitmap 的复用
+# 三、Coil 对 Bitmap 的复用
 
 Coil 的 BitmapPool 接口定义了缓存 Bitmap 的所有方法。BitmapPool 的存在意义是为了实现 Bitmap 的复用，那么自然就需要有相对应的存取方法，对应 `put` 方法和多个 `get` 方法。而缓存大小也不可能无限制增长，所以还需要有清理缓存的方法，对应 `trimMemory` 方法和 `clear` 方法。当中，`trimMemory`方法就用于根据应用或者系统当前的运行情况来决定如何清理缓存，例如，当应用退到后台时就可以通过该方法来主动减少内存占用，以此提升进程优先级，降低应用被系统杀死的概率
 
@@ -428,7 +428,7 @@ class CircleCropTransformation : Transformation {
 }
 ```
 
-### 四、Glide 对 Bitmap 的复用
+# 四、Glide 对 Bitmap 的复用
 
 理解了 Coil 对于 Bitmap 的缓存复用逻辑之后，再来看 Glide 就会简单很多了，两者在这方面的实现高度一致，甚至接口名和类名都很类似。准确来说应该是 Coil 借鉴了 Glide 的实现思路，Coil 作为一个后起之秀借鉴了 Glide 和 OkHttp 这两个开源库很多实现思路，看 Coil 源码的时候就总能发现这两个开源库的影子
 
@@ -677,7 +677,7 @@ public abstract class BitmapTransformation implements Transformation<Bitmap> {
 }
 ```
 
-### 五、相关联文章
+# 五、相关联文章
 
 - [三方库源码笔记（9）-超详细的 Glide 源码详解](https://juejin.im/post/6891307560557608967)
 - [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.im/post/6892751013544263687)

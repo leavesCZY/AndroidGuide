@@ -1,6 +1,6 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-### 一、架构指南
+# 一、架构指南
 
 在日常的开发中，我们经常会讲到 MVC、MVP、MVVM 等多种开发模式，这其实都是**应用架构**的不同呈现方式，你目前又是使用的什么应用架构呢？
 
@@ -15,23 +15,23 @@
 
 Google 推荐的应用架构图如下所示
 
-![](https://s3.ax1x.com/2020/12/03/DT2Z7Q.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbe9b55164e47ebb6c94ef60e9fe640~tplv-k3u1fbpfcp-zoom-1.image)
 
 当中，每个组件仅依赖于其下一级的组件。ViewModel 就是**关注点分离原则**的一个具体实现，是作为用户数据的**承载体**和**处理者**而存在的，Activity/Fragment 仅依赖于 ViewModel，ViewModel 就用于响应界面层的输入和驱动界面层变化，Repository 用于为 ViewModel 提供一个单一的数据来源及数据存储域，Repository 可以同时依赖于持久性数据模型和远程服务器数据源
 
-### 二、LiveData 的优势
+# 二、LiveData 的优势
 
-**本文想要讨论的就是 ViewModel 所包含的 LiveData**
+本文想要讨论的就是 ViewModel 所包含的 LiveData
 
 从 Google 官方推荐的应用架构图可以看到，[LiveData](https://developer.android.google.cn/topic/libraries/architecture/livedata) 是包含在 ViewModel 中的。LiveData 是一种可观察的数据存储器，Activity/Fragment 是观察者，LiveData 是被观察者。LiveData 具有生命周期感知能力，当我们向 LiveData 注册了一个和 LifecycleOwner 相绑定的 Observer 时，如果 LifecycleOwner 的生命周期处于[`STARTED`](https://developer.android.google.cn/reference/androidx/lifecycle/Lifecycle.State#STARTED) 或 [`RESUMED`](https://developer.android.google.cn/reference/androidx/lifecycle/Lifecycle.State#RESUMED) 状态，则认为该观察者当前处于活跃状态，此时 LiveData 才会向观察者发送事件通知，非活跃状态的观察者不会收到任何事件通知。且当 LifecycleOwner  的状态变为[`DESTROYED`](https://developer.android.google.cn/reference/androidx/lifecycle/Lifecycle.State#DESTROYED)时，LiveData 会自动解除和观察者之间的绑定关系，以防止内存泄漏和过多的内存消耗。所以说，LiveData 具有生命周期感知能力，Activity/Fragment 无需和 LiveData 创建明确且严格的依赖路径
 
 ViewModel 和 LiveData 可以看做是对**关注点分离**和**通过模型驱动界面**原则的一个共同实现，ViewModel 提供了让用户数据独立于界面而存在的能力，LiveData 提供了安全地通知并驱动界面变化的能力
 
-### 三、LiveData 的缺陷
+# 三、LiveData 的缺陷
 
 LiveData 的设计初衷就决定了其具有以下三点缺陷（或者说特性）：
 
-1. 只在 Observer 至少处于 STARTED 状态时才能收到事件通知。Activity 只有在 onStart 方法后且 onPause 方法前才能收到事件通知
+1. 只在 Observer 至少处于 STARTED 状态时才能收到事件通知。Activity 只有在 onStart 后和 onStop 前才能收到事件通知
 2. LiveData 是**黏性**的。假设存在一个静态的 LiveData 变量，且已经包含了数据，对其进行监听的 Activity 都会收到其当前值的回调通知，即收到了黏性消息。这个概念就类似于 EventBus 中的 StickyEvent
 3. 中间值可以被新值直接掩盖。当 Activity 处于后台时，如果 LiveData 先后接收到了多个值，那么当 Activity 回到前台时也只会收到最新值的一次回调，中间值直接被掩盖了，Activity 完全不会感受到中间值的存在
 
@@ -41,13 +41,13 @@ LiveData 的设计初衷就决定了其具有以下三点缺陷（或者说特�
 - 当界面被意外销毁后，我们需要根据已有的数据来进行界面重建，所以 LiveData 被设计为黏性的
 - 对于 LiveData 所代表的界面状态值来说，我们往往需要的只是其最新状态，不需要处理中间值，所以 LiveData 的中间值可以被新值直接掩盖
 
-### 四、LiveData 作为消息通知组件
+# 四、LiveData 作为消息通知组件
 
 如果将 LiveData 单纯地作为界面层状态更新的载体来看待的话，那么以上三点特性就挺合情合理的了。但如果我们是将 LiveData 作为应用全局的消息通知组件的话，这三个特性就会给我们带来困扰了
 
-相信很多开发者都尝试过将一个 LiveData 实例声明为静态变量，然后多个 Activity 通过同时监听该 LiveData 来实现数据通信。这种方式的优点是：**能够以非常简单的方式来实现跨页面通信，同时也保障了生命周期安全**。缺点是：**在 Activity 处于 onStop 状态时无法收到通知，会收到黏性消息这种脏数据**
+相信很多开发者都尝试过将一个 LiveData 实例声明为静态变量，然后多个 Activity 通过同时监听该 LiveData 来实现数据通信。这种方式的优点是：**能够以非常简单的方式来实现跨页面通信，同时也保障了生命周期安全**。缺点是：**在 Activity 处于 onStop 状态时无法收到通知，且会收到黏性消息这种脏数据**
 
-**在 Activity 处于 onStop 状态时收到通知有什么意义呢？收到了黏性消息又会导致什么问题呢？** 这可以通过假设一个需求来说明
+在 Activity 处于 onStop 状态时收到通知有什么意义呢？收到了黏性消息又会导致什么问题呢？这可以通过假设一个需求来说明
 
 假设当前你的 App 包含一个**圈子列表页面**，每个圈子 item 包含了一个按钮用于改变对此圈子的**关注状态**，当点击关注后就会向用户展示一个几百毫秒的动画效果。点击 item 可以跳转到**圈子详情页**，在详情页也包含一个按钮用于改变圈子的关注状态
 
@@ -95,86 +95,70 @@ class CircleDetailsActivity : AppCompatActivity() {
 - 如果在 CircleDetailsActivity 先后改变了多个圈子的关注状态的话，那么就会导致另一个问题：中间值被最新值直接掩盖了。这也是由于LiveData 不支持在 Activity 处于 onStop 状态时下发通知导致的
 - 在 focusLiveData 已经有值的情况下，当用户第一次打开 CircleListActivity 时，就会收到 focusLiveData 的回调通知。而此时 CircleListActivity 的数据会从服务器获取，可以保证是最新的，并不需要本地值的回调通知，此时 focusLiveData 就相当于脏数据了。这种情况下，LiveData 也会给我们带来困扰，其黏性消息其实就相当于脏数据了
 
-### 五、EventLiveData
+# 五、EventLiveData
 
 考虑到 LiveData 不那么适合用做应用全局的消息通知组件，所以我就基于其源码实现了一个改良版的 EventLiveData，以此来解决 LiveData 的缺陷。EventLiveData 在使用上基本 LiveData 一样，我只是对其进行了功能扩展
 
 发送消息：
 
 ```kotlin
-        val eventLiveData = EventLiveData<String>()
+val eventLiveData = EventLiveData<String>()
 
-        //主线程调用
-        eventLiveData.setValue("leavesC")
-        //子线程调用
-        eventLiveData.postValue("leavesC")
-        //任意线程都可以调用，内部会自动判断线程
-        eventLiveData.submitValue("leavesC")
+//主线程调用
+eventLiveData.setValue("leavesC")
+//子线程调用
+eventLiveData.postValue("leavesC")
+//任意线程都可以调用，内部会自动判断线程
+eventLiveData.submitValue("leavesC")
 ```
 
 不接收黏性消息：
 
 ```kotlin
-        //不接收黏性消息
-        //在 onResume 之后和 onDestroy 之前均能收到 Observer 回调
-        eventLiveData.observe(LifecycleOwner, Observer {
+//不接收黏性消息
+//在 onResume 之后和 onDestroy 之前均能收到 Observer 回调
+eventLiveData.observe(LifecycleOwner, Observer {
 
-        })
+})
 
-        //不接收黏性消息
-        //在 onCreate 之后和 onDestroy 之前均能收到 Observer 回调
-        eventLiveData.observe(LifecycleOwner, Observer {
+//不接收黏性消息
+//在 onCreate 之后和 onDestroy 之前均能收到 Observer 回调
+eventLiveData.observe(LifecycleOwner, Observer {
 
-        }, false)
+}, false)
 ```
 
 接收黏性消息：
 
 ```kotlin
-        //接收黏性消息
-        //在 onResume 之后和 onDestroy 之前均能收到 Observer 回调
-        eventLiveData.observeSticky(LifecycleOwner, Observer {
+//接收黏性消息
+//在 onResume 之后和 onDestroy 之前均能收到 Observer 回调
+eventLiveData.observeSticky(LifecycleOwner, Observer {
 
-        })
+})
 
-        //接收黏性消息
-        //在 onCreate 之后和 onDestroy 之前均能收到 Observer 回调
-        eventLiveData.observeSticky(LifecycleOwner, Observer {
+//接收黏性消息
+//在 onCreate 之后和 onDestroy 之前均能收到 Observer 回调
+eventLiveData.observeSticky(LifecycleOwner, Observer {
 
-        }, false)
+}, false)
 ```
 
 不和生命周期绑定：
 
 ```kotlin
-        //不接收黏性消息
-        eventLiveData.observeForever(Observer {
+//不接收黏性消息
+eventLiveData.observeForever(Observer {
 
-        })
+})
 
-        //接收黏性消息
-        eventLiveData.observeForeverSticky(Observer {
+//接收黏性消息
+eventLiveData.observeForeverSticky(Observer {
 
-        })
+})
 ```
 
-### 六、引入依赖
-
-EventLiveData 已托管到 jitpack，可以直接远程依赖。GitHub 地址：https://github.com/leavesC/EventLiveData
-
-```groovy
-	allprojects {
-		repositories {
-			maven { url 'https://jitpack.io' }
-		}
-	}
-	
-	dependencies {
-	    implementation 'com.github.leavesC:EventLiveData:1.0.0'
-	}
-```
-
-### 七、实现原理
+# 六、实现原理
 
 EventLiveData 是基于 LiveData 的源码来改造实现的，在理解了 LiveData 的设计理念和实现原理后来进行自定义其实就非常简单了，这里就简单说下我的实现思路
 
@@ -240,14 +224,28 @@ LiveData 内部包含一个 `mVersion` 变量用来标记**当前值的版本，
 
         @Override
         boolean shouldBeActive() {
-            //只有当 Lifecycle 的当前状态是 STARTED 或者 RESUMED 时
-            //才认为 Lifecycle 是处于活跃状态
             return mOwner.getLifecycle().getCurrentState().isAtLeast(STARTED);
         }
 
     }
 ```
 
-### 八、参考资料
+# 七、引入依赖
+
+EventLiveData 已托管到 jitpack，可以直接远程依赖。GitHub 地址：https://github.com/leavesC/EventLiveData
+
+```groovy
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
+
+dependencies {
+    implementation 'com.github.leavesC:EventLiveData:1.0.0'
+}
+```
+
+# 八、参考资料
 
 - https://developer.android.google.cn/jetpack/guide
