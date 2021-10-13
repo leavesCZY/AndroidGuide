@@ -291,7 +291,7 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
      public static void injectIfNeededIn(Activity activity) {
         if (Build.VERSION.SDK_INT >= 29) {
             // On API 29+, we can register for the correct Lifecycle callbacks directly
-            //当 API 等级为 29+ 时，我们可以直接向 android.app.Activity 注册生命周期回调
+            //直接向 android.app.Activity 注册生命周期回调
             activity.registerActivityLifecycleCallbacks(
                     new LifecycleCallbacks());
         }
@@ -299,7 +299,7 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
         // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
         // need to support activities that don't extend from FragmentActivity from support lib),
         // use a framework fragment to get the correct timing of Lifecycle events
-        //在 API 29 之前，向 activity 添加一个不可见的 framework 中的 fragment，以此来取得 Activity 生命周期事件的正确回调
+        //向 activity 添加一个不可见的 fragment
         android.app.FragmentManager manager = activity.getFragmentManager();
         if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
             manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
@@ -312,9 +312,9 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 `injectIfNeededIn()` 方法会根据两种情况来进行事件分发：
 
 - 运行设备的系统版本号小于 29。此情况会通过向 Activity 添加一个无 UI 界面的 Fragment（即 ReportFragment），间接获得 Activity 的各个生命周期事件的回调通知
-- 运行设备的系统版本号大于等于29。此情况会向 Activity 注册一个 LifecycleCallbacks ，以此来直接获得各个生命周期事件的回调通知。此时也会同时执行第一种情况的操作
+- 运行设备的系统版本号大于等于29。此情况会向 Activity 注册一个 LifecycleCallbacks ，以此来直接获得各个生命周期事件的回调通知。这里应该还牵扯到对旧版本 ProcessLifecycleOwner 和 support 库的兼容，所以此时也会同时执行第一种情况的操作
 
-之所以会进行这两种情况区分，是因为 `registerActivityLifecycleCallbacks` 是 SDK 29 开始 `android.app.Activity` 新添加的方法，从这个版本开始支持直接在 LifecycleCallbacks 中取得事件通知。当用户的设备 SDK 版本小于 29 时，就还是需要通过 ReportFragment 来间接取得事件通知
+之所以会进行这两种情况区分，是因为 `registerActivityLifecycleCallbacks` 中的 `onActivityPostXXX` 和 `onActivityPreXXX` 等方法是 SDK 29 时新添加的方法。当版本小于 29 时，就还是需要通过 ReportFragment 来间接取得事件通知
 
 ## SDK >= 29
 
@@ -533,7 +533,7 @@ public class LifecycleRegistry extends Lifecycle {
 1. 假设当前 LifecycleRegistry 的 `mState` 处于 RESUMED 状态，此时通过 `addObserver` 方法新添加的 LifecycleObserver 会被包装为 ObserverWithState，且初始化状态为 INITIALIZED。由于 RESUMED 大于INITIALIZED，ObserverWithState 就会按照 `INITIALIZED -> CREATED -> STARTED -> RESUMED ` 这样的顺序先后收到事件通知
 2. 假设当前 LifecycleRegistry 的 `mState` 处于 STARTED 状态。如果 LifecycleRegistry 收到 ON_RESUME 事件，`mState` 就需要变更为 RESUMED；如果 LifecycleRegistry 收到 ON_STOP 事件，`mState` 就需要变更为 CREATED；所以说，LifecycleRegistry 的 `mState` 会先后向不同方向迁移
 
-![](https://developer.android.google.cn/images/topic/libraries/architecture/lifecycle-states.svg)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5314c16fe94b47569f16e34e5f308fdd~tplv-k3u1fbpfcp-zoom-1.image)
 
 ObserverWithState 将外界传入的 LifecycleObserver 对象传给 Lifecycling 进行类型包装，将反射逻辑和接口回调逻辑都给汇总综合成一个新的 LifecycleEventObserver 对象，从而使得 Event 分发过程都统一为 `mLifecycleObserver.onStateChanged`
 
