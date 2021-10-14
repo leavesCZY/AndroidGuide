@@ -1,19 +1,20 @@
 > 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
 
-SharedPreferences 是系统提供的一个适合用于存储少量键值对数据的持久化存储方案，结构简单，使用方便，基本上所有应用都会使用到。另一方面，SharedPreferences 存在的问题也挺多的，当中 ANR 问题就屡见不鲜，字节跳动技术团队就曾经发布过一篇文章专门来阐述该问题：[剖析 SharedPreference apply 引起的 ANR 问题](https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247484387&idx=1&sn=e3c8d6ef52520c51b5e07306d9750e70&scene=21#wechat_redirect)。到了现在，Google Jetpack 也推出了一套新的持久化存储方案：DataStore，大有取代 SharedPreferences 的趋势
+SharedPreferences 是系统提供的一个适合用于存储少量键值对数据的持久化存储方案，结构简单，使用方便，很多应用都会使用到。另一方面，SharedPreferences 存在的问题也挺多的，当中 ANR 问题就屡见不鲜，字节跳动技术团队就曾经发布过一篇文章专门来阐述该问题：[剖析 SharedPreference apply 引起的 ANR 问题](https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247484387&idx=1&sn=e3c8d6ef52520c51b5e07306d9750e70&scene=21#wechat_redirect)。到了现在，Google Jetpack 也推出了一套新的持久化存储方案：DataStore，大有取代 SharedPreferences 的趋势
 
 本文就结合源码来剖析 SharedPreferences 存在的缺陷以及背后的具体原因，基于 SDK 30 进行分析，让读者做到知其然也知其所以然，并在最后介绍下我个人的一种存储机制设计方案，希望对你有所帮助 🤣🤣
 
-### 不得不说的坑
+# 不得不说的坑
 
-#### SP 数据会一直占用内存
+## 会一直占用内存
 
-SharedPreferences 本身是一个接口，其具体的实现类是 SharedPreferencesImpl，而 Context 的各个和 SharedPreferences 相关的方法则是由 ContextImpl 来实现的。我们项目中的每个 SP 或多或少都是保存着一些键值对数据，而每当我们获取到一个 SharedPreferences 对象，其对应的键值对数据就会一直被保留在内存中，直到应用进程被终结，因为每个 SharedPreferences 对象都被系统作为静态变量缓存起来了，对应 ContextImpl 中的静态变量 `sSharedPrefsCache`
+SharedPreferences 本身是一个接口，具体的实现类是 SharedPreferencesImpl，Context 中各个和 SP 相关的方法都是由 ContextImpl 来实现的。我们项目中的每个 SP 或多或少都是保存着一些键值对，而每当我们获取到一个 SP 对象时，其对应的数据就会一直被保留在内存中，直到应用进程被终结，因为每个 SP 对象都被系统作为静态变量缓存起来了，对应 ContextImpl 中的静态变量 `sSharedPrefsCache`
 
 ```java
 class ContextImpl extends Context {
     
-    //根据应用包名缓存所有 SharedPreferences，根据 xmlFile 和具体的 SharedPreferencesImpl 对应上
+    //先根据应用包名缓存所有 SharedPreferences
+    //再根据 xmlFile 和具体的 SharedPreferencesImpl 对应上
     private static ArrayMap<String, ArrayMap<File, SharedPreferencesImpl>> sSharedPrefsCache;
 
     //根据 fileName 拿到对应的 xmlFile
@@ -22,12 +23,10 @@ class ContextImpl extends Context {
 }
 ```
 
-每个 SP 都对应一个本地磁盘中的 xmlFile，fileName 则是由开发者来显式指定的，每个 xmlFile 都对应一个 SharedPreferencesImpl。所以 ContextImpl 的逻辑是先根据 fileName 拿到 xmlFile，再根据 xmlFile 拿到 SharedPreferencesImpl，最终应用内所有的 SharedPreferencesImpl 都会被缓存在 `sSharedPrefsCache` 这个静态变量中
-
-此外，由于 SharedPreferencesImpl 在初始化后就会自动去加载 xmlFile 中的所有键值对数据，而 ContextImpl 内部并没有看到有清理 `sSharedPrefsCache` 缓存的逻辑，所以 `sSharedPrefsCache` 会被一直保留在内存中直到进程终结，其内存大小会随着我们引用到的 SharedPreferences 增多而加大，这就可能会持续占用很大一块内存空间
+每个 SP 都对应一个本地磁盘中的 xmlFile，fileName 则是由开发者来显式指定的，每个 xmlFile 都对应一个 SharedPreferencesImpl。所以 ContextImpl 的逻辑是先根据 fileName 拿到 xmlFile，再根据 xmlFile 拿到 SharedPreferencesImpl，最终应用内所有的 SharedPreferencesImpl 就都会被缓存在 `sSharedPrefsCache` 这个静态变量中。此外，由于 SharedPreferencesImpl 在初始化后就会自动去加载 xmlFile 中的所有键值对数据，而 ContextImpl 内部并没有看到有清理 `sSharedPrefsCache` 缓存的逻辑，所以 `sSharedPrefsCache` 会被一直保留在内存中直到进程终结，其内存大小会随着我们引用到的 SP 增多而加大，这就可能会持续占用很大一块内存空间
 
 ```java
-	@Override
+    @Override
     public SharedPreferences getSharedPreferences(String name, int mode) {
         ···
         File file;
@@ -76,7 +75,7 @@ class ContextImpl extends Context {
     }
 ```
 
-#### getValue 可能导致线程阻塞
+## getValue 可能导致线程阻塞
 
 SharedPreferencesImpl 在构造函数中直接就启动了一个子线程去加载磁盘文件，这意味着该操作是一个异步操作（~~我好像在说废话~~），如果文件很大或者线程调度系统没有马上启动该线程的话，那么该操作就需要一小段时间后才能执行完毕
 
@@ -110,9 +109,7 @@ final class SharedPreferencesImpl implements SharedPreferences {
 }
 ```
 
-而如果我们在初始化 SharedPreferencesImpl 后紧接着就去 getValue 的话，势必也需要确保子线程已经加载完成后才去进行取值操作。SharedPreferencesImpl 就通过在每个 getValue 方法中调用 `awaitLoadedLocked()`方法来判断是否需要阻塞外部线程，确保取值操作一定会在子线程执行完毕后才执行。`loadFromDisk()`方法会在任务执行完毕后调用 `mLock.notifyAll()`唤醒所有被阻塞的线程
-
-所以说，如果 SharedPreferences 存储的数据量很大的话，那么就有可能导致外部的调用者线程被阻塞，严重时甚至可能导致 ANR。当然，这种可能性也只是发生在加载磁盘文件完成之前，当加载完成后 `awaitLoadedLocked()`方法自然不会阻塞线程
+而如果我们在初始化 SharedPreferencesImpl 后紧接着就去 getValue 的话，势必也需要确保子线程已经加载完成后才去进行取值操作，所以 SharedPreferencesImpl 就通过在每个 getValue 方法中调用 `awaitLoadedLocked()`方法来判断是否需要阻塞外部线程，确保取值操作一定会在子线程执行完毕后才执行。`loadFromDisk()`方法会在任务执行完毕后调用 `mLock.notifyAll()`唤醒所有被阻塞的线程
 
 ```java
     @Override
@@ -129,9 +126,6 @@ final class SharedPreferencesImpl implements SharedPreferences {
     @GuardedBy("mLock")
     private void awaitLoadedLocked() {
         if (!mLoaded) {
-            // Raise an explicit StrictMode onReadFromDisk for this
-            // thread, since the real read will be in a different
-            // thread and otherwise ignored by StrictMode.
             BlockGuard.getThreadPolicy().onReadFromDisk();
         }
         while (!mLoaded) {
@@ -151,9 +145,6 @@ final class SharedPreferencesImpl implements SharedPreferences {
         synchronized (mLock) {
             mLoaded = true;
             mThrowable = thrown;
-            // It's important that we always signal waiters, even if we'll make
-            // them fail with an exception. The try-finally is pretty wide, but
-            // better safe than sorry.
             try {
                 if (thrown == null) {
                     if (map != null) {
@@ -164,8 +155,6 @@ final class SharedPreferencesImpl implements SharedPreferences {
                         mMap = new HashMap<>();
                     }
                 }
-                // In case of a thrown exception, we retain the old map. That allows
-                // any open editors to commit and store updates.
             } catch (Throwable t) {
                 mThrowable = t;
             } finally {
@@ -176,7 +165,9 @@ final class SharedPreferencesImpl implements SharedPreferences {
     }
 ```
 
-#### getValue 不保证数据类型安全
+所以说，如果 SP 存储的数据量很大的话，那么就有可能导致外部的调用者线程被阻塞，严重时甚至可能导致 ANR。当然，这种可能性也只是发生在加载磁盘文件完成之前，当加载完成后 `awaitLoadedLocked()`方法自然不会阻塞线程
+
+## getValue 不保证数据类型安全
 
 以下代码在编译阶段是完全正常的，但在运行时就会抛出异常：`java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String`。很明显，这是由于同个 key 先后对应了不同数据类型导致的，SharedPreferences 没有办法对这种操作做出限制，完全需要依赖于开发者自己的代码规范来进行限制
 
@@ -189,17 +180,17 @@ edit.apply()
 val name = sharedPreferences.getString(key, "")
 ```
 
-#### SP 不支持多进程数据共享
+## 不支持多进程数据共享
 
-SharedPreferences 在创建的时候需要传入一个 int 类型的 mode 标记位参数，存在一个和多进程相关的标记位 MODE_MULTI_PROCESS，该标记位能起到一定程度的多进程数据同步的保障，但作用不大，且并不保证多进程并发安全性
+在获取 SP 实例的时候需要传入一个 int 类型的 mode 标记位参数，存在一个和多进程相关的标记位 MODE_MULTI_PROCESS，该标记位能起到一定程度的多进程数据同步的保障，但作用不大，且并不保证多进程并发安全性
 
 ```kotlin
 val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_MULTI_PROCESS)
 ```
 
-上文有讲到，SharedPreferencesImpl 在被加载后就会一直保留在内存中，之后每次获取都是直接使用缓存数据，通常情况下也不会再次去加载磁盘文件。而 MODE_MULTI_PROCESS 起到的作用就是每当再一次去获取 SharedPreferences 实例时，会判断当前磁盘文件相对最后一次内存修改是否被改动过了，如果是的话就主动去重新加载磁盘文件，从而可以做到在多进程环境下一定的数据同步
+上文有讲到，SharedPreferencesImpl 在被加载后就会一直保留在内存中，之后每次获取都是直接使用缓存数据，通常情况下也不会再次去加载磁盘文件。而 MODE_MULTI_PROCESS 起到的作用就是每当再一次去获取 SP 实例时，会判断当前磁盘文件相对最后一次内存修改是否被改动过了，如果是的话就主动去重新加载磁盘文件，从而可以做到在多进程环境下一定的数据同步
 
-但是，这种同步本身作用不大，因为即使此时重新加载磁盘文件了，后续修改 SP 值时不同进程中的内存数据也不会实时同步，且多进程同时修改 SP 值也存在数据丢失和数据覆盖的可能。所以说，SharedPreferences 并不支持多进程数据共享，MODE_MULTI_PROCESS 也已经被废弃了，其注释也推荐使用 ContentProvider 来实现跨进程通信
+但是，这种同步本身作用不大，因为即使此时重新加载磁盘文件了，后续修改 SP 值时不同进程中的内存数据也不会实时同步，且多进程同时修改 SP 值也存在数据丢失和数据覆盖的可能。所以说，SP 并不支持多进程数据共享，MODE_MULTI_PROCESS 也已经被废弃了，其注释也推荐使用 ContentProvider 来实现跨进程通信
 
 ```java
 class ContextImpl extends Context {
@@ -212,9 +203,6 @@ class ContextImpl extends Context {
         }
         if ((mode & Context.MODE_MULTI_PROCESS) != 0 ||
             getApplicationInfo().targetSdkVersion < android.os.Build.VERSION_CODES.HONEYCOMB) {
-            // If somebody else (some other process) changed the prefs
-            // file behind our back, we reload it.  This has been the
-            // historical (if undocumented) behavior.
             //重新去加载磁盘文件
             sp.startReloadIfChangedUnexpectedly();
         }
@@ -224,11 +212,11 @@ class ContextImpl extends Context {
 }
 ```
 
-#### SP 不支持增量更新
+## 不支持增量更新
 
-我们知道，SharedPreferences 提交数据的方法有两个：`commit()` 和 `apply()`，分别对应着同步修改和异步修改，而这两种方式对应的都是全量更新，SharedPreferences 以文件为最小单位进行修改，即使我们只修改了一个键值对，这两个方法也会将所有键值对数据重新写入到磁盘文件中，即 SharedPreferences 只支持全量更新
+我们知道，SP 提交数据的方法有两个：`commit()` 和 `apply()`，分别对应着同步修改和异步修改，而这两种方式对应的都是全量更新，SP 以文件为最小单位进行修改，即使我们只修改了一个键值对，这两个方法也会将所有键值对数据重新写入到磁盘文件中，即 SP 只支持全量更新
 
-我们平时获取到的 Editor 对象，对应的都是 SharedPreferencesImpl 的内部类 EditorImpl。EditorImpl 的每个 putValue 方法都会将传进来的 key-value 保存在 mModified 中，暂时还没有涉及任何文件改动。比较特殊的是 remove 和 clear 两个方法，remove 方法会将 this 作为键值对的 value，后续就通过对比 value 的相等性来知道是要移除键值对还是修改键值对，clear 方法则只是将 mClear 标记位置为 true
+我们平时获取到的 Editor 对象，对应的都是 SharedPreferencesImpl 的内部类 EditorImpl。EditorImpl 的每个 putValue 方法都会将传进来的 key-value 保存在 `mModified` 中，暂时还没有涉及任何文件改动。比较特殊的是 `remove` 和 `clear` 两个方法，`remove` 方法会将 this 作为键值对的 value，后续就通过对比 value 的相等性来知道是要移除键值对还是修改键值对，`clear` 方法则只是将 mClear 标记位置为 true
 
 ```java
 public final class EditorImpl implements Editor {
@@ -271,7 +259,7 @@ public final class EditorImpl implements Editor {
 
 `commit()` 和`apply()`两个方法都会通过调用 `commitToMemory()`方法拿到修改后的全量数据
 
-`commitToMemory()`采用了 diff 算法，SharedPreferences 包含的所有键值对数据都存储在 mapToWriteToDisk 中，Editor 改动到的所有键值对数据都存储在 mModified 中。如果  mClear 为 true，则会先清空 mapToWriteToDisk，然后再遍历 mModified，将 mModified 中的所有改动都同步给 mapToWriteToDisk。最终 mapToWriteToDisk 就保存了要重新写入到磁盘文件中的全量数据，SharedPreferences 会根据 mapToWriteToDisk 完全覆盖掉旧的 xml 文件
+`commitToMemory()`采用了 diff 算法，SP 包含的所有键值对数据都存储在 mapToWriteToDisk 中，Editor 改动到的所有键值对数据都存储在 mModified 中。如果  mClear 为 true，则会先清空 mapToWriteToDisk，然后再遍历 mModified，将 mModified 中的所有改动都同步给 mapToWriteToDisk。最终 mapToWriteToDisk 就保存了要重新写入到磁盘文件中的全量数据，SP 会根据 mapToWriteToDisk 完全覆盖掉旧的 xml 文件
 
 ```java
         // Returns true if any changes were made
@@ -352,9 +340,9 @@ public final class EditorImpl implements Editor {
         }
 ```
 
-#### clear 的反直觉用法
+## clear 的反直觉用法
 
-看以下例子。按照语义分析的话，最终 SharedPreferences 中应该是只剩下 blog 一个键值对才符合直觉，而实际上最终两个键值对都会被保留，且只有这两个键值对被保留下来
+看以下例子。按照语义分析的话，最终 SP 中应该是只剩下 blog 一个键值对才符合直觉，而实际上最终两个键值对都会被保留，且只有这两个键值对被保留下来
 
 ```kotlin
 val sharedPreferences: SharedPreferences = getSharedPreferences("UserInfo", Context.MODE_PRIVATE)
@@ -368,7 +356,7 @@ edit.apply()
 所以说，`Editor.clear()` 之前不应该连贯调用 putValue 语句，这会造成理解和实际效果之间的偏差
 
 ```java
-		// Returns true if any changes were made
+        // Returns true if any changes were made
         private MemoryCommitResult commitToMemory() {
             long memoryStateGeneration;
             boolean keysCleared = false;
@@ -445,7 +433,7 @@ edit.apply()
         }
 ```
 
-#### commit、applay 可能导致 ANR
+## commit、applay 可能导致 ANR
 
 `commit()` 方法会通过 `commitToMemory()` 方法拿到本次修改后的全量数据，即 MemoryCommitResult，然后向 `enqueueDiskWrite` 方法提交将全量数据写入磁盘文件的任务，在写入完成前调用者线程都会由于 CountDownLatch 一直阻塞等待着，方法返回值即本次修改操作的成功状态
 
@@ -526,7 +514,7 @@ edit.apply()
 此外，还有一个比较重要的知识点需要注意下。在 writeToFile 方法中会对本次任务进行校验，避免连续多次执行无效的磁盘任务。当中，mDiskStateGeneration 代表的是最后一次成功写入磁盘文件时的任务版本号，mCurrentMemoryStateGeneration 是当前内存中最新的修改记录版本号，mcr.memoryStateGeneration 是本次要执行的任务的版本号。通过两次版本号的对比，就避免了在连续多次 commit 或者 apply 时造成重复执行 I/O 操作的情况，而是只会执行最后一次，避免了无效的 I/O 任务
 
 ```java
-	@GuardedBy("mWritingToDiskLock")
+    @GuardedBy("mWritingToDiskLock")
     private void writeToFile(MemoryCommitResult mcr, boolean isFromSyncCommit) {
         ···
         if (fileExists) {
@@ -560,8 +548,6 @@ edit.apply()
 
 再回过头看 `commit()` 方法。不管该方法关联的 writeToDiskRunnable 最终是在本线程还是 HandlerThread 中执行，`await()`方法都会使得本线程阻塞等待直到 writeToDiskRunnable 执行完毕，从而实现了 `commit()`同步提交的效果
 
-综上所述，由于 SharedPreferences 本身只支持全量更新，如果 SharedPreferences 文件很大，即使是小数据量的 `commit()`操作也有可能导致 ANR
-
 ```java
         @Override
         public boolean commit() {
@@ -593,10 +579,10 @@ edit.apply()
 
 而对于 `apply()` 方法，其本身具有异步提交的含义，I/O 操作应该都是交由给了子线程来执行才对，按道理来说只需要调用 `enqueueDiskWrite` 方法提交任务且不等待任务完成即可，可实际上`apply()`方法反而要比`commit()`方法复杂得多
 
-`apply()`方法包含一个 awaitCommit 任务，用于阻塞其执行线程直到磁盘任务执行完毕，而 awaitCommit 又被包裹在 postWriteRunnable 中一起提交给了 enqueueDiskWrite 方法，enqueueDiskWrite 方法又会在 writeToDiskRunnable 执行完毕后执行 enqueueDiskWrite
+`apply()`方法包含一个 awaitCommit 任务，用于阻塞其执行线程直到磁盘任务执行完毕，而 awaitCommit 又被包裹在 postWriteRunnable 中一起提交给了 `enqueueDiskWrite` 方法，`enqueueDiskWrite` 方法又会在 writeToDiskRunnable 执行完毕后执行 enqueueDiskWrite
 
 ```java
-	    @Override
+        @Override
         public void apply() {
             final long startTime = System.currentTimeMillis();
 
@@ -644,7 +630,7 @@ edit.apply()
 要理解以上操作，还需要再看看 ActivityThread 这个类。当 Service 和 Activity 的生命周期处于 `handleStopService()` 、`handlePauseActivity()` 、`handleStopActivity()` 的时候，ActivityThread 会调用 `QueuedWork.waitToFinish()` 方法
 
 ```java
-	private void handleStopService(IBinder token) {
+    private void handleStopService(IBinder token) {
         Service s = mServices.remove(token);
         if (s != null) {
             try {
@@ -718,13 +704,15 @@ edit.apply()
 
 ActivityThread 为什么要主动去触发执行所有的磁盘写入任务我无从得知，字节技术跳动团队给出的猜测是：**Google 在 Activity 和 Service 调用 onStop 之前阻塞主线程来处理 SP，我们能猜到的唯一原因是尽可能的保证数据的持久化。因为如果在运行过程中产生了 crash，也会导致 SP 未持久化，持久化本身是 IO 操作，也会失败**
 
-### SP 的正反面
+综上所述，由于 SP 本身只支持全量更新，如果 SP 文件很大，即使是小数据量的 `apply/commit` 操作也有可能导致 ANR
+
+# 正反面
 
 SharedPreferencesImpl 在不同的系统版本中有着比较大的差别，例如 writeToFile 方法对于任务版本号的校验也是从 8.0 系统开始的，在 8.0 系统之前对于连续的 commit 和 apply 每次都会触发 I/O 操作，所以在 8.0 系统之前 ANR 问题会更加容易复现。我们需要根据系统版本来看待以上列举出来的各个缺陷
 
-需要强调的是，SharedPreferences 本身的定位是**轻量级数据存储**，设计初衷是用于存储**简单的数据结构**（基本数据类型），且提供了按模块分区存储的功能。如果开发者能够严格遵守这一个规范的话，那么其实以上所述的很多“缺陷”都是可以避免的。而 SharedPreferences 之所以现在看起来问题很多，也是因为如今大部分应用的业务比以前复杂太多了，有些时候为了方便就直接用 SharedPreferences 来存储非常复杂的数据结构，或者是没有做好数据分区存储，导致单个文件过大，这才是造成问题的主要原因
+需要强调的是，SP 本身的定位是**轻量级数据存储**，设计初衷是用于存储**简单的数据结构**（基本数据类型），且提供了按模块分区存储的功能。如果开发者能够严格遵守这一个规范的话，那么其实以上所述的很多“缺陷”都是可以避免的。而 SP 之所以现在看起来问题很多，也是因为如今大部分应用的业务比以前复杂太多了，有些时候为了方便就直接用来存储非常复杂的数据结构，或者是没有做好数据分区存储，导致单个文件过大，这才是造成问题的主要原因
 
-### 如何做好持久化
+# 如何做好持久化
 
 以下的示例代码估计是很多开发者的噩梦
 
@@ -735,19 +723,21 @@ val name = sharedPreference.getString("name", "")
 
 以上代码存在什么问题呢？我觉得至少有五点：
 
-- 强引用到了 SharedPreferences，导致后续需要切换存储库时需要全局搜索替换，工作量非常大
+- 强引用到了 SP，导致后续需要切换存储库时需要全局搜索替换，工作量非常大
 - key 值难维护，每次获取 value 时都需要显式声明 key 值
 - 可读性差，键值对的含义基本只能靠 key 值进行表示
 - 只支持基本数据类型，在存取自定义数据类型时存在很多重复工作。要向 SP 存入自定义的 JavaBean 对象时，只能将 Bean 对象转为 Json 字符串后存入 SP，在取值时再手动反序列化
 - 数据类型不明确，基本只能靠注释来引导开发者使用正确的数据类型
 
-开发者往往是会声明出各种 SpUtils 类进行多一层封装，但也没法彻底解决以上问题。SharedPreferences 的确是存在着一些设计缺陷，但对于大部分应用开发者来说其实并没有多少选择，我们只能选择用或者不用，并没有多少余地可以来解决或者避免其存在的问题，我们往往只能在遇到问题后切换到其它的持久化存储方案
+开发者往往是会声明出各种 SpUtils 类进行多一层封装，但也没法彻底解决以上问题。SP 的确是存在着一些设计缺陷，但对于大部分应用开发者来说其实并没有多少选择，我们只能选择用或者不用，并没有多少余地可以来解决或者避免其存在的问题，我们往往只能在遇到问题后切换到其它的持久化存储方案
 
-目前有两个比较知名的持久化存储方案：Jetpack DataStore 和腾讯的 MMKV，我们当然可以选择将项目中的 SharedPreferences 切换为这两个库，但这也不禁让人想到一个问题，如果以后这两个库也遇到了问题甚至是直接被废弃了，难道我们又需要再来全局替换一遍吗？我们应该如何设计才能使得每次的替换成本降到最低呢？在我看来，开发者在为项目引入一个新的依赖库之前就应该为以后移除该库做好准备，做好接口隔离，屏蔽具体的使用逻辑（当然，也不是每个依赖库都可以做到）。笔者的项目之前也是使用 SharedPreferences 来存储配置信息，后来我也将其切换到了 MMKV，下面就来介绍下笔者当时是如何设计存储结构避免硬编码的
+目前有两个比较知名的持久化存储方案：Jetpack DataStore 和腾讯的 MMKV，我们当然可以选择将项目中的 SP 切换为这两个库之一，但这也不禁让人想到一个问题，如果以后这两个库也遇到了问题甚至是直接被废弃了，难道我们又需要再来全局替换一遍吗？我们应该如何设计才能使得每次的替换成本降到最低呢？
 
-#### 目前的效果
+在我看来，开发者在为项目引入一个新的依赖库之前就应该为以后移除该库做好准备，做好接口隔离，屏蔽具体的底层逻辑（当然，也不是每个依赖库都可以做到）。笔者的项目之前也是使用 SP 来存储配置信息，后来我也将其切换到了 MMKV，下面就来介绍下笔者当时是如何设计存储结构避免硬编码的
 
-我将应用内所有需要存储的键值对数据分为了三类：**用户强关联数据、应用配置数据、不可二次变更的数据**。每一类数据的存储区域各不相同，互不影响。进行数据分组的好处就在于可以根据需要来清除特定数据，例如当用户退登后我们应该只清除 UserKVHolder，PreferenceKVHolder 和 FinalKVHolder 则可以一直保留
+## 目前的效果
+
+我将应用内所有需要存储的键值对数据分为了三类：**用户强关联数据、应用配置数据、不可二次变更的数据**。每一类数据的存储区域各不相同，互不影响。进行数据分组的好处就在于可以根据需要来清除特定数据，例如当用户退登后我们可以只清除 UserKVHolder，而 PreferenceKVHolder 和 FinalKVHolder 则可以一直保留
 
 IKVHolder 接口定义了基本的存取方法，MMKVKVHolder 通过 MMKV 实现了具体的存储逻辑
 
@@ -833,9 +823,9 @@ UserKV.set("name", "业志陈")
 val name = UserKV.get("name", "")
 ```
 
-#### 如何设计的
+## 如何设计的
 
-首先，IKVHolder 定义了基本的存取方法，除了需要支持基本数据类型外，还需要支持自定义的数据类型。依靠 Kotlin 的**扩展函数**和**内联函数**这两个语法特性，我们在存取自定义类型时都无需声明泛型类型，使用上十分简洁。JsonHolder 则是通过 Gson 实现了基本的序列化和反序列化方法
+首先，IKVHolder 定义了基本的存取方法，除了需要支持基本数据类型外，还需要支持自定义的数据类型。依靠 Kotlin 的 **扩展函数** 和 **内联函数** 这两个语法特性，我们在存取自定义类型时都无需声明泛型类型，使用上十分简洁。JsonHolder 则是通过 Gson 实现了基本的序列化和反序列化方法
 
 ```kotlin
 interface IKVHolder {
@@ -979,21 +969,20 @@ class MMKVKVFinalHolder constructor(selfGroup: String, encryptKey: String = "") 
 
 通过接口隔离，UserKV 就完全不会接触到具体的存储实现机制了，对于开发者来说也只是在读写 UserKV 的一个属性字段而已，当后续我们需要替换存储方案时，也只需要去改动 MMKVKVHolder 的内部实现即可，上层应用完全不需要进行任何改动
 
-#### KVHolder
+## KVHolder
 
-KVHolder 的实现思路还是十分简单的，再用上 Kotlin 本身强大的语法特性就进一步提高了易用性和可读性😇😇欢迎留言讨论
-
-有兴趣的同学可以直接远程导入依赖，GitHub 点击这里：[KVHolder](https://github.com/leavesC/KVHolder)
+KVHolder 的实现思路还是十分简单的，再加上 Kotlin 本身强大的语法特性就进一步提高了易用性和可读性 😇😇 我也将其发布为开源库，感兴趣的读者可以直接远程导入依赖
 
 ```groovy
-	allprojects {
-		repositories {
-			...
-			maven { url 'https://jitpack.io' }
-		}
-	}
+allprojects {
+    repositories {
+        maven { url "https://jitpack.io" }
+    }
+}
 
-	dependencies {
-	     implementation 'com.github.leavesC:KVHolder:latest_version'
-	}
+dependencies {
+    implementation 'com.github.leavesC:KVHolder:latest_version'
+}
 ```
+
+GitHub 点击这里：[KVHolder](https://github.com/leavesC/KVHolder)
