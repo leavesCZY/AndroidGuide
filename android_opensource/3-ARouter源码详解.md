@@ -18,37 +18,37 @@
 - [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
 - [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
 
-### 一、ARouter
+# 一、ARouter
 
 路由框架在大型项目中比较常见，特别是在项目中拥有多个 module 的时候。为了实现组件化，多个 module 间的通信就不能直接以模块间的引用来实现，此时就需要依赖路由框架来实现模块间的通信和解耦
 
 而 ARouter 就是一个用于帮助 Android App 进行组件化改造的框架，支持模块间的路由、通信、解耦
 
-#### 1、支持的功能
+## 1、支持的功能
 
-1. 支持直接解析标准URL进行跳转，并自动注入参数到目标页面中
+1. 支持直接解析标准 URL 进行跳转，并自动注入参数到目标页面中
 2. 支持多模块工程使用
 3. 支持添加多个拦截器，自定义拦截顺序
 4. 支持依赖注入，可单独作为依赖注入框架使用
-5. 支持InstantRun
-6. 支持MultiDex(Google方案)
+5. 支持 InstantRun
+6. 支持 MultiDex (Google 方案)
 7. 映射关系按组分类、多级管理，按需初始化
 8. 支持用户指定全局降级与局部降级策略
 9. 页面、拦截器、服务等组件均自动注册到框架
 10. 支持多种方式配置转场动画
-11. 支持获取Fragment
-12. 完全支持Kotlin以及混编(配置见文末 其他#5)
+11. 支持获取 Fragment
+12. 完全支持 Kotlin 以及混编(配置见文末 其他#5)
 13. 支持第三方 App 加固(使用 arouter-register 实现自动注册)
 14. 支持生成路由文档
 15. 提供 IDE 插件便捷的关联路径和目标类
 16. 支持增量编译(开启文档生成后无法增量编译)
 
-#### 2、典型应用
+## 2、典型应用
 
-1. 从外部URL映射到内部页面，以及参数传递与解析
+1. 从外部 URL 映射到内部页面，以及参数传递与解析
 2. 跨模块页面跳转，模块间解耦
 3. 拦截跳转过程，处理登陆、埋点等逻辑
-4. 跨模块API调用，通过控制反转来做组件解耦
+4. 跨模块 API 调用，通过控制反转来做组件解耦
 
 以上介绍来自于 ARouter 的 Github 官网：[README_CN](https://github.com/alibaba/ARouter/blob/master/README_CN.md)
 
@@ -61,7 +61,7 @@ dependencies {
 }
 ```
 
-### 二、前言
+# 二、前言
 
 假设存在一个包含多个 module 的项目，在名为 **user** 的 module 中存在一个 `UserHomeActivity`，其对应的**路由路径**是 `/account/userHome`。那么，当我们要从其它 module 跳转到该页面时，只需要指定 path 来跳转即可
 
@@ -113,7 +113,7 @@ ARouter 的基本实现思路就是：
 2. ARouter 在**编译阶段**通过**注解处理器**来自动生成 path 和特定的目标类之间的对应关系，即将 path 作为 key，将目标类的 Class 对象作为 value 之一存到 Map 之中
 3. 在运行阶段，应用通过 path 来发起请求，ARouter 根据 path 从 Map 中取值，从而拿到目标类，以此来完成跳转
 
-### 三、初始化
+# 三、初始化
 
 ARouter 一般是通过在 Application 中调用 `init` 方法来完成初始化的，这里先来看下其初始化流程
 
@@ -348,7 +348,7 @@ LogisticsCenter 的 `init` 方法就会根据文件名的固定前缀 `ARouter$$
 
 因为对于一个大型的 App 来说，可能包含几十甚至几百个页面，如果一次性将所有路由信息都加载到内存中，对于内存的压力是比较大的，而用户每次使用可能也只会打开十几个页面，所以这是就实现了按需加载
 
-### 四、跳转到 Activity
+# 四、跳转到 Activity
 
 讲完初始化流程，再来看下 ARouter 实现 Activity 跳转的流程
 
@@ -610,7 +610,7 @@ final class _ARouter {
     }
 ```
 
-### 五、跳转到 Activity 并注入参数
+# 五、跳转到 Activity 并注入参数
 
 ARouter 也支持在跳转到 Activity 的同时向目标页面自动注入参数
 
@@ -746,7 +746,7 @@ public class AutowiredServiceImpl implements AutowiredService {
 }
 ```
 
-### 六、控制反转
+# 六、控制反转
 
 上一节所讲的**跳转到 Activity 并自动注入参数**属于**依赖注入**的一种，ARouter 同时也支持**控制反转**：通过接口来获取其实现类实例
 
@@ -904,7 +904,7 @@ Warehouse.providersIndex：
     }
 ```
 
-### 七、拦截器
+# 七、拦截器
 
 ARouter 的拦截器对于某些需要控制页面跳转流程的业务逻辑来说是十分有用的功能。例如，用户如果要跳转到个人资料页面时，我们就可以通过拦截器来判断用户是否处于已登录状态，还未登录的话就可以拦截该请求，然后自动为用户打开登录页面
 
@@ -1190,7 +1190,7 @@ public class InterceptorServiceImpl implements InterceptorService {
 }
 ```
 
-### 八、注解处理器
+# 八、注解处理器
 
 通篇读下来，读者应该能够感受到注解处理器在 ARouter 中起到了很大的作用，依靠注解处理器生成的辅助文件，ARouter 才能完成**参数自动注入**等功能。这里就再来介绍下 ARouter 关于注解处理器的实现原理
 
@@ -1419,6 +1419,6 @@ public class InterceptorProcessor extends BaseProcessor {
 }
 ```
 
-### 九、结尾
+# 九、结尾
 
 ARouter 的实现原理和源码解析都讲得差不多了，自认还是讲得挺全面的，那么下一篇就再来进入实战篇吧，自己来动手实现一个简易版本的 ARouter 😂😂

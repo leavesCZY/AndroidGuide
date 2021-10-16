@@ -14,7 +14,7 @@ Google 官网上是这么介绍 Compose 的：Jetpack Compose 是用于构建原
 
 在过去的几年中，整个行业已开始转向声明性界面模型，该模型大大简化了与构建和更新界面关联的工程设计。该技术的工作原理是在概念上从头开始重新生成整个屏幕，然后仅执行必要的更改。此方法可避免手动更新有状态视图层次结构的复杂性。Compose 就是一个适用于 Android 的新式声明性界面工具包，**提供了声明性 API，让开发者可在不以命令方式改变前端视图的情况下呈现应用界面，从而使编写和维护应用界面变得更加容易**
 
-### 可组合函数
+# 可组合函数
 
 Compose 的重点就在于 `@Composable`函数，即**可组合函数**，每个可组合函数可以接收若干入参参数用于参与视图结构的绘制说明，但函数不返回任何值。可组合函数只用于描述视图结构如何绘制以及如何与用户进行交互，但不需要返回视图对象，而是由 Compose 根据开发者的描述来生成具体的视图对象
 
@@ -36,7 +36,7 @@ fun TetrisBody(
 )
 ```
 
-### 游戏机身 - TetrisBody
+# 游戏机身 - TetrisBody
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/9d9edfd61e954556b743cc4c725f01a4~tplv-k3u1fbpfcp-watermark.image)
 
@@ -93,7 +93,7 @@ fun TetrisBody(
 }
 ```
 
-### 游戏按钮 - TetrisButton
+# 游戏按钮 - TetrisButton
 
 ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7c28153d4044dde9d47a9254f355d2c~tplv-k3u1fbpfcp-watermark.image)
 
@@ -206,7 +206,7 @@ fun TetrisButton(
 }
 ```
 
-### 游戏屏幕  - TetrisScreen
+# 游戏屏幕  - TetrisScreen
 
 ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f32b685c86b54b6ead24f9d00e89ed30~tplv-k3u1fbpfcp-watermark.image)
 
@@ -432,7 +432,7 @@ fun DrawScope.drawBrick(brickSize: Float, color: Color) {
     }
 ```
 
-### 调度器 - TetrisViewModel
+# 调度器 - TetrisViewModel
 
 TetrisViewModel 是整个游戏的调度器，其大体结构如下所示。`dispatch` 方法负责接收外部的各个事件，事件类型就对应密封类 Action
 
@@ -647,7 +647,7 @@ private fun TetrisState.finalize(): TetrisState {
 }
 ```
 
-### 项目地址
+# 项目地址
 
 游戏的大体实现思路就如上所述，表达能力所限，有些地方没法讲得太清楚，实现细节欢迎查阅源码了解 😂😂
 

@@ -2,15 +2,15 @@
 
 > 本系列文章会陆续对 Java 和 Android 的集合框架（JDK 1.8，Android SDK 30）中的几个常见容器结合源码进行介绍，了解不同容器在**数据结构、适用场景、优势点**上的不同，希望对你有所帮助 🤣🤣
 
-## 一、数组和链表
+# 一、数组和链表
 
 很多集合框架在底层结构都使用到了**数组**和**链表**这两种数据结构，它们在**数据存储方式**和**优劣点**这两方面有着很大区别，这里先来介绍下这两者的结构和区别
 
-### 1、数组
+## 1、数组
 
 假设现在有六个元素存放在数组中，则数组在内存中的存储结构就如下所示
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/D4ubjA.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d35e498da26c4619acab1229db882021~tplv-k3u1fbpfcp-zoom-1.image)
 
 1. 数组是一块连续的内存空间，元素按照坐标索引依次排列，可以直接通过坐标定位到每一个数据的内存地址，例如可以直接通过坐标 3 获取到 element4，省去了从头到尾的遍历操作，因此随机读取数据的效率较高
 2. 相对应的，由于数组要求元素是连续存储的，因此在添加和移除数据时有可能需要移动大量数据，所以在添加和移除数据时效率较低
@@ -18,11 +18,11 @@
 
 ArrayList 底层就是用数组来存储数据
 
-### 2、链表
+## 2、链表
 
 假设现在有四个元素依靠链表来存放，链表在内存中的存储结构就如下所示
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/D4uXHP.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/073ecd6842734463804b9fc6dcbd151d~tplv-k3u1fbpfcp-zoom-1.image)
 
 1. 图中所展示的是一个双向链表，即每个结点除了包含实际的数据外，还存在两个引用分别指向上一个结点（prev）和下一个结点（next），各个结点通过这种双向链接从而串联在一起。此外还存在两个引用分别指向头结点（first）和尾结点（last），方便进行正向遍历和反向遍历
 2. 链表不要求有连续的内存空间，新添加的结点可以在内存中的任何位置，只要上一个结点和下一个结点互相保存有对方的引用即可，这也导致在随机访问数据时只能遍历整个链表，在最坏的情况下甚至需要全量遍历。当然，可以根据实际情况来选择是正向遍历还是反向遍历，以此提高访问效率，但总的来说链表在随机访问数据时效率要比数组低
@@ -32,25 +32,25 @@ ArrayList 底层就是用数组来存储数据
 
 LinkedList 底层就是用链表来存储数据
 
-## 二、ArrayList 
+# 二、ArrayList 
 
 ArrayList 应该是大多数开发者使用得最为频繁的集合容器了，ArrayList 实现了 List 接口，是一个有序容器，即元素的存放顺序与添加顺序保持一致，允许添加相同元素，包括 null 。ArrayList 底层通过数组来进行数据存储，当向 ArrayList 中添加元素时如果发现数组空间不足，ArrayList 会自动对底层数组进行扩容并迁移现有数据
 
-### 1、类声明
+## 1、类声明
 
 从 ArrayList 实现的接口可以看出来它是支持快速访问，可克隆，可序列化的
 
 ```java
-	public class ArrayList<E> extends AbstractList<E> 
+    public class ArrayList<E> extends AbstractList<E> 
         implements List<E>, RandomAccess, Cloneable, java.io.Serializable
 ```
 
-### 2、成员变量
+## 2、成员变量
 
 ArrayList 一共包含以下几个成员变量，主要看 elementData。elementData 是用于存放数据的底层数组，由于其数据类型声明为 Object，所以可以用来存放任何类型的数据。而 ArrayList 属于泛型类，如果我们在初始化时就指定了数据类型的话，依靠 Java 泛型为我们提供的语法糖，我们在向 elementData 存取数据时编译器就会自动进行类型校验和类型转换，确保存入和取出的数据类型是安全的
 
 ```java
-	//序列化ID
+    //序列化ID
     private static final long serialVersionUID = 8683452581122892189L;
 
     //进行扩容操作后的最小容量
@@ -68,18 +68,18 @@ ArrayList 一共包含以下几个成员变量，主要看 elementData。element
     //集合大小
     private int size;
 
-	//ArrayList 的快照版本号
-	protected transient int modCount = 0;
+    //ArrayList 的快照版本号
+    protected transient int modCount = 0;
 ```
 
-### 3、构造函数
+## 3、构造函数
 
 如果已经知道目标数据量大小的话，在初始化 ArrayList 的时候我们可以直接传入最终的容量值，这样效率会更高一些。因为如果 initialCapacity 过大，则会造成内存浪费；如果 initialCapacity 过小，可能会导致后续需要多次扩容，每次扩容都需要复制原有数据到新数组，这会降低运行效率
 
 如果我们使用的是无参构造函数或者是指定的 initialCapacity 为 0，此时也只会将 elementData 指向空数组，并不会新建一个数组变量
 
 ```java
-	//指定集合的初始容量，以此来进行数组的初始化操作
+    //指定集合的初始容量，以此来进行数组的初始化操作
     public ArrayList(int initialCapacity) {
         if (initialCapacity > 0) {
             this.elementData = new Object[initialCapacity];
@@ -108,12 +108,12 @@ ArrayList 一共包含以下几个成员变量，主要看 elementData。element
     }
 ```
 
-### 4、获取元素
+## 4、获取元素
 
 在获取指定索引处的元素时，ArrayList 都是直接通过坐标值来获取元素，无需从头遍历，所以说 ArrayList 遍历和随机访问的效率较高
 
 ```java
-	@SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
     E elementData(int index) {
         return (E) elementData[index];
     }
@@ -125,14 +125,14 @@ ArrayList 一共包含以下几个成员变量，主要看 elementData。element
     }
 ```
 
-### 5、添加元素
+## 5、添加元素
 
 ArrayList 添加元素的操作就不是那么理想了。如果是直接向集合尾端添加数据，那么直接定位到该位置进行赋值即可；如果是向集合的中间位置 index 插入数据，则需要将数组中索引 index 后的所有数据向后推移一位，然后将数据插入到空出的位置上。此外，在插入数据前 elementData 可能已经空间不足了，那么还需要先进行扩容操作。扩容操作会创建一个新的符合大小的数组，并将原数组中的数据迁移到新数组中，然后让 elementData 指向新数组
 
 由此可以看出来，向集合添加数据和进行扩容都可能会导致数组元素大量移动，所以说 ArrayList 存入数据的效率并不高
 
 ```java
-	public boolean add(E e) {
+    public boolean add(E e) {
         //在需要的时候进行扩容
         ensureCapacityInternal(size + 1);
         elementData[size++] = e;
@@ -153,7 +153,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
 以上说的是存入单个数据的情况，此外还有存入整个集合的情况
 
 ```java
-	//如果待添加的数据不为空则返回 true，否则返回 false
+    //如果待添加的数据不为空则返回 true，否则返回 false
     public boolean addAll(Collection<? extends E> c) {
         Object[] a = c.toArray();
         int numNew = a.length;
@@ -183,12 +183,12 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
     }
 ```
 
-### 6、移除元素
+## 6、移除元素
 
 因为数组是一种内存地址连续的数据结构，所以移除某个元素同样可能导致大量元素移动
 
 ```java
-	//移除指定索引处的元素值，并返回该值
+    //移除指定索引处的元素值，并返回该值
     public E remove(int index) {
         rangeCheck(index);
         modCount++;
@@ -226,7 +226,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
     }
 ```
 
-### 7、扩容机制
+## 7、扩容机制
 
 再来看下数组的扩容机制的具体实现逻辑
 
@@ -235,7 +235,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
 如果在初始化 ArrayList 前已知目标数据的数据量，最好就使用`ArrayList(int initialCapacity)`来进行初始化，直接让底层数组扩充到目标大小，或者是在添加数据前就调用 `ensureCapacity` 方法直接让数组扩容到目标大小，避免之后赋值过程中多次扩容
 
 ```java
-	public void ensureCapacity(int minCapacity) {
+    public void ensureCapacity(int minCapacity) {
         int minExpand = (elementData != DEFAULTCAPACITY_EMPTY_ELEMENTDATA)
             ? 0
             : DEFAULT_CAPACITY;
@@ -264,7 +264,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
 构建出一个新的符合大小的数组后，就将原数组中的元素复制到新数组中，至此就完成了扩容
 
 ```java
-	//数组可扩容到的最大容量
+    //数组可扩容到的最大容量
     private static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     private void grow(int minCapacity) {
@@ -279,24 +279,24 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
     }
 ```
 
-### 8、修改元素
+## 8、修改元素
 
 ```java
-	//将索引 index 出的元素值置为 element，并返回原始数值
-	public E set(int index, E element) {
+    //将索引 index 出的元素值置为 element，并返回原始数值
+    public E set(int index, E element) {
     	rangeCheck(index);
     	E oldValue = elementData(index);
     	elementData[index] = element;
     	return oldValue;
-	}
+    }
 ```
 
-### 9、遍历数组
+## 9、遍历数组
 
 遍历数组的方法包含以下几个，逻辑都比较简单，直接看注释即可。一个比较重要的知识点是看方法内部对 modCount 的校验
 
 ```java
-	@Override
+    @Override
     public void forEach(Consumer<? super E> action) {
         Objects.requireNonNull(action);
         final int expectedModCount = modCount;
@@ -314,7 +314,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
         }
     }
 
-	//按照给定规则对集合元素进行过滤，如果元素符合过滤规则那就将之移除
+    //按照给定规则对集合元素进行过滤，如果元素符合过滤规则那就将之移除
     @Override
     public boolean removeIf(Predicate<? super E> filter) {
         Objects.requireNonNull(filter);
@@ -382,7 +382,7 @@ ArrayList 添加元素的操作就不是那么理想了。如果是直接向集�
     }
 ```
 
-### 10、迭代器
+## 10、迭代器
 
 ArrayList 内部包含一个用于迭代元素的 Iterator 实现类，其用法如下所示
 
@@ -491,7 +491,7 @@ ArrayList 内部包含一个用于迭代元素的 Iterator 实现类，其用法
     }
 ```
 
-### 11、效率测试
+## 11、效率测试
 
 最后再来测试下 ArrayList 扩容次数的高低对其运行效率的影响
 
@@ -535,11 +535,11 @@ ArrayList 内部包含一个用于迭代元素的 Iterator 实现类，其用法
 初始容量为300000，所用时间：13毫秒
 ```
 
-## 三、LinkedList
+# 三、LinkedList
 
 LinkedList 同时实现了 List 接口和 Deque 接口，所以既可以将 LinkedList 当做一个有序容器，也可以将之看作一个队列（Queue），同时又可以看作一个栈（Stack）。虽然 LinkedList 和 ArrayList 一样都实现了 List 接口，但其底层是通过**双向链表**来实现的，所以插入和删除元素的效率都要比 ArrayList 高，但也因此随机访问的效率要比 ArrayList 低
 
-### 1、类声明
+## 1、类声明
 
 从 LinkedList 实现的几个接口可以看出来，LinkedList 是支持快速访问，可克隆，可序列化的，而且可以将之看成一个**支持有序访问的队列或者栈**
 
@@ -551,7 +551,7 @@ public class LinkedList<E> extends AbstractSequentialList<E>
 LinkedList 内部通过双向链表的数据结构来实现的，每个链表结点除了存储本结点的数据元素外，还有两个指针分别用于指向其上下两个相邻结点，这个结点就是 LinkedList 中的静态类 Node
 
 ```java
-	private static class Node<E> {
+    private static class Node<E> {
 
         //当前结点包含的实际元素
         E item;
@@ -570,10 +570,10 @@ LinkedList 内部通过双向链表的数据结构来实现的，每个链表结
     }
 ```
 
-### 2、成员变量
+## 2、成员变量
 
 ```java
-	//双向链表包含的结点总数，即数据总量
+    //双向链表包含的结点总数，即数据总量
     transient int size = 0;
 
     //双向链表的头结点
@@ -588,14 +588,14 @@ LinkedList 内部通过双向链表的数据结构来实现的，每个链表结
 
 当中的成员变量 first 和 last 分别用于指向链表的头部和尾部结点，因此 LinkedList 的数据结构图是类似于这样的
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/2552605-5fc0a4fb9515e7c3.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5ea71d0950c04d8a947867ad892ff6c6~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 3、构造函数
+## 3、构造函数
 
 LinkedList 不需要去请求一片连续的内存空间来存储数据，而是在每次有新的元素需要添加时再来动态请求内存空间，因此 LinkedList 的两个构造函数都很简单
 
 ```java
-	public LinkedList() {
+    public LinkedList() {
     }
 
     //传入初始数据
@@ -605,7 +605,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-### 4、添加元素
+## 4、添加元素
 
 `add(E e)` 方法用于向链表的尾部添加结点，因为有 `last` 指向链表的尾结点，因此向尾部添加新元素只需要修改几个引用即可，效率较高
 
@@ -636,12 +636,12 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/2552605-1a9718c006ce91af.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/83bed0a5917a494c88aa6edc2be08ab6~tplv-k3u1fbpfcp-zoom-1.image)
 
 `add(int index, E element)` 方法用于向指定索引处添加元素，需要先通过索引 index 获取相应位置的结点，并在该位置开辟一个新的结点来存储元素 element，最后还需要修改相邻结点间的引用
 
 ```java
- 	//在索引 index 处插入元素 element
+     //在索引 index 处插入元素 element
     public void add(int index, E element) {
         //判断索引大小是否合法，不合法则抛出 IndexOutOfBoundsException
         checkPositionIndex(index);
@@ -653,7 +653,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
             linkBefore(element, node(index));
     }
 
-	//将元素 e 置为 succ 结点的上一个结点
+    //将元素 e 置为 succ 结点的上一个结点
     void linkBefore(E e, Node<E> succ) {
         //保存 succ 的上一个结点信息
         final Node<E> pred = succ.prev;
@@ -672,9 +672,9 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/%E9%9B%86%E5%90%88%E6%A1%86%E6%9E%B6/121242142552605-817b1e290041b1dc.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6853b99e131840ccb6c4efaa2584e399~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 5、移除元素
+## 5、移除元素
 
 `remove()` 方法有两种重载形式，其内部都是通过调用 `unlink(Node<E> x)` 方法来移除指定结点在链表中的引用，不同于 ArrayList 在移除元素时可能导致的大量数据移动，LinkedList 只需要通过移除引用即可将指定元素从链表中移除
 
@@ -686,7 +686,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
         return unlink(node(index));
     }
 
-	//对链表进行正向遍历，移除第一个元素值为 o 的结点
+    //对链表进行正向遍历，移除第一个元素值为 o 的结点
     //如果移除成功则返回 true，否则返回 false
     public boolean remove(Object o) {
         if (o == null) {
@@ -709,7 +709,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
         return false;
     }
 
-	//移除结点 x 并返回其包含的元素值
+    //移除结点 x 并返回其包含的元素值
     E unlink(Node<E> x) {
         final E element = x.item;
         final Node<E> next = x.next;
@@ -739,7 +739,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-### 6、随机访问元素
+## 6、随机访问元素
 
 对于单向链表来说，如果想随机定位到某个结点，那么只能通过从头结点开始遍历的方式来定位，最极端的情况下需要遍历整个链表才能定位到目标结点。如果是双向链表，则可以选择正向遍历或者反向遍历，最极端的情况下需要遍历一半链表才能定位到目标结点。所以，相比数组来说 LinkedList 的随机访问效率并不高
 
@@ -781,10 +781,10 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-### 7、几个常用的方法
+## 7、几个常用的方法
 
 ```java
-	//判断是否包含元素 o
+    //判断是否包含元素 o
     public boolean contains(Object o) {
         return indexOf(o) != -1;
     }
@@ -849,14 +849,14 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-### 8、Deque 接口
+## 8、Deque 接口
 
 以上介绍的几个方法都是 List 接口中所声明的，接下来看下 Deque 接口中的方法
 
 其实 Deque 接口中很多方法的含义都是类似的，且一些方法都是相互调用的，并不算复杂
 
 ```java
-	//将元素 e 置为头结点
+    //将元素 e 置为头结点
     public void addFirst(E e) {
         linkFirst(e);
     }
@@ -945,7 +945,7 @@ LinkedList 不需要去请求一片连续的内存空间来存储数据，而是
     }
 ```
 
-### 9、效率测试
+## 9、效率测试
 
 上面说过，LinkedList 相比 ArrayList 在添加和移除元素时效率上会高很多，但随机访问元素的效率要比 ArrayList 低，这里也来做个测试，验证两者之间的差别
 

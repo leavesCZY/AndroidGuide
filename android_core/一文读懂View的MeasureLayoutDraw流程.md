@@ -4,18 +4,18 @@ Activity 通过 Window 与 View 系统进行交互，Window 再通过 ViewRootIm
 
 本文基于 Android API 30 进行分析
 
-### 一、Measure
+# 一、Measure
 
 measure 代表的是**测量尺寸**的过程，在这个过程中 View 需要计算出自己的宽高大小
 
-#### 1、MeasureSpec
+## 1、MeasureSpec
 
 我们知道，一个 View 想要显示在屏幕上，那么其自身必然就要带有宽高属性，即**尺寸大小 size**，而 size 的设定依据可能来源于不同的约束条件：ViewGroup 允许的最大空间、布局文件中为 View 指定了特定宽高、将 View 的宽高设定为 match_parent 或者 wrap_content 等等。有了 size 后，相对应的我们就需要能够分辨出不同的约束条件，比如说 View 得到的 widthSize 是 100dp，这可能是因为父容器只有 100dp 且 View 使用了 match_parent，也可能是我们在布局文件中为该 View 直接指定了宽度就是 100dp，View 需要知道这种区别，这是 View 在测量自身尺寸的依据之一，即我们也需要拿到**测量模式 mode**
 
 MeasureSpec 就用来封装 View 的 **size** 和 **mode** 这两个属性，它是 View 的一个静态内部类，用一个 int 类型的三十二位整数来表示这两个属性，前两位表示 mode，后三十位表示 size。通过单个整数来表示两个属性值并通过位运算来进行拆分可以更加节省内存空间。两个二进制位足够表示四种可能值，实际上 View 只用到了三种：UNSPECIFIED、EXACTLY、AT_MOST。`makeMeasureSpec` 方法就用于打包封装 size 和 mode 这两个属性值来生成 MeasureSpec
 
 ```java
-	public static class MeasureSpec {
+    public static class MeasureSpec {
         
         public static final int UNSPECIFIED = 0 << MODE_SHIFT;
 
@@ -23,7 +23,7 @@ MeasureSpec 就用来封装 View 的 **size** 和 **mode** 这两个属性，它
 
         public static final int AT_MOST     = 2 << MODE_SHIFT;
 
-		public static int makeMeasureSpec(int size, int mode) {
+	public static int makeMeasureSpec(int size, int mode) {
             if (sUseBrokenMakeMeasureSpec) {
                 return size + mode;
             } else {
@@ -46,12 +46,12 @@ MeasureSpec 就用来封装 View 的 **size** 和 **mode** 这两个属性，它
 
 在进行自定义 View 的时候，系统会自动构造出 MeasureSpec 对象并回调给 View 的 `onMeasure(int widthMeasureSpec, int heightMeasureSpec)`方法，在此方法中我们就需要根据实际情况来计算出 View 应该且可以占有的尺寸值
 
-#### 2、LayoutParams
+## 2、LayoutParams
 
 LayoutParams 是 ViewGroup 的一个静态内部类，包含了 View 的两个最基础属性： width 和 height，默认只会解析我们在布局文件中设置的 `layout_width` 和 `layout_height`这两个属性
 
 ```java
-	public static class LayoutParams {
+    public static class LayoutParams {
     
         @Deprecated
         public static final int FILL_PARENT = -1;
@@ -90,14 +90,14 @@ View 能够占据的尺寸大小肯定是要受其父容器 ViewGroup 的影响�
 
 LayoutParams 则代表的是 View 本身的尺寸属性和布局属性，例如 width、height、margin 等，我们在布局文件中为 View 设置的 `layout_width="match_parent"` 和 `layout_marginStart="@dimen/DIMEN_32PX"` 等最终就都会转换为 View 内的 LayoutParams 对象，这也是 MeasureSpec 的生成依据之一
 
-#### 3、ViewRootImpl  &  View
+## 3、ViewRootImpl  &  View
 
 我们知道，DecorView 是整个视图树的根布局，而 DecorView 是 FrameLayout 的子类，所以说平时我们在 Activity 中 `setContentView` 其实就是在向 DecorView 执行 `addView` 操作。很自然地，整个视图树的测量过程就是要从 DecorView 开始，从上到下从外到内进行，DecorView 的尺寸大小就是整个视图树所能占据的最大空间，而 DecorView 的宽高默认都是 `match_parent`，即占据整个屏幕空间
 
 View 的整个绘制流程的启动入口可以从 ViewRootImpl 的 `performTraversals` 方法开始看，`performTraversals` 方法逻辑挺复杂的，主要就用于为 DecorView 生成 MeasureSpec，我们只看其主干逻辑即可。`mWidth` 和 `mHeight` 即屏幕的宽高，`lp.width` 和 `lp.height` 即 DecorView 的宽高，由于可见最终 `childWidthMeasureSpec` 和 `childHeightMeasureSpec` 的 mode 都将是 EXACTLY。最后又会调用 `performMeasure` 方法来启动整个视图树的测量流程，当中的 mView 代表的即是 DecorView
 
 ```java
-	private void performTraversals() {
+    private void performTraversals() {
     	···
     	int childWidthMeasureSpec = getRootMeasureSpec(mWidth, lp.width);
     	int childHeightMeasureSpec = getRootMeasureSpec(mHeight, lp.height);
@@ -191,14 +191,14 @@ View 的整个绘制流程的启动入口可以从 ViewRootImpl 的 `performTrav
     }
 ```
 
-#### 4、ViewGroup
+## 4、ViewGroup
 
 DecorView 是 FrameLayout 的子类，实际上就是一个 ViewGroup，所以说平时我们在 Activity 中 `setContentView` 其实就是在向 ViewGroup 执行 `addView`。这里就再来分析下 ViewGroup 的 measure 过程
 
 上文说了，ViewRootImpl 通过调用 DecorView 的`measure`方法来启动整个视图树的测量流程，之后又会调用`onMeasure`方法。对于 FrameLayout 来说，其自身可能会包含多个 childView，那么在 measure 阶段就需要在进行自身的测量操作之前先完成所有 childView 的测量操作。而 DecorView 直接继承于 FrameLayout  并重写了 `onMeasure` 方法，DecorView 增加了一些修正操作，当判断到 widthMode 和 heightMode 为 AT_MOST 时，就会尝试去将 mode 修正为 EXACTLY 并修改 size 大小，生成新的 `widthMeasureSpec` 和 `heightMeasureSpec`，并调用 `super.onMeasure` 将实际的测量操作交由 FrameLayout 去完成
 
 ```java
-	@Override
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         final DisplayMetrics metrics = getContext().getResources().getDisplayMetrics();
         final boolean isPortrait =
@@ -420,18 +420,18 @@ FrameLayout 自然是会重写 View 的 `onMeasure`方法，不同 ViewGroup 有
     }
 ```
 
-#### 5、ParentMeasureSpec  &  LayoutParams
+## 5、ParentMeasureSpec  &  LayoutParams
 
 对于 DecorView 来说，其 MeasureSpec 是通过测量屏幕宽高来生成的，这从 ViewRootImpl 的 `performTraversals()` 方法就可以体现出来
 
 ```java
-	private void performTraversals() {
+    private void performTraversals() {
     	···
     	int childWidthMeasureSpec = getRootMeasureSpec(mWidth, lp.width);
     	int childHeightMeasureSpec = getRootMeasureSpec(mHeight, lp.height);
     	performMeasure(childWidthMeasureSpec, childHeightMeasureSpec);
     	···
-	}
+    }
 ```
 
 **而对于 View 来说，其 MeasureSpec 是由其父容器 ViewGroup 的 MeasureSpec 和 View 自身的 LayoutParams 来共同决定的**。此处所说的 View 也包含 ViewGroup 类型，因为父容器 ViewGroup 在测量 childView 的时候并不关心下一级的具体类型，而只是负责下发测量要求并接收测量结果，下一级如果是 View 类型那么就只需要测量自身并返回结果，下一级如果是 ViewGroup 类型那么就重复以上步骤并返回结果，整个视图树的绘制流程就通过这种层层调用的方式来完成测量，和 View 的事件分发机制非常相似
@@ -441,7 +441,7 @@ FrameLayout 自然是会重写 View 的 `onMeasure`方法，不同 ViewGroup 有
 在该方法中，FrameLayout 通过 `measureChildWithMargins`方法来执行 childView 的 measure 流程，将 childView 的测量结果作为测量自身的依据之一，这里就用到了 FrameLayout 自身的 `widthMeasureSpec` 和 `heightMeasureSpec`
 
 ```java
-	@Override
+    @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int count = getChildCount();
 		···
@@ -471,7 +471,7 @@ FrameLayout 自然是会重写 View 的 `onMeasure`方法，不同 ViewGroup 有
 `measureChildWithMargins`从名字上就可以看出在生成 childView 的 MeasureSpec 的时候会同时考虑 childView 是否设置了 margin，实际上还会用上 ViewGroup 的 padding 值。ViewGroup 必须先减去这两个属性值所占据的空间，剩余的空间才能用来容纳 childView。可以看到，**此时已经使用到 childView 的 LayoutParams 了**
 
 ```java
-	protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, 
+    protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, 
                                            int parentHeightMeasureSpec, int heightUsed) {
         final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();
         final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,
@@ -490,7 +490,7 @@ FrameLayout 自然是会重写 View 的 `onMeasure`方法，不同 ViewGroup 有
 例如，假设 ViewGroup 的 `layout_width` 是 `match_parent`，childView 的 `layout_width` 是 `wrap_content`，那么 childView 的宽度最多只能占满 ViewGroup 而不应该超出该范围。在这个设定下，ViewGroup 的`specMode`就是`EXACTLY`，`resultSize` 就等于`size`，`resultMode` 就是 `AT_MOST`，即 childView 最终的测量结果不得超出 size
 
 ```java
-	public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
+    public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
         int specMode = MeasureSpec.getMode(spec);
         int specSize = MeasureSpec.getSize(spec);
 
@@ -523,16 +523,16 @@ FrameLayout 自然是会重写 View 的 `onMeasure`方法，不同 ViewGroup 有
     }
 ```
 
-### 二、Layout
+# 二、Layout
 
 layout 代表的是**确定位置**的过程，在这个过程中 View 需要计算得出自己在父容器中的显示位置
 
-#### 1、ViewRootImpl
+## 1、ViewRootImpl
 
 View 的 layout 起始点也是从 ViewRootImpl 开始的，ViewRootImpl 的 `performLayout` 方法会调用 DecorView 的 `layout` 方法来启动 layout 流程，传入的后两个参数即屏幕的宽高大小
 
 ```java
-	private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth,
+    private void performLayout(WindowManager.LayoutParams lp, int desiredWindowWidth,
             int desiredWindowHeight) {
         mScrollMayChange = true;
         mInLayout = true;
@@ -558,12 +558,12 @@ View 的 layout 起始点也是从 ViewRootImpl 开始的，ViewRootImpl 的 `pe
     }
 ```
 
-#### 2、View
+## 2、View
 
 `layout` 是 View 类中的方法，传入的四个参数即我们熟知的 left、top、right、bottom，这四个值都是 View 相对父容器 ViewGroup 的坐标值。对于 DecorView 来说这四个值就分别是 0、0、screenWidth、screenHeight
 
 ```java
-	public void layout(int l, int t, int r, int b) {
+    public void layout(int l, int t, int r, int b) {
         ···
         //重点
         boolean changed = isLayoutModeOptical(mParent) ?
@@ -583,7 +583,7 @@ View 的 layout 起始点也是从 ViewRootImpl 开始的，ViewRootImpl 的 `pe
 `setFrame` 方法又会将 left、top、right、bottom 等四个值保存到 View 相应的几个全局变量上，至此 View 的 width 和 height 才真正确定下来，View 的 `getWidth()` 和 `getHeight()`方法都是依靠这四个值做减法运算得到的。此外，这里也会回调 `onSizeChanged` 方法，在自定义 View 时我们往往就通过该方法来得到 View 的准确宽高大小，并在这里接收宽高大小变化的通知
 
 ```java
-	protected boolean setFrame(int left, int top, int right, int bottom) {
+    protected boolean setFrame(int left, int top, int right, int bottom) {
         ···
         if (mLeft != left || mRight != right || mTop != top || mBottom != bottom) {
             changed = true;
@@ -619,7 +619,7 @@ View 的 layout 起始点也是从 ViewRootImpl 开始的，ViewRootImpl 的 `pe
     }
 ```
 
-#### 3、ViewGroup
+## 3、ViewGroup
 
 `layout` 方法又会调用自身的 `onLayout` 方法。`onLayout` 方法在 View 类中是空实现，大部分情况下 View 都无需重写该方法。而 ViewGroup 又将其改为了抽象方法，即每个 ViewGroup 子类都需要通过实现该方法来管理自己的所有 childView 的摆放位置，FrameLayout 和 LinearLayout 等容器类就通过实现该方法来实现不同的布局效果
 
@@ -628,7 +628,7 @@ View 的 layout 起始点也是从 ViewRootImpl 开始的，ViewRootImpl 的 `pe
 FrameLayout 的 `layoutChildren` 方法就需要考虑以上因素，计算得出 childView 相对 FrameLayout 的 left、top、right、bottom 等值的大小，然后调用 childView 的 `layout` 方法，使得 childView 能够得到自己的真实宽高。如果 childView 也属于 ViewGroup 类型的话，就又会层层调用重复以上步骤完成整个视图树的 layout 操作
 
 ```java
-	@Override
+    @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
         layoutChildren(left, top, right, bottom, false /* no force left gravity */);
     }
@@ -700,7 +700,7 @@ FrameLayout 的 `layoutChildren` 方法就需要考虑以上因素，计算得�
     }
 ```
 
-### 三、Draw
+# 三、Draw
 
 draw 代表的是**绘制视图**的过程，在这个过程中 View 需要通过操作 Canvas 来实现自己 UI 效果
 
@@ -724,13 +724,13 @@ View 的`draw`方法的重点看其调用的 `onDraw` 和 `dispatchDraw` 这两�
 
 ```java
 	public void draw(Canvas canvas) {
-         ···
+                ···
 		// Step 3, draw the content
 		onDraw(canvas);
 		// Step 4, draw the children
 		dispatchDraw(canvas);
 		···
-    }
+        }
 ```
 
 ViewGroup 的 `dispatchDraw` 方法会循环遍历所有 childView，使用同个 Canvas 对象来调用每个 childView 的 `draw`方法，层层调用完成整个视图树的绘制
@@ -768,9 +768,9 @@ ViewGroup 的 `dispatchDraw` 方法会循环遍历所有 childView，使用同�
     }
 ```
 
-### 四、提问环节
+# 四、提问环节
 
-#### 1、ViewGroup 和 View 的绘制顺序
+## 1、ViewGroup 和 View 的绘制顺序
 
 ViewGroup 和 View 在进行 measure、layout、draw 时是交叉在一起的，那么这两者具体的先后顺序是怎么样的呢？
 
@@ -825,7 +825,7 @@ ViewGroup 和 View 在进行 measure、layout、draw 时是交叉在一起的，
 在 layout 阶段，FrameLayout 的 `setFrame` 方法已经将外部传入的 left、top、right、bottom 等四个值保存起来了，至此 ViewGroup 自身的位置信息就已经确定下来了，之后才会调用 `layoutChildren` 方法去执行 childView 的 layout 操作
 
 ```java
-	public void layout(int l, int t, int r, int b) {
+    public void layout(int l, int t, int r, int b) {
         ···
         //重点
         boolean changed = isLayoutModeOptical(mParent) ?
@@ -848,7 +848,7 @@ ViewGroup 和 View 在进行 measure、layout、draw 时是交叉在一起的，
 
 ```java
 	public void draw(Canvas canvas) {
-         ···
+                 ···
 		// Step 3, draw the content
 		onDraw(canvas);
 		// Step 4, draw the children
@@ -857,12 +857,12 @@ ViewGroup 和 View 在进行 measure、layout、draw 时是交叉在一起的，
     }
 ```
 
-#### 2、View 多个回调函数的先后顺序
+## 2、View 多个回调函数的先后顺序
 
 View 开放给子类重写的回调方法有很多个，我们经常使用的到的有以下几个
 
 ```java
-	@Override
+    @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
     }
@@ -922,7 +922,7 @@ private void performTraversals() {
 `dispatchAttachedToWindow` 方法是 View 类中的方法，参数 0 即 `View.VISIBLE`，即 DecorView 默认状态下就是可见的。该方法内部就会回调 `onAttachedToWindow` 和 `onVisibilityChanged` 这两个方法
 
 ```java
-	void dispatchAttachedToWindow(AttachInfo info, int visibility) {
+    void dispatchAttachedToWindow(AttachInfo info, int visibility) {
         ···
         onAttachedToWindow();
         ···
@@ -934,7 +934,7 @@ private void performTraversals() {
 而 ViewGroup 重写了该方法，ViewGroup 会先调用自身再调用 childView 的 `dispatchAttachedToWindow`方法，这说明 ViewGroup 和内嵌的 View 之间具有明确的先后顺序。DecorView 就通过这种层层调用来执行内嵌 View 的 `dispatchAttachedToWindow`方法
 
 ```java
-	@Override
+    @Override
     @UnsupportedAppUsage
     void dispatchAttachedToWindow(AttachInfo info, int visibility) {
         mGroupFlags |= FLAG_PREVENT_DISPATCH_ATTACHED_TO_WINDOW;
@@ -960,7 +960,7 @@ private void performTraversals() {
 ViewRootImpl 的 `dispatchDetachedFromWindow()` 方法又负责调用 DecorView 的 `dispatchDetachedFromWindow` 方法
 
 ```java
-	void dispatchDetachedFromWindow() {
+    void dispatchDetachedFromWindow() {
         ···
         if (mView != null && mView.mAttachInfo != null) {
             mAttachInfo.mTreeObserver.dispatchOnWindowAttachedChange(false);
@@ -973,7 +973,7 @@ ViewRootImpl 的 `dispatchDetachedFromWindow()` 方法又负责调用 DecorView 
 View 收到该回调后就会再回调 `onDetachedFromWindow` 方法 
 
 ```java
-	@UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P)
+    @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P)
     void dispatchDetachedFromWindow() {
         ···
         onDetachedFromWindow();
@@ -1009,7 +1009,7 @@ ViewGroup 则是会先调用 childView 再调用自身的 `dispatchDetachedFromW
 2. childView 的 onDetachedFromWindow 会先被调用，所有 childView 都调用后才会调用父容器的该方法
 3. View 的绘制流程就按照 onMeasure、onLayout、onLayout 的顺序进行，onAttachedToWindow 和 onVisibilityChanged 都会早于这三个方法
 
-#### 3、getWidth 和 getMeasuredWidth 的区别
+## 3、getWidth 和 getMeasuredWidth 的区别
 
 `getMeasuredWidth()` 和 `getMeasuredHeight()`返回的是 View 在 measure 阶段的测量结果，用于在 `onMeasure` 方法后调用。`getWidth()` 和 `getHeight()`返回的是 View 的实际宽高值，用于在 `onLayout` 方法后调用。这两者可以说是 View 在不同阶段下的一个尺寸值，大多数情况下这两个值都是相等的，但 measureWidth 只是相当于一个预估值，View 的最终宽度并不一定遵循该值，View 的实际宽高需要在 layout 阶段才能最终确定下来
 
@@ -1022,7 +1022,7 @@ public void layout(int l, int t, int r, int b) {
 }
 ```
 
-#### 4、LayoutParams 在什么时候生成
+## 4、LayoutParams 在什么时候生成
 
 我们知道，当我们在 Activity 中调用 `setContentView` 后，系统肯定是需要从布局文件中为每个 View 和 ViewGroup 构造生成对应的 LayoutParams，那这个过程具体是在什么时候呢？下面就来了解下
 
@@ -1047,7 +1047,7 @@ public void layout(int l, int t, int r, int b) {
         return inflate(resource, root, root != null);
     }
 
-	public View inflate(@LayoutRes int resource, @Nullable ViewGroup root, boolean attachToRoot) {
+    public View inflate(@LayoutRes int resource, @Nullable ViewGroup root, boolean attachToRoot) {
         final Resources res = getContext().getResources();
         if (DEBUG) {
             Log.d(TAG, "INFLATING from resource: \"" + res.getResourceName(resource) + "\" ("
@@ -1128,7 +1128,7 @@ public void layout(int l, int t, int r, int b) {
  temp 内嵌的所有 childView 既可能是 View 类型也可能是 ViewGroup 类型，而 childView 也可能包含多个 View 和 ViewGroup ，每个 childView 都需要通过 `addView` 的方式添加到其父容器 ViewGroup 中。因此`rInflateChildren`方法使用到了递归的思想来实现这个目的，它调用了 `rInflate` 方法，`rInflate` 方法又调用回`rInflateChildren` 方法
 
 ```java
-	final void rInflateChildren(XmlPullParser parser, View parent, AttributeSet attrs,
+    final void rInflateChildren(XmlPullParser parser, View parent, AttributeSet attrs,
             boolean finishInflate) throws XmlPullParserException, IOException {
         rInflate(parser, parent, parent.getContext(), attrs, finishInflate);
     }
@@ -1200,16 +1200,16 @@ public void layout(int l, int t, int r, int b) {
         return new FrameLayout.LayoutParams(getContext(), attrs);
     }
 
-	public static class LayoutParams extends MarginLayoutParams {
+    public static class LayoutParams extends MarginLayoutParams {
       
-        public static final int UNSPECIFIED_GRAVITY = -1;
+    public static final int UNSPECIFIED_GRAVITY = -1;
 
-        public int gravity = UNSPECIFIED_GRAVITY;
+    public int gravity = UNSPECIFIED_GRAVITY;
 
-        public LayoutParams(@NonNull Context c, @Nullable AttributeSet attrs) {
-            super(c, attrs);
-            final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.FrameLayout_Layout);
-            gravity = a.getInt(R.styleable.FrameLayout_Layout_layout_gravity, UNSPECIFIED_GRAVITY);
+    public LayoutParams(@NonNull Context c, @Nullable AttributeSet attrs) {
+        super(c, attrs);
+        final TypedArray a = c.obtainStyledAttributes(attrs, R.styleable.FrameLayout_Layout);
+        gravity = a.getInt(R.styleable.FrameLayout_Layout_layout_gravity, UNSPECIFIED_GRAVITY);
             a.recycle();
         }
 
@@ -1219,7 +1219,7 @@ public void layout(int l, int t, int r, int b) {
 
 所以说，每个 View 或者 ViewGroup 都需要通过其父容器来生成 LayoutParams，且每个 ViewGroup 子类返回的 LayoutParams 一般来说都需要继承于 MarginLayoutParams，这样才能具备解析 `layout_margin`的能力，且还需要再根据自身 ViewGroup 提供的标签属性来进一步扩展 MarginLayoutParams 的功能
 
-#### 5、LayoutInflater 生成的 View 是否有 LayoutParams
+## 5、LayoutInflater 生成的 View 是否有 LayoutParams
 
 以下代码是我们惯用的一种将布局文件转换为 View 对象的方法，那么这种方法生成的 View 是否具有 LayoutParams 呢？
 
@@ -1233,7 +1233,7 @@ View view = LayoutInflater.from(context).inflate(layoutId, root, attachToRoot)
 - 如果 root 不为 null，那么就会通过 root 为 view 生成 LayoutParams。之后，如果 attachToRoot 为 false，那么就将 LayoutParams 直接赋予 view。如果 attachToRoot  为 true，那么就通过 `root.addView` 的方式将 view 添加到 root 中，root 内部一样会将 LayoutParams 赋予 view
 
 ```java
-	public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot) {
+    public View inflate(XmlPullParser parser, @Nullable ViewGroup root, boolean attachToRoot) {
         synchronized (mConstructorArgs) {
             	···
    			     // Temp is the root view that was found in the xml
@@ -1277,12 +1277,12 @@ View view = LayoutInflater.from(context).inflate(layoutId, root, attachToRoot)
     }
 ```
 
-#### 6、向 ViewGroup 添加的 View 是否有 LayoutParams
+## 6、向 ViewGroup 添加的 View 是否有 LayoutParams
 
 ViewGroup 包含以下三个没有传入 LayoutParams 的 `addView` 方法，可以看出来如果 child 内部不包含 LayoutParams 的话也会通过 `generateDefaultLayoutParams()` 方法来生成一个默认值，如果该方法返回了 null 的话将抛出异常，默认情况下 DefaultLayoutParams 的宽高值都是 `WRAP_CONTENT`
 
 ```java
-	public void addView(View child) {
+    public void addView(View child) {
         addView(child, -1);
     }
 
@@ -1313,7 +1313,7 @@ ViewGroup 包含以下三个没有传入 LayoutParams 的 `addView` 方法，可
     }
 ```
 
-#### 7、requestLayout 方法调用后的流程
+## 7、requestLayout 方法调用后的流程
 
 当我们动态改变了一个 View 的位置或者宽高大小的时候，就可以通过调用`requestLayout()`方法来重新触发 View 的绘制流程，使得我们的修改可以生效。该方法会触发其自身与父容器回调 `onMeasure` 和 `onLayout` 两个方法，但不会回调 `onDraw` 方法。这里来看下该方法的主干流程
 
@@ -1353,7 +1353,7 @@ ViewGroup 包含以下三个没有传入 LayoutParams 的 `addView` 方法，可
 View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当前有设置 `PFLAG_FORCE_LAYOUT` 标记位，如果 View 的视图没有发生变化又没有设置该标记位的话就不会参与此次绘制流程
 
 ```java
-	public final void measure(int widthMeasureSpec, int heightMeasureSpec) {
+    public final void measure(int widthMeasureSpec, int heightMeasureSpec) {
         ···
         final boolean forceLayout = (mPrivateFlags & PFLAG_FORCE_LAYOUT) == PFLAG_FORCE_LAYOUT;
         ···
@@ -1370,7 +1370,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
 当调用了 `onMeasure` 方法后又会设置 `PFLAG_LAYOUT_REQUIRED` 标记位，该标记位又会参与判断是否需要调用 `onLayout` 方法
 
 ```java
-	public void layout(int l, int t, int r, int b) {
+    public void layout(int l, int t, int r, int b) {
         ···
         boolean changed = isLayoutModeOptical(mParent) ?
                 setOpticalFrame(l, t, r, b) : setFrame(l, t, r, b);
@@ -1384,7 +1384,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
     }
 ```
 
-#### 8、属性动画会触发绘制流程吗
+## 8、属性动画会触发绘制流程吗
 
 会，但可能只会执行一部分流程
 
@@ -1400,7 +1400,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
 如果我们动态改变的是 View 的 BackgroundColor，则会根据当前 View 的宽高大小或者位置是否发生了变化来决定是否调用 `requestLayout()` 方法，但最终一定会调用 `invalidate(true)` 方法来回调 `onDraw` 方法
 
 ```java
-	public void setBackgroundDrawable(Drawable background) {
+    public void setBackgroundDrawable(Drawable background) {
         ···
         boolean requestLayout = false;
         ···
@@ -1413,7 +1413,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
     }
 ```
 
-#### 9、parent 是 wrap_content，child 是 match_parent，会怎么显示
+## 9、parent 是 wrap_content，child 是 match_parent，会怎么显示
 
 假设 Activity 的布局如下所示，FrameLayout 的宽高都是 wrap_content，View 的宽高都是 match_parent。试验下就可以知道 View 视图将占满整个屏幕
 
@@ -1439,7 +1439,7 @@ View 的 `measure` 方法调用 `onMeasure` 方法的前置条件之一就是当
 FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整个屏幕大小。childDimension 等于 MATCH_PARENT，所以 childView 最终对应的 specSize 就是屏幕大小，specMode 就是 AT_MOST
 
 ```java
-	public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
+    public static int getChildMeasureSpec(int spec, int padding, int childDimension) {
         int specMode = MeasureSpec.getMode(spec);
         int specSize = MeasureSpec.getSize(spec);
 
@@ -1497,10 +1497,10 @@ FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整�
     }
 ```
 
-### 五、自定义 View Demo
+# 五、自定义 View Demo
 
 我在蛮久前曾写过几个自定义 View 来练手，这次就趁着写本篇文章的机会用 Kotlin 重写了一遍，需要的同学可以参照下
 
 点击这里获取代码：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
 
-![](https://s3.ax1x.com/2021/03/14/60p8US.gif) ![](https://s3.ax1x.com/2021/03/14/60p3E8.gif)![](https://s3.ax1x.com/2021/03/14/60plHf.gif)
+![](https://s3.ax1x.com/2021/03/14/60p8US.gif) ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef4ec5a3a18f46f1997c7115c91c5967~tplv-k3u1fbpfcp-zoom-1.image)![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7c7d3cd985a4e4ebababc0b7e1c1a0c~tplv-k3u1fbpfcp-zoom-1.image)

@@ -16,7 +16,7 @@
 - 列表：Compose 的 Lazy 组件为数据列表的呈现提供了一种简单扼要且功能强大的方式，而且将模版代码精简到了最少
 - 动画：Compose 简明的动画 API 让您可以更轻松地打造出让用户眼前一亮的体验
 
-### 一、compose_chat
+# 一、compose_chat
 
 技术的世界总是在不断变化的，新的技术总在不断涌现，我数了一下，现在一名 Android 应用开发工程师需要掌握的最基础技能有以下几个，有点 MMP 的感觉 🤣🤣
 
@@ -44,7 +44,7 @@
 
 本文主要介绍的是 Jetpack Compose 的各种重点概念和功能点，并不会涉及太多 compose_chat 的实际编码内容，但会以 compose_chat 作为讲解时的辅助例子。读者如果想要学习 Jetpack Compose 的话，compose_chat 会是一个很好的入门学习项目，希望对你有所帮助 🤣🤣
 
-### 二、命令式与声明式
+# 二、命令式与声明式
 
 长期以来，Android 的视图层次结构都可以表示为一个视图树，若干个 View 和 ViewGroup 以嵌套的关系组成整个视图树，开发者通过 XML 来声明整个视图树的层次结构，再通过 `findViewById()`来拿到每个控件的引用。当状态发生变化需要刷新 UI 时，就通过主动调用控件的特定方法来更新 UI
 
@@ -57,7 +57,7 @@
         tvUserName.text = userName
     }
 
-	onUserNameChanged("业志陈")
+    onUserNameChanged("业志陈")
 ```
 
 Compose 则是通过声明一系列不包含返回值的**可组合（Composable）函数**来构建界面的。可组合函数只负责描述所需的屏幕状态，且不提供任何视图控件的引用给到开发者。可组合函数可以包含入参参数，参数就用来参与描述屏幕状态，当需要改变屏幕状态时，也是通过**生成新的入参参数并再次调用可组合函数**来实现 UI 刷新的
@@ -109,7 +109,7 @@ fun HomeScreen(
 }
 ```
 
-### 三、可组合函数
+# 三、可组合函数
 
 带有 `@Composable`注解的函数即可组合函数，该注解就用于告知 Compose 编译器：此函数旨在将数据转换为界面。例如，Compose 的`Text()` 函数就提供了 TextView 的所有功能，开箱即用，方法签名如下所示
 
@@ -138,7 +138,7 @@ fun Text(
 当中，最需要关注的当属 Modifier 这个入参参数了，Compose 提供了一系列开箱即用的“控件”函数，例如，对应 FrameLayout 的 Box()、对应 ImageView 的 Image()、对应 RecyclerView 的 LazyColumn() 等，这些控件都包含一个 Modifier 入参参数。Modifier 功能十分强大，每个控件的**宽高大小、位置、方向、对齐、裁切、间距、背景色、点击、甚至手势识别**等功能都需要通过它来完成，每个功能都通过扩展函数的方式来声明，以链式调用的方式进行使用
 
 ```kotlin
-		Text(
+	Text(
             modifier = Modifier
                 .weight(weight = messageWidthWeight, fill = false)
                 .padding(
@@ -173,7 +173,7 @@ Compose 提供的一系列“控件”函数基本已经能够满足我们的日
 
 ![](https://p9-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/76dfa61a8ac544718f0677b6ce9e39ee~tplv-k3u1fbpfcp-watermark.image)
 
-### 四、状态 
+# 四、状态 
 
 应用的状态（State）是指可以随时间变化的任何值，其定义十分宽泛，从函数的入参参数到应用的背景色都包括在内
 
@@ -244,7 +244,7 @@ fun HomeScreen(
 }
 ```
 
-### 五、状态提升
+# 五、状态提升
 
 看以下例子。name 的存在，相当于使得 HelloContent 这个可组合函数包含了一个内部状态，该状态对于调用方来说是完全不可见的。如果调用方不需要控制状态的变化或者是接收状态变化的通知，那么隐藏内部状态就变得十分有用，因为这样就降低了调用方的调用成本。但是，具有内部状态的可组合项往往不易重复使用，也更难测试
 
@@ -337,7 +337,7 @@ fun HomeScreen(
 
 > 我认为，遵循状态提升的理念并非一定要做到所有可组合项均无状态。虽然 BottomBar 做到了无状态，但最终 screenSelected 也需要转交给上一级的调用方进行持有，调用方是有状态的。虽然可以将 screenSelected 再次提升到 ViewModel 中进行持有，但像这种不依赖外部环境（例如，网络请求，系统配置等），仅依靠用户事件进行变化的状态，我觉得将其提升到使用该状态（读取）的所有可组合项的**最低共同父项**即可，不必强行做到所有可组合项均无状态
 
-### 六、纯函数
+# 六、纯函数
 
 在很多讲解关于程序设计最佳实践的文章或者书籍里，都会推荐一个编码原则：**尽可能使用 val、不可变对象及纯函数来设计程序**。这个原则在 Compose 中也同样需要遵守，因为一个合格的可组合函数就应该属于**纯函数**，幂等且没有副作用
 
@@ -406,7 +406,7 @@ fun EndScreen() {
 
 所以说，可组合函数需要做到无副作用才能得到正确的期望结果。此外，对于相同的入参参数，可组合函数应该一直呈现相同的表现形式。多个可组合函数之间应该保持状态独立，不能具有互相依赖性。对于共享的状态，应该以入参参数的形式进行传递，并且将状态放在最顶级函数或者 ViewModel 中进行维护
 
-### 七、副作用
+# 七、副作用
 
 在某些情况下，可组合函数可能无法做到完全无副作用，例如，我们在切换应用主题的时候希望系统状态栏也能跟着一起改变背景色，此时就说可组合函数产生了副作用。为了处理这种情况，Compose 也提供了 Effect API，以便以可预测的方式执行这些附带效应
 
@@ -465,11 +465,11 @@ fun HomeScreen(
 
 > 更多关于 Effect API 的介绍请看这里：[Compose 中的附带效应](https://developer.android.google.cn/jetpack/compose/side-effects)
 
-### 八、布局
+# 八、布局
 
 布局是每个 UI 框架都必须的功能，不管是 View、Flutter、还是 Compose，都必须提供一些开箱即用的布局控件，这里就介绍下 compose_chat 中使用得比较多的 ConstraintLayout 和 LazyColumn
 
-#### ConstraintLayout 
+## ConstraintLayout 
 
 在以往的 Android View 视图体系下，我们都会尽量避免在布局中进行多层嵌套，因为嵌套层次越深，在测量 View 时需要的次数和时间就会越多，这就会严重影响到应用的运行性能了，因此 Google 官方也建议开发者尽量使用 ConstraintLayout 进行布局，实现扁平化布局。但 Compose 不同，由于 Compose 可以避免多次测量，因此开发者可以根据需要进行深层次嵌套，而不用担心会影响性能。同时 Compose 也提供了自己专属的 constraintlayout-compose，用于实现约束定位
 
@@ -477,7 +477,7 @@ fun HomeScreen(
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5fce8b4dc0d545a99715de767c6445d7~tplv-k3u1fbpfcp-watermark.image)
 
-#### LazyColumn
+## LazyColumn
 
 在以往的 Android View 视图体系下，我们在加载长列表时一般是通过 RecyclerView 来实现的，以便能够缓存复用 Item，RecyclerView 在滑动性能上还是很优越的，能有效地避免由于数据量过大导致滑动卡顿的情况，缺点就是需要由开发者来声明各种 Adapter 和 ViewHolder，这一点比较麻烦
 
@@ -515,7 +515,7 @@ fun FriendshipScreen(
 }
 ```
 
-### 九、动画  &  手势操作 
+# 九、动画  &  手势操作 
 
 Jetpack Compose 提供了一些功能强大且可扩展的 API，可用于在应用界面中轻松实现各种动画效果。动画在现代移动应用中至关重要，其目的是实现自然流畅、易于理解的用户体验。许多 Jetpack Compose 动画 API 可以提供可组合函数，就像布局和其他界面元素一样；它们由使用 Kotlin 协程挂起函数构建的较低级别 API 提供支持
 
@@ -528,7 +528,7 @@ Jetpack Compose 提供了一些功能强大且可扩展的 API，可用于在应
 
 <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a37c2618a7df40e496d95c56ce45441e~tplv-k3u1fbpfcp-watermark.image" style="zoom:80%;" />
 
-#### 动画
+## 动画
 
 前文很多地方都有讲到：更新视图的唯一途径就是生成新的入参参数并再次调用可组合函数，动画也是如此。想要让视图以一种连贯且自然的方式进行变换，那么意思也就是说需要有一个值生成器来连贯地改变可组合函数的参数值
 
@@ -557,7 +557,7 @@ ProfileScreen 使用`rememberInfiniteTransition()`来实现这种效果。Infini
         )
 ```
 
-#### 手势操作 
+## 手势操作 
 
 Compose 中的 Modifier 十分强大，不仅仅是用于进行布局，像点击事件、手势操作等一样需要依靠其来完成，pointerInput 函数就用于识别用户的手势操作，Modifier 同时提供了 offset 函数用于控制控件的偏移量，通过结合 pointerInput 和 offset  两个函数来动态改变控件的偏移量，就可以实现拖拽用户头像了
 
@@ -609,7 +609,7 @@ Compose 中的 Modifier 十分强大，不仅仅是用于进行布局，像点�
         )
 ```
 
-### 十、主题
+# 十、主题
 
 在以前，Android 应用实现多主题 Theme 切换时都需要声明多个 XML 文件，例如在实现夜间模式时就需要两套 colors.xml 和 styles.xml，这种机制在性能上不能说低，但在易用性上的确不高
 
@@ -781,7 +781,7 @@ fun HomeScreen(
 
 可以看出来，Compose 的主题切换是完全依赖于内存读写的，避免了原生 Android 方式还需要通过  IO 流去读取 XML 文件的情况，在执行效率上相对会高很多，而且在定义主题时也十分方便，仅需要多声明一种 Colors 对象即可实现，类型安全且有助于减少代码量
 
-### 十一、结尾
+# 十一、结尾
 
 关于 Jetpack Compose 的大部分知识点都讲完了，自我感觉 compose_chat 能很好的帮助读者入门，最后当然也少不了源码了
 
@@ -802,7 +802,6 @@ APK 下载尝鲜：[compose_chat](https://github.com/leavesC/compose_chat/releas
 - ViewModel
 - LiveData
 
-### 十二、参考
+# 十二、参考
 
 - https://developer.android.google.cn/jetpack/compose/mental-model
-

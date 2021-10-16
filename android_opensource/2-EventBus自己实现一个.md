@@ -94,7 +94,7 @@ data class HelloBean(val data: String)
 
 使用起来和真正的 EvnetBus 差不多 😁😁，虽然实际上是要简陋很多的~~
 
-![](https://s1.ax1x.com/2020/10/05/0YgC38.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d9ba6a949d284ba98fe74150a72f764a~tplv-k3u1fbpfcp-zoom-1.image)
 
 最终自定义的 EasyEventBus 也只有五十行左右的代码量，仅向外部提供了三个方法用于进行**注册、反注册和发送消息**
 
@@ -159,7 +159,7 @@ object EasyEventBus {
 }
 ```
 
-### 一、怎么实现
+# 一、怎么实现
 
 这里先来想下这个自定义的 EasyEventBus 应该实现什么功能，以及怎么实现
 
@@ -208,7 +208,7 @@ public class EventBusInject {
 - easyeventbus_api。向外暴露 EasyEventBus 和 @Event
 - easyeventbus_processor。不对外暴露，只在编译阶段生效
 
-### 二、注解处理器
+# 二、注解处理器
 
 首先，我们需要提供一个注解对监听方法进行标记
 
@@ -477,7 +477,7 @@ override fun process(
     }
 ```
 
-### 三、EasyEventBus
+# 三、EasyEventBus
 
 EasyEventBus 的逻辑就很简单了，主要是通过反射来生成 EventBusInject 对象，拿到 `subscriber` 关联的 SubscriberInfo，然后在有消息被 Post 出来的时候进行遍历调用即可
 
@@ -542,6 +542,6 @@ object EasyEventBus {
 }
 ```
 
-### 四、GitHub
+# 四、GitHub
 
 文本实现的 EasyEventBus 挺简陋的😂😂因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

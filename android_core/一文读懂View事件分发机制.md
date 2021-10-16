@@ -2,15 +2,15 @@
 
 View 的事件分发机制一直是 Android 开发中比较难啃的一块知识点，想要理顺 MotionEvent 在 ViewGroup 和 View 这两者之间流转的规则十分不容易，整个过程涉及分发、拦截、消费三个过程，每个过程根据返回值的不同在流程就会有很大差别，且 Activity 也会参与进这个过程，不参照源码进行分析的话就很难明白触摸事件的分发规则。在很久前我就想过要来动笔写这一块知识点，熬夜肝了一篇，希望对你有所帮助 🤣🤣
 
-### 一、坐标系
+# 一、坐标系
 
 Android 中的坐标系可以分为两种：**屏幕坐标系** 和 **View 坐标系**
 
-#### 1、屏幕坐标系
+## 屏幕坐标系
 
 屏幕坐标系以屏幕左上角作为坐标原点，水平向右方向为 X 轴正轴方向，竖直向下方向为 Y 轴正轴方向
 
-#### 2、View 坐标系
+## View 坐标系
 
 View 坐标系以 View 所在的 ViewGroup 的左上角作为坐标原点，水平向右方向为 X 轴正轴方向，竖直向下方向为 Y 轴正轴方向。View 类包含了以下几个方法用于获取其相对父容器 ViewGroup 的距离：
 
@@ -22,7 +22,7 @@ View 坐标系以 View 所在的 ViewGroup 的左上角作为坐标原点，水�
 View 就依赖于这四个距离值来计算宽高大小
 
 ```java
-	public final int getWidth() {
+    public final int getWidth() {
         return mRight - mLeft;
     }
 
@@ -31,7 +31,7 @@ View 就依赖于这四个距离值来计算宽高大小
     }
 ```
 
-### 二、MotionEvent
+# 二、MotionEvent
 
 触摸事件最常见的有以下三种类型：
 
@@ -44,25 +44,25 @@ View 就依赖于这四个距离值来计算宽高大小
 每个事件都会被包装为 MotionEvent 类
 
 ```kotlin
-    fun dispatchTouchEvent(event: MotionEvent) {
-        when (event.action) {
-            MotionEvent.ACTION_DOWN -> TODO()
-            MotionEvent.ACTION_MOVE -> TODO()
-            MotionEvent.ACTION_UP -> TODO()
-        }
+fun dispatchTouchEvent(event: MotionEvent) {
+    when (event.action) {
+        MotionEvent.ACTION_DOWN -> TODO()
+        MotionEvent.ACTION_MOVE -> TODO()
+        MotionEvent.ACTION_UP -> TODO()
     }
+}
 ```
 
 MotionEvent 包含了该次触摸事件发生的坐标点，分为两组不同的方法
 
 ```kotlin
-        //基于 View 左上角获取到的距离
-        motionEvent.getX();
-        motionEvent.getY();
+//基于 View 左上角获取到的距离
+motionEvent.getX();
+motionEvent.getY();
 
-        //基于屏幕左上角获取到的距离
-        motionEvent.getRawX();
-        motionEvent.getRawY();
+//基于屏幕左上角获取到的距离
+motionEvent.getRawX();
+motionEvent.getRawY();
 ```
 
 此外，系统内置了一个最小滑动距离值，只有先后两个坐标点之间的距离超出该值，才会认为属于滑动事件
@@ -71,11 +71,11 @@ MotionEvent 包含了该次触摸事件发生的坐标点，分为两组不同�
 ViewConfiguration.get(Context).getScaledTouchSlop()	
 ```
 
-### 三、事件分发的三个阶段
+# 三、事件分发的三个阶段
 
 在整个事件分发过程中，我们主要接触的是 ViewGroup 和 View 这两种视图类型。一次完整的事件分发过程会包括三个阶段，即事件的**发布、拦截和消费**，这三个过程分别对应声明在 View 和 ViewGroup 中的三个方法
 
-#### 1、发布
+## 发布
 
 事件的发布对应着如下方法
 
@@ -85,7 +85,7 @@ public boolean dispatchTouchEvent(MotionEvent ev)
 
 Android 中的视图（View、ViewGroup、Activity 等）接收到的触摸事件都是通过这个方法来进行分发的，如果事件能够传递给当前视图，则此方法一定会被调用，即视图接收到的触摸事件都需要通过该方法来进行分发。该方法的返回值用于表明该视图或者内嵌视图是否消费了该事件。如果当前视图类型是 ViewGroup，该方法内部会调用 `onInterceptTouchEvent(MotionEvent)`方法来判断是否拦截该事件
 
-#### 2、拦截
+## 拦截
 
 事件的拦截对应着如下方法
 
@@ -95,7 +95,7 @@ public boolean onInterceptTouchEvent(MotionEvent ev)
 
 ViewGroup 包含该方法，View 中不存在。该方法通过返回值来标明是否需要拦截对应的事件。返回 true 则表示拦截这个事件，不继续发布给子视图，并将事件交由自身的 `onTouchEvent(MotionEvent event)` 方法来进行处理；返回 false 则表示不拦截事件，继续传递给子视图。如果 ViewGroup 拦截了某个事件，那么在同一个事件序列当中，此方法不会被再次调用
 
-#### 3、消费
+## 消费
 
 事件的消费对应着如下方法
 
@@ -105,12 +105,12 @@ public boolean onTouchEvent(MotionEvent event)
 
 该方法返回 true 表示当前视图已经处理了对应的事件，事件将在这里完成消费，终止传递；返回 false 表示当前视图不处理这个事件，事件会被传递给其它视图
 
-#### 4、三者的联系
+## 三者的联系
 
 ViewGroup 完整包含以上三个过程，而 View 只包含**分发和消费**两个，既 View 类不包含 `onInterceptTouchEvent(MotionEvent)` 方法。三个方法之间的联系可以用如下伪代码来表示：
 
 ```kotlin
-	fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    fun dispatchTouchEvent(event: MotionEvent): Boolean {
         var consume = false
         consume = if (onInterceptTouchEvent(event)) {
             onTouchEvent(event)
@@ -129,9 +129,9 @@ ViewGroup 完整包含以上三个过程，而 View 只包含**分发和消费**
 
 当然，View 的事件分发过程不是上述介绍的那么简单，实际上事件的流转过程很复杂，根据每个方法返回值的不同，事件序列的流转方向会有很大差异。直接看以下的例子才比较容易理解
 
-### 四、举个例子
+# 四、举个例子
 
-#### 1、打印日志
+## 打印日志
 
 这里分别继承于 RelativeLayout、LinearLayout 和 TextView，重写以上三个方法，打印各个方法的返回值，观察其调用时机
 
@@ -232,7 +232,7 @@ MyRelativeLayout: dispatchTouchEvent return: false
 5. 对于 View 来说，其不包含 onInterceptTouchEvent 方法，dispatchTouchEvent 方法会直接调用其 onTouchEvent 方法来决定是否消费该触摸事件。如果返回 false，则意味着其不打算消费该事件，返回 true 的话则意味着事件被其消费了，终止传递。此时触摸事件已经到了最底层，由于 TextView 默认就是不可点击的，在默认状态下不会消费任何触摸事件，由于找不到消费者，所以接着就会将事件依次返还给父容器
 6. MyTextView 不打算消费该触摸事件后，MyLinearLayout 的 onTouchEvent 方法就会接着被调用，之后 MyLinearLayout 的 dispatchTouchEvent 才最终得到确定的返回值 false。这说明内部 View 的回调事件是由其父容器 ViewGroup 来负责调用的，通过递归调用的方式来完成整个事件的分发，从 MyRelativeLayout 的 dispatchTouchEvent 方法的返回值是最后才打印也可以看出来
 
-#### 2、Activity 参与事件分发
+## Activity 参与事件分发
 
 前文有讲到，每次的触摸事件都是从 ACTION_DOWN 开始，以 ACTION_UP 作为结尾的，可是上面的日志信息却只看到了 ACTION_DOWN，ACTION_UP 去哪了呢？
 
@@ -276,7 +276,7 @@ MotionMainActivity: dispatchTouchEvent return: false
 1. Activity 会早于各个 ViewGroup 和 View 接收到触摸事件，ViewGroup 和 View 没有消费掉的 ACTION_DOWN 事件最终还是会交由 Activity 来消化掉
 2. 由于 ViewGroup 和 View 均没有消费掉 ACTION_DOWN 事件，所以后续的 ACTION_UP 事件不会再继续向它们下发，而是会直接调用 Activity 的 onTouchEvent 方法，由 Activity 来消化掉
 
-#### 3、ViewGroup 拦截事件
+## ViewGroup 拦截事件
 
 如果 ViewGroup 自身拦截且消费了 ACTION_DOWN 事件，即 onInterceptTouchEvent 和 onTouchEvent  两个方法均返回了 true，那么本次事件序列的后续事件就都会交由其进行处理（如果能接收得到的话），不会再调用其 onInterceptTouchEvent 方法来判断是否进行拦截，dispatchTouchEvent 方法会直接调用 onTouchEvent 方法
 
@@ -415,7 +415,7 @@ MyRelativeLayout: dispatchTouchEvent return: false
 
 **此外，有一个需要注意的点是，即使每个 ACTION_MOVE 事件 MyLinearLayout 均没有消费掉，MyLinearLayout 一样可以完整接收到整个事件序列的消息，且此时父容器的 onTouchEvent 方法也不会被回调。因为在正常情况下，一个事件序列只应该由单独一个 View 或者 ViewGroup 进行处理，既然 MyLinearLayout 已经消费了 ACTION_DOWN 事件，那么后续的事件应该也都交由其进行处理**
 
-#### 4、View 消费事件
+## View 消费事件
 
 View 没有拦截事件这个过程，但如果有消费掉 ACTION_DOWN 事件的话，后续事件就都可以接收到
 
@@ -501,7 +501,7 @@ MyRelativeLayout: dispatchTouchEvent return: false
 
 **总的来说，View 是否能接收到整个事件序列的消息主要就取决于其是否消费了 ACTION_DOWN 事件，ACTION_DOWN 事件是整个事件序列的起始点，View 必须消耗了起始事件才有机会完整处理整个事件序列**
 
-### 五、总结
+# 五、总结
 
 1. Activity 会早于各个 ViewGroup 和 View 接收到触摸事件，Activity 可以通过主动拦截掉各个事件的下发使得 ViewGroup 和 View 接收不到任何事件。而如果 ViewGroup 和 View 接收到了 ACTION_DOWN 事件但没有消费掉，那么事件最终还是会交由 Activity 来消费
 2. 当触摸事件被触发时，系统会根据触摸点的坐标系找到根 ViewGroup，然后向底层 View 下发事件，即事件分发流程先是从根 ViewGroup 从上往下（从外向内）向内嵌的底层 View 传递的，如果在这个过程中事件没有被消费的话，最终又会反向传递从下往上（从内向外）进行传递
@@ -514,11 +514,11 @@ MyRelativeLayout: dispatchTouchEvent return: false
 9. 处于上游的 ViewGroup 不关心到底是下游的哪个 ViewGroup 或者 View 消费了触摸事件，只要下游的 dispatchTouchEvent 方法返回了 true，上游就会继续向下游下发后续事件
 10. ViewGroup 和 View 对于每次事件序列的消费过程是独立的，即上一次事件序列的消费结果不影响新一次的事件序列
 
-### 六、View
+# 六、View
 
 View 是 Android 整个体系最基础的基类之一，这里来对 View 的事件分发源码做下分析，以此来验证上边我给出的结论，基于 SDK 30 版本进行分析
 
-#### dispatchTouchEvent
+## dispatchTouchEvent
 
 View 的 dispatchTouchEvent 方法逻辑上还比较简单，可以总结为：
 
@@ -557,7 +557,7 @@ View 的 dispatchTouchEvent 方法逻辑上还比较简单，可以总结为：
     }
 ```
 
-#### onTouchEvent 
+## onTouchEvent 
 
 onTouchEvent 方法就比较复杂了，我们只看其主干思路即可，可以总结为：
 
@@ -616,11 +616,11 @@ onTouchEvent 方法就比较复杂了，我们只看其主干思路即可，可�
     }
 ```
 
-### 七、ViewGroup
+# 七、ViewGroup
 
 ViewGroup 直接继承于 View，其逻辑是在 View 的基础上来做扩展的，这里就直接看 ViewGroup 类是如何来实现上述介绍的三个方法的
 
-#### dispatchTouchEvent
+## dispatchTouchEvent
 
 ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因为 View 在整个视图体系中处于最基础的底层，只需要管理好自己就可以，而 ViewGroup 还需要管理其内嵌的布局，可能会包含多个子 ViewGroup 和子 View
 
@@ -742,7 +742,7 @@ ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因�
 8. 对应第五步。此时 mFirstTouchTarget 不为 null，那么就会去调用 child 的 dispatchTouchEvent 方法，重复以上步骤，从而得知 child 对该事件的处理结果 handled
 9. 所以说，ViewGroup 通过这种递归调用，最终就会为上层视图 Activity 返回最终的事件处理结果
 
-#### onInterceptTouchEvent
+## onInterceptTouchEvent
 
 onInterceptTouchEvent 方法只在特定几种情况下才会返回 true，成立条件似乎是当存在外置鼠标设备的时候才有可能成立，读者只需要记住该方法默认返回 false 即可，既默认不进行拦截
 
@@ -758,11 +758,11 @@ onInterceptTouchEvent 方法只在特定几种情况下才会返回 true，成�
     }
 ```
 
-#### onTouchEvent
+## onTouchEvent
 
 ViewGroup 没有重写其父类 View 的 onTouchEvent 方法，所以此方法和 View 类的逻辑保持一致
 
-### 八、Activity、PhoneWindow、DecorView
+# 八、Activity、PhoneWindow、DecorView
 
 上文在很多地方都讲到了 Activity 会参与 View 的事件分发机制，而实际上除了 Activity 外，这个过程还包含 PhoneWindow 和 DecorView，只是这两个都被包含在 Activity 内部，日常开发中一般都不会接触到这一块。这里就再来介绍下这三者的作用
 
@@ -771,7 +771,7 @@ ViewGroup 没有重写其父类 View 的 onTouchEvent 方法，所以此方法�
 - DecorView 是 FrameLayout 的子类，是 Activity 视图树的根视图，我们平时调用 setContentView 所添加的 View 就对应 DecorView 的 ContentParent 区域
 - 在这三者中 DecorView 会最先接收到触摸事件，DecorView 作为视图树的根视图，就负责向其内部 View 下发触摸事件
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/View/%E6%9C%AA%E5%91%BD%E5%90%8D%E6%96%87%E4%BB%B6.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5d474d52a06d4cce9116958136dc01f6~tplv-k3u1fbpfcp-zoom-1.image)
 
 DecorView 的 dispatchTouchEvent 方法会拿到 PhoneWindow 内含的 Window.Callback 对象向其转发事件，而这里的 Window.Callback 实际上就对应的是 Activity，Activity 实现了 Window.Callback 接口
 
@@ -884,11 +884,11 @@ public class DecorView extends FrameLayout implements RootViewSurfaceTaker, Wind
 
 因此，这三者之间的事件流转机制，可以说是为了给开发者一个可以进行全局事件拦截的机会
 
-### 九、滑动冲突
+# 九、滑动冲突
 
 如果父容器和子 View 都可以响应滑动事件的话，那么就有可能发生滑动冲突的情况。解决滑动冲突的方法大致上可以分为两种：**外部拦截法** 和 **内部拦截法**
 
-#### 1、外部拦截法
+## 外部拦截法
 
 父容器根据实际情况在 onInterceptTouchEvent 方法中对触摸事件进行选择性拦截，如果判断到当前滑动事件自己需要，那么就拦截事件并消费，否则就交由子 View 进行处理。该方式有几个注意点：
 
@@ -920,7 +920,7 @@ override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
 }
 ```
 
-#### 2、内部拦截法
+## 内部拦截法
 
 内部拦截法则是要求父容器不拦截任何事件，所有事件都传递给子 View，子 View 根据实际情况判断是自己来消费还是传回给父容器进行处理。该方式有几个注意点：
 
@@ -959,7 +959,7 @@ override fun onInterceptTouchEvent(event: MotionEvent): Boolean {
 }
 ```
 
-### 十、解决滑动冲突
+# 十、解决滑动冲突
 
 我经常会在网上看到一些开发者在问怎么解决 ScrollView 嵌套 ScrollView 后内部 ScrollView 无法滑动的问题，有这问题就是因为发生了滑动冲突，根本原因就是因为用户的滑动操作都被外部 ScrollView 拦截并消费了，导致内部 ScrollView 一直无法响应滑动事件。这里就以 ScrollView 嵌套 ScrollView 的情况作为例子，来看看怎么解决它们之间的滑动冲突问题
 
@@ -1098,9 +1098,9 @@ class InsideScrollView @JvmOverloads constructor(
 }
 ```
 
-### 十一、提问环节
+# 十一、提问环节
 
-#### 1、事件为什么是由外向内？
+## 事件为什么是由外向内？
 
 在上面提供的例子里，当点击 MyTextView 区域时，最外层的 MyRelativeLayout 还是会最先接收到触摸事件。那么，为什么 Android 系统要将事件分发机制设计成由外向内的形式呢？能不能是由内向外的形式？或者是直接只交于点击区域所在的 View 进行处理呢？
 
@@ -1108,7 +1108,7 @@ class InsideScrollView @JvmOverloads constructor(
 
 **那能不能是由内向外的形式呢？也不合适。**一个ViewGroup 可能包含一个到多个 View，ViewGroup 需要通过判断触摸点的坐标系位于哪个 View 区域内来确定触摸事件的下一个接收者。而我们知道，触摸事件按照从外向内的传递顺序是： DecorView -> Activity -> PhoneWindow -> DecorView -> ContentView，由于触摸事件的早期接收者已经是处于外层的 DecorView 了，所以按照从外向内进行传递会更加合适（这也只是我自己的个人见解，有误的话欢迎指出）
 
-#### 2、mFirstTouchTarget 怎么设计的？
+## mFirstTouchTarget 怎么设计的？
 
 由于触摸事件的发生频率是很高的，且布局的嵌套层次也可能很深，如果每次在下发事件时都进行全量遍历的话不利于提升绘制效率。为了提高事件的下发效率并减少对象的重复创建，ViewGroup 中声明了一个 TouchTarget 类型的全局变量，即 mFirstTouchTarget
 
@@ -1117,7 +1117,7 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 此外，TouchTarget 中的静态成员变量 sRecycleBin 就用于提供对象复用功能，以链表的形式最多缓存 MAX_RECYCLED 个对象，调用 `obtain` 方法的时候就会以切换 next 引用的形式来获取一个独立的 TouchTarget 对象
 
 ```java
-	private static final class TouchTarget {
+    private static final class TouchTarget {
         private static final int MAX_RECYCLED = 32;
         private static final Object sRecycleLock = new Object[0];
         private static TouchTarget sRecycleBin;
@@ -1177,14 +1177,14 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
     }
 ```
 
-#### 3、讲下 ACTION_CANCEL 事件？
+## 讲下 ACTION_CANCEL 事件？
 
 按照正常情况来说，每个事件序列应该是都只交由一个 View 或者 ViewGroup 进行消费的，可是还存在一种特殊情况，即 View 消费了 ACTION_DOWN 事件，而后续的 ACTION_MOVE 和 ACTION_UP 事件被其上层容器 ViewGroup 拦截了，导致 View 接收不到后续事件。这会导致一些异常问题， 例如，Button 在接收到 ACTION_DOWN 事件后 UI 后呈现按压状态，如果接收不到 ACTION_UP 这个结束事件的话可能就无法恢复 UI 状态了。为了解决这个问题，Android 系统就通过 ACTION_CANCEL 事件来作为事件序列的另外一种结束消息
 
 当存在上诉情况时，ViewGroup 就会通过 `dispatchTransformedTouchEvent` 方法构造一个 ACTION_CANCEL 事件并将之下发给 View，从而使得 View 即使没有接受到 ACTION_UP 事件也可以知道本次事件序列已经结束了
 
 ```java
-	private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
+    private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
             View child, int desiredPointerIdBits) {
         final boolean handled;
 
@@ -1207,12 +1207,12 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 
 同时，ViewGroup 也会将 View 从 mFirstTouchTarget 中移除，这样后续事件也就不会再尝试向 View 下发了
 
-#### 4、onUserInteraction 方法的作用？
+## onUserInteraction 方法的作用？
 
 前文有讲到，Activity 提供了一个空实现的 `onUserInteraction` 方法，向子类提供了 ACTION_DOWN 事件的触发通知，那么该方法能够用来做什么呢？
 
 `onUserInteraction` 方法在 Activity 接收到 ACTION_DOWN 事件的时候才会被调用，这可以用于某些需要知道 Activity 是否处于长期“闲置”状态的需求。例如，如果我们需要在 Activity 没有被操作一段时间后自动隐藏标题栏的话，就可以用该方法来设置一个定时任务控制标题栏的隐藏状态
 
-### 十二、Demo 下载
+# 十二、Demo 下载
 
 上述的所有示例代码我都放到了 Github 上，按需自取：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

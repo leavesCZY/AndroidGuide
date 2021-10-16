@@ -2,13 +2,13 @@
 
 Java 和 Kotlin 的泛型算作是一块挺大的知识难点了，涉及到很多很难理解的概念：**泛型型参、泛型实参、类型参数、不变、型变、协变、逆变、内联**等等。本篇文章就将 Java 和 Kotlin 结合着一起讲，按照我的个人理解来阐述泛型的各个知识难点，希望对你有所帮助 🤣🤣
 
-### 一、泛型类型
+# 一、泛型类型
 
 泛型允许你定义带**类型形参**的数据类型，当这种类型的实例被创建出来后，**类型形参**便被替换为称为**类型实参**的具体类型。例如，对于 `List<T>`，List 称为**基础类型**，T 便是**类型型参**，T 可以是任意类型，当没有指定 T 的具体类型时，我们只能知道`List<T>`是一个集合列表，但不知道承载的具体数据类型。而对于 `List<String>`，当中的 String 便是**类型实参**，我们可以明白地知道该列表承载的都是字符串，在这里 String 就相当于一个参数传递给了 List，在这语义下 String 也称为**类型参数**
 
 此外，在 Kotlin 中我们可以实现**实化类型参数**，在运行时的**内联函数**中拿到作为**类型实参**的具体类型，即可以实现 `T::class.java`，但在 Java 中却无法实现，因为**内联函数**是 Kotlin 中的概念，Java 中并不存在
 
-### 二、为什么需要泛型
+# 二、为什么需要泛型
 
 泛型是在 Java 5 版本开始引入的，先通过几个小例子来明白泛型的重要性
 
@@ -31,7 +31,8 @@ public class GenericTest {
 ```
 
 ```java
-Exception in thread "main" java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.String
+Exception in thread "main" java.lang.ClassCastException: 
+java.lang.Integer cannot be cast to java.lang.String
 ```
 
 而有了泛型后，我们就可以写出更加健壮安全的代码，以下错误就完全可以在编译阶段被发现，且取值的时候也不需要进行类型强转
@@ -83,7 +84,7 @@ Exception in thread "main" java.lang.ClassCastException: java.lang.Integer canno
 - 自动类型转换，在取值时无需进行手动类型转换
 - 能够将逻辑抽象出来，使得代码更加具有通用性
 
-### 三、类型擦除
+# 三、类型擦除
 
 泛型是在 Java 5 版本开始引入的，所以在 Java 4 中 ArrayList 还不属于泛型类，其内部通过 **Object 向上转型**和**外部强制类型转换**来实现数据存储和逻辑复用，此时开发者的项目中已经充斥了大量以下类型的代码：
 
@@ -315,7 +316,7 @@ E elementData(int index) {
 
 所以 Java 的泛型可以看做是一种特殊的语法糖，因此也被人称为**伪泛型**
 
-### 四、类型擦除的后遗症
+# 四、类型擦除的后遗症
 
 Java 泛型对于类型的约束只在编译期存在，运行时仍然会按照 Java 5 之前的机制来运行，泛型的具体类型在运行时已经被删除了，所以 JVM 是识别不到我们在代码中指定的具体的泛型类型的
 
@@ -362,7 +363,7 @@ public void filter(List<Integer> stringList) {
 }
 ```
 
-### 五、Kotlin 泛型
+# 五、Kotlin 泛型
 
 Kotlin 泛型在大体上和 Java 一致，毕竟两者需要保证兼容性
 
@@ -428,10 +429,11 @@ fun printSum(c: Collection<*>) {
 ```kotlin
 printSum(listOf("1", "2", "3"))
 
-Exception in thread "main" java.lang.ClassCastException: java.lang.String cannot be cast to java.lang.Number
+Exception in thread "main" java.lang.ClassCastException: 
+java.lang.String cannot be cast to java.lang.Number
 ```
 
-### 六、上界约束
+# 六、上界约束
 
 泛型本身已经带有类型约束的作用，我们也可以进一步细化其支持的具体类型
 
@@ -473,7 +475,7 @@ fun main() {
 
 此外，没有指定上界约束的类型形参会默认使用 Any? 作为上界，即我们可以使用 String 或 String? 作为具体的类型实参。如果想确保最终的类型实参一定是非空类型，那么就需要主动声明上界约束为 Any
 
-### 七、类型通配符 & 星号投影
+# 七、类型通配符 & 星号投影
 
 假设现在有个需求，需要我们提供一个方法用于遍历所有类型的 List 集合并打印元素
 
@@ -481,9 +483,9 @@ fun main() {
 
 ```java
 public static void printList1(List list) {
-	for (Object o : list) {
-		System.out.println(o);
-	}
+    for (Object o : list) {
+        System.out.println(o);
+    }
 }
 ```
 
@@ -491,9 +493,9 @@ public static void printList1(List list) {
 
 ```java
 public static void printList2(List<Object> list) {
-	for (Object o : list) {
-		System.out.println(o);
-	}
+    for (Object o : list) {
+        System.out.println(o);
+    }
 }
 ```
 
@@ -501,9 +503,9 @@ public static void printList2(List<Object> list) {
 
 ```java
 public static void printList3(List<?> list) {
-	for (Object o : list) {
-		System.out.println(o);
-	}
+    for (Object o : list) {
+        System.out.println(o);
+    }
 }
 ```
 
@@ -529,7 +531,7 @@ val list: MutableList<*> = ArrayList<Number>() //正常
 val list2: MutableList<*> = ArrayList<*>() //报错
 ```
 
-### 八、协变 & 不变
+# 八、协变 & 不变
 
 看以下例子。Apple 和 Banana 都是 Fruit 的子类，可以发现 Apple[] 类型的对象是可以赋值给 Fruit[] 的，且 Fruit[] 可以容纳 Apple 对象和 Banana 对象，这种设计就被称为**协变**，即如果 A 是 B 的子类，那么 A[] 就是 B[] 的子类型。相对的，Object[] 就是所有数组对象的父类型
 
@@ -612,7 +614,7 @@ val anyArray: Array<Any?> = stringArray //报错
 
 > Java 的泛型也并非完全**不变**的，只是实现**协变**需要满足一些条件，甚至也可以实现**逆变**，下面就来介绍下泛型如何实现**协变**和**逆变**
 
-### 九、泛型协变
+# 九、泛型协变
 
 假设我们定义了一个`copyAll`希望用于 List 数据迁移。那以下操作在我们看来就是完全安全的，因为 Integer 是 Number 的子类，按道理来说是能够将 Integer 保存为 Number 的，但由于泛型不变性，`List<Integer>`并不是`List<Number>`的子类型，所以实际上该操作将报错
 
@@ -645,7 +647,7 @@ val anyArray: Array<Any?> = stringArray //报错
 
 ```java
 private static <T> void copyAll(List<T> to, List<? extends T> from) {
-	to.addAll(from);
+    to.addAll(from);
 }
 ```
 
@@ -653,7 +655,7 @@ private static <T> void copyAll(List<T> to, List<? extends T> from) {
 
 简而言之，带 **extends** 限定了上界的通配符类型使得**泛型参数类型是协变的**，即如果 A 是 B 的子类，那么 `Generic<A>` 就是`Generic<? extends B>`的子类型
 
-### 十、泛型逆变
+# 十、泛型逆变
 
 **协变**所能做到的是：如果 A 是 B 的子类，那么 `Generic<A>` 就是`Generic<? extends B>`的子类型。**逆变**相反，其代表的是：如果 A 是 B 的子类，那么 `Generic<B>` 就是 `Generic<? super A>` 的子类型
 
@@ -663,7 +665,7 @@ private static <T> void copyAll(List<T> to, List<? extends T> from) {
 
 ```java
 private static <T> void copyAll(List<? super T> to, List<T> from) {
-	to.addAll(from);
+    to.addAll(from);
 }
 ```
 
@@ -671,8 +673,7 @@ private static <T> void copyAll(List<? super T> to, List<T> from) {
 
 简而言之，带 **super** 限定了下界的通配符类型使得**泛型参数类型是逆变的**，即如果 A 是 B 的子类，那么 `Generic<B>` 就是 `Generic<? super A>` 的子类型
 
-
-### 十一、out  &  in
+# 十一、out  &  in
 
 Java 中关于泛型的困境在 Kotlin 中一样存在，out 和 in 都是 Kotlin 的关键字，其作用都是为了来应对泛型问题。`in` 和 `out` 是一个对立面，同时它们又与泛型**不变**相对立，统称为**型变**
 
@@ -719,7 +720,7 @@ fun <T> copyAll(to: MutableList<in T>, from: MutableList<T>) {
 
 > 从这也可以联想到，`MutableList<*>` 就相当于 `MutableList<out Any?>`了，两者都带有相同的限制条件：不允许写值操作，允许读值操作，且读取出来的值只能当做 `Any?`进行处理
 
-### 十二、支持协变的 List
+# 十二、支持协变的 List
 
 在上述例子中，想要实现协变还有另外一种方式，那就是使用 List
 
@@ -753,7 +754,7 @@ public interface List<out E> : Collection<E> {
 
 > 虽然 List 接口中有几个方法也接收了 E 类型的入参参数，但该方法本身不会进行写值操作，所以实际上可以正常使用，Kotlin 也使用 `@UnsafeVariance`抑制了编译器警告
 
-### 十三、reified  &  inline
+# 十三、reified  &  inline
 
 上文讲了，由于类型擦除，Java 和 Kotlin 的泛型类型实参都会在编译阶段被擦除，在 Kotlin 中存在一个额外手段可以来解决这个问题，即**内联函数**
 
@@ -834,7 +835,7 @@ fun main() {
 
 我也利用 Kotlin 的这个强大特性写了一个用于简化 Java / Kotlin 平台的序列化和反序列化操作的库：[JsonHolder](https://github.com/leavesC/JsonHolder)
 
-### 十四、总结
+# 十四、总结
 
 最后来做个简单的总结
 

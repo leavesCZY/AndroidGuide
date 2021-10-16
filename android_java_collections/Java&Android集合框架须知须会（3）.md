@@ -4,13 +4,13 @@
 
 本篇文章再来分析下 SparseArray 和 ArrayMap 这两个 Android 系统独有的集合框架类，这两个容器在使用上类似于 HashMap，都是用于存储键值对。由于 Android 系统对于内存比较敏感，所以 SparseArray 和 ArrayMap 在内存使用方面会比较克制，这里就来分析下其实现原理和优势点
 
-## 一、SparseArray
+# 一、SparseArray
 
 使用 Android Studio 的同学可能遇到过一个现象，就是如果在代码中声明了 `Map<Integer,Object>` 类型变量的话，Android Studio 会提示：`Use new SparseArray<Object>(...) instead for better performance ...`，即**用 SparseArray< Object > 性能更优，可以用来替代 HashMap**
 
 这里就来介绍下 SparseArray 的内部原理，看看它相比 HashMap 有什么性能优势
 
-### 1、基本概念
+## 1、基本概念
 
 SparseArray 的使用方式：
 
@@ -32,15 +32,15 @@ mKeys 和 mValues 按照如下规则对应起来：
 
 从以上可以看出来的一点就是：SparseArray 避免了 HashMap 每次存取值时的装箱拆箱操作，key 值保持为基本数据类型 int，减少了性能开销
 
-### 2、类声明
+## 2、类声明
 
 SparseArray 本身并没有直接继承于任何类，内部也没有使用到 Java 原生的集合框架，所以 SparseArray 是 Android 系统自己实现的一个集合容器类
 
 ```java
-	public class SparseArray<E> implements Cloneable
+    public class SparseArray<E> implements Cloneable
 ```
 
-### 3、全局变量
+## 3、全局变量
 
 `mGarbage` 是 SparseArray 的一个优化点之一，用于标记**当前是否有需要垃圾回收(GC)的元素**，当该值被置为 true 时，意味着当前存在无效元素，需要进行垃圾回收，但回收操作并不会马上进行，而是在后续操作中再统一进行
 
@@ -61,7 +61,7 @@ SparseArray 本身并没有直接继承于任何类，内部也没有使用到 J
     private int mSize;
 ```
 
-### 4、构造函数
+## 4、构造函数
 
 key 数组和 value 数组的默认大小都是 10，如果在初始化时已知最终数据量的大小，则可以直接指定初始容量，这样可以避免后续的扩容操作
 
@@ -83,7 +83,7 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-### 5、添加元素
+## 5、添加元素
 
 添加元素的方法有几个，主要看 `put(int key, E value)` 方法就可以，该方法用于存入 key 和 value 组成的键值对
 
@@ -121,13 +121,13 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
 再来具体看看 put 方法的逻辑
 
 ```java
-	public void put(int key, E value) {
+    public void put(int key, E value) {
         //用二分查找法查找指定 key 在 mKeys 中的索引值
         int i = ContainerHelpers.binarySearch(mKeys, mSize, key);
         if (i >= 0) { //对应已经存在相同 key 的情况
             mValues[i] = value;
         } else {
-		   //取反，拿到真实的索引位置
+            //取反，拿到真实的索引位置
             i = ~i;
             //如果目标位置还未赋值，则直接存入数据即可
             if (i < mSize && mValues[i] == DELETED) {
@@ -149,7 +149,7 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
         }
     }
 
-	//将索引 index 处的元素赋值为 value
+    //将索引 index 处的元素赋值为 value
     //知道目标位置的话可以直接向 mValues 赋值
     public void setValueAt(int index, E value) {
         if (index >= mSize && UtilConfig.sThrowExceptionForUpperArrayOutOfBounds) {
@@ -181,14 +181,14 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-### 6、移除元素
+## 6、移除元素
 
 上文说了，布尔变量 `mGarbage` 用于标记**当前是否有待垃圾回收(GC)的元素**，当该值被置为 true 时，即意味着**当前状态需要进行垃圾回收，但回收操作并不马上进行，而是在后续操作中再完成**
 
 以下几个方法在移除元素时，都只是切断了 mValues 对 value 的引用，而 mKeys 并没有进行回收，这个操作会留到 `gc()` 进行处理
 
 ```java
-	public void delete(int key) {
+    public void delete(int key) {
         //用二分查找法查找指定 key 在 mKeys 中的索引值
         int i = ContainerHelpers.binarySearch(mKeys, mSize, key);
         if (i >= 0) {
@@ -253,7 +253,7 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-### 7、查找元素
+## 7、查找元素
 
 查找元素的方法较多，逻辑都挺简单的
 
@@ -336,12 +336,12 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-### 8、垃圾回收
+## 8、垃圾回收
 
 因为 SparseArray 中会出现只移除 key 和 value 两者之一的情况，导致当前数组中的有效数据并不是全都紧挨着排列在一起的，即存在无效值，因此 `gc()` 方法会根据 mValues 中到底存在多少有效数据，将 mKeys 和 mValues 中的数据进行重新排列，将有意义的元素值紧挨着排序在一起
 
 ```java
-	private void gc() {
+    private void gc() {
         int n = mSize;
         int o = 0;
         int[] keys = mKeys;
@@ -365,7 +365,7 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
     }
 ```
 
-### 9、优劣势总结
+## 9、优劣势总结
 
 从上文的介绍来看，SparseArray 的主要优势有以下几点：
 
@@ -381,21 +381,21 @@ key 数组和 value 数组的默认大小都是 10，如果在初始化时已知
 - 插入键值对时可能需要移动大量的数组元素
 - 数据量较大时，查找效率（二分查找法）会明显降低，需要经过多次折半查找才能定位到目标数据。而 HashMap 在没有哈希冲突的情况下只需要进行一次哈希计算即可定位到目标元素，有哈希冲突时也只需要对比链表或者红黑树上的元素即可
 
-### 10、关联类
+## 10、关联类
 
 SparseArray 属于泛型类，所以即使 value 是基本数据类型也会被装箱和拆箱，如果想再省去这一部分开销的话，可以使用 SparseBooleanArray、SparseIntArray 和 SparseLongArray 等三个容器类，这三个容器的实现原理和 SparseArray 相同，但是 value 还是属于基本数据类型
 
 此外，系统还提供了 LongSparseArray 这个容器类，其实现原理和 SparseArray 类似，但是 key 固定为 long 类型，value 通过泛型来声明，对于日常开发中比较有用的一点是可以用来根据 viewId 来存储 view 对象
 
-## 二、ArrayMap
+# 二、ArrayMap
 
 ArrayMap 属于泛型类，继承了 Map 接口，其使用方式和 HashMap 基本一样，但在内部逻辑上有着很大差异，所以需要了解其实现原理后才能明白 ArrayMap 到底适用于哪些场景
 
 ```java
-	public final class ArrayMap<K, V> implements Map<K, V>
+    public final class ArrayMap<K, V> implements Map<K, V>
 ```
 
-### 1、存储机制
+## 1、存储机制
 
 ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的哈希值，mArray 则用于存储 key 和 value，即每个键值对会一起被存入 mArray 中
 
@@ -411,7 +411,7 @@ ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的�
 
 当要通过 key 对象向 ArrayMap 取值时，就先计算出 keyHash，然后通过二分查找法找到 keyHash 在 mHashes 中的位置索引 index，然后在 (index<<1 + 1)位置从 mArray 拿到 value
 
-### 2、添加元素
+## 2、添加元素
 
 有几个用于添加元素的方法，当中重点看 `put` 方法即可，其它添加元素的方法都需要依靠该方法来实现。前文有讲到，key-value 最终是会相邻着存入 mArray 中的，而 key-value 在 mArray 中的位置是由 keyHash 和 mHashes 来共同决定的，`put` 方法的整体逻辑如下所述：
 
@@ -422,7 +422,7 @@ ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的�
 5. 对最终的数组进行数据迁移，插入 key-value 和 keyHash
 
 ```java
-	@Override
+    @Override
     public V put(K key, V value) {
         final int osize = mSize;
         final int hash;
@@ -524,7 +524,7 @@ ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的�
     }
 ```
 
-### 3、获取元素
+## 3、获取元素
 
 获取元素的方法主要看 `indexOf(Object key, int hash)`方法即可，只要理解了该方法是如何获取 keyIndex 的，那么就能够对 ArrayMap 的存储结构有更明确的认知
 
@@ -538,7 +538,7 @@ ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的�
 6. 会执行到这里，说明还是没有找到和 key 相等的元素值，那么就拿到 hash 应该存入 mHashes 后的索引，~ 运算后返回
 
 ```java
-	int indexOf(Object key, int hash) {
+    int indexOf(Object key, int hash) {
         final int N = mSize;
         // Important fast case: if nothing is in here, nothing to look for.
         if (N == 0) {
@@ -579,7 +579,7 @@ ArrayMap 中包含以下两个数组。mHashes 用于存储键值对中 key 的�
     }
 ```
 
-### 4、缓存机制
+## 4、缓存机制
 
 ArrayMap 内部包含了对 mHashes 和 mArray 这两个数组进行缓存的机制，避免由于频繁创建数组而造成内存抖动，这一点还是比较有意义的。在 Android 系统中 Bundle 是使用得很频繁的一个类，其内部就通过 ArrayMap 来存储键值对，这可以从 Bundle 的父类 BaseBundle 看到。所以 ArrayMap 的数组缓存机制在我看来更多的是面对系统运行时的优化措施
 
@@ -612,7 +612,7 @@ public class BaseBundle {
 `put` 方法内部就使用到了数组的缓存和复用机制
 
 ```java
-	@Override
+    @Override
     public V put(K key, V value) {
         ···
         if (osize >= mHashes.length) {
@@ -643,7 +643,7 @@ public class BaseBundle {
     }
 ```
 
-#### 1、缓存数组
+### 缓存数组
 
 实现数组缓存逻辑对应的是 `freeArrays` 方法，该方法就用于缓存 mHashes 和 mArray。每当 ArrayMap 完成数组扩容后就会调用此方法对扩容前的数组进行缓存，但也不是所有数组都会进行缓存，而是有着数组长度和缓存总数这两方面的限制
 
@@ -652,33 +652,33 @@ public class BaseBundle {
 例如，如果 hashes 的数组长度是 BASE_SIZE * 2，且当前缓存总数没有超出 CACHE_SIZE，那么缓存的数组就保存在 mTwiceBaseCache 所构造的的单向链表中。mTwiceBaseCache 采用单向链表的结构来串联多个数组，要缓存的 mArray 的第一个数组元素值会先指向 mTwiceBaseCache，第二个数组元素值会指向 mHashes，之后 mArray 会成为单向链表的新的头结点，即 mArray 成为了新的 mTwiceBaseCache。在这种缓存机制下，最终 mTwiceBaseCache 指向的其实是本次缓存的 mArray，mArray 的第一个元素值指向的又是上一次缓存的 mArray，第二个元素值指向的是本次缓存的 mHashes，从而形成了一个单向链表结构
 
 ```java
-	//用于缓存长度为 BASE_SIZE 的数组
+    //用于缓存长度为 BASE_SIZE 的数组
     static Object[] mBaseCache;
-	//mBaseCache 已缓存的数组个数
+    //mBaseCache 已缓存的数组个数
     static int mBaseCacheSize;
 		
-	//用于缓存长度为 BASE_SIZE * 2 的数组
+    //用于缓存长度为 BASE_SIZE * 2 的数组
     static Object[] mTwiceBaseCache;
-	//mTwiceBaseCache 已缓存的数组个数
+    //mTwiceBaseCache 已缓存的数组个数
     static int mTwiceBaseCacheSize;
 
     private static final int BASE_SIZE = 4;
 		
-	//mBaseCacheSize 和 mTwiceBaseCacheSize 的最大缓存个数
+    //mBaseCacheSize 和 mTwiceBaseCacheSize 的最大缓存个数
     private static final int CACHE_SIZE = 10;
 
-	//用来当做同步锁
+    //用来当做同步锁
     private static final Object sBaseCacheLock = new Object();
     private static final Object sTwiceBaseCacheLock = new Object();
 
-	//缓存 hashes 和 array
-	private static void freeArrays(final int[] hashes, final Object[] array, final int size) {
+    //缓存 hashes 和 array
+    private static void freeArrays(final int[] hashes, final Object[] array, final int size) {
         if (hashes.length == (BASE_SIZE*2)) {
             synchronized (sTwiceBaseCacheLock) {
                 if (mTwiceBaseCacheSize < CACHE_SIZE) {
-                  	//第一个元素指向 mTwiceBaseCache
+                      //第一个元素指向 mTwiceBaseCache
                     array[0] = mTwiceBaseCache;
-                  	//第二个元素指向 hashes
+                      //第二个元素指向 hashes
                     array[1] = hashes;
                     for (int i=(size<<1)-1; i>=2; i--) {
                       	//切除多余引用，避免内存泄漏，有利于 GC
@@ -709,29 +709,29 @@ public class BaseBundle {
     }
 ```
 
-#### 2、复用数组
+### 复用数组
 
 缓存数组的目的自然就是为了后续复用，数组的复用逻辑对应的是 `allocArrays` 方法，该方法用于为 mHashes 和 mArray 申请一个更大容量的数组空间，通过复用数组或者全新初始化来获得
 
 在进行数组缓存的时候会判断数组长度，只有当长度是 BASE_SIZE * 2 或 BASE_SIZE 时才会进行缓存，那么自然只有当数组的目标长度 size 是这两个值之一才符合复用条件了。`allocArrays` 方法取出缓存的逻辑也很简单，只需要取出单向链表的头结点赋值给 mHashes 和 mArray，同时使链表的第二个结点成为新的头结点即可。如果不符合复用条件或者复用失败，那么就还是需要重新构建两个新的数组对象
 
 ```java
-	//用于缓存长度为 BASE_SIZE 的数组
+    //用于缓存长度为 BASE_SIZE 的数组
     static Object[] mBaseCache;
-	//mBaseCache 已缓存的数组个数
+    //mBaseCache 已缓存的数组个数
     static int mBaseCacheSize;
 		
-	//用于缓存长度为 BASE_SIZE * 2 的数组
+    //用于缓存长度为 BASE_SIZE * 2 的数组
     static Object[] mTwiceBaseCache;
-	//mTwiceBaseCache 已缓存的数组个数
+    //mTwiceBaseCache 已缓存的数组个数
     static int mTwiceBaseCacheSize;
 
     private static final int BASE_SIZE = 4;
 		
-	//mBaseCacheSize 和 mTwiceBaseCacheSize 的最大缓存个数
+    //mBaseCacheSize 和 mTwiceBaseCacheSize 的最大缓存个数
     private static final int CACHE_SIZE = 10;
 
-	//用来当做同步锁
+    //用来当做同步锁
     private static final Object sBaseCacheLock = new Object();
     private static final Object sTwiceBaseCacheLock = new Object();
 
@@ -803,12 +803,12 @@ public class BaseBundle {
     }
 ```
 
-#### 3、总结
+### 总结
 
 上文说了，只有长度为 BASE_SIZE 或者 BASE_SIZE * 2 的数组才会被缓存复用，而 mHashes 和 mArray 的扩容操作也会尽量使得扩容后的数组长度就是这两个值之一，这可以从 `put` 方法计算扩容后容量的算法看出来
 
 ```java
-	@Override
+    @Override
     public V put(K key, V value) {
         final int osize = mSize;
         final int hash;
@@ -838,7 +838,7 @@ public class BaseBundle {
 
 此外，ArrayMap 的扩容操作在申请内存时也显得比较克制，在数组长度超出 BASE_SIZE * 2  后，只是扩容到当前的 1.5 倍，且也只在 mHashes 容量不足时才会触发扩容机制。而 HashMap 在达到负载因子设定的比例后（此时数组未满）就会触发扩容机制，而且也是按照扩充到两倍容量的方式进行扩容。所以说，ArrayMap 对于内存空间的利用效率会更高一些
 
-### 5、优劣势总结
+## 5、优劣势总结
 
 ArrayMap 的适用场景可以从它的缓存机制就看出来一些，它会缓存容量为 4 或者 8 的数组并进行后续复用，而这两个值可以说都是比较小的。Android 系统对于内存比较敏感，需要存储键值对时面对的往往是使用频率高但数据量小的场景。例如我们在跳转到 Activity 时往往是通过 Bundle 来存储跳转参数，但数据量一般都很少，所以 Bundle 内部就使用到了 ArrayMap 来存储键值对。ArrayMap 在内存申请时相比 HashMap 会比较克制，键值对会以更加紧密的数据结构存储在一起，对内存利用率会更高一些
 
@@ -846,6 +846,6 @@ ArrayMap 的适用场景可以从它的缓存机制就看出来一些，它会�
 
 所以说， ArrayMap 适用于数据量较小的场景，此时查找效率也不会受多大影响，而内存利用率能够显著提高。如果数据量较大，那就可以考虑使用 HashMap 来替代了
 
-### 6、关联类
+## 6、关联类
 
 系统还包含了一个用于存储不重复元素值的集合框架类：ArraySet，从名字就可以猜到 ArraySet 实现了 Set 接口。ArraySet 内部一样使用两个数组来存储 hash 和 value，即 mHashes 和 mArray，在实现逻辑上基本和 ArrayMap 一样，只是会在存值的时候判断 value 是否重复而已，这里就不再赘述了

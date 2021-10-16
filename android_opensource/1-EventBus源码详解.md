@@ -26,10 +26,10 @@
 这里先介绍第一种方式，这种方式只需要导入如下依赖即可
 
 ```groovy
-    implementation "org.greenrobot:eventbus:3.2.0"
+implementation "org.greenrobot:eventbus:3.2.0"
 ```
 
-### 一、注册
+# 一、注册
 
 EventBus 通过 `EventBus.register(Object)`方法来进行注册的。该方法会对 subscriber 进行解析，通过 SubscriberMethodFinder 的 `findSubscriberMethods` 方法将 subscriber 包含的所有声明了`@Subscribe`注解的方法的签名信息保存到内存中，当有消息被 Post 时就可以直接在内存中查找到目标方法了
 
@@ -363,9 +363,9 @@ SubscriberMethodFinder 会将每次的查找结果缓存到 `METHOD_CACHE`中，
     }
 ```
 
-### 二、消息
+# 二、消息
 
-#### 1、消息的执行策略
+## 1、消息的执行策略
 
 在介绍消息的具体发送步骤前，先来了解下 EventBus 几种不同的消息执行策略。执行策略由枚举 ThreadMode 来定义，在 `@Subscribe` 注解中进行声明。执行策略决定了消息接收方是在哪一个线程接收到消息的
 
@@ -500,7 +500,7 @@ final class BackgroundPoster implements Runnable, Poster {
     }
 ```
 
-#### 2、发送非黏性消息
+## 2、发送非黏性消息
 
 `EventBus.getDefault().post(Any)`方法用于发送非黏性消息。EventBus 会通过 ThreadLocal 为每个发送消息的线程维护一个 PostingThreadState 对象，用于为每个线程维护一个消息队列及其它辅助参数
 
@@ -626,7 +626,7 @@ final class BackgroundPoster implements Runnable, Poster {
 
 ```
 
-#### 3、发送黏性消息
+## 3、发送黏性消息
 
 黏性消息的意义是为了使得在消息发出来后，即使是后续再进行 `register` 的 subscriber 也可以收到之前发送的消息，这需要将 `@Subscribe` 注解的 `sticky` 属性设为 true，即表明消息接收方希望接收黏性消息
 
@@ -694,7 +694,7 @@ final class BackgroundPoster implements Runnable, Poster {
     }
 ```
 
-#### 4、移除黏性事件
+## 4、移除黏性事件
 
 移除指定的黏性事件可以通过以下方法来实现，都是用于将指定事件从 `stickyEvents` 中移除
 
@@ -730,7 +730,7 @@ final class BackgroundPoster implements Runnable, Poster {
 
 ```
 
-### 三、解除注册
+# 三、解除注册
 
 解除注册的目的是为了避免内存泄露，EventBus 使用了单例模式，如果不主动解除注册的话，EventBus 就会一直持有 subscriber。解除注册是通过 `unregister`方法来实现的，该方法逻辑也比较简单，只是将 subscriber 以及其关联的所有 method 对象从集合中移除而已
 
@@ -772,7 +772,7 @@ final class BackgroundPoster implements Runnable, Poster {
     }
 ```
 
-### 四、注解处理器
+# 四、注解处理器
 
 使用注解处理器（Annotation Processing Tool）可以避免 subscriber 进行注册时的多次循环反射操作，极大提升了 EventBus 的运行效率。注解处理器是一种注解处理工具，用来在编译期扫描和处理注解，通过注解来生成 Java 文件。即以注解作为桥梁，通过预先规定好的代码生成规则来自动生成 Java 文件。此类注解框架的代表有 ButterKnife、Dragger2、EventBus 等
 
@@ -917,9 +917,9 @@ EventBus.builder().addIndex(MyEventBusIndex()).installDefaultEventBus()
 
 使用了注解处理器后也有一定的弊端。由于 MyEventBusIndex 是通过静态常量类型的 Map 来保存所有的方法签名信息，当在初始化 EventBus 时该 Map 就同时被初始化了，这就相当于在一开始就进行了全量加载，而某些 subscriber 我们可能不会使用到，这就造成了内存浪费。而如果是通过反射来获取，那就相当于在按需加载，只有 subscriber 进行注册了才会去缓存 subscriber 带有的监听方法
 
-### 五、一些坑
+# 五、一些坑
 
-#### 1、奇怪的继承关系
+## 1、奇怪的继承关系
 
 上文有介绍到，子类可以继承父类的 Subscribe 方法。但有一个比较奇怪的地方是：如果子类重写了父类多个 Subscribe 方法的话，就会抛出 IllegalStateException。例如，在下面的例子中。父类 BaseActivity 声明了两个 Subscribe 方法，子类 MainActivity 重写了这两个方法，此时运行后就会抛出 IllegalStateException。而如果 MainActivity 不重写或者只重写一个方法的话，就可以正常运行
 
@@ -1001,7 +1001,7 @@ class MainActivity : BaseActivity() {
 
 EventBus 有一个 issues 也反馈了这个问题：[issues](https://github.com/greenrobot/EventBus/issues/539)，该问题在 2018 年时就已经存在了，EeventBus 的作者也只是回复说：**只在子类进行方法监听**
 
-#### 2、移除黏性消息
+## 2、移除黏性消息
 
 `removeStickyEvent` 方法会有一个比较让人误解的点：对于通过 `EventBus.getDefault().postSticky(XXX)`方法发送的黏性消息无法通过 `removeStickyEvent` 方法来使现有的监听者拦截该事件
 
@@ -1034,7 +1034,7 @@ EventBus 有一个 issues 也反馈了这个问题：[issues](https://github.com
     }
 ```
 
-### 六、总结
+# 六、总结
 
 EventBus 的源码解析到这里就结束了，本文所讲的内容应该也已经涵盖了大部分内容了。这里再来为 EventBus 的实现流程做一个总结
 

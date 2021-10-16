@@ -6,13 +6,13 @@
 
 线程池（ThreadPool）面对的是外部复杂多变的多线程环境，既需要保证多线程环境下的状态同步，也需要最大化对每个线程的利用率，还需要留给子类足够多的余地来实现功能扩展。所以说，线程池的难点在于如何实现，而在概念上其实还是挺简单的。在 Java 中，线程池这个概念一般都认为对应的是 JDK 中的 ThreadPoolExecutor 类及其各种衍生类，本篇文章就从实现思路出发，探索 ThreadPoolExecutor 的源码到底是如何实现的以及为什么这么实现
 
-### 一、线程池
+# 一、线程池
 
 线程是一种昂贵的系统资源，其“昂贵”不仅在于创建线程所需要的资源开销，还在于使用过程中带来的资源消耗。一个系统能够支持同时运行的线程总数受限于该系统所拥有的处理器数目和内存大小等硬件条件，线程的运行需要占用处理器时间片，系统中处于运行状态的线程越多，每个线程单位时间内能分配到的时间片就会越少，线程调度带来的上下文切换的次数就会越多，最终导致处理器真正用于运算的时间就会越少。此外，在现实场景中一个程序在其整个生命周期内需要交由线程执行的任务数量往往是远多于系统所能支持同时运行的最大线程数。基于以上原因，为每个任务都创建一个线程来负责执行是不太现实的。那么，我们最直接的一个想法就是要考虑怎么来实现线程的复用了
 
 **线程池**就是实现线程复用的一种有效方式。线程池的思想可以看做是对**资源是有限的而需要处理的任务几乎是无限的**这样一个现状的应对措施。线程池的一般实现思路是：线程池内部预先创建或者是先后创建一定数量的线程，外部将需要执行的任务作为一个对象提交给线程池，由线程池选择某条空闲线程来负责执行。如果所有线程都处于工作状态且线程总数已经达到限制条件了，则先将任务缓存到任务队列中，线程再不断从任务队列中取出任务并执行。因此，线程池可以看做是基于**生产者-消费者模式**的一种服务，内部维护的多个线程相当于消费者，提交的任务相当于产品，提交任务的外部就相当于生产者
 
-### 二、思考下
+# 二、思考下
 
 好了，既然已经对线程池这个概念有了基本的了解，那么就再来思考下线程池应该具备的功能以及应该如何来实现线程池
 
@@ -49,13 +49,13 @@
 
 以上就是线程池在实现过程中需要主要考虑的几个点，下面就来看下 Java 实际上是怎么实现线程池的
 
-### 三、ThreadPoolExecutor
+# 三、ThreadPoolExecutor
 
 `java.util.concurrent.ThreadPoolExecutor` 类就是 Java 对线程池的默认实现，下文如果没有特别说明的话，所说的线程池就是指 `ThreadPoolExecutor`
 
 ThreadPoolExecutor 的继承关系如下图所示
 
-![](https://s1.ax1x.com/2020/09/12/walwMn.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6b73cde5111446a8bd4e41af1b028e61~tplv-k3u1fbpfcp-zoom-1.image)
 
 ThreadPoolExecutor 实现的最顶层接口是 Executor。Executor 提供了一种将**任务的提交**和**任务的执行**两个操作进行解耦的思路：客户端无需关注执行任务的线程是如何创建、运行和回收的，只需要将任务的执行逻辑包装为一个 Runnable 对象传递进来即可，由 Executor 的实现类自己来完成最复杂的执行逻辑
 
@@ -68,7 +68,7 @@ AbstractExecutorService 则是上层的抽象类，负责将任务的执行流�
 
 也正如上文所说的那样，ThreadPoolExecutor 可以看做是基于**生产者-消费者模式**的一种服务，内部维护的多个线程相当于消费者，提交的任务相当于产品，提交任务的外部就相当于生产者。其整个运行流程如下图所示
 
-![](https://p0.meituan.net/travelcube/77441586f6b312a54264e3fcf5eebe2663494.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/31321bc8231648f2a455106a31e94884~tplv-k3u1fbpfcp-zoom-1.image)
 
 而在线程池的整个生命周期中，以下三个关于线程数量的统计结果也影响着线程池的流程走向
 
@@ -89,7 +89,7 @@ or
 ThreadPoolExecutor 中参数最多的一个构造函数的声明如下所示：
 
 ```java
-	public ThreadPoolExecutor(int corePoolSize,
+    public ThreadPoolExecutor(int corePoolSize,
                               int maximumPoolSize,
                               long keepAliveTime,
                               TimeUnit unit,
@@ -124,43 +124,43 @@ ThreadPoolExecutor 中参数最多的一个构造函数的声明如下所示：
 
 **下面就以点见面，从细节处来把握整个线程池的流程走向**
 
-#### 1、线程池的状态如何保存
+## 1、线程池的状态如何保存
 
 这里所说的“状态”指的是一个**复合数据**，包含“**线程池生命周期状态**”和“**线程池当前线程数量**”这两项。线程池从启动到最终终止，其内部需要记录其当前状态来决定流程走向。而线程池的当前线程数量，也关乎着线程是否需要进行回收以及是否需要执行任务的拒绝策略
 
 线程池一共包含以下五种生命周期状态，涵盖了线程池从启动到终止的这整个范围。线程池的生命周期状态可以按顺序跃迁，但无法反向回转，每个状态的数值大小也是逐步递增的
 
 ```java
-	//运行状态，线程池正处于运行中
+    //运行状态，线程池正处于运行中
     private static final int RUNNING    = -1 << COUNT_BITS;
-	//关闭状态，当调用 shutdown() 方法后处于这个状态，任务队列中的任务会继续处理，但不再接受新任务，
+    //关闭状态，当调用 shutdown() 方法后处于这个状态，任务队列中的任务会继续处理，但不再接受新任务，
     private static final int SHUTDOWN   =  0 << COUNT_BITS;
-	//停止状态，当调用 shutdownNow() 方法后处于这个状态
-	//任务队列中的任务也不再处理且作为方法返回值返回，此后不再接受新任务
+    //停止状态，当调用 shutdownNow() 方法后处于这个状态
+    //任务队列中的任务也不再处理且作为方法返回值返回，此后不再接受新任务
     private static final int STOP       =  1 << COUNT_BITS;
-	//TERMINATED 之前的临时状态，当线程都被回收且任务队列已清空后就会处于这个状态
+    //TERMINATED 之前的临时状态，当线程都被回收且任务队列已清空后就会处于这个状态
     private static final int TIDYING    =  2 << COUNT_BITS;
-	//终止状态，在处于 TIDYING 状态后会立即调用 terminated() 方法，调用完成就会马上转到此状态
+    //终止状态，在处于 TIDYING 状态后会立即调用 terminated() 方法，调用完成就会马上转到此状态
     private static final int TERMINATED =  3 << COUNT_BITS;
 ```
 
-![](https://s1.ax1x.com/2020/09/11/wtMQNd.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/42fd1e9319824fdca526dbcdaeb4fe90~tplv-k3u1fbpfcp-zoom-1.image)
 
 在日常开发中，如果我们想要用一个 int 类型的 state 变量来表示这五种状态的话，那么就可能是通过让 state 分别取值 **1，2，3，4，5** 来进行标识，而 state 作为一个 int 类型是一共有三十二位的，那其实上仅需要占用三位就足够标识了，即 2 x 2 x 2 = 8 种可能。那还剩下 29 位可以用来存放其它数据
 
 实际上 ThreadPoolExecutor 就是通过将一个 32 位的 int 类型变量分割为两段，**高 3 位用来表示线程池的当前生命周期状态，低 29 位就拿来表示线程池的当前线程数量**，从而做到用一个变量值来维护两份数据，这个变量值就是 `ctl`。从 `ctl` 的初始值就可以知道线程池的初始生命周期状态( runState )是 `RUNNING`，初始线程数量 ( workerCount )是 0。这种用一个变量去存储两个值的做法，可以避免在做相关决策时出现不一致的情况，且不必为了维护两者的一致而使用锁，后续需要获取线程池的**当前生命周期状态**和**线程数量**的时候，也可以直接采用位运算的方式获取，在速度上相比基本运算会快很多
 
 ```java
-	private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
+    private final AtomicInteger ctl = new AtomicInteger(ctlOf(RUNNING, 0));
 ```
 
 ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
 
 ```java
-  	//用来表示线程数量的位数，即 29
-	private static final int COUNT_BITS = Integer.SIZE - 3;
-	//线程池所能表达的最大线程数，即一个“高3位全是0，低29位全是1”的数值
-  	private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
+    //用来表示线程数量的位数，即 29
+    private static final int COUNT_BITS = Integer.SIZE - 3;
+    //线程池所能表达的最大线程数，即一个“高3位全是0，低29位全是1”的数值
+    private static final int CAPACITY   = (1 << COUNT_BITS) - 1;
 ```
 
 相应的，那么就需要有几个方法可以来分别取“生命周期状态”和“线程数”这两个值，以及将这两个值合并保存的方法，这几个方法都使用到了位运算
@@ -168,18 +168,18 @@ ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
 ```java
     // Packing and unpacking ctl
 
-	//通过按位取反 + 按位与运算，将 c 的高3位保留，舍弃低29位，从而得到线程池状态
+    //通过按位取反 + 按位与运算，将 c 的高3位保留，舍弃低29位，从而得到线程池状态
     private static int runStateOf(int c)     { return c & ~CAPACITY; }
 		
-	//通过按位与运算，将 c 的高3位舍弃，保留低29位，从而得到工作线程数
+    //通过按位与运算，将 c 的高3位舍弃，保留低29位，从而得到工作线程数
     private static int workerCountOf(int c)  { return c & CAPACITY; }
 
-	//rs，即 runState，线程池的生命周期状态
-	//wc，即 workerCount，工作线程数量
-	//通过按位或运算来合并值
+    //rs，即 runState，线程池的生命周期状态
+    //wc，即 workerCount，工作线程数量
+    //通过按位或运算来合并值
     private static int ctlOf(int rs, int wc) { return rs | wc; }
 
-	private static boolean runStateLessThan(int c, int s) {
+    private static boolean runStateLessThan(int c, int s) {
         return c < s;
     }
 
@@ -209,18 +209,18 @@ ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
     }
 ```
 
-#### 2、线程的创建流程
+## 2、线程的创建流程
 
 在初始状态下，客户端每提交一个任务，线程池就会通过 `threadFactory` 创建线程来处理该任务，如果开发者没有指定 `threadFactory` 的话，则会使用 `Executors.DefaultThreadFactory`。线程池在最先开始创建的线程属于核心线程，线程数量在大于 corePoolSize 而小于等于 maximumPoolSize 这个范围内的线程属于非核心线程。需要注意的是，核心线程和非核心线程并非是两种不同类型的线程对象，这两个概念只是对不同数量范围内的线程进行的区分，实质上这两者指向的都是同一类型
 
 线程的创建流程可以通过任务的提交流程来了解，任务的提交流程图如下所示
 
-![](https://p0.meituan.net/travelcube/31bad766983e212431077ca8da92762050214.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/5743941998c94452872373a79b68c90a~tplv-k3u1fbpfcp-zoom-1.image)
 
 线程池开放了多个让外部提交任务的方法，这里主要看 `execute(Runnable command)` 方法。该方法需要先后多次校验状态值，因为线程池面对的调用方可以来自于多个不同的线程。可能在当前线程提交任务的同时，其它线程就刚好关闭了线程池或者是调整了线程池的线程大小参数，需要考虑当前的线程数量是否已经达到限制了
 
 ```java
-	public void execute(Runnable command) {
+    public void execute(Runnable command) {
         if (command == null)
             throw new NullPointerException();
         int c = ctl.get();
@@ -271,7 +271,7 @@ ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
 4. 符合创建线程的条件，但创建过程中或启动线程的过程中抛出了异常
 
 ```java
-	private boolean addWorker(Runnable firstTask, boolean core) {
+    private boolean addWorker(Runnable firstTask, boolean core) {
       	//下面的 for 主要逻辑：
       	//在创建线程前通过 CAS 原子性地将“工作者线程数量递增加一”
       	//由于 CAS 可能会失败，所以将之放到 for 循环中进行循环重试
@@ -351,7 +351,7 @@ ThreadPoolExecutor 还声明了以下两个常量用来参与位运算
     }
 ```
 
-#### 3、线程的执行流程
+## 3、线程的执行流程
 
 上面所讲的线程其实指的是 ThreadPoolExecutor 的内部类 Worker ，Worker 内部包含了一个 Thread 对象，所以本文就把 Worker 实例也看做线程来对待
 
@@ -365,10 +365,7 @@ Worker 继承于 AbstractQueuedSynchronizer，意味着 Worker 就相当于一�
 Worker 同时也是 Runnable 类型，`thread` 是通过 `getThreadFactory().newThread(this)` 来创建的，即将 Worker 本身作为构造参数传给 Thread 进行初始化，所以在 `thread` 启动的时候 Worker 的 `run()` 方法就会被执行
 
 ```java
-private final class Worker
-        extends AbstractQueuedSynchronizer
-        implements Runnable
-    {
+    private final class Worker extends AbstractQueuedSynchronizer implements Runnable  {
         /**
          * This class will never be serialized, but we provide a
          * serialVersionUID to suppress a javac warning.
@@ -446,7 +443,7 @@ private final class Worker
 `runWorker(Worker)` 方法就是线程正式进行任务执行的地方。该方法通过 while 循环不断从任务队列中取出任务来进行执行，如果 `getTask()`方法返回了 null，那此时就需要将此线程进行回收。如果在任务执行过程中抛出了异常，那也需要回收此线程
 
 ```java
-	final void runWorker(Worker w) {
+    final void runWorker(Worker w) {
         Thread wt = Thread.currentThread();
         Runnable task = w.firstTask;
         w.firstTask = null;
@@ -505,7 +502,7 @@ private final class Worker
         }
     }
 
-	private Runnable getTask() {
+    private Runnable getTask() {
         boolean timedOut = false; // Did the last poll() time out?
 
         for (; ; ) {
@@ -556,9 +553,9 @@ private final class Worker
 
 `getTask()` 方法获取任务的流程图如下所示：
 
-![](https://p0.meituan.net/travelcube/49d8041f8480aba5ef59079fcc7143b996706.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/27aa45cbba2848de85cb20fdccd5ae42~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 4、线程的回收流程
+## 4、线程的回收流程
 
 当外部调用了线程池的以下几个方法之一时，就会触发到线程的回收机制：
 
@@ -570,7 +567,7 @@ private final class Worker
 6. 停止线程池：shutdownNow()
 
 ```java
-	/**
+    /**
      * 用于控制核心线程是否可以由于空闲时间超时而被回收
      * 超时时间和非核心线程一样由 keepAliveTime 来指定
      *
@@ -587,7 +584,7 @@ private final class Worker
         }
     }
 
-	/**
+    /**
      * 重置 corePoolSize
      *
      * @param corePoolSize
@@ -613,7 +610,7 @@ private final class Worker
         }
     }
 
-	/**
+    /**
      * 用于设置线程池允许存在的最大活跃线程数
      *
      * @param maximumPoolSize
@@ -627,7 +624,7 @@ private final class Worker
             interruptIdleWorkers();
     }
 
-	/**
+    /**
      * 用于设置非核心线程在空闲状态能够存活的时间
      *
      * @param time
@@ -646,7 +643,7 @@ private final class Worker
             interruptIdleWorkers();
     }
 
- 	/**
+     /**
      * 关闭线程池
      */
     public void shutdown() {
@@ -666,7 +663,7 @@ private final class Worker
         tryTerminate();
     }
 
-	/**
+    /**
      * 停止线程池
      *
      * @return 任务队列中缓存的所有任务
@@ -699,7 +696,7 @@ private final class Worker
         interruptIdleWorkers(false);
     }
 
-	private void interruptIdleWorkers(boolean onlyOne) {
+    private void interruptIdleWorkers(boolean onlyOne) {
         final ReentrantLock mainLock = this.mainLock;
         mainLock.lock();
         try {
@@ -771,7 +768,7 @@ private final class Worker
 以上几种情况其触发时机主要看 `getTask()` 方法就可以。在向任务队列 workQueue 获取任务前，通过判断当前线程池的 `allowCoreThreadTimeOut、corePoolSize、workerCount` 等参数来决定是否需要对“从任务队列获取任务”这个操作进行限时。如果需要进行限时且获取任务的时间超出 keepAliveTime 的话，那就说明此线程的空闲时间已经达到限制了，需要对其进行回收
 
 ```java
-	private Runnable getTask() {
+    private Runnable getTask() {
         boolean timedOut = false; // Did the last poll() time out?
 
         for (; ; ) {
@@ -821,7 +818,7 @@ private final class Worker
 
 以上就是线程池基本所有的线程回收流程。线程回收机制有助于节约系统资源，但如果 **corePoolSize、keepAliveTime** 等参数设置得和系统的实际运行情况不符的话，反而会导致线程频繁地被创建和回收，反而加大了资源开销
 
-#### 5、线程池的关闭流程
+## 5、线程池的关闭流程
 
 `shutdown()` 和 `shutdownNow()` 方法可以用来关闭和停止线程池
 
@@ -831,7 +828,7 @@ private final class Worker
 由于这两个方法调用过后线程池都不会再接收新任务了，所以在回收空闲线程后，还需要检查下线程是否都已经回收完毕了，是的话则需要将线程池的生命周期状态向 TIDYING 和 TERMINATED 迁移
 
 ```java
-	final void tryTerminate() {
+    final void tryTerminate() {
         for (;;) {
             int c = ctl.get();
             //在以下几种情况不需要终止线程池：
@@ -870,7 +867,7 @@ private final class Worker
     }
 ```
 
-#### 6、任务队列的选择
+## 6、任务队列的选择
 
 阻塞队列(BlockingQueue)是一个支持两个附加操作的队列。这两个附加的操作是：在队列为空时，获取数据的线程会阻塞等待直到从队列获取到任务。当队列已满时，存储数据的线程会阻塞等待直到队列空出位置可以存入数据。阻塞队列常用于生产者和消费者的场景，生产者是往队列里添加数据的线程，消费者是从队列里取出数据的线程。阻塞队列就是生产者存放数据的容器，而消费者也只从容器里取数据
 
@@ -878,9 +875,9 @@ private final class Worker
 
 选择不同的阻塞队列可以实现不一样的任务存取策略：
 
-![](https://p0.meituan.net/travelcube/725a3db5114d95675f2098c12dc331c3316963.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/deee7e19ca544678bf862481adbabed0~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 7、任务的拒绝策略
+## 7、任务的拒绝策略
 
 随着客户端不断地提交任务，当前线程池大小也会不断增加。在当前线程池大小达到 corePoolSize 的时候，新提交的任务会被缓存到任务队列之中，由线程后续不断从队列中取出任务并执行。当任务队列满了之后，线程池就会创建非核心线程。当线程总数达到 maximumPoolSize 且所有线程都处于工作状态，同时任务队列也满了后，客户端再次提交任务时就会被拒绝。而被拒绝的任务具体的处理策略则由 `RejectedExecutionHandler` 来进行定义
 
@@ -906,7 +903,7 @@ ThreadPoolExecutor 提供了以下几种拒绝策略，默认使用的是 AbortP
 任务的拒绝策略只会在提交任务的时候被触发，即只在 `execute(Runnable command)` 方法中被触发到。`execute(Runnable command)` 方法会判断当前状态是否允许接受该任务，如果不允许的话则会走拒绝任务的流程
 
 ```java
-	public void execute(Runnable command) {
+    public void execute(Runnable command) {
         if (command == null)
             throw new NullPointerException();
         int c = ctl.get();
@@ -945,7 +942,7 @@ ThreadPoolExecutor 提供了以下几种拒绝策略，默认使用的是 AbortP
     }
 ```
 
-#### 8、监控线程池的运行状态
+## 8、监控线程池的运行状态
 
 ThreadPoolExecutor 提供了多个配置参数以便满足多种不同的需求，这些配置参数包含：**corePoolSize、maximumPoolSize、keepAliveTime、allowCoreThreadTimeOut 等**。但很多时候我们一开始使用线程池时并不知道该如何配置参数才最为适应当前需求，那么就只能通过监控线程池的运行状态来进行考察，最终得到一份最合理的配置参数
 
@@ -967,11 +964,11 @@ protected void afterExecute(Runnable r, Throwable t) { }
 protected void terminated() { }
 ```
 
-### 四、Executors
+# 四、Executors
 
 Executors 是 JDK 提供的一个线程池创建工具类，封装了很多个创建 ExecutorService 实例的方法，这里就来介绍下这几个方法，这些线程池的差别主要都是由于选择了不同的任务队列导致的，读者需要先认识下以下几种任务队列
 
-![](https://p0.meituan.net/travelcube/725a3db5114d95675f2098c12dc331c3316963.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b34aa0ed8322449d821b8f07666a66e2~tplv-k3u1fbpfcp-zoom-1.image)
 
 `newFixedThreadPool`方法创建的线程池，核心线程数和最大线程数都是 nThreads，所以线程池在任何时候最多也只会有 nThreads 个线程在同时运行，且在停止线程池前所有线程都不会被回收。LinkedBlockingQueue 的默认容量是 Integer.MAX_VALUE，近乎无限，在线程繁忙的情况下有可能导致等待处理的任务持续堆积，使得系统频繁 GC，最终导致 OOM
 
@@ -1061,19 +1058,19 @@ Executors 是 JDK 提供的一个线程池创建工具类，封装了很多个�
     }
 ```
 
-### 五、线程池故障
+# 五、线程池故障
 
-#### 1、线程池死锁
+## 1、线程池死锁
 
 多个线程会因为循环等待对方持有的排他性资源而导致死锁，线程池也可能会因为多个任务间的相互依赖而导致**线程池死锁**。例如，如果在线程池中执行的任务 A 在其执行过程中又向同个线程池提交了任务 B，且任务 A 的执行结束又依赖于任务 B 的执行结果，那么就可能出现这样的一种极端情形：线程池中的所有正在执行任务的线程都在等待其它任务的处理结果，而这些任务均在任务队列中处于待执行状态，且由于线程总数已经达到线程池的最大线程数量限制，所以任务队列中的任务就会一直无法被执行，最终导致所有任务都无法完成，从而形成线程池死锁
 
 因此，提交给同一个线程池的任务必须是没有互相依赖关系的。对于有依赖关系的任务，应该提交给不同的线程池，以此来避免死锁的发生
 
-#### 2、线程泄漏
+## 2、线程泄漏
 
 **线程泄漏**指由于某种原因导致线程池中实际可用的线程变少的一种异常情况。如果线程泄漏持续存在，那么线程池中的线程会越来越少，最终使得线程池再也无法处理任务。导致线程泄露的原因可能有两种：由于线程异常自动终止或者由于程序缺陷导致线程处于非有效运行状态。前者通常是由于 `Thread.run()` 方法中没有捕获到任务抛出的 Exception 或者 Error 导致的，使得相应线程被提前终止而没有相应更新线程池当前的线程数量，ThreadPoolExecutor 内部已经对这种情形进行了预防。后者可能是由于客户端提交的任务包含阻塞操作（Object.wait() 等操作），而该操作又没有相应的时间或者条件方面的限制，那么就有可能导致线程一直处于等待状态而无法执行其它任务，这样最终也是形成了线程泄漏
 
-### 六、总结
+# 六、总结
 
 线程池通过复用一定数量的线程来执行不断被提交的任务，除了可以节约线程这种有限而昂贵的资源外，还包含以下好处：
 
@@ -1082,6 +1079,6 @@ Executors 是 JDK 提供的一个线程池创建工具类，封装了很多个�
 - 封装了任务的具体执行过程。线程池封装了每个线程在创建、管理、复用、回收等各个阶段的逻辑，使得客户端代码只需要提交任务和获取任务的执行结果，而无须关心任务的具体执行过程。即使后续想要将任务的执行方式从并发改为串行，往往也只需要修改线程池内部的处理逻辑即可，而无需修改客户端代码
 - 减少销毁线程的开销。JVM 在销毁一个已经停止的线程时也有着资源和时间方面的开销，采用线程池可以避免频繁地创建线程，从而减少了销毁线程的次数，减少了相应开销
 
-### 七、参考资料
+# 七、参考资料
 
 [Java线程池实现原理及其在美团业务中的实践](https://tech.meituan.com/2020/04/02/java-pooling-pratice-in-meituan.html)

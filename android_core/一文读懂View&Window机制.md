@@ -4,7 +4,7 @@ Android 系统中，Window 在代码层次上是一个抽象类，在概念上�
 
 本文就以 Activity 为例子，展开讲解 Activity 是如何挂载到 Window 上的，基于 Android API 30 进行分析，希望对你有所帮助 🤣🤣
 
-### 一、Window 
+# 一、Window 
 
 Window 存在的意义是什么呢？
 
@@ -88,7 +88,7 @@ WindowManager.LayoutParams 内就声明了这些层级值，我们可以择需�
     }
 ```
 
-### 二、WindowManager
+# 二、WindowManager
 
 每个 Window 都会关联一个 View，想要显示 Window 也离不开 WindowManager，WindowManager 就提供了对 View 进行操作的能力。WindowManager 本身是一个接口，其又继承了另一个接口 ViewManager，WindowManager 最基本的三种操作行为就由 ViewManager 来定义，即**添加 View、更新 View、移除 View**
 
@@ -215,11 +215,11 @@ ViewRootImpl 内部最终会通过 WindowSession 来完成 Window 的添加过�
 
 需要注意的是，这里所讲的视图树代表的是很多种不同的视图形式。在启动一个 Activity 或者显示一个 Dialog 的时候，我们都需要为它们指定一个布局文件，布局文件会通过 LayoutInflater 加载映射为一个具体的 View 对象，即最终 Activity 和 Dialog 都会被映射为一个 View 类型的视图树，它们都会通过 WindowManager 的 `addView` 方法来显示到屏幕上，WindowManager 对于 Activity 和 Dialog 来说具有统一的操作行为入口
 
-### 三、Activity  &  Window 
+# 三、Activity  &  Window 
 
 这里就以 Activity 为例子来展开讲解 Window 相关的知识点，所以也需要先对 Activity 的组成结构做个大致的介绍。Activity 和 Window 之间的关系可以用以下图片来表示
 
-![](https://z3.ax1x.com/2021/03/21/64LK81.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a513336e6d04478cb5eb32789f4a9d72~tplv-k3u1fbpfcp-zoom-1.image)
 
 1. 每个 Activity 均包含一个 Window 对象，即 Activity 和 Window 是一对一的关系
 
@@ -253,7 +253,7 @@ public abstract class Window {
 }
 ```
 
-### 四、Activity  # setContentView
+# 四、Activity  # setContentView
 
 每个 Activity 内部都包含一个 Window 对象 `mWindow`，在 `attach` 方法中完成初始化，这说明 Activity 和 Window 是一对一的关系。`mWindow` 对象对应的是 PhoneWindow 类，这也是 Window 的唯一实现类
 
@@ -344,7 +344,7 @@ Activity  的`attach` 方法又是在 ActivityThread 的 `performLaunchActivity`
 
 此外，从 Activity 的`setContentView` 的方法签名来看，具体逻辑都交由了 Window 的同名方法来实现，传入的 `layoutResID` 就是我们希望在屏幕上呈现的布局，那么 PhoneWindow 自然就需要去加载该布局文件生成对应的 View。而为了能够有一个对 View 进行统一管理的入口，View 应该要包含在一个指定的 ViewGroup 中才行，该 ViewGroup 指的就是 DecorView
 
-### 五、PhoneWindow # setContentView
+# 五、PhoneWindow # setContentView
 
 PhoneWindow 的 `setContentView` 方法的逻辑可以总结为：
 
@@ -465,7 +465,7 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
     }
 ```
 
-### 六、DecorView
+# 六、DecorView
 
 DecorView 是 FrameLayout 的子类，其 `onResourcesLoaded` 方法在拿到 PhoneWindow 传递过来的 `layoutResource` 后，就会生成对应的 View 并添加为自己的 childView，就像普通的 ViewGroup 执行 `addView` 方法一样，该 childView 就对应 `mContentRoot`，我们可以在 Activity 中通过`(window.decorView as ViewGroup).getChildAt(0)`来获取到 `mContentRoot`
 
@@ -512,7 +512,7 @@ public class DecorView extends FrameLayout implements RootViewSurfaceTaker, Wind
 }
 ```
 
-### 七、ActivityThread
+# 七、ActivityThread
 
 完成以上步骤后，此时其实还只是完成了 Activity 整个视图树的加载工作，虽然 Activity 的 `attach`方法已经创建了 Window 对象，但还需要将 DecorView 提交给 WindowManager 后才能正式将视图树展示到屏幕上
 
@@ -540,7 +540,7 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
     }
 ```
 
-### 八、做下总结
+# 八、做下总结
 
 对以上流程做下总结
 
@@ -551,13 +551,13 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
 5. View 和 ViewGroup 共同组成一个具体的视图树，视图树的根布局则是 DecorView，DecorView 的存在使得视图树有了一个统一的容器，有利于统一系统的主题样式并对所有 childView 进行统一管理
 6. Activity 的 DecorView 是在`makeVisible` 方法里提交给 WindowManager 的，之后 WindowManagerImpl 会通过 ViewRootImpl 来完成整个视图树的绘制流程，之后 Activity 才正式对用户可见
 
-### 九、一个 Demo
+# 九、一个 Demo
 
 这里我也提供一个自定义 Window 的 Demo，实现了基本的拖拽移动和点击事件，代码点击这里：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
 
-![](https://z3.ax1x.com/2021/03/21/64zLJe.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8222b030014d4aa99f39e673f60e9ea7~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 十、一文系列
+# 十、一文系列
 
 最近比较倾向于只用一篇文章来写一个知识点，也懒得总是想文章标题，就一直沿用一开始用的**一文读懂XXX**，写着写着也攒了蛮多篇文章了，之前也已经写了几篇关于 View 系统的文章，希望对你有所帮助 🤣🤣
 

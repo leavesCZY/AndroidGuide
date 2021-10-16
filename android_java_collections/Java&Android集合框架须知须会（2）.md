@@ -2,13 +2,13 @@
 
 > 本系列文章会陆续对 Java 和 Android 的集合框架（JDK 1.8，Android SDK 30）中的几个常见容器结合源码进行介绍，了解不同容器在**数据结构、适用场景、优势点**上的不同，希望对你有所帮助 🤣🤣
 
-## 一、HashMap
+# 一、HashMap
 
 HashMap 是一种用于存储键值对的数据类型，基于哈希表的 Map 接口的非同步实现，key 可以为 null，不允许插入重复的 key，允许 value 重复
 
 HashMap 实际上是**数组+链表+红黑树**的结合体，其底层包含一个数组，数组中每一项元素的类型分为四种可能：**null、单独一个结点、链表、红黑树**（JDK1.8 开始通过使用红黑树来提高元素查找效率）。当往 HashMap 中存入元素时，会先根据 key 的哈希值得到该元素在数组中的位置（即数组下标），如果该位置上已经存放有其它元素了，那么在这个位置上的元素将以链表或者红黑树的形式来存放，如果该位置上没有元素，就直接向该位置存放元素。因此 HashMap 要求 key 必须是不可变对象，即 key 的哈希值不能发生改变，否则就会导致后续访问时无法定位到它的存放位置了
 
-#### 1、哈希
+## 1、哈希
 
 Hash，一般翻译做哈希或者散列，是把输入的任意对象通过哈希算法变换成固定长度的输出，该输出就是哈希值。不同的输入可能会哈希成相同的输出，所以不可能从哈希值来确定唯一的输入值，但可以将哈希值作为这个对象的一个特征
 
@@ -16,32 +16,32 @@ Hash，一般翻译做哈希或者散列，是把输入的任意对象通过哈�
 
 HashMap 内部就采用了哈希算法来存储元素。但由于哈希算法对于不同的输入有可能会哈希成相同的输出，而且数组空间不可能是无限大的，所以在同个数组位置上就不可避免的需要存储多个元素了，这种情况就叫做**哈希冲突**。此外，HashMap 不保证元素的存储顺序和迭代顺序，因为根据需要 HashMap 会对元素重新哈希，元素的顺序也会被再次打乱，因此在不同时间段其存储顺序和迭代顺序都可能会发现变化。此外，HashMap 也不保证线程安全，如果有多个线程同时进行写操作的话可能会导致数据错乱甚至线程死锁
 
-#### 2、类声明
+## 2、类声明
 
 ```java
-	public class HashMap<K, V> extends AbstractMap<K, V> 
+    public class HashMap<K, V> extends AbstractMap<K, V> 
         implements Map<K, V>, Cloneable, Serializable
 ```
 
-#### 3、常量
+## 3、常量
 
 HashMap 中的全局常量主要看以下几个
 
 ```java
-	//哈希桶数组的默认容量
+    //哈希桶数组的默认容量
     static final int DEFAULT_INITIAL_CAPACITY = 1 << 4;
 
     //哈希桶数组能够达到的最大容量
     static final int MAXIMUM_CAPACITY = 1 << 30;
 	
-	//装载因子
+    //装载因子
     static final float DEFAULT_LOAD_FACTOR = 0.75f;
 
     //为了提高效率，当链表的长度超出这个值时，就将链表转换为红黑树
     static final int TREEIFY_THRESHOLD = 8;
 	
-	//当红黑树的长度小于这个值时，就将红黑树转换为链表
-	static final int UNTREEIFY_THRESHOLD = 6;
+    //当红黑树的长度小于这个值时，就将红黑树转换为链表
+    static final int UNTREEIFY_THRESHOLD = 6;
 ```
 
 装载因子用于规定数组在自动扩容之前数据占有其容量的最高比例，即当数据量占有数组的容量达到这个比例后，数组将自动扩容。装载因子衡量的是一个散列表的空间的使用程度，装载因子越大表示散列表的装填程度越高，反之愈小。对于使用链表的散列表来说，查找一个元素的平均时间是O(1+a)，因此装载因子越大，对空间的利用程度就越高，相对应的是查找效率越低。如果装载因子太小，那么数组的数据将过于稀疏，对空间的利用率就变低，相应查找效率也会提升
@@ -50,7 +50,7 @@ HashMap 中的全局常量主要看以下几个
 
 此外，即使装载因子和哈希算法设计得再合理，也难免会出现由于哈希冲突导致链表长度过长的情况，这也将影响 HashMap 的性能。为了优化性能，从 JDK1.8 开始引入了红黑树，当链表长度超出 TREEIFY_THRESHOLD 规定的值时，链表就会被转换为红黑树，利用红黑树快速增删改查的特点以提高 HashMap 的性能
 
-#### 4、变量
+## 4、变量
 
 ```java
     //哈希桶数组，在第一次使用时才初始化
@@ -79,10 +79,10 @@ HashMap 中的全局常量主要看以下几个
     final float loadFactor;
 ```
 
-#### 5、构造函数
+## 5、构造函数
 
 ```java
-	//设置Map的初始化大小和装载因子
+    //设置Map的初始化大小和装载因子
     public HashMap(int initialCapacity, float loadFactor) {
         if (initialCapacity < 0)
             throw new IllegalArgumentException("Illegal initial capacity: " + initialCapacity);
@@ -111,7 +111,7 @@ HashMap 中的全局常量主要看以下几个
     }
 ```
 
-#### 6、插入键值对
+## 6、插入键值对
 
 在上边说过，HashMap 是 **数组+链表+红黑树** 的结合体，数组中每一项元素的类型分为四种可能：**null、单独一个结点、链表、红黑树**
 
@@ -169,7 +169,7 @@ Node 类的声明如下所示
 插入键值对的方法是 `put(K key, V value)` 
 
 ```java
-	public V put(K key, V value) {
+    public V put(K key, V value) {
         return putVal(hash(key), key, value, false, true);
     }
 
@@ -191,7 +191,7 @@ Node 类的声明如下所示
 7. 当保存键值对后，进行必要的扩容
 
 ```java
-	/**
+    /**
      * @param hash         hash for key
      * @param key          the key
      * @param value        the value to put
@@ -275,12 +275,12 @@ Node 类的声明如下所示
     }
 ```
 
-#### 7、获取 value
+## 7、获取 value
 
 获取 value 对应的是 `get(Object key)`方法
 
 ```java
-	public V get(Object key) {
+    public V get(Object key) {
         Node<K, V> e;
         return (e = getNode(hash(key), key)) == null ? null : e.value;
     }
@@ -310,13 +310,13 @@ Node 类的声明如下所示
     }
 ```
 
-#### 8、移除结点
+## 8、移除结点
 
 从 Map 中移除键值对的操作，对于其底层数据结构的体现就是要移除对某个 Node 对象的引用，这个数据结构可能是数组、红黑树、或者链表
 
 ```java
-	//如果真的存在该 key，则返回对应的 value，否则返回 null
-	public V remove(Object key) {
+    //如果真的存在该 key，则返回对应的 value，否则返回 null
+    public V remove(Object key) {
         Node<K, V> e;
         return (e = removeNode(hash(key), key, null, false, true)) == null ?
                 null : e.value;
@@ -376,14 +376,14 @@ Node 类的声明如下所示
     }
 ```
 
-#### 9、哈希算法
+## 9、哈希算法
 
 在插入、查询和移除键值对时，定位到哈希桶数组的对应位置都是很关键的第一步，只有 HashMap 中的元素尽量分布均匀，才能尽量让数组中的每个位置都只保存一个 Node，避免频繁地去构建和遍历链表或者红黑树，这就需要依靠于一个比较好的哈希算法了
 
 以下是 HashMap 中计算 key 值的哈希值以及根据哈希值获取其在哈希桶数组中位置的方法
 
 ```java
-	static final int hash(Object key) {
+    static final int hash(Object key) {
         int h;
         //高位参与运算
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
@@ -421,7 +421,7 @@ key 在哈希桶数组的位置索引则是通过 `(n - 1) & hash` 来计算得�
 
 可以看出来，不管 hash 值是多少，通过 `(n - 1) & hash` 计算得到的索引值的大小都不会超出 n 本身，大于等于 0 且小于等于 n - 1，这也符合我们对数组索引值范围的要求。再加上 hash 值的生成规则同时使用到了 hashCode 的高 16 位和低 16 位，在 hashCode 的基础上加大了随机性，使得最终通过 `(n - 1) & hash` 计算得到的索引值的随机性也比较大，从而使得元素可以比较均匀地分布在哈希桶数组中，减少了哈希冲突的概率
 
-#### 10、扩容
+## 10、扩容
 
 如果哈希桶数组很大，即使是较差的哈希算法，元素也会比较分散；如果哈希桶数组很小，即使是好的哈希算法也会出现较多哈希碰撞的情况，所以就需要在空间成本和时间成本之间权衡，除了需要设计较好的哈希算法以便减少哈希冲突外，也需要在合适的的时机对哈希桶数组进行扩容
 
@@ -434,7 +434,7 @@ key 在哈希桶数组的位置索引则是通过 `(n - 1) & hash` 来计算得�
 初始化数组和扩容数组这两个操作对应的是 `resize()`方法
 
 ```java
-	final Node<K, V>[] resize() {
+    final Node<K, V>[] resize() {
         //扩容前的数组
         Node<K, V>[] oldTab = table;
         //扩容前数组的容量
@@ -530,7 +530,7 @@ key 在哈希桶数组的位置索引则是通过 `(n - 1) & hash` 来计算得�
     }
 ```
 
-#### 11、效率测试
+## 11、效率测试
 
 这里来测试下不同的初始化大小和不同情况下的 hashCode 值对 HashMap 运行效率的影响
 
@@ -622,27 +622,27 @@ public class Test {
 初始化大小是：20000，用时：1865毫秒
 ```
 
-## 二、LinkedHashMap
+# 二、LinkedHashMap
 
 HashMap 并不保证元素的存储顺序和迭代顺序能够和存入顺序保持一致，即 HashMap 本身是无序的。为了解决这一个问题，Java 提供了 LinkedHashMap 来实现有序的 HashMap
 
-#### 1、类声明
+## 1、类声明
 
 LinkedHashMap 是 HashMap 的子类，它保留了元素的插入顺序，其内部维护着一个按照**元素插入顺序**或者**元素访问顺序**来排列的链表，默认是按照**元素的插入顺序**来排列，就像使用 ArrayList 一样；如果是按照**元素的访问顺序**来排列，那么每次访问元素后该元素将移至链表的尾部，可以靠此来实现 LRUcache 缓存算法
 
 ```java
-	public class LinkedHashMap<K,V> extends HashMap<K,V> 
+    public class LinkedHashMap<K,V> extends HashMap<K,V> 
         implements Map<K,V>
 ```
 
-#### 2、结点类
+## 2、结点类
 
 HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMap 则是包装为 Entry 对象，看 `newNode` 方法就知道了。Entry 类在 Node 类的基础上扩展了两个新的成员变量：before 和 after，这两个变量就是 LinkedHashMap 来实现有序访问的关键。每当保存了新的键值对，Entry 就会通过这两个变量将其和之前的键值对串联起来，保存为链表的尾结点，从而保留了键值对的顺序信息
 
 不管 Entry 在 HashMap 内部为了解决哈希冲突采用的是链表还是红黑树，这两个变量的指向都不受数据结构变化的影响。从这也可以看出集合框架在设计时一个很巧妙的地方：LinkedHashMap 内部没有新建一个链表用来维护元素的插入顺序，而是通过扩展父类来实现扩展功能
 
 ```java
-	static class Entry<K,V> extends HashMap.Node<K,V> {
+    static class Entry<K,V> extends HashMap.Node<K,V> {
         //用于指定上一个结点 before 和下一个结点 after
         Entry<K,V> before, after;
         Entry(int hash, K key, V value, Node<K,V> next) {
@@ -679,7 +679,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
     }
 ```
 
-#### 3、变量
+## 3、变量
 
 变量 accessOrder 用于决定 LinkedHashMap 中元素的排序方式，如果为 true 就按照元素访问顺序来排序，为 false 就按照元素插入顺序来排序
 
@@ -696,12 +696,12 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
     final boolean accessOrder;
 ```
 
-#### 4、构造函数
+## 4、构造函数
 
 默认情况下 LinkedHashMap 都是按照元素插入顺序来排序
 
 ```java
-	public LinkedHashMap(int initialCapacity, float loadFactor) {
+    public LinkedHashMap(int initialCapacity, float loadFactor) {
         super(initialCapacity, loadFactor);
         accessOrder = false;
     }
@@ -728,7 +728,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
     }
 ```
 
-#### 5、预留的方法
+## 5、预留的方法
 
 在 HashMap 中有三个预留的空方法，源码注释中也写明这三个函数就是为 LinkedHashMap 预留的
 
@@ -742,7 +742,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
 当 HashMap 中的某个结点被访问了（例如调用了 get 方法）且 accessOrder 为 true，那么`afterNodeAccess` 方法就会被调用，该方法用于将最新访问的键值对移至链表的尾部，由于链表内结点位置的改变仅仅是修改几个引用即可，所以这个操作还是非常轻量级的 
 
 ```java
-	public V get(Object key) {
+    public V get(Object key) {
         Node<K,V> e;
         if ((e = getNode(hash(key), key)) == null)
             return null;
@@ -751,7 +751,7 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
         return e.value;
     }
 
-	//当访问了结点 e 时调用
+    //当访问了结点 e 时调用
     //结点 e 是最新访问的一个结点，此时就将结点 e 置为链表的尾结点
     void afterNodeAccess(Node<K,V> e) {
         //last 用来指向链表的尾结点
@@ -830,14 +830,14 @@ HashMap 中每个存入的键值对都会被包装为 Node 对象，LinkedHashMa
     }
 ```
 
-#### 6、LRUCache
+## 6、LRUCache
 
 在 Android 端的应用开发中，LRUCache 算法（最近最少使用算法）是很常见的，一种典型的用途就是用来在内存中缓存 Bitmap，因为从 IO 流中读取 Bitmap 的资源消耗较大，为了防止多次从磁盘中读取某张图片，所以通常会在内存中 Bitmap。但内存空间也是有限的，所以也不能每张图片都进行缓存，需要有选择性地缓存一定数量的图片，LRUCache 就是最常见的缓存方案之一
 
 这里利用 LinkedHashMap 可以按照元素使用顺序进行排列的特点，来实现一个 LRUCache 策略的缓存
 
 ```java
-public class LRUCache {
+ public class LRUCache {
 
     private static class LRUCacheMap<K, V> extends LinkedHashMap<K, V> {
 
@@ -888,7 +888,7 @@ public class LRUCache {
 }
 ```
 
-## 三、HashSet
+# 三、HashSet
 
 HashSet 实现了 Set 接口，不允许插入重复的元素，允许包含 null 元素，且不保证元素的迭代顺序，源码十分简单，去掉注释后不到两百行，因为其底层也是通过 HashMap 来实现的，看了上面关于 HashMap 源码的解析后再来看 HashSet 就会有一种“不过如此”的感觉了
 
@@ -968,7 +968,7 @@ public class HashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, jav
 }
 ```
 
-## 四、LinkedHashSet
+# 四、LinkedHashSet
 
 LinkedHashSet 其内部源码十分简单，简单到只有几十行代码，从其名字就可以猜出它是 HashSet 的子类，并且是依靠链表来实现有序的 HashSet
 
@@ -977,7 +977,7 @@ HashSet 为 LinkedHashSet 预留了一个构造函数，其 dummy 参数并没�
 ```java
 public class HashSet<E> extends AbstractSet<E> implements Set<E>, Cloneable, java.io.Serializable {
 
-	private transient HashMap<E,Object> map;
+    private transient HashMap<E,Object> map;
     
     HashSet(int initialCapacity, float loadFactor, boolean dummy) {
         map = new LinkedHashMap<>(initialCapacity, loadFactor);
