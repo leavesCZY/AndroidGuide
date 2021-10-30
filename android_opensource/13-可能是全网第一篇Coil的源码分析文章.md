@@ -24,7 +24,7 @@ Coil 是我最后一个要来分析的开源库，本篇也是我 [三方库源�
 
 Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的，Coil 在2020年10月22日才发布了 1.0.0 版本，还热乎着呢。我在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而且本文写好的时候离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 的源码分析文章** ~~~
 
-### 一、Coil 是什么
+# 一、Coil 是什么
 
 [Coil](https://github.com/coil-kt/coil) 是一个新兴的 Android 图片加载库，使用 Kotlin 协程来加载图片，有以下几个特点：
 
@@ -35,7 +35,7 @@ Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都
 
 Coil 的首字母由来：**Co**routine，**I**mage 和 **L**oader 得到 Coil
 
-### 二、引入 Coil
+# 二、引入 Coil
 
 Coil 要求 **AndroidX、Min SDK 14+、Java 8+** 环境
 
@@ -87,9 +87,9 @@ implementation("io.coil-kt:coil-svg:1.0.0")
 implementation("io.coil-kt:coil-video:1.0.0")
 ```
 
-### 三、快速入门
+# 三、快速入门
 
-#### 1、load
+## 1、load
 
 要将图片显示到 ImageView 上，直接使用`ImageView`的扩展函数`load`即可
 
@@ -116,7 +116,7 @@ imageView.load("https://www.example.com/image.jpg") {
 }
 ```
 
-#### 2、ImageRequest
+## 2、ImageRequest
 
 如果要将图片加载到自定义的 target 中，可以通过 ImageRequest.Builder 来构建 ImageRequest 实例，并将请求提交给 ImageLoader
 
@@ -130,7 +130,7 @@ imageView.load("https://www.example.com/image.jpg") {
         context.imageLoader.enqueue(request)
 ```
 
-#### 3、ImageLoader
+## 3、ImageLoader
 
 `imageView.load`使用单例对象 imageLoader 来执行 ImageRequest，可以使用 Context 的扩展函数来访问 ImageLoader
 
@@ -149,7 +149,7 @@ val imageLoader = context.imageLoader
         )
 ```
 
-#### 4、execute
+## 4、execute
 
 如果想直接拿到目标图片，可以调用 ImageLoader 的`execute`方法来实现
 
@@ -160,13 +160,13 @@ val request = ImageRequest.Builder(context)
 val drawable = imageLoader.execute(request).drawable
 ```
 
-#### **5、R8 / Proguard**
+## 5、R8 / Proguard
 
 Coil 开箱即用，与 R8 完全兼容，不需要添加任何额外规则
 
 如果你使用了 Proguard，你可能需要添加对应的混淆规则：[Coroutines](https://github.com/Kotlin/kotlinx.coroutines/blob/master/kotlinx-coroutines-core/jvm/resources/META-INF/proguard/coroutines.pro)、[OkHttp](https://github.com/square/okhttp/blob/master/okhttp/src/main/resources/META-INF/proguard/okhttp3.pro) and [Okio](https://github.com/square/okio/blob/master/okio/src/jvmMain/resources/META-INF/proguard/okio.pro)。
 
-#### 6、**License**
+## 6、License
 
 ```groovy
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -182,7 +182,7 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ```
 
-### 四、大体框架
+# 四、大体框架
 
 Coil 在我看来是一个比较“**激进**”的开源库，热衷于使用当前最为流行的技术，包括 Coroutines、OkHttp、Okio，以及 Google 官方的 Jetpack Lifecycles、AndroidX 等，代码不仅完全由 Kotlin 语言来实现，连 gradle 脚本也是全部使用 kts，而且 gradle 版本也升级得很快，我一开始由于使用的 Android Studio 不是 4.x 版本，连 Coil 代码都跑不起来 =_=
 
@@ -276,7 +276,7 @@ inline fun ImageView.loadAny(
 
 下面就来分析下这一整个流程
 
-### 五、ImageRequest 
+# 五、ImageRequest 
 
 ImageRequest 基于 Builder 模式来构建，包含了加载图片时的各个配置项，其配置项很多，重点看前九个
 
@@ -318,7 +318,7 @@ ImageRequest 基于 Builder 模式来构建，包含了加载图片时的各个�
         private var resolvedScale: Scale?
 ```
 
-#### 1、Target
+## 1、Target
 
 Target 即最终图片的接收载体，ImageRequest 提供了 `target` 方法用于把 ImageView 包装为 Target 。如果最终图片的接收载体不是 ImageView 的话，就需要开发者自己来实现 Target 接口
 
@@ -384,7 +384,7 @@ open class ImageViewTarget(
 }
 ```
 
-#### 2、Lifecycle
+## 2、Lifecycle
 
 每个 ImageRequest 都会关联一个 Context 对象，如果外部传入的是 ImageView，则会取 ImageView 内部的 Context。Coil 会判断 Context 是否属于 LifecycleOwner 类型，是的话则可以拿到**和 Activity 或者 Fragment 关联的 Lifecycle**，否则最终取 **GlobalLifecycle**
 
@@ -421,7 +421,7 @@ internal object GlobalLifecycle : Lifecycle() {
 }
 ```
 
-#### 3、CachePolicy
+## 3、CachePolicy
 
 和 Glide 一样，Coil 也具备了多级缓存的能力，即**内存缓存 memoryCachePolicy、磁盘缓存 diskCachePolicy、网络缓存 networkCachePolicy**。这些缓存功能是否开启都是通过 CachePolicy 来定义，默认三级缓存全部可读可写
 
@@ -437,7 +437,7 @@ enum class CachePolicy(
 }
 ```
 
-#### 4、Fetcher
+## 4、Fetcher
 
 Fetcher 是**根据图片来源地址转换为目标数据类型**的转换器。例如，我们传入了 Int 类型的 drawableResId，想要以此拿到 Drawable，那么这里的 `Class<*>` 即 `Class<Int>` ，`Fetcher<*>` 即 `Fetcher<Drawable>`
 
@@ -493,7 +493,7 @@ Coil 默认提供了以下八种类型的 Fetcher，分别用于处理 **HttpUri
         .build()
 ```
 
-#### 5、Decoder
+## 5、Decoder
 
 Decoder 接口用于提供将 BufferedSource 转码为 Drawable 的能力，BufferedSource 就对应着不同类型的图片资源
 
@@ -518,7 +518,7 @@ interface Decoder {
 }
 ```
 
-### 六、Disposable
+# 六、Disposable
 
 Disposable 是我们调用 `load` 方法后的返回值，为外部提供用于**取消图片加载**或者**等待图片加载完成**的方法
 
@@ -579,7 +579,7 @@ internal class ViewTargetDisposable(
 }
 ```
 
-### 七、ImageLoader
+# 七、ImageLoader
 
 上面有说过，`loadAny`方法最终是会通过调用 `imageLoader.enqueue(request)`来发起一个图片加载请求的，那么重点就是要来看 ImageLoader 是如何实现的
 
@@ -998,7 +998,7 @@ internal abstract class HttpFetcher<T : Any>(private val callFactory: Call.Facto
 }
 ```
 
-### 八、缓存机制
+# 八、缓存机制
 
 Glide 的缓存机制是分为**内存缓存**和**磁盘缓存**两层，Coil 在这两个的基础上还增加了**网络缓存**这一层，这可以从 ImageRequest 的参数看出来，默认情况下，这三层缓存机制是全部启用的，即全部可读可写
 
@@ -1035,7 +1035,7 @@ enum class CachePolicy(
 
 下面来看看 Coil 的缓存机制具体是如何定义和实现的
 
-#### 1、内存缓存
+## 1、内存缓存
 
 Coil 的内存缓存机制集中在 EngineInterceptor 中生效，有两个时机会来判断是否可以写入和读取内存缓存
 
@@ -1132,7 +1132,7 @@ Coil 的内存缓存机制实际上是分为两级：
 
 此外，BitmapPool 的存在意义是为了尽量避免频繁创建 Bitmap。在使用 Transformation 的时候需要用到 Bitmap 来作为载体，如果频繁创建 Bitmap 可能会造成内存抖动，所以即使当一个 Bitmap 不再被使用，也会将之存到 RealBitmapPool 中缓存起来，方便后续复用。RealBitmapReferenceCounter 会保存 Bitmap 的引用次数和可用状态，当引用次数小于等于 0 且处于不可用状态时，就会将其从 RealWeakMemoryCache 中移除并存到 BitmapPool 中
 
-#### 2、磁盘缓存、网络缓存
+## 2、磁盘缓存、网络缓存
 
 Coil 的**磁盘缓存**和**网络缓存**可以合在一起讲，因为 Coil 的磁盘缓存其实是通过 OkHttp 本身的网络缓存功能来间接实现的。RealImageLoader 在初始化的时候，默认构建了一个包含 cache 的 OkHttpClient，即默认支持缓存网络请求结果
 
@@ -1254,7 +1254,7 @@ internal class RequestService(private val logger: Logger?) {
 }
 ```
 
-### 九、生命周期监听
+# 九、生命周期监听
 
 前文有提到，每个 ImageRequest 都会关联一个 Context 对象，如果外部传入的是 ImageView，则会自动取 ImageView 内部的 Context。Coil 会判断 Context 是否属于 LifecycleOwner 类型，是的话则可以拿到**和 Activity 或者 Fragment 关联的 Lifecycle**，否则最终取 **GlobalLifecycle**
 
@@ -1345,7 +1345,7 @@ internal class RequestService(private val logger: Logger?) {
     }
 ```
 
-### 十、Transformation
+# 十、Transformation
 
 图片变换是基本所有的图片加载库都会支持的功能，Coil 对这个概念的抽象即 Transformation 接口
 
@@ -1381,7 +1381,7 @@ Coil 默认提供了以下几个 Transformation 实现类
 
 我们可以学着官方给的例子，自己来实现两个 Transformation 
 
-#### 1、为图片添加水印
+## 1、为图片添加水印
 
 为图片添加水印的思路也很简单，只需要对 canvas 稍微坐下旋转，然后绘制文本即可
 
@@ -1439,7 +1439,7 @@ class WatermarkTransformation(
 
 ![](https://s3.ax1x.com/2020/11/22/D8EfC4.png)
 
-#### 2、为图片添加蒙层
+## 2、为图片添加蒙层
 
 Android 的 Paint 原生就支持为 Bitmap 添加一个蒙层，只需要使用其 `colorFilter`方法即可
 
@@ -1486,7 +1486,7 @@ class ColorFilterTransformation(
 
 更多 Transformation 效果看这里：[coil-transformations](https://github.com/Commit451/coil-transformations)
 
-### 十一、实现全局默认配置
+# 十一、实现全局默认配置
 
 如果我们想要设置应用内所有图片在加载时固定显示同一张 loading 图，在加载失败时固定显示一张 error 图， 那么就需要为 Coil 设定一个全局的默认配置。Glide 是通过 AppGlideModule 来实现的，那 Coil 是如何来实现这个效果呢？
 
@@ -1589,7 +1589,7 @@ object CoilHolder {
 }
 ```
 
-### 十二、自定义网络请求
+# 十二、自定义网络请求
 
 在讲 Coil 的**磁盘缓存**和**网络缓存**这一节内容的时候有提到，Coil 的网络请求是由 HttpFetcher 来完成的，那么我们是否有办法来替换该组件，自己来实现网络请求呢？先来看下 Coil 是如何实现将外部传入的图片地址和特定的 Fetcher 对应上的
 
@@ -1780,6 +1780,6 @@ class VolleyFetcher(private val application: Application) : Fetcher<Uri> {
     }
 ```
 
-### 十三、GitHub
+# 十三、GitHub
 
 上述的所有示例代码我都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

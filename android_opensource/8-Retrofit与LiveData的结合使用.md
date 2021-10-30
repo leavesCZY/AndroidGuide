@@ -65,7 +65,7 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-### 一、基础定义
+# 一、基础定义
 
 假设我们的项目中 API 接口的返回值的数据格式都是如下所示。通过 status 来标明本次网络请求结果是否成功，在 data 里面存放具体的目标数据
 
@@ -180,7 +180,7 @@ data class HttpWrapBean<T>(val status: Int, val msg: String, val data: T) {
 }
 ```
 
-### 二、LiveDataCallAdapter
+# 二、LiveDataCallAdapter
 
 首先需要继承 CallAdapter.Factory 类，在 LiveDataCallAdapterFactory 类中判断是否支持特定的 API 方法，在类型校验通过后返回 LiveDataCallAdapter
 
@@ -313,6 +313,6 @@ class LiveDataCallAdapterActivity : AppCompatActivity() {
 }
 ```
 
-### 三、GitHub
+# 三、GitHub
 
 LiveDataCallAdapter 的实现逻辑挺简单的，在使用上也很简单。本篇文章也算作是在了解了 Retrofit 源码后所做的一个实战 😁😁 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

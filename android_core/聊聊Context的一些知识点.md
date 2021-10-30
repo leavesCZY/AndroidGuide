@@ -12,7 +12,7 @@ Context 是一个抽象类，像我们平时经常使用的 `startActivity、sen
 - 系统限制了 BroadcastReceiver 不能用于注册广播和绑定服务，所以其 onReceive 方法传入的 Context 对象实际上属于 ReceiverRestrictedContext 类型。ReceiverRestrictedContext 重载了 registerReceiver 和 bindService 等方法，当被调用时会直接抛出异常
 - 可以看出来，Contex 整体的实现关系是使用到了装饰模式，通过组合而非继承的方式来扩展或者是限制 ContextImpl 的功能，在运行时选择不同的装饰类来用于特定的功能场景
 
-### 一、Activity
+# 一、Activity
 
 上文讲了，ContextWrapper 内部包含一个 ContextImpl 类型实例的成员变量`mBase`，因此 Activity 也同样包含。Activity 的`mBase`的初始化时机主要看 ActivityThread 的 `performLaunchActivity` 方法，该方法就用于在启动 Activity 时构建 Activity 实例。此外，我们知道 Activity 包含一个 `getApplication()`方法用于获取 Application 实例，那么在实例化 Activity 的时候需要一起把 ContextImpl 和 Application 传给 Activity
 
@@ -110,7 +110,7 @@ public class Activity extends ContextThemeWrapper {
 
 所以说，Activity 包含的 mBase 和 Application 都是在启动过程中得到的，Activity 在被实例化后，其 `attach` 方法就会被调用从而初始化这两个成员变量。Activity 直接继承于 ContextThemeWrapper，ContextThemeWrapper 又直接继承于 ContextWrapper，Activity 拿到的 ContextImpl 就用来初始化声明在 ContextWrapper 中的 mBase，之后 Activity 就可以使用 Context 中的各个方法了
 
-### 二、Service
+# 二、Service
 
 Service 的 Context 创建过程与 Activity 类似，主要看 ActivityThread 的 `handleCreateService` 方法，该方法就用于创建 Service 实例并回调其 `onCreate` 方法
 
@@ -165,7 +165,7 @@ Service 的 Context 创建过程与 Activity 类似，主要看 ActivityThread �
     }
 ```
 
-### 三、BroadcastReceiver
+# 三、BroadcastReceiver
 
 BroadcastReceiver 的 Context 创建过程主要看 ActivityThread 的 `handleReceiver` 方法，该方法就用于创建 BroadcastReceiver 实例并回调其 `onReceive` 方法。由于系统限制了 BroadcastReceiver 不能用于注册广播和绑定服务，所以其 `onReceive` 方法传入的 Context 对象实际上属于 ContextWrapper 的子类  ReceiverRestrictedContext
 
@@ -223,7 +223,7 @@ class ReceiverRestrictedContext extends ContextWrapper {
 }
 ```
 
-### 四、ContentProvider
+# 四、ContentProvider
 
 ContentProvider 并不是 Context 的子类，但由于其属于四大组件之一，这里就一起讲下吧
 
@@ -294,7 +294,7 @@ ContentProvider 的 `attachInfo` 方法最终就会初始化自身的 mContext �
     }
 ```
 
-### 五、Application
+# 五、Application
 
 回顾以上代码，可以看到 Activity、Service、BroadcastReceiver 三者都是通过 `LoadedApk.makeApplication` 方法拿到 Application 实例的，再来看下 Application Context 的创建流程
 

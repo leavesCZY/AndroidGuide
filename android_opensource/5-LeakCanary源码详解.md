@@ -22,7 +22,7 @@
 
 本文就基于其当前（2020/10/06）的最新一次提交来进行源码分析，具体的 Git 版本节点是：**9f62126e**，来了解 LeakCanary 的整体运行流程和实现原理 😂😂
 
-### 一、支持的内存泄露类型
+# 一、支持的内存泄露类型
 
 我们经常说 LeakCanary 能检测到应用内发生的内存泄露，那么它到底具体支持什么类型的内存泄露情况呢？LeakCanary   官网有对此进行介绍：
 
@@ -85,7 +85,7 @@ data class Config(
   )
 ```
 
-### 二、初始化
+# 二、初始化
 
 如今，我们在项目中引入 LeakCanary 只需要添加如下依赖即可，无须任何的初始化行为等附加操作，当应用启动时 LeakCanary 就会自动启动并开始监测了
 
@@ -175,7 +175,7 @@ LeakCanary 具体进行内存泄露检测的逻辑可以分为三类：
 
 当中，`ActivityDestroyWatcher` 和 `FragmentDestroyWatcher` 都需要依靠 `ObjectWatcher` 来完成，因为 `Activity、Fragment、FragmentView、ViewModel`  本质上都属于不同类型的 `Object` 
 
-### 三、ObjectWatcher：检测任意对象
+# 三、ObjectWatcher：检测任意对象
 
 我们知道，当一个对象不再被我们引用时，如果该对象由于代码错误或者其它原因导致迟迟无法被系统回收，此时就是发生了内存泄露。那么 LeakCanary 是怎么知道应用是否发生了内存泄露呢？
 
@@ -311,7 +311,7 @@ class KeyedWeakReference(
     }
 ```
 
-### 四、ActivityDestroyWatcher：检测Activity 
+# 四、ActivityDestroyWatcher：检测Activity 
 
 理解了 `ObjectWatcher` 的流程后来看 `ActivityDestroyWatcher` 就会比较简单了。`ActivityDestroyWatcher` 会向 `Application` 注册一个 `ActivityLifecycleCallbacks` 回调，当收到每个 Activity 执行了 `onDestroy` 的回调后，就会将将 Activity 对象转交由 `ObjectWatcher` 来进行监听
 
@@ -337,7 +337,7 @@ internal class ActivityDestroyWatcher private constructor(private val objectWatc
 }
 ```
 
-### 五、FragmentDestroyWatcher：检测Fragment 
+# 五、FragmentDestroyWatcher：检测Fragment 
 
 做 Android 应用开发的应该都知道，现在 Google 提供的基础依赖包分为了 **Support** 和 **AndroidX** 两种，**Support** 版本已经不再维护，主流的都是使用 **AndroidX** 了。而 LeakCanary 为了照顾老项目，就贴心的为这两种版本分别提供了 Fragment 的内存检测功能
 
@@ -480,7 +480,7 @@ internal class AndroidXFragmentDestroyWatcher(
 
 Fragment 和 FragmentView 走向 `Destroyed` 时，正常情况下它们都是不会被复用的，应该会很快就被 GC 回收，且它们本质上都只是一种对象，所以直接使用 `ObjectWatcher` 进行检测即可
 
-### 六、ViewModelClearedWatcher：检测ViewModel
+# 六、ViewModelClearedWatcher：检测ViewModel
 
 和 Fragment、FragmentView 相比，ViewModel 就比较特殊了，由于可能存在一个 Activity 和多个 Fragment 同时持有一个 ViewModel 实例的情况，而 leakcanary 无法知道 ViewModel 到底是同时被几个持有者所持有，所以无法通过单独一个 Activity 和 Fragment 的 `Destroyed` 回调来启动对 ViewModel 的检测。幸好 ViewMode 也提供了 `onCleared()` 的回调事件，leakcanary 就通过该回调来知道 ViewModel 是什么时候需要被回收。对 ViewModel 的实现原理不清楚的同学可以看我的这篇文章：[从源码看 Jetpack（6）-ViewModel源码详解](https://juejin.im/post/6873356946896846856)
 
@@ -536,7 +536,7 @@ internal class ViewModelClearedWatcher(
 }
 ```
 
-### 七、检测到内存泄露后的流程
+# 七、检测到内存泄露后的流程
 
 我们不可能在 Activity 刚被回调了 `onDestroy` 方法就马上来判断 `ReferenceQueue` 中是否有值，因为 JVM 的 GC 时机是不确定的，Activity 对象可能不会那么快就被回收，所以需要延迟一段时间后再来检测。而即使延迟检测了，也可能会存在**应用没有发生内存泄露只是系统还未执行 GC** 的情况，所以就需要去主动触发 GC，经过几轮检测后才可以确定当前应用是否的确发生了内存泄露
 
@@ -819,9 +819,9 @@ internal class HeapDumpTrigger(
 
 更后面的流程就涉及具体的 DumpHeap 操作了，这里就不再展开了，因为我也不太懂，后续有机会再单独写一篇文章来介绍了~~
 
-### 八、小提示
+# 八、小提示
 
-#### 1、检测任意对象
+## 1、检测任意对象
 
 除了 LeakCanary 默认支持的四种类型外，我们还可以主动检测任意对象。例如，可以检测 Service： 
 
@@ -840,7 +840,7 @@ class MyService : Service {
 }
 ```
 
-#### 2、更改配置项
+## 2、更改配置项
 
 LeakCanary 提供的默认配置项大多数情况已经很适合我们在项目中直接使用了，而如果我们想要更改 LeakCanary 的默认配置项（例如不希望检测 FragmentView），可以在 Application 中进行更改：
 
@@ -856,7 +856,7 @@ class DebugExampleApplication : Application() {
 
 由于 LeakCanary 的引用方式是 `debugImplementation`，在 `releas` 环境下是引用不到 LeakCanary 的，所以为了避免在生成 `release` 包时需要主动来删除这行配置项，需要将 `DebugExampleApplication` 放到 `src/debug/java` 文件夹中
 
-### 九、结尾
+# 九、结尾
 
 可以看出 **Activity、Fragment、FragmentView、ViewModel** 等四种类型的内存检测都是需要依靠 `ObjectWatcher` 来完成的，因为这四种类型本质上都是属于不同的对象。而 `ObjectWatcher` 需要依靠引用队列 `ReferenceQueue` 来实现，因此 LeakCanary 的基本实现基础就是来源于 Java 的原生特性
 

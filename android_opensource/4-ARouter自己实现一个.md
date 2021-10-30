@@ -68,7 +68,7 @@ public class EasyRouterappLoader {
 
 下面再来简单介绍下 EasyRouter 的实现过程
 
-### 一、前置准备
+# 一、前置准备
 
 由于路由框架是以模块为单位的，所以同个模块内的路由信息都可以存到同一个辅助文件中，而为了避免多个模块间出现生成的辅助文件重名的情况，所以外部需要主动配置每个模块的特定唯一标识，然后在编译阶段通过 `AbstractProcessor` 拿到这个唯一标识
 
@@ -122,7 +122,7 @@ annotation class Router(val path: String)
 data class RouterBean(val targetClass: Class<*>, val path: String, val group: String)
 ```
 
-### 二、注解处理器
+# 二、注解处理器
 
 声明一个 EasyRouterProcessor 类继承于 AbstractProcessor，在编译阶段通过扫描代码元素从而拿到 `@Router` 注解的信息
 
@@ -256,7 +256,7 @@ class EasyRouterProcessor : AbstractProcessor() {
     }
 ```
 
-### 三、EasyRouter
+# 三、EasyRouter
 
 EasyRouter 这个单例对象即最终提供给外部的调用入口，总代码行数不到五十行。外部通过调用 `navigation` 方法并传入目标页面 path 来实现跳转，通过 path 来判断其所属 group，并尝试加载其所在模块生成的辅助文件，如果加载成功则能成功跳转，否则就 Toast 提示
 
@@ -317,6 +317,6 @@ object EasyRouter {
 }
 ```
 
-### 四、GitHub
+# 四、GitHub
 
 由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyRouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😂😂 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

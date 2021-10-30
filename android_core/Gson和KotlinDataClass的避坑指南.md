@@ -37,7 +37,7 @@ Exception in thread "main" java.lang.NullPointerException: Parameter specified a
 	at temp.TestKt.main(Test.kt)
 ```
 
-### 一、为啥会抛出 NEP？
+# 一、为啥会抛出 NEP？
 
 `printMsg` 方法接收了参数后实际上什么也没做，为啥会抛出 NPE？
 
@@ -53,7 +53,7 @@ Exception in thread "main" java.lang.NullPointerException: Parameter specified a
 
 当然，这个自动插入的校验逻辑只会在 Kotlin 代码中生成，如果我们是将 `userBean.userName`传给 Java 方法的话，就不会有这个效果，而是会等到我们使用到了该参数时才发生 NPE
 
-### 二、Kotlin 的 nullSafe 失效了吗？
+# 二、Kotlin 的 nullSafe 失效了吗？
 
 既然 UserBean 中的 userName 字段已经被声明为非 null 类型了，那么为什么还可以反序列化成功呢？按照我自己的第一直觉，应该在进行反序列的时候就直接抛出异常才对，Gson 是怎么绕过 Kotlin 的 null 检查的呢？
 
@@ -138,7 +138,7 @@ Gson 的 UnsafeAllocator 类中就通过 `allocateInstance` 方法来完成了 U
 - UserBean 的构造函数只有一个，其包含两个构造参数，在构造函数内部也对 userName 这个字段进行了 null 检查，当发现为 null 时会直接抛出 NPE
 - Gson 是通过 Unsafe 包来实例化 UserBean 对象的，并不会调用到其构造函数，相当于绕过了 Kotlin 的 null 检查，所以即使 userName 值为 null 最终也能够反序列化成功
 
-### 三、构造参数默认值失效？
+# 三、构造参数默认值失效？
 
 再看个例子
 
@@ -168,7 +168,7 @@ UserBean(userName=null, userAge=26)
 
 通过上一节内容的分析，我们知道 Unsafe 包是不会调用 UserBean 的任何构造函数的，所以默认值也一定不会生效，那就只能找其它解决方案了，有以下几种方案可以解决：
 
-#### 1、无参构造函数
+## 1、无参构造函数
 
 UserBean 提供一个**无参构造函数**，让 Gson 通过反射该函数来实例化 UserBean，从而同时进行默认值赋值
 
@@ -180,7 +180,7 @@ data class UserBean(val userName: String, val userAge: Int) {
 }
 ```
 
-#### 2、添加注解
+## 2、添加注解
 
 可以通过向构造函数添加一个 `@JvmOverloads` 注解来解决，这种方式实际上也是通过提供一个无参构造函数来解决问题的。所以缺点就是需要每个构造参数都提供默认值，所以才能生成无参构造函数
 
@@ -191,7 +191,7 @@ data class UserBean @JvmOverloads constructor(
 )
 ```
 
-#### 3、声明为字段
+## 3、声明为字段
 
 这种方式和前两种类似，也是通过间接提供一个无参构造函数来实现的。将所有字段都声明在类内部而非构造参数，此时声明的字段也一样具有默认值
 
@@ -209,7 +209,7 @@ class UserBean {
 }
 ```
 
-#### 4、改用 moshi
+## 4、改用 moshi
 
 Gson 由于本身定位就是用于 Java 语言的，所以目前对于 Kotlin 的友好程度不高，导致默认值无法直接生效。我们可以改用另外一个 Json 序列化库：[moshi](https://github.com/square/moshi)
 
@@ -267,7 +267,7 @@ Exception in thread "main" com.squareup.moshi.JsonDataException: Non-null value 
 	at temp.TestKt.main(Test.kt)
 ```
 
-### 四、扩展知识
+# 四、扩展知识
 
 **再来看个扩展知识，和 Gson 无直接关联，但是在开发中也是蛮重要的一个知识点**
 

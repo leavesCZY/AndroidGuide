@@ -18,7 +18,6 @@ dependencies {
 }
 ```
 
-
 # 1、如何使用
 
 本节内容先来介绍如何将 Fragment 添加到 Activity 中

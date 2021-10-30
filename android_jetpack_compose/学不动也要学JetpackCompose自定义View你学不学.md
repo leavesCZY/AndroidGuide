@@ -13,7 +13,7 @@
 
 <img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c03ad101c9934138baadc0adf9b4ff2c~tplv-k3u1fbpfcp-watermark.image" style="zoom:80%;" />
 
-### 一、Canvas  &  DrawScope
+# 一、Canvas  &  DrawScope
 
 在原生的 Android View 体系架构下，我们要实现一个自定义 View 所需要的基本步骤有：
 
@@ -113,7 +113,7 @@ fun DrawPath() {
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d4b3010671e24230ac4942590a527455~tplv-k3u1fbpfcp-watermark.image)
 
-### 二、drawText
+# 二、drawText
 
 目前 DrawScope 还没有提供类似于 drawText 的方法，即 Jetpack Compose 目前还不支持直接进行文本绘制，这方面的需求需要通过 Android 框架原生的 Canvas 对象来实现
 
@@ -170,7 +170,7 @@ fun DrawPath() {
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/91406c7430064d47bfe986568eb15a96~tplv-k3u1fbpfcp-watermark.image)
 
-### 三、drawWithContent
+# 三、drawWithContent
 
 我们除了可以直接使用 Canvas() 函数来实现各种自定义 View 外，Jetpack Compose 还提供了 drawWithContent 函数用于扩展现有控件。drawWithContent 函数是 Modifier 的扩展函数，drawWithContent 函数上执行的各种绘制操作，都会同步给 Modifier 所在控件的 Canvas 上，以此对任意控件进行自定义绘制
 
@@ -260,7 +260,7 @@ fun DrawWithContentSample() {
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/84996cf570d140da8e3f1c563d9a6dc9~tplv-k3u1fbpfcp-watermark.image)
 
-### 四、WaveLoadingView
+# 四、WaveLoadingView
 
 有了上述基础后，就可以来动手实现以下效果了
 
@@ -412,7 +412,7 @@ private fun drawText(
         )
 ```
 
-### 五、结尾
+# 五、结尾
 
 最后当然也少不了 WaveLoadingView 的完整示例代码了，有需要的同学点击这里下载：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
 

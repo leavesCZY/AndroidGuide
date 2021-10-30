@@ -22,7 +22,7 @@
 
 Java 的一个很显著的优点就在于内存自动回收机制，Java 通过垃圾收集器(Garbage Collection，GC)来自动管理内存的回收过程，而无需开发者来主动释放内存。这种自动化行为有效地节省了开发人员的开发成本，但也让一些开发者误以为 Java 就不存在**内存泄漏**的问题了，或者是误认为内存泄露应该是 GC 或者 JVM 层面来关心和解决的问题。这种想法是不正确的，因为内存泄露大多时候是由于程序本身存在缺陷而导致的，GC 和 JVM 并无法精准理解程序的实现初衷，所以还是需要由开发人员来主动解决问题
 
-### 一、内存泄露和内存溢出
+# 一、内存泄露和内存溢出
 
 **内存泄露(Memory Leak)** 和 **内存溢出(Out Of Memory)** 两个概念经常会一起被提及，两者有相互关联的地方，但实质上还是有着很大的区别：
 
@@ -36,7 +36,7 @@ Java 的一个很显著的优点就在于内存自动回收机制，Java 通过�
 
 对于一个存在内存泄露的程序来说，即使每次仅会泄露少量内存，程序的可用内存也是会逐步降低，在长期运行过后，程序也是隐藏着崩溃的危险
 
-### 二、内存管理
+# 二、内存管理
 
 为了判断程序是否存在内存泄露的情况，我们首先必须先了解 Java 是如何管理内存的，Java 的内存管理就是对象的分配和释放过程
 
@@ -59,11 +59,11 @@ Java 的一个很显著的优点就在于内存自动回收机制，Java 通过�
 
 在 Java 中，内存泄露的就意味着发生了这么一种情况：一个对象是可达的，存在其它对象强引用着该对象，但该对象是无用的，程序以后不会再使用这些对象。满足这种情况的对象就意味着该对象已经泄露，该对象不会被 GC 所回收（因为该对象可达，还未达到 GC 的标准），然而却一直持续占用着内存。例如，由于非静态内部类会持有对外部类的隐式引用，所以当非静态内部类在被回收之前，外部类也无法被回收
 
-### 三、常见的内存泄露
+# 三、常见的内存泄露
 
 以下列举九种常见的内存泄露场景及相应的解决方案，内容来自于国外的一篇文章：[9 ways to avoid memory leaks in Android](https://android.jlelse.eu/9-ways-to-avoid-memory-leaks-in-android-b6d81648e35e)
 
-#### 1、Broadcast Receivers
+## 1、Broadcast Receivers
 
 如果在 Activity 中注册了 BroadcastReceiver 而忘记了 **unregister** 的话，BroadcastReceiver 就将一直持有对 Activity 的引用，即使 Activity 已经执行了 `onDestroy` 
 
@@ -117,7 +117,7 @@ public class BroadcastReceiverLeakActivity extends AppCompatActivity {
 
 开发者必须谨记在 `Activity.onStop()` 的时候调用 `unregisterReceiver`。但需要注意的是，如果 BroadcastReceiver 是在 `onCreate()` 中进行注册的，那么当应用进入后台并再次切换回来时，BroadcastReceiver 将不会被再次注册。所以，最好在 Activity 的 `onStart()` 或者 `onResume()` 方法中进行注册，然后在 `onStop()` 时进行注销
 
-#### 2、Static Activity or View Reference
+## 2、Static Activity or View Reference
 
 看下面的示例代码，将 TextView 声明为了静态变量（无论出于什么原因）。不管是直接还是间接通过静态变量引用了 Activity 或者 View，在 Activity 被销毁后都无法对其进行垃圾回收
 
@@ -146,7 +146,7 @@ public class StaticReferenceLeakActivity extends AppCompatActivity {
 
 永远不要通过静态变量来引用 Activity、View 和 Context
 
-#### 3、Singleton Class Reference
+## 3、Singleton Class Reference
 
 看下面的例子，定义了一个 Singleton 类，该类需要传递 Context 以便从本地存储中获取一些文件
 
@@ -207,7 +207,7 @@ public class SingletonSampleClass {
 - 可以传递 ApplicationContext，而不是将 ActivityContext 传递给 singleton 类
 - 如果真的必须使用 ActivityContext，那么当 Activity 被销毁的时候，需要确保传递将 singleton 类的 Context 设置为 null
 
-#### 4、Inner Class Reference
+## 4、Inner Class Reference
 
 看下面的例子，定义了一个 LeakyClass 类，你需要传递 Activity 才能重定向到新的 Activity
 
@@ -314,7 +314,7 @@ public class InnerClassReferenceLeakActivity extends AppCompatActivity {
 }
 ```
 
-#### 5、Anonymous Class Reference
+## 5、Anonymous Class Reference
 
 匿名内存类带来的内存泄漏问题和上一节内容相同，解决办法如下所示：
 
@@ -364,7 +364,7 @@ public class AnonymousClassReferenceLeakActivity extends AppCompatActivity {
 }
 ```
 
-#### 6、AsyncTask Reference
+## 6、AsyncTask Reference
 
 看下面的示例，通过 AsyncTask 来获取一个字符串值，该值用于在 `onPostExecute()` 方法中更新 textView
 
@@ -489,7 +489,7 @@ public class AsyncTaskReferenceLeakActivity extends AppCompatActivity {
 }
 ```
 
-#### 7、Handler Reference
+## 7、Handler Reference
 
 看下面的例子，通过 Handler 在五秒后更新 UI
 
@@ -572,7 +572,7 @@ public class HandlersReferenceLeakActivity extends AppCompatActivity {
     }
 ```
 
-#### 8、Threads Reference
+## 8、Threads Reference
 
 Thread 和 TimerTask 也可能会导致内存泄露问题
 
@@ -669,7 +669,7 @@ public class ThreadReferenceLeakActivity extends AppCompatActivity {
 }
 ```
 
-#### 9、TimerTask Reference
+## 9、TimerTask Reference
 
 对于 TimerTask 也可以遵循相同的原则，修复内存泄漏的示例如下所示：
 
@@ -765,7 +765,7 @@ public class TimerTaskReferenceLeakActivity extends Activity {
 }
 ```
 
-#### 10、总结
+## 10、总结
 
 最后再来简单总结一下：
 

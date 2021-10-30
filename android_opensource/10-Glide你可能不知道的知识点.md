@@ -18,7 +18,7 @@
 - [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
 - [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
 
-### 一、利用 AppGlideModule 实现默认配置
+# 一、利用 AppGlideModule 实现默认配置
 
 在大多数情况下 Glide 的默认配置就已经能够满足我们的需求了，像缓存池大小，磁盘缓存策略等都不需要我们主动去设置，但 Glide 也提供了 AppGlideModule 让开发者可以去实现自定义配置。对于一个 App 来说，在加载图片的时候一般都是使用同一张 placeholder，如果每次加载图片时都需要来手动设置一遍的话就显得很多余了，此时就可以通过 AppGlideModule 来设置默认的 placeholder
 
@@ -168,7 +168,7 @@ final class GeneratedAppGlideModuleImpl extends GeneratedAppGlideModule {
   }
 ```
 
-### 二、自定义网络请求组件
+# 二、自定义网络请求组件
 
 默认情况下，Glide 是通过 HttpURLConnection 来进行联网请求图片的，这个过程就由 HttpUrlFetcher 类来实现。HttpURLConnection 相对于我们常用的 OkHttp 来说比较原始低效，我们可以通过使用 Glide 官方提供的`okhttp3-integration`来将网络请求交由 OkHttp 完成
 
@@ -332,7 +332,7 @@ class MyAppGlideModule : AppGlideModule() {
 }
 ```
 
-### 三、实现图片加载进度监听
+# 三、实现图片加载进度监听
 
 对于某些高清图片来说，可能一张就是十几MB甚至上百MB大小了，如果没有进度条的话用户可能就会等得有点难受了，这里我就提供一个基于 **OkHttp 拦截器**实现的监听图片加载进度的方法
 
@@ -465,7 +465,7 @@ class ProgressInterceptor : Interceptor {
 
 ![](https://s1.ax1x.com/2020/11/07/B44aAU.gif)
 
-### 四、自定义磁盘缓存  key
+# 四、自定义磁盘缓存  key
 
 在某些时候，我们拿到的图片 Url 可能是带有时效性的，需要在 Url 的尾部加上一个 token 值，在指定时间后 token 就会失效，防止图片被盗链。这种类型的 Url 在一定时间内就需要更换 token 才能拿到图片，可是 Url 的变化就会导致 Glide 的磁盘缓存机制完全失效
 
@@ -536,7 +536,7 @@ class TokenGlideUrl(private val selfUrl: String) : GlideUrl(selfUrl) {
       Glide.with(Context).load(TokenGlideUrl(ImageUrl)).into(ImageView)
 ```
 
-### 五、如何直接拿到图片
+# 五、如何直接拿到图片
 
 如果想直接取得 Bitmap 而非显示在 ImageView 上的话，可以用以下同步请求的方式来获得 Bitmap。需要注意的是，`submit()`方法就会触发 Glide 去请求图片，此时请求操作还是运行于 Glide 内部的线程池的，但 `get()`操作就会直接阻塞所在线程，直到图片加载结束（不管成功与否）才会返回
 
@@ -588,7 +588,7 @@ Glide 也提供了以下的异步加载方式
                 })
 ```
 
-### 六、Glide 如何实现网络监听
+# 六、Glide 如何实现网络监听
 
 在上篇文章我有讲到，RequestTracker 就用于存储所有加载图片的任务，并提供了**开始、暂停和重启**所有任务的方法，一个常见的需要重启任务的情形就是用户的网络**从无信号状态恢复正常了**，此时就应该自动重启所有未完成的任务
 
@@ -729,6 +729,6 @@ internal class DefaultConnectivityMonitor(
 }
 ```
 
-### 七、GitHub
+# 七、GitHub
 
 关于 Glide 的知识点扩展也介绍完了，上述的所有示例代码我也都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)

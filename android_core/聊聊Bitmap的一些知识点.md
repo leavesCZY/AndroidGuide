@@ -11,7 +11,7 @@ Bitmap 应该是很多应用中最占据内存空间的一类资源了，Bitmap 
 3. Bitmap 所占内存大小和 ImageView 的宽高的关系？
 4. Bitmap 如何减少内存大小？
 
-### 1、预备知识
+# 1、预备知识
 
 在开始讲关于 Bitmap 的知识点前，需要先阐述一些基础概念作为预备知识
 
@@ -48,7 +48,7 @@ dpi 决定了应用在显示 drawable 时是选择哪一个文件夹内的切图
 
 举个例子。对于 320dpi 的设备来说，应用在选择图片时就会优先从 `drawable-xhdpi` 文件夹拿，如果该文件夹内没找到图片，就会依照 `xxhdpi -> xxxhdpi -> hdpi -> mdpi -> ldpi` 的顺序进行查找，**优先使用高密度版本，然后从中选择最接近当前屏幕密度的图片资源**
 
-### 2、内存大小的计算公式
+# 2、内存大小的计算公式
 
 先将一张大小为 1920 x 1080 px 的图片保存到 `drawable-xxhdpi` 文件夹内，然后将其显示在一个宽高均为 180dp 的 ImageView 上，该 Bitmap 所占用的内存就通过 `bitmap.byteCount`来获取
 
@@ -86,7 +86,7 @@ BitmapMainActivity: bitmap byteCount: 8294400
 
 从最终结果可以很容易地就逆推出 Bitmap 所占内存大小的计算公式：**bitmapWidth * bitmapHeight * 单位像素点所占用的字节数**，即 1920 * 1080 * 4 = 8294400
 
-### 3、和 drawable 文件夹的关系
+# 3、和 drawable 文件夹的关系
 
 上面之所以很容易就逆推出了 Bitmap 所占内存大小的计算公式，是因为所有条件都被我故意设定为最优情况了，才使得计算过程这么简单。而实际上 Bitmap 所占内存大小和其所在的 drawable 文件夹是有很大关系的，虽然计算公式没变
 
@@ -111,13 +111,13 @@ BitmapMainActivity: bitmap byteCount: 18662400
 
 所以说，对于同一台手机，Bitmap 在不同 drawable 文件夹下对其最终占用的内存大小是有很大关系的，虽然计算公式没变，但是由于系统会进行自动缩放，导致 Bitmap 的最终宽高都发生了变化，从而影响到了其占用的内存空间大小。同理，对于同个 drawable 文件夹下的同一张图片，在不同的手机屏幕上也可能会占用不同的内存空间，因为不同的手机的 dpi 大小可能是不一样的，BitmapFactory 进行缩放的比例也就不一样
 
-### 4、和 ImageView 的宽高的关系
+# 4、和 ImageView 的宽高的关系
 
 在上一个例子里，Bitmap 的宽高是 2880 * 1620 px，ImageView 的宽高是 540 * 540 px，该 Bitmap 肯定是会显示不全的，读者可以试着自己改变 ImageView 的宽高大小来验证是否会对 Bitmap 的大小产生影响
 
 这里就不贴代码了，直接来说结论，答案是**没有关系**。原因也很简单，毕竟上述例子是先将 Bitmap 加载到内存中后再设置给 ImageView 的，ImageView 自然不会影响到 Bitmap 的加载过程，该 Bitmap 的大小也只受**其所在的 drawable 文件夹类型**以及**手机的 dpi 大小**这两个因素的影响。但这个结论是需要考虑测试方式的，如果你是使用 Glide 来加载图片，Glide 内部实现了按需加载的机制，会根据 ImageView 的大小对 Bitmap 进行自动缩放，避免内存浪费的情况，这种情况下 ImageView 的宽高就会影响到 Bitmap 的内存大小了
 
-### 5、BitmapFactory
+# 5、BitmapFactory
 
 BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile、decodeResourceStream、decodeResource、decodeByteArray、decodeStream` 等多个，但只有 `decodeResourceStream` 和 `decodeResource` 这两个方法才会根据 dpi 进行自动缩放。如果是从磁盘或者 assert 目录加载图片的话是不会进行自动缩放的，毕竟这些来源也不具备 dpi 信息，Bitmap 的分辨率也只能保持其原有大小
 
@@ -149,7 +149,7 @@ BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile�
     }
 ```
 
-### 6、BitmapConfig
+# 6、BitmapConfig
 
 Bitmap.Config 定义了四种常见的编码格式，分别是：
 
@@ -158,7 +158,7 @@ Bitmap.Config 定义了四种常见的编码格式，分别是：
 - ARGB_8888。ARGB 各占八个位的精度，折合四个字节，会存储位图的透明度和颜色信息
 - RGB_565。R占五位精度，G占六位精度，B占五位精度，一共是十六位精度，折合两个字节，只存储颜色信息，没有透明度信息
 
-### 7、优化 Bitmap
+# 7、优化 Bitmap
 
 根据 Bitmap 所占内存大小的计算公式：**bitmapWidth * bitmapHeight * 单位像素点所占用的字节数**，想要尽量减少 Bitmap 占用的内存大小的话就要从**降低图片分辨率**和**降低单位像素需要的字节数**这两方面来考虑了
 
@@ -183,7 +183,7 @@ BitmapMainActivity: inTargetDensity: 480
 BitmapMainActivity: bitmap byteCount: 8294400
 ```
 
-#### 1、inSampleSize
+## 1、inSampleSize
 
 由于 ImageView 的宽高只有 540 * 540 px，如果按照原图进行加载的话其实会造成很大的内存浪费，此时我们就可以通过 inSampleSize 属性来压缩图片尺寸
 
@@ -241,7 +241,7 @@ fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeig
 }
 ```
 
-#### 2、inTargetDensity
+## 2、inTargetDensity
 
 如果我们不主动设置 inTargetDensity 的话，`decodeResource` 方法会自动根据当前设备的 dpi 来对 Bitmap 进行缩放处理，我们可以通过主动设置 inTargetDensity 来控制缩放比例，从而控制 Bitmap 的最终宽高。最终宽高的生成规则： 180 / 480 * 1920 = 720，180 / 480 * 1080 = 405，占用的内存空间是 720 * 405 * 4 = 1166400，约 1.1 MB
 
@@ -265,7 +265,7 @@ BitmapMainActivity: inTargetDensity: 480
 BitmapMainActivity: bitmap byteCount: 1166400
 ```
 
-#### 3、Bitmap.Config
+## 3、Bitmap.Config
 
 BitmapFactory 默认使用的编码图片格式是 ARGB_8888，每个像素点占用四个字节，我们可以按需改变要采用的图片格式。例如，如果要加载的 Bitmap 不包含透明通道的，我们可以使用 RGB_565，该格式每个像素点占用两个字节，占用的内存空间是 1920 * 1080 * 2 = 4147200，约 3.9 MB
 

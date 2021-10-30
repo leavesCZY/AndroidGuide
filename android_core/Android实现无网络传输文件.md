@@ -12,13 +12,13 @@ Wifi P2P 是在 Android 4.0 以及更高版本系统中加入的功能，通过 
 
 开发步骤分为以下几点：
 
-    1. 在 AndroidManifest 中声明相关权限（网络和文件读写权限）
-    2. 获取 WifiP2pManager ，注册相关广播监听Wifi直连的状态变化
-    3. 指定某一台设备为服务器（用来接收文件），创建群组并作为群主存在，在指定端口监听客户端的连接请求，等待客户端发起连接请求以及文件传输请求
-    4. 客户端（用来发送文件）主动搜索附近的设备，加入到服务器创建的群组，获取服务器的 IP 地址，向其发起文件传输请求
-    5. 校验文件完整性
+1. 在 AndroidManifest 中声明相关权限（网络和文件读写权限）
+2. 获取 WifiP2pManager ，注册相关广播监听Wifi直连的状态变化
+3. 指定某一台设备为服务器（用来接收文件），创建群组并作为群主存在，在指定端口监听客户端的连接请求，等待客户端发起连接请求以及文件传输请求
+4. 客户端（用来发送文件）主动搜索附近的设备，加入到服务器创建的群组，获取服务器的 IP 地址，向其发起文件传输请求
+5. 校验文件完整性
 
-### 一、声明权限
+# 一、声明权限
 
 Wifi P2P 技术并不会访问网络，但由于会使用到 Java Socket，所以需要申请网络权限。此外，由于是要实现文件互传，所以也需要申请SD卡读写权限。
 
@@ -33,14 +33,14 @@ Wifi P2P 技术并不会访问网络，但由于会使用到 Java Socket，所�
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 ```
 
-### 二、注册广播
+# 二、注册广播
 
 与 Wifi P2P 相关的广播有以下几个：
 
-    1. WIFI_P2P_STATE_CHANGED_ACTION（ 用于指示 Wifi P2P 是否可用 ）
-    2. WIFI_P2P_PEERS_CHANGED_ACTION（ 对等节点列表发生了变化 ）
-    3. WIFI_P2P_CONNECTION_CHANGED_ACTION（ Wifi P2P 的连接状态发生了改变 ）
-    4. WIFI_P2P_THIS_DEVICE_CHANGED_ACTION（ 本设备的设备信息发生了变化 ）
+1. WIFI_P2P_STATE_CHANGED_ACTION（ 用于指示 Wifi P2P 是否可用 ）
+2. WIFI_P2P_PEERS_CHANGED_ACTION（ 对等节点列表发生了变化 ）
+3. WIFI_P2P_CONNECTION_CHANGED_ACTION（ Wifi P2P 的连接状态发生了改变 ）
+4. WIFI_P2P_THIS_DEVICE_CHANGED_ACTION（ 本设备的设备信息发生了变化 ）
 
 当接收到这几个广播时，我们都需要到 WifiP2pManager （对等网络管理器）来进行相应的信息请求，此外还需要用到 Channel 对象作为请求参数
 
@@ -205,7 +205,7 @@ public class DirectBroadcastReceiver extends BroadcastReceiver {
 }
 ```
 
-### 三、服务端
+# 三、服务端
 
 假设当设备A搜索到了设备B，并与设备B连接到了一起，此时系统会自动创建一个群组（Group）并随机指定一台设备为群主（GroupOwner）。此时，对于两台设备来说，群主的IP地址是可知的（系统回调函数中有提供），但客户端的IP地址需要再来通过其他方法来主动获取。例如，可以在设备连接成功后，客户端主动发起对服务器端的Socket连接请求，服务器端在指定端口监听客户端的连接请求，当连接成功后，服务器端就可以获取到客户端的IP地址了
 
@@ -353,7 +353,7 @@ public class FileTransfer implements Serializable {
     };
 ```
 
-### 四、客户端
+# 四、客户端
 
 文件发送界面 SendFileActivity 需要实现 DirectActionListener 接口
 
@@ -643,7 +643,7 @@ public class WifiClientTask extends AsyncTask<String, Integer, Boolean> {
 }
 ```
 
-### 五、校验文件完整性
+# 五、校验文件完整性
 
 传输文件的完整性主要是通过计算文件的MD5码值来保证了，在发送文件前，即在 WifiClientTask 的 doInBackground 方法中进行计算，将MD5码值赋给 FileTransfer 模型，通过如下方法计算得到
 

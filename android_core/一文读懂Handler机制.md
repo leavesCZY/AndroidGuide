@@ -4,11 +4,11 @@ Handler 在整个 Android 开发体系中占据着很重要的地位，是一种
 
 **本文基于 Android API 30（即 Android 11）的系统源码进行讲解**
 
-### 一、动手实现 Handler
+# 一、动手实现 Handler
 
 本文不会一上来就直接介绍源码，而是会先根据我们想要实现的效果来反推源码，一步步来自己动手实现一个简单的 Handler
 
-#### 1、Message
+## 1、Message
 
 首先，我们需要有个载体来表示要执行的任务，就叫它 Message 吧，Message 应该有什么参数呢？
 
@@ -35,7 +35,7 @@ public final class Message {
 }
 ```
 
-#### 2、MessageQueue
+## 2、MessageQueue
 
 因为 Message 并不是发送了就能够马上被消费掉，所以就肯定要有个可以用来存放的地方，就叫它 MessageQueue 吧，即消息队列。Message 可能需要延迟处理，那么 MessageQueue 在保存 Message 的时候就应该按照时间戳的大小来顺序存放，时间戳小的 Message 放在队列的头部，在消费 Message 的时候就直接从队列头取值即可
 
@@ -185,7 +185,7 @@ public class MessageQueue {
     }
 ```
 
-#### 3、Handler
+## 3、Handler
 
 既然存放消息的地方已经确定就是 MessageQueue 了，那么自然就还需要有一个类可以用来向 MessageQueue 发送消息了，就叫它 Handler 吧。Handler 可以实现哪些功能呢？
 
@@ -312,7 +312,7 @@ public class Handler {
         handler.sendMessage(messageB);
 ```
 
-#### 4、Looper
+## 4、Looper
 
 现在就再来想想怎么让 Handler 拿到和主线程关联的 MessageQueue，以及主线程怎么从 MessageQueue 获取 Message 并回调 Handler。这之间就一定需要一个中转器，就叫它 Looper 吧。Looper 具体需要实现什么功能呢？
 
@@ -392,7 +392,7 @@ Looper 还需要有一个用于循环从 MessageQueue 获取消息并处理的�
 
 这样，主线程就先通过调用`prepareMainLooper()`来完成 sMainLooper 的初始化，然后调用`loop()`开始向 mainMessageQueue 循环取值并进行处理，没有消息的话主线程就暂时休眠着。子线程拿到 sMainLooper 后就以此来初始化 Handler，这样子线程向 Handler 发送的消息就都会被存到 mainMessageQueue 中，最终在主线程被消费掉
 
-#### 5、做一个总结
+## 5、做一个总结
 
 这样一步步走下来后，读者对于 Message、MessageQueue、Handler、Looper 这四个类的定位就应该都很清晰了吧？不同线程之间就可以依靠拿到对方的 Looper 来实现消息的跨线程处理了
 
@@ -449,9 +449,9 @@ Looper 还需要有一个用于循环从 MessageQueue 获取消息并处理的�
 
 **有了以上的认知基础后，下面就来看看实际的源码实现 ~ ~**
 
-### 二、Handler 源码
+# 二、Handler 源码
 
-#### 1、Handler  如何初始化
+## 1、Handler  如何初始化
 
 Handler 的构造函数一共有七个，除去**两个已经废弃的和三个隐藏的**，实际上开发者可以使用的只有两个。而不管是使用哪个构造函数，最终的目的都是为了完成 **mLooper、mQueue、mCallback、mAsynchronous** 这四个常量的初始化，同时也可以看出来 MessageQueue 是由 Looper 来完成初始化的，而且 Handler 对于 Looper 和 MessageQueue 都是一对一的关系，一旦初始化后就不可改变
 
@@ -494,7 +494,7 @@ Handler 的构造函数一共有七个，除去**两个已经废弃的和三个�
     }
 ```
 
-#### 2、Looper  如何初始化
+## 2、Looper  如何初始化
 
 在初始化 Handler 时，如果外部调用的构造函数没有传入 Looper，那就会调用`Looper.myLooper()`来获取和当前线程关联的 Looper 对象，再从 Looper 中取 MessageQueue。如果获取到的 Looper 对象为 null 就会抛出异常。根据异常信息 `Can't create handler inside thread that has not called Looper.prepare()` 可以看出来，在初始化 Handler 之前需要先调用 `Looper.prepare()`完成 Looper 的初始化
 
@@ -594,7 +594,7 @@ public final class ActivityThread extends ClientTransactionHandler {
 }
 ```
 
-#### 3、Handler 发送消息
+## 3、Handler 发送消息
 
 Handler 用于发送消息的方法非常多，有十几个，其中大部分最终调用到的都是 `sendMessageAtTime()` 方法。uptimeMillis 即 Message 具体要执行的时间戳，如果该时间戳比当前时间大，那么就意味着要执行的是延迟任务。如果为 mQueue 为 null，就会打印异常信息并直接返回，因为 Message 是需要交由 MessageQueue 来处理的
 
@@ -627,7 +627,7 @@ Handler 用于发送消息的方法非常多，有十几个，其中大部分最
     }
 ```
 
-#### 4、MessageQueue
+## 4、MessageQueue
 
 MessageQueue 通过 `enqueueMessage` 方法来接收消息
 
@@ -802,7 +802,7 @@ Handler 的`dispatchMessage`方法就是在向外部分发处理 Message 了，M
 
 至此，Message 的整个分发流程就结束了
 
-#### 5、消息屏障
+## 5、消息屏障
 
 Android 系统为了保证某些高优先级的 Message（异步消息） 能够被尽快执行，采用了一种消息屏障（Barrier）机制。其大致流程是：先发送一个屏障消息到 MessageQueue 中，当 MessageQueue 遍历到该屏障消息时，就会判断当前队列中是否存在**异步消息**，有的话则先跳过同步消息（开发者主动发送的都属于同步消息），优先执行异步消息。这种机制就会使得在异步消息被执行完之前，同步消息都不会得到处理
 
@@ -867,7 +867,7 @@ MessageQueue 在获取队头消息的时候，如果判断到队头消息的 tar
 
 屏障消息的作用就是可以确保高优先级的异步消息可以优先被处理，ViewRootImpl 就通过该机制来使得 View 的绘制流程可以优先被处理
 
-#### 6、退出 Looper 循环
+## 6、退出 Looper 循环
 
 Looper 类本身做了方法限制，除了主线程外，子线程关联的 MessageQueue 都支持退出 Loop 循环，即 quitAllowed 只有主线程才能是 false
 
@@ -923,7 +923,7 @@ MessageQueue 支持两种方式来退出 Loop：
     }
 ```
 
-#### 7、IdleHandler
+## 7、IdleHandler
 
 IdleHandler 是 MessageQueue 的一个内部接口，可以用于在 Loop 线程处于空闲状态的时候执行一些优先级不高的操作，通过 MessageQueue 的 `addIdleHandler` 方法来提交要执行的操作
 
@@ -1028,7 +1028,7 @@ public final class ActivityThread extends ClientTransactionHandler {
 }
 ```
 
-#### 8、做一个总结
+## 8、做一个总结
 
 再来总结下以上的所有内容
 
@@ -1041,9 +1041,9 @@ public final class ActivityThread extends ClientTransactionHandler {
 7. 对于我们自己在子线程中创建的 Looper，当不再需要的时候我们应该主动退出循环，否则子线程将一直无法得到释放。对于主线程 Loop 我们则不应该去主动退出，否则将导致应用崩溃
 8. 我们可以通过向 MessageQueue 添加 IdleHandler 的方式，来实现在 Loop 线程处于空闲状态的时候执行一些优先级不高的任务。例如，假设我们有个需求是希望当主线程完成界面绘制等事件后再执行一些 UI 操作，那么就可以通过 IdleHandler 来实现，这可以避免拖慢用户看到首屏页面的速度
 
-### 三、Handler 在系统中的应用
+# 三、Handler 在系统中的应用
 
-#### 1、HandlerThread
+## 1、HandlerThread
 
 HandlerThread 是 Android SDK 中和 Handler 在同个包下的一个类，从其名字就可以看出来它是一个线程，而且使用到了 Handler
 
@@ -1149,7 +1149,7 @@ public class HandlerThread extends Thread {
 
 HandlerThread 起到的作用就是方便了主线程和子线程之间的交互，主线程可以直接通过 Handler 来声明耗时任务并交由子线程来执行。使用 HandlerThread 也方便在多个线程间共享，主线程和其它子线程都可以向 HandlerThread 下发任务，且 HandlerThread 可以保证多个任务执行时的有序性
 
-#### 2、IntentService 
+## 2、IntentService 
 
 IntentService 是系统提供的 Service 子类，用于在后台串行执行耗时任务，在处理完所有任务后会自动停止，不必来手动调用 `stopSelf()` 方法。而且由于IntentService 是四大组件之一，拥有较高的优先级，不易被系统杀死，因此适合用于执行一些高优先级的异步任务
 
@@ -1211,9 +1211,9 @@ public abstract class IntentService extends Service {
     }
 ```
 
-### 四、Handler 在三方库中的应用
+# 四、Handler 在三方库中的应用
 
-#### 1、EventBus
+## 1、EventBus
 
 EventBus 的 Github 上有这么一句介绍：[EventBus](https://greenrobot.org/eventbus/) is a publish/subscribe event bus for Android and Java.  这说明了 EventBus 是普遍适用于 Java 环境的，只是对 Android 系统做了特殊的平台支持而已。EventBus 的四种消息发送策略包含了`ThreadMode.MAIN` 用于指定在主线程进行消息回调，其内部就是通过 Handler 来实现的
 
@@ -1259,7 +1259,7 @@ public class HandlerPoster extends Handler implements Poster {
 }
 ```
 
-#### 2、Retrofit
+## 2、Retrofit
 
 和 EventBus 一样，Retrofit 的内部实现也不需要依赖于 Android 平台，而是可以用于任意的 Java 客户端，Retrofit 只是对 Android 平台进行了特殊实现而已
 
@@ -1301,9 +1301,9 @@ static final class Android extends Platform {
   }
 ```
 
-### 五、提问环节
+# 五、提问环节
 
-#### 1、Handler、Looper、MessageQueue、Thread 的对应关系
+## 1、Handler、Looper、MessageQueue、Thread 的对应关系
 
 首先，Looper 中的 MessageQueue 和 Thread 两个字段都属于常量，且 Looper 实例是存在 ThreadLocal 中，这说明了 Looper 和 MessageQueue 之间是一对一应的关系，且一个 Thread 在其整个生命周期内都只会关联到同一个 Looper 对象和同一个 MessageQueue 对象
 
@@ -1334,7 +1334,7 @@ public class Handler {
 }
 ```
 
-#### 2、Handler 的同步机制
+## 2、Handler 的同步机制
 
 MessageQueue 在保存 Message 的时候，`enqueueMessage`方法内部已经加上了同步锁，从而避免了多个线程同时发送消息导致竞态问题。此外，`next()`方法内部也加上了同步锁，所以也保障了 Looper 分发 Message 的有序性。最重要的一点是，Looper 总是由一个特定的线程来执行遍历，所以在消费 Message 的时候也不存在竞态
 
@@ -1370,7 +1370,7 @@ MessageQueue 在保存 Message 的时候，`enqueueMessage`方法内部已经加
     }
 ```
 
-#### 3、Handler 发送同步消息
+## 3、Handler 发送同步消息
 
 如果我们在子线程通过 Handler 向主线程发送了一个消息，希望等到消息执行完毕后子线程才继续运行，这该如何实现？其实像这种涉及到多线程同步等待的问题，往往都是需要依赖于**线程休眠+线程唤醒**机制来实现的
 
@@ -1459,7 +1459,7 @@ private static final class BlockingRunnable implements Runnable {
 
 虽然 `runWithScissors` 方法我们无法直接调用，但是我们也可以依靠这思路自己来实现 BlockingRunnable，折中实现这个功能。但这种方式并不安全，如果 Loop 意外退出循环导致该 Runnable 无法被执行的话，就会导致被暂停的线程一直无法被唤醒，需要谨慎使用
 
-#### 4、Handler 避免内存泄漏
+## 4、Handler 避免内存泄漏
 
 当退出 Activity 时，如果作为内部类的 Handler 中还保存着待处理的延时消息的话，那么就会导致内存泄漏，可以通过调用`Handler.removeCallbacksAndMessages(null)`来移除所有待处理的 Message
 
@@ -1471,7 +1471,7 @@ private static final class BlockingRunnable implements Runnable {
     }
 ```
 
-#### 5、Message 如何复用
+## 5、Message 如何复用
 
 因为 Android 系统本身就存在很多事件需要交由 Message 来交付给 mainLooper，所以 Message 的创建是很频繁的。为了减少 Message 频繁重复创建的情况，Message 提供了 MessagePool 用于实现 Message 的缓存复用，以此来优化内存使用
 
@@ -1530,7 +1530,7 @@ public final class Message implements Parcelable {
 }
 ```
 
-#### 6、Message 复用机制存在的问题
+## 6、Message 复用机制存在的问题
 
 由于 Message 采用了缓存复用机制，从而导致了一个 Message 失效问题。当 `handleMessage` 方法被回调后，Message 携带的所有参数都会被清空，而如果外部的 `handleMessage`方法是使用了异步线程来处理 Message 的话，那么异步线程只会得到一个空白的 Message
 
@@ -1549,7 +1549,7 @@ fun handleMessageAsync(msg: Message) {
 }
 ```
 
-#### 7、Message 如何提高优先级
+## 7、Message 如何提高优先级
 
 Handler 包含一个 `sendMessageAtFrontOfQueue`方法可以用于提高 Message 的处理优先级。该方法为 Message 设定的时间戳是 0，使得 Message 可以直接插入到 MessageQueue 的头部，从而做到优先处理。但官方并不推荐使用这个方法，因为最极端的情况下可能会使得其它 Message 一直得不到处理或者其它意想不到的情况
 
@@ -1566,7 +1566,7 @@ Handler 包含一个 `sendMessageAtFrontOfQueue`方法可以用于提高 Message
     }
 ```
 
-#### 8、检测 Looper 分发 Message 的效率
+## 8、检测 Looper 分发 Message 的效率
 
 Looper 在进行 Loop 循环时，会通过 Observer 向外回调每个 Message 的回调事件。且如果设定了 `slowDispatchThresholdMs` 和 `slowDeliveryThresholdMs` 这两个阈值的话，则会对 Message 的**分发时机**和**分发耗时**进行监测，存在异常情况的话就会打印 Log。该机制可以用于实现应用性能监测，发现潜在的 Message 处理异常情况，但可惜监测方法被系统隐藏了
 
@@ -1648,7 +1648,7 @@ Looper 在进行 Loop 循环时，会通过 Observer 向外回调每个 Message 
     }
 ```
 
-#### 9、主线程 Looper 在哪里创建
+## 9、主线程 Looper 在哪里创建
 
 由 ActivityThread 类的 `main()` 方法来创建。该 `main()` 方法即 Java 程序的运行起始点，当应用启动时系统就自动为我们在主线程做好了 mainLooper 的初始化，而且已经调用了`Looper.loop()`方法开启了消息的循环处理，应用在使用过程中的各种交互逻辑（例如：屏幕的触摸事件、列表的滑动等）就都是在这个循环里完成分发的。正是因为 Android 系统已经自动完成了主线程 Looper 的初始化，所以我们在主线程中才可以直接使用 Handler 的无参构造函数来完成 UI 相关事件的处理
 
@@ -1666,7 +1666,7 @@ public final class ActivityThread extends ClientTransactionHandler {
 }
 ```
 
-#### 10、主线程 Looper 什么时候退出循环
+## 10、主线程 Looper 什么时候退出循环
 
 当 ActivityThread 内部的 Handler 收到了 EXIT_APPLICATION 消息后，就会退出 Looper 循环
 
@@ -1683,7 +1683,7 @@ public final class ActivityThread extends ClientTransactionHandler {
 		}
 ```
 
-#### 11、主线程 Looper.loop() 为什么不会导致 ANR
+## 11、主线程 Looper.loop() 为什么不会导致 ANR
 
 这个问题在网上很常见，我第一次看到时就觉得这种问题很奇怪，主线程凭啥会 ANR？这个问题感觉本身就是特意为了来误导人
 
@@ -1712,7 +1712,7 @@ public final class ActivityThread extends ClientTransactionHandler {
 
 所以说，loop 循环本身不会导致 ANR，会出现 ANR 是因为在 loop 循环之内 Message 处理时间过长
 
-#### 12、子线程一定无法弹 Toast 吗
+## 12、子线程一定无法弹 Toast 吗
 
 不一定，只能说是**在子线程中无法直接弹出 Toast，但可以实现**。因为 Toast 的构造函数中会要求拿到一个 Looper 对象，如果构造参数没有传入不为 null 的 Looper 实例的话，则尝试使用调用者线程关联的 Looper 对象，如果都获取不到的话则会抛出异常
 
@@ -1757,7 +1757,7 @@ public final class ActivityThread extends ClientTransactionHandler {
     }
 ```
 
-#### 13、子线程一定无法更新 UI？主线程就一定可以？
+## 13、子线程一定无法更新 UI？主线程就一定可以？
 
 在子线程能够弹出 Toast 就已经说明了子线程也是可以更新 UI 的，**Android 系统只是限制了必须在同个线程内进行 ViewRootImpl 的创建和更新这两个操作**，而不是要求必须在主线程进行
 
@@ -1830,13 +1830,13 @@ public final class ViewRootImpl implements ViewParent,
 }
 ```
 
-#### 14、为什么 UI 体系要采用单线程模型
+## 14、为什么 UI 体系要采用单线程模型
 
 其实这很好理解，就是为了提高运行效率和降低实现难度。如果允许多线程并发访问 UI 的话，为了避免竞态，很多即使只是小范围的局部刷新操作（例如，TextView.setText）都势必需要加上同步锁，这无疑会加大 UI 刷新操作的“成本”，降低了整个应用的运行效率。而且会导致 Android 的 UI 体系在实现时就被迫需要对多线程环境进行“防御”，即使开发者一直是使用同个线程来更新 UI，这就加大了系统的实现难度
 
 所以，最为简单高效的方式就是采用单线程模型来访问 UI
 
-#### 15、如何跨线程下发任务
+## 15、如何跨线程下发任务
 
 通常情况下，两个线程之间的通信是比较麻烦的，需要做很多线程同步操作。而依靠 Looper 的特性，我们就可以用比较简单的方式来实现跨线程下发任务
 
@@ -1867,7 +1867,7 @@ public final class ViewRootImpl implements ViewParent,
     }
 ```
 
-#### 16、如何判断当前是不是主线程
+## 16、如何判断当前是不是主线程
 
 通过 Looper 来判断
 
@@ -1881,7 +1881,7 @@ public final class ViewRootImpl implements ViewParent,
         }
 ```
 
-#### 17、如何全局捕获主线程异常
+## 17、如何全局捕获主线程异常
 
 比较卧槽的一个做法就是**通过嵌套 Loop 循环来实现**。向主线程 Loop 发送 一个 Runnable，在 Runnable 里死循环执行 Loop 循环，这就会使得主线程消息队列中的所有任务都会被交由该 Runnable 来调用，只要加上 try catch 后就可以捕获主线程的任意异常了，做到**主线程永不崩溃**
 

@@ -1,10 +1,10 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库有 Gson 和 FastJson 两种，这里要介绍的是 Gson
 
-Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库就是 Gson，GitHub 主页点击这里：[Gson](https://github.com/google/gson)
+Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)
 
-### 一、基本用法
+# 一、基本用法
 
-#### 1、Gson
+## 1、Gson 对象
 
 在进行序列化与反序列操作前，需要先实例化一个 `com .google.gson.Gson` 对象，获取 Gson 对象的方法有两种
 
@@ -14,7 +14,8 @@ Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json �
         //通过 GsonBuilder 来获取，可以进行多项特殊配置
         Gson gson = new GsonBuilder().create();
 ```
-#### 2、生成 Json
+
+## 2、生成  Json
 
 利用 Gson 可以很方便地生成 Json 字符串，通过使用 `addProperty` 的四个重载方法
 
@@ -22,18 +23,16 @@ Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json �
     public static void main(String[] args) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("String", "leavesC");
-        jsonObject.addProperty("StringMore", "https://juejin.cn/user/923245496518439/posts");
         jsonObject.addProperty("Number_Integer", 23);
         jsonObject.addProperty("Number_Double", 22.9);
         jsonObject.addProperty("Boolean", true);
         jsonObject.addProperty("Char", 'c');
+        System.out.println();
         System.out.println(jsonObject);
     }
 ```
-```java
-{"String":"leavesC","StringMore":"https://juejin.cn/user/923245496518439/posts","Number_Integer":23,"Number_Double":22.9,"Boolean":true,"Char":"c"}
-```
 
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/86dce58efe1b406db415b9ed6cbbe40b~tplv-k3u1fbpfcp-zoom-1.image)
 
 `addProperty` 方法底层调用的是 `add(String property, JsonElement value)` 方法，即将基本数据类型转化为了 **JsonElement** 对象，JsonElement 是一个抽象类，而 **JsonObject** 继承了 JsonElement ，因此我们可以通过 JsonObject 自己来构建一个 JsonElement 
 
@@ -41,7 +40,6 @@ Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json �
     public static void main(String[] args) {
         JsonObject jsonObject = new JsonObject();
         jsonObject.addProperty("String", "leavesC");
-        jsonObject.addProperty("StringMore", "https://juejin.cn/user/923245496518439/posts");
         jsonObject.addProperty("Number", 23);
         jsonObject.addProperty("Number", 22.9);
         jsonObject.addProperty("Boolean", true);
@@ -52,54 +50,45 @@ Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json �
         jsonElement.addProperty("Double", 25.9);
         jsonElement.addProperty("Char", 'c');
         jsonObject.add("JsonElement", jsonElement);
-        
+
+        System.out.println();
         System.out.println(jsonObject);
     }
 ```
-```java
-{"String":"leavesC","StringMore":"https://juejin.cn/user/923245496518439/posts","Number":22.9,"Boolean":true,"Char":"c","JsonElement":{"Boolean":false,"Double":25.9,"Char":"c"}}
-```
 
-#### 3、数组、List的转化
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/41f93e3921b8496eaaf6860573be42c8~tplv-k3u1fbpfcp-zoom-1.image)
 
-Json数组与字符串数组
+## 3、Json 与 Array、List 的转化
+
+Json 数组与字符串数组
 
 ```java
     public static void main(String[] args) {
         //Json数组 转为 字符串数组
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://juejin.cn/user/923245496518439/posts\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         String[] strings = gson.fromJson(jsonArray, String[].class);
         System.out.println("Json数组 转为 字符串数组: ");
         for (String string : strings) {
             System.out.println(string);
         }
         //字符串数组 转为 Json数组
-        jsonArray = gson.toJson(strings, String[].class);
+        jsonArray = gson.toJson(jsonArray, new TypeToken<String>() {
+        }.getType());
         System.out.println("\n字符串数组 转为 Json数组: ");
         System.out.println(jsonArray);
     }
 ```
-```java
-Json数组 转为 字符串数组: 
-https://github.com/leavesC
-https://juejin.cn/user/923245496518439/posts
-Java
-Kotlin
-Git
-GitHub
 
-字符串数组 转为 Json数组: 
-["https://github.com/leavesC","https://juejin.cn/user/923245496518439/posts","Java","Kotlin","Git","GitHub"]
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/eff362e498f84aa09b3e61eaa77a11a6~tplv-k3u1fbpfcp-zoom-1.image)
 
-Json数组 与 List
+Json 数组 与 List
 
 ```java
     public static void main(String[] args) {
         //Json数组 转为 List
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://juejin.cn/user/923245496518439/posts\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         List<String> stringList = gson.fromJson(jsonArray, new TypeToken<List<String>>() {
         }.getType());
         System.out.println("\nJson数组 转为 List: ");
@@ -113,20 +102,10 @@ Json数组 与 List
         System.out.println(jsonArray);
     }
 ```
-```java
-Json数组 转为 List: 
-https://github.com/leavesC
-https://juejin.cn/user/923245496518439/posts
-Java
-Kotlin
-Git
-GitHub
 
-List 转为 Json数组: 
-["https://github.com/leavesC","https://juejin.cn/user/923245496518439/posts","Java","Kotlin","Git","GitHub"]
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0ad6694864e94a739be74332b979523e~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 4、序列化与反序列化
+## 4、序列化与反序列化
 
 Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与 Json，前者实现了序列化，后者实现了反序列化
 
@@ -134,7 +113,7 @@ Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -166,7 +145,6 @@ public class User {
 
 序列化的方法很简单，调用 gson 对象的 toJson 方法，传入要序列化的对象
 
-
 ```java
     public static void main(String[] args) {
         //序列化
@@ -177,9 +155,7 @@ public class User {
     }
 ```
 
-```java
-{"name":"leavesC","age":24,"sex":true}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e192083ec56b4b38ba7634f4bb9e9ac5~tplv-k3u1fbpfcp-zoom-1.image)
 
 反序化的方式也类似
 
@@ -194,14 +170,13 @@ public class User {
     }
 ```
 
-### 二、属性重命名
+# 二、属性重命名
 
 继续使用上一节声明的 User 类，根据 User 类声明的各个属性名，移动端的开发者希望接口返回的数据格式即是如下这样的
 
 ```java
 {"name":"leavesC","age":24,"sex":true}
 ```
-
 如果没有和服务器端沟通好或者是 API 改版了，接口返回的数据格式可能是这样的
 
 ```java
@@ -228,9 +203,7 @@ public class User {
 ```
 name 属性值解析不到，所以为 null
 
-```java
-User{name='null', age=24, sex=true}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/71d1516941744b9d82932b1cb681aa2a~tplv-k3u1fbpfcp-zoom-1.image)
 
 
 此时为了兼顾多种格式的数据，就需要使用 **SerializedName** 注解
@@ -254,7 +227,7 @@ SerializedName 的作用是为了在序列化或反序列化时，指导 Gson �
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -282,9 +255,7 @@ public class User {
     }
 ```
 
-```java
-User{name='leavesC', age=24, sex=true}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3cdb00c69827421a845406668a66d9c6~tplv-k3u1fbpfcp-zoom-1.image)
 
 在反序列化时也一样，能够解析到正确的属性值
 
@@ -299,15 +270,13 @@ User{name='leavesC', age=24, sex=true}
     }
 ```
 
-```java
-User{name='leavesC', age=24, sex=true}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a22237127f4d424485f7dc05d1fc6b63~tplv-k3u1fbpfcp-zoom-1.image)
 
 还有个问题没解决，为了应对多种属性名不一致的情况，难道我们要声明多个 User 类吗？这显然是不现实的，所以还需要为 User 类设置多个备选属性名，这就需要用到 SerializedName 注解的另一个属性值 **alternate** 了。
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -321,6 +290,7 @@ public class User {
     private boolean sex;
 
 }
+
 ```
 
 以下几种情况都能够被正确的反序列化
@@ -346,19 +316,13 @@ public class User {
     }
 ```
 
-```java
-User{name='leavesC', age=24, sex=true}
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7a265bd984754066abad2a908280fa5b~tplv-k3u1fbpfcp-zoom-1.image)
 
-User{name='leavesC', age=24, sex=true}
+# 三、字段过滤
 
-User{name='leavesC', age=24, sex=true}
-```
+有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求。
 
-### 三、字段过滤
-
-有时候并不是所有的字段都需要进行系列化和反序列化，因此需要对某些字段进行排除，有四种方法可以来实现这种需求
-
-#### 1、基于注解
+## 1、基于@Expose注解
 
 Expose 注解包含两个属性值，且均声明了默认值。Expose 的含义即为“暴露”，即用于对外暴露字段，serialize 用于指定是否进行序列化，deserialize 用于指定是否进行反序列化。如果字段不声明 Expose 注解，则意味着不进行序列化和反序列化操作，相当于两个属性值均为 false 。此外，Expose 注解需要和 GsonBuilder 构建的 Gson 对象一起使用才能生效
 
@@ -373,17 +337,21 @@ public @interface Expose {
 }
 
 ```
+
 Expose 注解的注解值声明情况有四种
+
 ```java
     @Expose(serialize = true, deserialize = true)   //序列化和反序列化都生效
     @Expose(serialize = false, deserialize = true)  //序列化时不生效，反序列化时生效
     @Expose(serialize = true, deserialize = false)  //序列化时生效，反序列化时不生效
     @Expose(serialize = false, deserialize = false) //序列化和反序列化都不生效，和不写注解一样
 ```
+
 现在来看个例子，修改 User 类
+
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -441,15 +409,11 @@ public class User {
     }
 ```
 
-```java
-{"a":"A","c":"C"}
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1db89d97907f42be91eab1637c1bcb22~tplv-k3u1fbpfcp-zoom-1.image)
 
-User{a='A', b='B', c='null', d='null', e='null'}
-```
+## 2、基于版本
 
-#### 2、基于版本
-
-Gson 提供了 @Since 和 @Until 两个注解基于版本对字段进行过滤，@Since 和 @Until 都包含一个 Double 属性值，用于设置版本号。Since 的意思是“自……开始”，Until 的意思是“到……为止”，一样要和 GsonBuilder 配合使用。
+Gson 提供了 @Since 和 @Until 两个注解基于版本对字段进行过滤，@Since 和 @Until 都包含一个 Double 属性值，用于设置版本号。Since 的意思是“自……开始”，Until 的意思是“到……为止”，一样要和 GsonBuilder 配合使用
 
 ```java
 @Documented
@@ -473,7 +437,7 @@ public @interface Until {
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -530,13 +494,10 @@ public class User {
         System.out.println(user.toString());
     }
 ```
-```java
-{"a":"A","b":"B","e":"E"}
 
-User{a='A', b='B', c='null', d='null', e='E'}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/750f3b022d2d46889bbdeba6be5fcb3d~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 3、基于访问修饰符
+## 3、基于访问修饰符
 
 访问修饰符由 **java.lang.reflect.Modifier** 提供 int 类型的定义，而 GsonBuilder 对象的 `excludeFieldsWithModifiers`方法接收一个 int 类型可变参数，指定不进行序列化和反序列化操作的访问修饰符字段
 
@@ -544,7 +505,7 @@ User{a='A', b='B', c='null', d='null', e='E'}
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -573,11 +534,9 @@ public class ModifierSample {
     }
 ```
 
-```java
-{"publicField":"public","protectedField":"protected","defaultField":"default","finalField":"final"}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ba1e07967c374dda91f1e10691fb6ac3~tplv-k3u1fbpfcp-zoom-1.image)
 
-#### 4、基于策略
+## 4、基于策略
 
 GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`方法用于传入不定长参数的策略方法，用于直接排除指定字段名或者指定字段类型
 
@@ -585,7 +544,7 @@ GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`�
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -641,13 +600,10 @@ public static void main(String[] args) {
         System.out.println(strategies);
     }
 ```
+
 字段名为 "intField" 和字段类型为 double 的字段都会被排除掉
 
-```java
-{"stringField":"stringField"}
-
-Strategies{stringField='stringField', intField=0, doubleField=0.0}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b5ede196fb3b49dc89d689b63856d043~tplv-k3u1fbpfcp-zoom-1.image)
 
 `setExclusionStrategies` 方法在序列化和反序列化时都会生效，如果只是想指定其中一种情况下的排除策略或分别指定排除策略，可以改为使用以下两个方法
 
@@ -657,15 +613,15 @@ addSerializationExclusionStrategy(ExclusionStrategy strategy);
 addDeserializationExclusionStrategy(ExclusionStrategy strategy);
 ```
 
-### 四、个性化配置
+# 四、个性化配置
 
-#### 1、输出 null
+## 1、输出 null
 
 对于 Gson 而言，在序列化时如果某个属性值为 null 的话，那么在序列化时该字段不会参与进来，如果想要显示输出该字段的话，可以通过 GsonBuilder 进行配置
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -690,11 +646,10 @@ public class Strategies {
         System.out.println(gson.toJson(strategies));
  }
 ```
-```java
-{"stringField":null,"intField":24,"doubleField":22.333}
-```
 
-#### 2、格式化输出
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b0c33efba86344c6974cacebcee3470f~tplv-k3u1fbpfcp-zoom-1.image)
+
+## 2、格式化输出Json
 
 默认的序列化后的 Josn 字符串并不太直观，可以选择格式化输出
 
@@ -709,21 +664,16 @@ public class Strategies {
         System.out.println(gson.toJson(strategies));
     }
 ```
-```java
-{
-  "stringField": null,
-  "intField": 24,
-  "doubleField": 22.333
-}
-```
 
-#### 3、格式化时间
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c28fa45112934426a4b7eb1ecf16e70c~tplv-k3u1fbpfcp-zoom-1.image)
+
+## 3、格式化时间
 
 Gson 也可以对时间值进行格式化
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -748,14 +698,14 @@ public class Strategies {
     }
 
 }
+
 ```
 
 ```java
 public static void main(String[] args) {
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()//格式化输出
-                .setDateFormat("yyyy-MM-dd HH:mm:ss:SSS")//格式
-化时间
+                .setDateFormat("yyyy-MM-dd HH:mm:ss:SSS")//格式化时间
                 .create();
         Date date = new Date();
         Strategies strategies = new Strategies(date, new Date(date.getTime() + 1000000));
@@ -770,16 +720,10 @@ public static void main(String[] args) {
         System.out.println(gson.fromJson(json, Strategies.class));
     }
 ```
-```java
-{
-  "date": "2021-03-30 22:11:14:254",
-  "date2": "2021-03-30 22:27:54:254"
-}
 
-Strategies{date=2018-03-17 19:38:50:033, date2=2018-03-17 19:55:30:033}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/367f08a42e6244d3b539d8cfd8db7ecc~tplv-k3u1fbpfcp-zoom-1.image)
 
-### 五、TypeAdapter
+# 五、TypeAdapter
 
 TypeAdapter 是一个泛型抽象类，用于接管某种类型的序列化和反序列化过程，包含两个抽象方法，分别用于自定义序列化和反序列化过程
 
@@ -793,7 +737,7 @@ public abstract T read(JsonReader var1) throws IOException;
 
 ```java
 /**
- * 作者：leavesC
+ * 作者：chenZY
  * 时间：2018/3/17 18:32
  * 描述：https://github.com/leavesC
  */
@@ -827,6 +771,7 @@ public class User {
 ```
 
 定义 TypeAdapter 的子类 UserTypeAdapter 来接管 User 类的序列化和反序列化过程
+
 这里设定当 User 类序列化时 Json 中的Key值都是大写字母开头，反序列化时支持“name”和“Name”两种不同的 Json 风格
 
 ```java
@@ -886,15 +831,12 @@ public class UserTypeAdapter extends TypeAdapter<User> {
         System.out.println(user);
     }
 ```
+
 可以看到 User 类按照预定义的策略来完成序列化和反序列化了
 
-```java
-{"Name":"leavesC","Age":24,"Sex":true}
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/317d550269a64d46b747d68c64203f26~tplv-k3u1fbpfcp-zoom-1.image)
 
-User{name='leavesC', age=24, sex=true}
-```
-
-### 六、JsonSerializer 和 JsonDeserializer
+# 六、JsonSerializer 和 JsonDeserializer
 
 TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还提供了只接管序列化过程的接口，即 JsonSerializer
 
@@ -917,9 +859,8 @@ TypeAdapter 将序列化和反序列操作都接管了过来，其实 Gson 还�
         System.out.println(gson.toJson(user));
     }
 ```
-```java
-{"NameHi":"leavesC","Sex":true,"Age":24}
-```
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1ec92160824423da39f6c0409e27a26~tplv-k3u1fbpfcp-zoom-1.image)
 
 相对应的，JsonDeserializer 接口提供了反序列化的接口
 
@@ -952,14 +893,10 @@ public static void main(String[] args) {
         System.out.println(user);
     }
 ```
-```java
-User{name='leavesC', age=24, sex=true}
 
-User{name='leavesC', age=24, sex=true}
-```
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9adbf6fa0b94ee4b0f2a32e26925174~tplv-k3u1fbpfcp-zoom-1.image)
 
 这里有个比较麻烦的地方，那就是在使用 **TypeAdapter 、JsonSerializer** 和 **JsonDeserializer** 时，总需要调用 **registerTypeAdapter** 方法进行注册，那有没有更简单的注册方法呢？
-
 有的，Gosn 还提供了另一个注解 **@JsonAdapter** 用于进行简单的声明
 
 类似于这样，声明了 User 类的序列化或反序列化操作由 UserTypeAdapter 完成，注解的优先级高于 **registerTypeAdapter** 方法
@@ -971,7 +908,8 @@ public class User {
 }
 ```
 
-### 七、TypeAdapterFactory
+# 七、TypeAdapterFactory
+
 TypeAdapterFactory 是用于创建 TypeAdapter 的工厂类，通过参数 TypeToken 来查找确定对应的 TypeAdapter，如果没有就返回 null 并由 Gson 默认的处理方法来进行序列化和反序列化操作，否则就由用户预定义的 TypeAdapter 来进行处理
 
 ```java
@@ -987,3 +925,10 @@ TypeAdapterFactory 是用于创建 TypeAdapter 的工厂类，通过参数 TypeT
             }
         }).create();
 ```
+
+
+# 八、结语
+
+这一篇文章好像写得太长了一点？Gson 的知识点介绍到这里也差不多了，以后如果还发现新内容的话我会继续补充，现在就先这样啦
+
+我的 GitHub： [leavesC](https://github.com/leavesC)  -> https://github.com/leavesC

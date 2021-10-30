@@ -12,7 +12,7 @@ dependencies {
 }
 ```
 
-### 一、相对定位
+# 一、相对定位
 
 ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXXX_toYYYOf` 格式的属性，用于将 ViewA 的 XXX 方向和 ViewB 的 YYY 方向进行约束。当中，ViewB 也可以是父容器 ConstraintLayout，用 parent 来表示。这些属性都是用于为控件添加垂直和水平方向的约束力，根据约束力的 “有无” 或者 “强弱”，控件会处于不同的位置
 
@@ -97,7 +97,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224233451.png)
 
-### 二、约束力的强度
+# 二、约束力的强度
 
 如果想要让控件的左右或者上下间距具有固定的比例，这种即在某个方向上其两边的约束力的强度有所不同，可以依靠 `layout_constraintHorizontal_bias` 和 `layout_constraintVertical_bias` 两个属性来设置控件在水平和垂直方向的偏移量
 
@@ -158,7 +158,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226133740.png)
 
-### 三、宽高比
+# 三、宽高比
 
 在使用其它布局类型时，如果想让控件在不同的屏幕上都保持固定的宽高比是比较麻烦的，但用 ConstraintLayout 就很简单。例如，如果我们想为 Activity 实现一个固定宽高比的顶部标题栏的话，可以将宽度设置为占满屏幕，高设置为 0dp，然后通过 `app:layout_constraintDimensionRatio` 属性设定宽高比为一个固定比例，此时 ConstraintLayout 就会自动根据屏幕的宽度来动态计算标题栏应该具有的高度
 
@@ -204,7 +204,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226134656.png)
 
-### 四、控件之间的宽高占比
+# 四、控件之间的宽高占比
 
 ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weight` 属性，从而控件子控件之间的宽高占比，对应的属性是：`layout_constraintHorizontal_weight` 和 `layout_constraintVertical_weight`
 
@@ -286,7 +286,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226140239.png)
 
-### 五、Dimensions
+# 五、Dimensions
 
 当控件的宽或者高设置为 0dp 时，可以用以下两个属性来指定控件的宽度或高度占父控件空间的百分比，属性值在 0 到 1 之间
 
@@ -330,7 +330,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225003233.png)
 
-### 六、Visibility
+# 六、Visibility
 
 在使用其它布局时，如果将 View 的 visibility 属性设置为 gone，那么其它原本依赖该 View 来参照定位的属性都会失效，而在 ConstraintLayout 布局中会有所不同
 
@@ -387,7 +387,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 - `layout_goneMarginRight`
 - `layout_goneMarginBottom`
 
-### 七、圆形定位
+# 七、圆形定位
 
 圆形定位用于将两个 View 以**角度**和**距离**这两个维度来进行定位，以两个 View 的中心点作为定位点
 
@@ -439,7 +439,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225002744.png)
 
-### 八、Guideline
+# 八、Guideline
 
 当需要一个任意位置的锚点时，可以使用指示线（Guideline）来帮助定位，Guideline 是 View 的子类，使用方式和普通的 View 相同，但 Guideline 有着如下的特殊属性：
 
@@ -490,7 +490,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224231530.png)
 
-### 九、Barrier
+# 九、Barrier
 
 很多时候我们都会遇到控件的宽高值随着其包含的数据的多少而改变的情况，而此时如果有多个控件之间是相互约束的话，就比较难来设定各个控件间的约束关系了，而 Barrier（屏障）就是用于解决这种情况。Barrier 和 GuideLine 一样是一个虚拟的 View，对界面是不可见的，只是用于辅助布局
 
@@ -561,7 +561,7 @@ Barrier 可以使用的属性有：
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226152135.png)
 
-### 十、Group
+# 十、Group
 
 Group 用于控制多个控件的可见性，先依靠 `constraint_referenced_ids`来绑定其它 View，之后就可以通过单独控制 Group 的可见性从而来间接改变绑定的 View 的可见性
 
@@ -604,7 +604,7 @@ Group 用于控制多个控件的可见性，先依靠 `constraint_referenced_id
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-### 十一、Placeholder
+# 十一、Placeholder
 
 Placeholder （占位符）用于和一个视图关联起来，通过 `setContentId()` 方法将占位符转换为指定的视图，即视图将在占位符所在位置上显示，如果此时布局中已包含该视图，则视图将从原有位置消失
 
@@ -656,7 +656,7 @@ Placeholder （占位符）用于和一个视图关联起来，通过 `setConten
 
 ![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/setContentId.gif)
 
-### 十二、Chains
+# 十二、Chains
 
 Chain 比较难描述，它是一种特殊的约束形式，多个控件通过明确的相互约束来互相约束对方的位置，从而形成一个链条，Chain 可以设定链条中的剩余空间的分发规则
 
@@ -756,7 +756,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225001927.png)
 
-### 十三、Flow
+# 十三、Flow
 
 [Flow](https://developer.android.google.cn/reference/androidx/constraintlayout/helper/widget/Flow?hl=en) 是一种新的虚拟布局，它专门用来构建链式排版效果，当出现空间不足的情况时能够自动换行，甚至是自动延展到屏幕的另一区域。当需要对多个元素进行链式布局，但不确定在运行时布局空间的实际大小是多少时 Flow 对你来说就非常有用。你可以使用 Flow 来实现让布局随着应用屏幕尺寸的变化 (比如设备发生旋转后出现的屏幕宽度变化) 而动态地进行自适应。此外，Flow 是一种虚拟布局，并不会作为视图添加到视图层级结构中，而是仅仅引用其它视图来辅助它们在布局系统中完成各自的布局功能
 
@@ -818,7 +818,7 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-#### none
+## none
 
 此模式下控件不会自动换行，且由于屏幕宽度无法完整展示，所以只会展示一部分内容
 
@@ -835,7 +835,7 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 - flow_horizontalAlign = "start|end"
 - flow_verticalAlign = "top|bottom|center|baseline
 
-#### chain
+## chain
 
 此模式下控件会自动换行，且不足一行的内容会居中显示
 
@@ -873,13 +873,13 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 
 ![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226171313.png)
 
-#### aligned
+## aligned
 
 此模式和 chain 类似，区别在于不足一行的内容会靠边对齐显示
 
 ![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226171558.png)
 
-### 十四、Layer
+# 十四、Layer
 
 [Layer](https://developer.android.google.cn/reference/androidx/constraintlayout/helper/widget/Layer) 作为一种新的辅助工具，可以在多个视图上创建一个虚拟的图层 (layer)，和 Flow 不同，它并不会对视图进行布局，而是对多个视图同时进行变换 (transformation) 操作。如果想对多个视图整体进行旋转 (rotate)、平移 (translate) 或缩放 (scale) 操作，那么 Layer 将会是最佳的选择
 
@@ -983,7 +983,7 @@ class LayerActivity : AppCompatActivity() {
 
 此外，Layer 比较有用的一个点就是可以用于设置背景色，以前如果我们想要对某块区域设置一个背景色的话往往需要多嵌套一层，而如果使用 Layer 的话则可以直接设置，不需要进行嵌套
 
-### 十五、ConstraintSet
+# 十五、ConstraintSet
 
 Layer 是对 ConstraintLayout 内的一部分控件做动画变换，ConstraintSet 则是用于对 ConstraintLayout 整体进行一次动画变换
 
@@ -1053,7 +1053,7 @@ class ConstraintSetActivity : AppCompatActivity() {
 
 ![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/ConstraintSetsassa.gif)
 
-### 十六、ConstraintHelper
+# 十六、ConstraintHelper
 
 Flow 和 Layer 都是 ConstraintHelper 的子类，这两者都属于辅助布局的工具类，ConstraintLayout 也开放了 ConstraintHelper 交由开发者自己去进行自定义
 
@@ -1121,7 +1121,7 @@ class CircularRevealHelper @JvmOverloads constructor(
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-### 十七、ImageFilterView
+# 十七、ImageFilterView
 
 ImageFilterView 是放在 ConstraintLayout 的 `utils.widget`包下的一个 View，从包名可以猜测 ImageFilterView 只是 Google 官方提供的一个额外的工具属性的类，和 ConstraintLayout 本身并没有啥关联
 
@@ -1222,11 +1222,11 @@ class ImageFilterViewActivity : AppCompatActivity() {
 
 ![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/ImageFilterViewsafafsa.gif)
 
-### 十八、Demo 下载
+# 十八、Demo 下载
 
 示例代码我均已放到 Github，请查收：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
 
-### 十九、参考资料
+# 十九、参考资料
 
 - https://developer.android.google.cn/reference/androidx/constraintlayout/widget/ConstraintLayout
 - https://juejin.cn/post/6905216987496972302

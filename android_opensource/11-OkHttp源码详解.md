@@ -100,7 +100,7 @@ fun main() {
 4. 调用 execute 方法发起同步请求并返回一个 Response 对象，Response 就包含了此次网络请求的所有返回信息，如果请求失败的话此方法会抛出异常
 5. 拿到 Response 对象的 body 并以字符串流的方式进行读取，打印结果即文章开头的 Android 机器人彩蛋
 
-### 一、OkHttpClient
+# 一、OkHttpClient
 
 OkHttpClient 使用了 Builder 模式来完成初始化，其提供了很多的配置参数，每个选项都有默认值，但大多数时候我们还是需要来进行自定义，所以也有必要来了解下其包含的所有参数
 
@@ -162,7 +162,7 @@ class Builder constructor() {
 }
 ```
 
-### 二、Request 
+# 二、Request 
 
 Request 包含了网络请求时的所有请求参数，一共包含以下五个：
 
@@ -181,7 +181,7 @@ Request 包含了网络请求时的所有请求参数，一共包含以下五个
     internal var tags: MutableMap<Class<*>, Any> = mutableMapOf()
 ```
 
-### 三、Call 
+# 三、Call 
 
 当调用 `okHttClient.newCall(request)`时就会得到一个 Call 对象
 
@@ -258,7 +258,7 @@ class RealCall(
 }
 ```
 
-### 四、Dispatcher
+# 四、Dispatcher
 
 从上面的分析可以看出来，`getResponseWithInterceptorChain` 方法就是重头戏了，其返回了我们最终得到的 Response。但这里先不介绍该方法，先来看看 Dispatcher 的逻辑
 
@@ -289,7 +289,7 @@ Dispatcher 是一个调度器，用于对全局的网络请求进行缓存调度
 
 为了统计以上两个运行参数，就需要使用 readyAsyncCalls、runningAsyncCalls 和 runningSyncCalls 来保存当前正在执行或者准备执行的网络请求。runningSyncCalls 用于保存**当前正在执行的同步任务**，其存储的是 RealCall。readyAsyncCalls 和 runningAsyncCalls 用于保存**异步任务**，其存储的是 AsyncCall
 
-#### 1、同步请求
+## 1、同步请求
 
 RealCall 的 `execute()` 方法在开始请求前，会先将自身传给 dispatcher，在请求结束后又会从 dispatcher 中移除
 
@@ -350,7 +350,7 @@ class Dispatcher constructor() {
 }
 ```
 
-#### 2、异步请求
+## 2、异步请求
 
 RealCall 的 `enqueue`方法会将外部传入的 Callback 包装为一个 AsyncCall 对象后传给 dispatcher
 
@@ -506,7 +506,7 @@ private fun promoteAndExecute(): Boolean {
   }
 ```
 
-#### 3、ArrayDeque 
+## 3、ArrayDeque 
 
 上面有讲到，三种请求的存储容器是 ArrayDeque。ArrayDeque 属于非线程安全的双端队列，所以涉及到多线程操作时都需要外部主动线程同步。那么让我们想一想，OkHttp 选择 ArrayDeque 作为任务容器的理由是什么？以我粗浅的眼光来看，有以下几点：
 
@@ -515,7 +515,7 @@ private fun promoteAndExecute(): Boolean {
 - 在遍历到符合条件的请求后，需要将请求从 readyAsyncCalls 中移除并转移到 runningAsyncCalls 中，而 ArrayDeque 作为双端队列，在内存空间利用率上比较高
 - Dispatcher 面对的就是多线程环境，本身就需要进行线程同步，选择 ArrayDeque 这个非线程安全的容器可以省去多余的线程同步消耗
 
-#### 4、线程池
+## 4、线程池
 
 OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池就长这样：
 
@@ -540,7 +540,7 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
 
 虽然线程池本身对于最大线程数几乎没有限制，但是由于提交任务的操作还受 maxRequests 的控制，所以实际上该线程池最多同时运行 maxRequests 个线程
 
-#### 5、推动请求执行
+## 5、推动请求执行
 
 既然 OkHttp 内部的线程池是不可能无限制地新建线程来执行请求的，那么当请求总数已达到 maxRequests 后，后续的请求只能是先处于等待状态，那么这些等待状态的请求会在什么时候被启动呢？
 
@@ -573,14 +573,14 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
   }
 ```
 
-#### 6、总结
+## 6、总结
 
 - 如果是同步请求，那么网络请求过程就会直接在调用者所在线程上完成，不受 Dispatcher 的控制
 - 如果是异步请求，该请求会先存到待执行列表 readyAsyncCalls 中，该请求是否可以立即发起受 maxRequests 和 maxRequestsPerHost 两个条件的限制。如果符合条件，那么就会从 readyAsyncCalls 取出并存到 runningAsyncCalls 中，然后交由 OkHttp 内部的线程池来执行
 - 不管外部是同步请求还是异步请求，内部都是通过调用`getResponseWithInterceptorChain()`方法来拿到 Response 的
 - Dispatcher 内部的线程池本身允许同时运行 Int.MAX_VALUE 个线程，但是实际上的线程数量还是受 maxRequests 的控制
 
-### 五、RealInterceptorChain 
+# 五、RealInterceptorChain 
 
 重点再来看 `getResponseWithInterceptorChain()`方法，其主要逻辑就是通过拦截器来完成整个网络请求过程。在该方法中，除了会获取外部主动设置的拦截器外，也会默认添加以下几个拦截器
 
@@ -833,7 +833,7 @@ class RealInterceptorChain(
 }
 ```
 
-### 六、Interceptor
+# 六、Interceptor
 
 我们在构建 OkHttpClient 的时候，添加拦截器的方法分为两类：`addInterceptor`和`addNetworkInterceptor`
 
@@ -999,7 +999,7 @@ content-length: 11448857
 completed
 ```
 
-### 七、结尾
+# 七、结尾
 
 关于 OkHttp 的源码讲解到这里就结束了，但本文还缺少了对 ConnectInterceptor 和 CallServerInterceptor 的讲解，这两者是 OkHttp 完成实际网络请求的地方，涉及到了 Connection 和 Socket 这些比较底层的领域，我没法讲得多清晰，就直接略过这块内容了~~
 

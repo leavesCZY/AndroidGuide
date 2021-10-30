@@ -29,7 +29,7 @@ dependencies {
 }
 ```
 
-### 一、概述
+# 一、概述
 
 在开始看 Glide 源码前，需要先对 Glide 有一些基本的了解
 
@@ -56,7 +56,7 @@ Glide 的缓存机制分为**内存缓存**和**磁盘缓存**两级。默认情
 
 由于磁盘空间是有限的，所以 AUTOMATIC 是在衡量**所占磁盘空间大小**和**获取图片的成本**两者所做的一个居中选择
 
-### 二、如何监听生命周期
+# 二、如何监听生命周期
 
 通常，我们加载的图片最终是要显示在 ImageView 中的，而 ImageView 是会挂载在 Activity 或者 Fragment 等容器上的，当容器处于后台或者已经被 finish 时，此时加载图片的操作就应该被取消或者停止，否则也是在浪费宝贵的系统资源和网络资源，甚至可能发生内存泄露或者 NPE 问题。那么，显而易见的一个问题就是，Glide 是如何判断容器是否还处于活跃状态的呢？
 
@@ -207,7 +207,7 @@ class ApplicationLifecycle implements Lifecycle {
 }
 ```
 
-### 三、怎么注入 Fragment
+# 三、怎么注入 Fragment
 
 现在已经知道 Glide 是通过 SupportRequestManagerFragment 来拿到生命周期事件的，那么 SupportRequestManagerFragment 是如何挂载到 Activity 或者 Fragment 上的呢？
 
@@ -369,7 +369,7 @@ public class RequestManagerRetriever implements Handler.Callback {
   }
 ```
 
-### 四、如何启动加载图片的任务
+# 四、如何启动加载图片的任务
 
 前文介绍了 Glide 是如何实现监听 Activity 的生命周期变化的，那么，Glide 是如何发起加载图片的任务的呢？
 
@@ -539,7 +539,7 @@ public class RequestTracker {
   }
 ```
 
-### 五、加载图片的具体流程
+# 五、加载图片的具体流程
 
 Request 是一个接口，代表的是每个图片加载请求，其包含有几个实现类，这里以 SingleRequest 为例。SingleRequest 的`begin()` 方法会先对当前的任务状态进行校验，防止重复加载，然后去获取**目标宽高**或者 **ImageView 的宽高**，之后还会判断是否需要先展示占位符
 
@@ -758,7 +758,7 @@ public <R> LoadStatus load(
 
 这里就以加载一张网络图片为例，先后介绍**从网络请求到磁盘缓存，再到内存缓存**这整个过程
 
-#### 1、网络请求
+## 1、网络请求
 
 `Glide.with(Context).load(Any)`的 `load` 方法是一个多重载形式的方法，支持 Integer、String、Uri、File 等多种入参类型，而且最终我们获取到的可能是 Bitmap、Drawable、GifDrawable 等多种结果。那么，Glide 是如何分辨我们不同的入参请求的呢？以及如何对不同的请求类型进行处理呢？
 
@@ -899,7 +899,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
 }
 ```
 
-#### 2、磁盘缓存
+## 2、磁盘缓存
 
 再回过头看 Engine 类的 `waitForExistingOrStartNewJob`方法。当判断到当前内存缓存中没有目标图片时，就会启动 EngineJob 和 DecodeJob 进行磁盘文件加载或者联网请求加载
 
@@ -1136,7 +1136,7 @@ SourceGenerator 在通过 HttpUrlFetcher 成功加载到图片后就会调用到
   }
 ```
 
-#### 3、内存缓存
+## 3、内存缓存
 
 再来看下内存缓存机制。前文说了，Glide 的内存缓存分为 ActiveResources 和 MemoryCache 两级，取内存缓存的操作就对应 Engine 类的 `loadFromMemory` 方法
 
@@ -1304,7 +1304,7 @@ public class LruResourceCache extends LruCache<Key, Resource<?>> implements Memo
 3. ActiveResources 中保存的图片是当前处于强引用状态的资源，正常来说即使系统当前可用内存不足，系统即使抛出 OOM 也不会回收强引用，所以 Glide 的内存缓存先从 ActiveResources 取值就不会增大当前的已用内存。而系统内存大小是有限的，MemoryCache 使用 Lrc 算法就是为了尽量节省内存且尽量让最大概率还会被重用的图片可以被保留下来
 4. Glide 将内存缓存分为 ActiveResources 和 MemoryCache 两级，而不是全都放到 MemoryCache 中，就避免了误将当前正处于活跃状态的图片资源给移除队列。且 ActiveResources 内部也一直在循环判断保存的图片资源是否已经不再被外部使用了，从而可以及时更新 MemoryCache，提高了 MemoryCache 的利用率和准确度
 
-### 六、内存清理机制
+# 六、内存清理机制
 
 Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地进行磁盘读写和内存读写，memoryCache、bitmapPool 和 arrayPool 的存在都是为了这个目的，但另一方面内存缓存也造成了有一部分内存空间一直被占用着，可能会造成系统的可用内存空间不足。当我们的应用退到后台时，如果之后系统的可用内存空间不足，那么系统就会按照优先级高低来清理掉一些后台进程，以便为前台进程腾出内存空间，为了提高应用在后台时的优先级，我们就需要主动降低我们的内存占用
 
@@ -1365,8 +1365,7 @@ Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地�
   }
 ```
 
-
-### 七、包含几个线程池
+# 七、包含几个线程池
 
 先说结论，如果我没看遗漏的话，Glide 是一共包含七个线程池。**此处我所指的线程池的概念不单单指 ThreadPoolExecutor 类，而是指 `java.util.concurrent.Executor` 接口的任意实现类**
 
@@ -1513,7 +1512,7 @@ public final class Executors {
 }
 ```
 
-### 八、自定义网络请求库
+# 八、自定义网络请求库
 
 默认情况下，Glide 是通过 HttpURLConnection 来联网加载图片的，相对于我们常用的 OkHttp 来说比较原始低效。而 Glide 也提供了 Registry 类，允许外部来自定义实现特定的请求逻辑
 

@@ -22,7 +22,7 @@
 
 按照我写 **[三方库源码笔记]** 这系列文章的习惯，我是每写一篇关于源码讲解的文章，就会接着写一篇关于该三方库的自定义实现或者是扩展阅读。所以，承接上一篇文章：[三方库源码笔记（11）-OkHttp 源码详解](https://juejin.im/post/6895369745445748749)  本篇文章就来写关于 OkHttp 的实战内容，来实现一个在移动端的可视化抓包工具：[Monitor](https://github.com/leavesC/Monitor)
 
-### 一、Monitor 
+# 一、Monitor 
 
 Monitor 适用于使用了 **OkHttp/Retrofit** 作为网络请求框架的项目，只要添加了 **MonitorInterceptor** 拦截器，Monitor 就会自动记录并保存所有的**网络请求信息**且自动弹窗展示
 
@@ -30,7 +30,7 @@ Monitor 适用于使用了 **OkHttp/Retrofit** 作为网络请求框架的项目
 
 ![](https://s1.ax1x.com/2020/10/21/BCJpz6.gif)
 
-### 二、实现思路
+# 二、实现思路
 
 这里来简单地介绍下 Monitor 的实现思路
 
@@ -168,7 +168,7 @@ UI 层则不用自己去考虑线程切换和内存泄露这类问题，直接�
     }
 ```
 
-### 三、远程引用
+# 三、远程引用
 
 代码我已经发布到了 jitpack，方便大家直接远程依赖使用。同时引入 debug 和 release 版本的依赖，**release 版本的 MonitorInterceptor 不会做任何操作，避免了信息泄露，也不会增加 Apk 体积大小**
 
@@ -193,6 +193,6 @@ UI 层则不用自己去考虑线程切换和内存泄露这类问题，直接�
             .build()
 ```
 
-### 四、Github
+# 四、Github
 
 GitHub 链接点击这里：[Monitor](https://github.com/leavesC/Monitor)
