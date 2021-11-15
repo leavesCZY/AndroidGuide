@@ -32,8 +32,8 @@ Goggle 官方推荐将 Kotlin 协程作为在 Android 上进行异步编程的�
 引入依赖：
 
 ```kotlin
-    implementation 'org.jetbrains.Kotlinx:Kotlinx-coroutines-core:1.4.2'
-    implementation 'org.jetbrains.Kotlinx:Kotlinx-coroutines-android:1.4.2'
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
+implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
 ```
 
 # 二、第一个协程
@@ -83,7 +83,7 @@ public suspend fun delay(timeMillis: Long)
 
 对于这句话我的理解是：`delay()` 函数类似于 Java 中的 `Thread.sleep()`，而之所以说 `delay()` 函数是非阻塞的，是因为它和单纯的线程休眠有着本质的区别。协程是运行于线程上的，一个线程可以运行多个（几千上万个）协程。线程的调度行为是由操作系统来管理的，而协程的调度行为是可以由开发者来指定并由编译器来实现的，协程能够细粒度地控制多个任务的执行时机和执行线程，当某个特定的线程上的所有协程被 suspend 后，该线程便可腾出资源去处理其他任务
 
-例如，当在 ThreadA 上运行的 CoroutineA 调用了`delay(1000L)`函数指定延迟一秒后再运行，ThreadA 会转而去执行 CoroutineB，等到一秒后再来继续执行 CoroutineA。所以，ThreadA 并不会因为 CoroutineA 的延时而阻塞，而是能继续去执行其它任务，所以挂起函数并不会阻塞其所在线程，这样就极大地提高了线程的并发灵活度，最大化了线程的利用效率。而如果是使用`Thread.sleep()`的话，线程就只能干等着而不会去执行其它任务，降低了线程的利用效率
+例如，当在 ThreadA 上运行的 CoroutineA 调用了`delay(1000L)`函数指定延迟一秒后再运行，ThreadA 会转而去执行 CoroutineB，等到一秒后再来继续执行 CoroutineA。所以，ThreadA 并不会因为 CoroutineA 的延时而阻塞，而是能继续去执行其它任务，所以挂起函数并不会阻塞其所在线程，这样就极大地提高了线程的并发灵活度，最大化了线程的利用效率。而如果是使用`Thread.sleep()`的话，线程就只能干等着而不能去执行其它任务，降低了线程的利用效率
 
 # 四、suspend function 的挂起与恢复
 
@@ -227,7 +227,7 @@ fun main() {
         delay(500)
         log("runBlocking")
     }
-    //主动休眠两百毫秒，使得和 runBlocking 加起来的延迟时间少于六百毫秒
+    //主动休眠两百毫秒，使得和 runBlocking 加起来的延迟时间多于六百毫秒
     Thread.sleep(200)
     log("after sleep")
 }

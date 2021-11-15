@@ -5,7 +5,7 @@
 ![公众号：字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 
 文章链接均导航至掘金：[业志陈](https://juejin.cn/user/923245496518439/posts) 如果发现掘金文章内容不全，请查看此处文件夹中的文章，这里会一直保留最新最全的文章内容
-  
+
 * [Android 精讲]()
   * [Android WebView H5 秒开方案总结](https://juejin.cn/post/7016883220025180191)
   * [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
@@ -39,9 +39,9 @@
   * [学不动也要学，Jetpack Compose 玩一把俄罗斯方块](https://juejin.cn/post/6974585048762679310)  
   * [学不动也要学，Jetpack Compose 自定义 View 你学不学](https://juejin.cn/post/6996568363581308959/)
 * [Flutter]()
+  * [Dart 入门教程](https://juejin.cn/post/6844903937342963719)
   * [FlutterDo - 入门实例教程](https://github.com/leavesC/flutter_do)
   * [Flutter 实战 - 用贝塞尔曲线画一个带文本的波浪球 Widget](https://juejin.cn/post/6844903981790019592)
-  * [Dart 入门教程](https://juejin.cn/post/6844903937342963719)
 * [Jetpack 源码笔记]()
   * [从源码看 Jetpack（1）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
   * [从源码看 Jetpack（2）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)

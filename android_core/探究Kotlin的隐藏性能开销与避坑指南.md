@@ -538,7 +538,7 @@ public final class KotlinMode {
 
 所以说，init 块和成员变量之间的声明顺序决定了在构造函数中的初始化顺序，我们应该先声明成员变量再声明 init 块，否则就有可能导致 NPE
 
-# Gosn & data class
+# Gson & data class
 
 来看个小例子，猜猜其运行结果会是怎样的
 
