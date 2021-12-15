@@ -1,4 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 SharedPreferences 是系统提供的一个适合用于存储少量键值对数据的持久化存储方案，结构简单，使用方便，很多应用都会使用到。另一方面，SharedPreferences 存在的问题也挺多的，当中 ANR 问题就屡见不鲜，字节跳动技术团队就曾经发布过一篇文章专门来阐述该问题：[剖析 SharedPreference apply 引起的 ANR 问题](https://mp.weixin.qq.com/s?__biz=MzI1MzYzMjE0MQ==&mid=2247484387&idx=1&sn=e3c8d6ef52520c51b5e07306d9750e70&scene=21#wechat_redirect)。到了现在，Google Jetpack 也推出了一套新的持久化存储方案：DataStore，大有取代 SharedPreferences 的趋势
 

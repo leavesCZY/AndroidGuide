@@ -1,4 +1,6 @@
-> 公众号：[字节数组](https://link.juejin.cn/?target=https%3A%2F%2Fp6-juejin.byteimg.com%2Ftos-cn-i-k3u1fbpfcp%2F0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)     希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 flutter 中的自定义 Widget 算作是 flutter 体系中比较高阶的知识点之一了，相当于原生开发中的自定义 View，以我个人的感受来说，自定义 widget 的难度要低于自定义 View，不过由于当前 flutter 的开源库还不算多丰富，所以有些效果还是需要开发者自己动手来实现，而本篇文章就来介绍如何用 flutter 来实现一个带文本的波浪球 Widget，实现的的效果如下所示：
 

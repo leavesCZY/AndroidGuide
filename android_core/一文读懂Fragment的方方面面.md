@@ -1,3 +1,7 @@
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
+
 Fragment 是 Android 中历史十分悠久的一个组件，在 Android 3.0 （API 级别 11）的时候推出，时至今日已成为 Android 开发中最常用的组件之一
 
 在一开始的时候，引入 Fragment 的目的是为了在大屏幕（如平板电脑）上能够更加动态和灵活地设计界面，被定义为一个 **轻量级 Activity** 而进行设计。通过 Fragment 可以将整个界面划分为多个分散的区域块，且同个 Fragment 可以被应用于多个 Activity 中，从而实现界面的**模块化**并提高**可重用性**。随着 Android 系统的逐渐升级，系统功能越来越丰富，Fragment 因此也自然而然的就被添加了很多和 Activity 完全一样的 API。例如，想要跳转到某个 Activity 并获取返回值，Activity 和 Fragment 就都加上了`startActivityForResult`方法；在 6.0 的时候有了运行时权限，就都加上了`requestPermissions`方法；在 8.0 的时候有了画中画模式，就又都加上了`onPictureInPictureModeChanged`方法

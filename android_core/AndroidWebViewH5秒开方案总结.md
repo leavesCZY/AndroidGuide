@@ -1,4 +1,6 @@
->  公众号：[字节数组](https://link.juejin.cn/?target=https%3A%2F%2Fp6-juejin.byteimg.com%2Ftos-cn-i-k3u1fbpfcp%2F0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image) 希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 为了满足跨平台和动态性的要求，如今很多 App 都采用了 Hybrid 这种比较成熟的方案来满足多变的业务需求。Hybrid 也叫混合开发，即半原生半 H5 的方式，通过 WebView 来实现需要高度灵活性的业务，在需要和 Native 做交互或者是调用特定平台能力时再通过 JsBridge 来实现两端交互
 

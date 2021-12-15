@@ -1,3 +1,7 @@
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
+
 Json 是一种文本形式的数据交换格式，比 xml 更为轻量。Json 的解析和生成的方式很多，在 Android 平台上最常用的类库有 Gson 和 FastJson 两种，这里要介绍的是 Gson
 
 Gson 的 GitHub 主页点击这里：[Gson](https://github.com/google/gson)

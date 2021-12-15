@@ -1,4 +1,6 @@
-> 公众号：[字节数组](https://link.juejin.cn/?target=https%3A%2F%2Fp6-juejin.byteimg.com%2Ftos-cn-i-k3u1fbpfcp%2F0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)   希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 在 2019 年 Google I/O 大会上，Google 宣布了今后 Android 开发将优先使用 Kotlin ，即 Kotlin-first，随之在 Android 开发界兴起了一阵全民学习 Kotlin 的热潮。之后 Google 也推出了一系列用 Kotlin 实现的 ktx 扩展库，例如 `activity-ktx`、`fragment-ktx`、`core-ktx`等，提供了各种方便的扩展方法用于简化开发者的工作，Kotlin 协程目前也是官方在 Android 上进行异步编程的推荐解决方案
 

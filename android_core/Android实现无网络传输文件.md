@@ -1,4 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 最近的项目需要实现一个 Android 手机之间无网络传输文件的功能，就研究了下 Wifi P2P（Wifi点对点) 这么一个功能，最后也实现了通过 Wifi 隔空传输文件 的功能，这里我也来整理下代码，分享给大家
 
@@ -8,7 +10,9 @@ Wifi P2P 是在 Android 4.0 以及更高版本系统中加入的功能，通过 
 
 实现的效果如下所示：
 
-<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad0ec2fb76034d5b81bc8e6c212f4ea3~tplv-k3u1fbpfcp-watermark.image" style="zoom: 33%;" /><img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13f7162a146d408783d865b210fb4c77~tplv-k3u1fbpfcp-watermark.image" style="zoom:33%;" />
+<img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad0ec2fb76034d5b81bc8e6c212f4ea3~tplv-k3u1fbpfcp-watermark.image" style="zoom: 33%;" />
+
+<img src="https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13f7162a146d408783d865b210fb4c77~tplv-k3u1fbpfcp-watermark.image" style="zoom:33%;" />
 
 开发步骤分为以下几点：
 

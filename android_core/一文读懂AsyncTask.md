@@ -1,4 +1,6 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
 AsyncTask 是一个较为轻量级的异步任务类，在底层通过封装 ThreadPool 和 Handler 实现了线程的复用、后台任务执行顺序的控制、子线程和主线程的切换，使得开发者可以通过很简单的方法来执行一些耗时任务
 

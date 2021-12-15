@@ -1,6 +1,8 @@
-> 公众号：[字节数组](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0357ed9ee08d4a5d92af66a72b002169~tplv-k3u1fbpfcp-watermark.image)，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> 希望对你有所帮助 🤣🤣
 
-在蛮久前有同事问过我关于一个 Gson 和 Kotlin dataClass 的问题，当时答不上来也没去细究，但一直都放在心底，今天就认真探究下原因，也输出总结了一下，希望能帮助你避开这个坑😂😂
+在蛮久前有同事问过我关于一个 Gson 和 Kotlin dataClass 的问题，当时答不上来也没去细究，但一直都放在心底，今天就认真探究下原因，也输出总结了一下，希望能帮助你避开这个坑 😂😂
 
 来看个小例子，猜猜其运行结果会是怎样的
 
