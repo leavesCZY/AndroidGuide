@@ -23,11 +23,11 @@
 
 先随意声明一个 Thread 对象，对应在项目中存在的各类匿名线程
 
-![](https://upload-images.jianshu.io/upload_images/2552605-e9e2e9ae07f85b8c.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/cd3b413c83b74d829f8aafb4d23bb957~tplv-k3u1fbpfcp-zoom-1.image)
 
 反编译查看对应的字节码指令
 
-![](https://upload-images.jianshu.io/upload_images/2552605-9ca971b771086e50.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/289fdaca979247a283be676c2d7d694b~tplv-k3u1fbpfcp-zoom-1.image)
 
 从当中就可以看出几点信息：
 
@@ -400,5 +400,3 @@ class OptimizedThreadTransform(private val config: OptimizedThreadConfig) : Base
 # 四、源码
 
 最后也给出完整的源码：[ASM_Transform](https://github.com/leavesC/ASM_Transform)
-
-当中包含了本文的全部实现源码，也包含上一篇文章：[ASM 字节码插桩实现双击防抖的实现始末](https://juejin.cn/post/7042328862872567838) 中所实现的双击防抖功能，希望对你有所帮助 🤣🤣
