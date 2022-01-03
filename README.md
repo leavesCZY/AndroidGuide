@@ -4,9 +4,7 @@
 
 ![公众号：字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 
-文章链接均导航至掘金：[业志陈](https://juejin.cn/user/923245496518439/posts) 
-
-如果发现掘金文章内容不全，请查看此处文件夹中的文章，这里会一直保留最新最全的文章内容
+文章链接均导航至掘金：[业志陈](https://juejin.cn/user/923245496518439/posts)
 
 * [Android 精讲]()
   * [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)

@@ -2,8 +2,6 @@
 >
 > 希望对你有所帮助 🤣🤣
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1abcd1e5ce9a4f36b6f150500ef65fa8~tplv-k3u1fbpfcp-zoom-1.image)
-
 在 2019 年的 Google/IO 大会上，亮相了一个全新的 Android 原生 UI 开发框架 Jetpack Compose。与 IOS 的 SwiftUI 一样，Jetpack Compose 也是一个声明式的 UI  框架，随着 Android 和 IOS 两大移动平台相继推出了自己平台专属的声明式 UI 框架，标志着整个行业已开始转向声明性界面模型，该模型大大简化了与构建和更新界面关联的工程设计
 
 经过两年多的打磨，到了今年七月底，Google 正式发布了 Jetpack Compose 的 1.0 版本，这是 Compose 的稳定版本，可供开发者在生产环境中使用
@@ -38,7 +36,7 @@
 
 实践出真理，学不动也要学 🤣🤣 Jetpack Compose 大概率会成为以后 Android 原生应用开发时的首选技术方案，所以我也做了一次实战演练，花了两个月时间断断续续写了一个完全用 Compose 实现的 IM APP，实现了基本的好友聊天功能
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/fb09ffc29b9740998193ef88855eaffc~tplv-k3u1fbpfcp-watermark.image)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22cfd6b6fcbe4e019d42a1f7c29405e6~tplv-k3u1fbpfcp-zoom-1.image)
 
 整个 APP 采用的是单 Activity 形式，内部通过 navigation 来模拟多屏幕跳转，使用了单向数据流模式，所有业务逻辑均通过 ViewModel 来完成，业务逻辑的处理结果再以可组合函数的入参参数的形式回传给 UI 层，底层通过腾讯云的 IM SDK 来实现通信
 
