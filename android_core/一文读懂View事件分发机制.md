@@ -1217,4 +1217,4 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 
 # 十二、Demo 下载
 
-上述的所有示例代码我都放到了 Github 上，按需自取：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+上述的所有示例代码我都放到了 Github 上，按需自取：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

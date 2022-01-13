@@ -8,10 +8,10 @@
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/21 12:23
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 data class UserBean(val userName: String, val userAge: Int)
 
@@ -148,10 +148,10 @@ Gson 的 UnsafeAllocator 类中就通过 `allocateInstance` 方法来完成了 U
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/21 12:23
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 data class UserBean(val userName: String = "leavesC", val userAge: Int)
 

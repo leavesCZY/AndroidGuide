@@ -100,9 +100,8 @@
 
 ```java
 /**
- * 作者：leavesc
- * 时间：2018/7/15 10:26
- * 描述：
+ * @Author: leavesCZY
+ * @Date: 2018/7/15 10:26
  */
 public class MyViewPager extends ViewPager {
 
@@ -182,9 +181,8 @@ public class MainActivity extends AppCompatActivity {
 
 ```java
 /**
- * 作者：leavesc
- * 时间：2018/7/15 10:26
- * 描述：
+ * @Author: leavesCZY
+ * @Date: 2018/7/15 10:26
  */
 public class MyViewPager extends ViewPager {
 
@@ -243,9 +241,8 @@ public class MyViewPager extends ViewPager {
 
 ```java
 /**
- * 作者：leavesc
- * 时间：2018/7/15 12:40
- * 描述：
+ * @Author: leavesCZY
+ * @Date: 2018/7/15 12:40
  */
 public class MyListView extends ListView {
 
@@ -298,9 +295,8 @@ public class MyListView extends ListView {
 
 ```java
 /**
- * 作者：leavesc
- * 时间：2018/7/15 10:26
- * 描述：
+ * @Author: leavesCZY
+ * @Date: 2018/7/15 10:26
  */
 public class MyViewPager extends ViewPager {
 

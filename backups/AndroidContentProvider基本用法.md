@@ -122,9 +122,8 @@ URI 代表了要操作的数据对象，主要包含了两部分信息：
 
 ```java
 /**
- * 作者： leavesc
- * 时间： 2017/4/3 12:07
- * 描述：
+ * @Author: leavesCZY
+ * @Date:  2017/4/3 12:07
  */
 public class DbOpenHelper extends SQLiteOpenHelper {
 

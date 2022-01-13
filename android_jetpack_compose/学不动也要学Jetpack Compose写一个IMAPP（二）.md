@@ -4,7 +4,7 @@
 
 历经两年的打磨，在今年七月底的时候，Google 终于发布了 Jetpack Compose 的正式版本。我对 Jetpack Compose 的很多特性都很感兴趣，也觉得其很可能会成为以后 Android 原生应用开发时的首选技术方案，所以在正式版发布之前就开始了一次实战演练，花了两个月时间断断续续写了一个完全用 Jetpack Compose 实现的 IM APP，实现了基本的聊天功能，同时也写了一篇文章对其进行介绍：[学不动也要学，Jetpack Compose 写一个 IM APP](https://juejin.cn/post/6991429231821684773) 
 
-在文章中，我以 [compose_chat](https://github.com/leavesC/compose_chat) 为例，详细地介绍了 Jetpack Compose 的很多重要概念和基础特性，包括：
+在文章中，我以 [compose_chat](https://github.com/leavesCZY/compose_chat) 为例，详细地介绍了 Jetpack Compose 的很多重要概念和基础特性，包括：
 
 - 命令式与声明式
 - 可组合函数
@@ -830,9 +830,9 @@ fun CoilImage(
 
 关于 Jetpack Compose 和 compose_chat 的介绍就到这里了，先后看完我两篇文章的话，读者应该都能快速上手开发了 🤣🤣
 
-最后再放一下 compose_chat 的 GitHub 地址：[🎁🎁🎁 用 Jetpack Compose 实现一个 IM APP](https://github.com/leavesC/compose_chat)
+最后再放一下 compose_chat 的 GitHub 地址：[🎁🎁🎁 用 Jetpack Compose 实现一个 IM APP](https://github.com/leavesCZY/compose_chat)
 
- Apk 下载尝鲜：[🎁🎁🎁 用 Jetpack Compose 实现一个 IM APP](https://github.com/leavesC/compose_chat/releases)
+ Apk 下载尝鲜：[🎁🎁🎁 用 Jetpack Compose 实现一个 IM APP](https://github.com/leavesCZY/compose_chat/releases)
 
 腾讯云 IM SDK 免费版最多只能注册一百个账号，1.0 版本的 compose_chat 用户数已经满了，因此 2.0 版本我更换了新的 AppId。如果发现无法注册，读者可以使用以下几个我预先注册好的账号，但多设备同时登陆的话会互相挤掉线 ~~
 

@@ -391,7 +391,7 @@ ArrayList 内部包含一个用于迭代元素的 Iterator 实现类，其用法
 ```java
     public static void main(String[] args) {
         List<String> stringList = new ArrayList<>();
-        stringList.add("https://github.com/leavesC");
+        stringList.add("https://github.com/leavesCZY");
         Iterator<String> iterator = stringList.iterator();
         if (iterator.hasNext()) {
             String next = iterator.next();

@@ -73,10 +73,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/10 22:11
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/10 22:11
+ * @Github：https://github.com/leavesCZY
  */
 const val URL = "https://publicobject.com/helloworld.txt"
 
@@ -681,9 +680,8 @@ Interceptor 的实现初衷是为了给开发者提供一个可以控制网络�
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/11 16:08
- * 描述：
+ * @Author: leavesCZY
+ * @Date: 2020/11/11 16:08
  */
 class Request
 
@@ -881,10 +879,9 @@ Interceptor 和 NetworkInterceptor 分别被称为**应用拦截器**和**网络
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/14 15:49
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/14 15:49
+ * @Github：https://github.com/leavesCZY
  */
 fun main() {
     run()

@@ -185,10 +185,9 @@ LeakCanary 具体进行内存泄露检测的逻辑可以分为三类：
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/06 14:26
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/06 14:26
+ * @Github：https://github.com/leavesCZY
  */
 fun main() {
     val referenceQueue = ReferenceQueue<Pair<String, Int>?>()

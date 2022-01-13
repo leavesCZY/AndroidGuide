@@ -835,7 +835,7 @@ fun main() {
 }
 ```
 
-我也利用 Kotlin 的这个强大特性写了一个用于简化 Java / Kotlin 平台的序列化和反序列化操作的库：[JsonHolder](https://github.com/leavesC/JsonHolder)
+我也利用 Kotlin 的这个强大特性写了一个用于简化 Java / Kotlin 平台的序列化和反序列化操作的库：[JsonHolder](https://github.com/leavesCZY/JsonHolder)
 
 # 十四、总结
 

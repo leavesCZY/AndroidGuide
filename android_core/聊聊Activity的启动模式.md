@@ -108,10 +108,10 @@ launchMode 一共包含以下四种属性值：
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2021/4/16 16:38
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 abstract class BaseLaunchModeActivity : BaseActivity() {
 
@@ -324,7 +324,7 @@ E/SingleInstanceActivity: onDestroy hashCode: 144724929 taskId: 47
 
 关于 Activity 的启动模式的讲解到这里就结束了，最后再强调一遍，launchMode 和 Intent flag 的各种组合效果还是有点过于难理解了，使得我很难全面地进行描述，再加上似乎还存在版本兼容性问题，使用起来就更加麻烦了，所以我觉得开发者只需要有个大致的印象即可，当真正要使用的时候再来亲自测试验证效果就好，不必强行记忆
 
-以上各个示例 Demo 点这里：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+以上各个示例 Demo 点这里：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 
 # 8、参考资料
 

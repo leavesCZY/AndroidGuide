@@ -285,9 +285,8 @@ public class ThreadActivity extends AppCompatActivity {
 
 ```java
 /**
- * 作者： leavesc
- * 时间： 2017/4/4 14:05
- * 描述：
+ * @Author: leavesCZY
+ * @Date:  2017/4/4 14:05
  */
 public class ToastUtils {
 
@@ -342,9 +341,8 @@ public Toast(Context context) {
 
 ```java
 /**
- * 作者： leavesc
- * 时间： 2017/4/4 14:05
- * 描述：
+ * @Author: leavesCZY
+ * @Date:  2017/4/4 14:05
  */
 public class ToastUtils {
 
@@ -384,9 +382,8 @@ Gradle强大的可配置性，可以确保只在编译 debug 版本时才会检�
 
 ```java
 /**
- * 作者： leavesc
- * 时间： 2017/4/4 12:41
- * 描述：
+ * @Author: leavesCZY
+ * @Date:  2017/4/4 12:41
  */
 public class MyApplication extends Application {
 
@@ -402,9 +399,8 @@ public class MyApplication extends Application {
 
 ```java
 /**
- * 作者： leavesc
- * 时间： 2017/4/4 12:41
- * 描述：
+ * @Author: leavesCZY
+ * @Date:  2017/4/4 12:41
  */
 public class MyApplication extends Application {
 

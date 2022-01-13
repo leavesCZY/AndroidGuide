@@ -1503,6 +1503,6 @@ FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整�
 
 我在蛮久前曾写过几个自定义 View 来练手，这次就趁着写本篇文章的机会用 Kotlin 重写了一遍，需要的同学可以参照下
 
-点击这里获取代码：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+点击这里获取代码：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 
 ![](https://s3.ax1x.com/2021/03/14/60p8US.gif) ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef4ec5a3a18f46f1997c7115c91c5967~tplv-k3u1fbpfcp-zoom-1.image)![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7c7d3cd985a4e4ebababc0b7e1c1a0c~tplv-k3u1fbpfcp-zoom-1.image)

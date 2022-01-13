@@ -28,10 +28,10 @@
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2021/1/15 23:42
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class EasyEventBusMainActivity : BaseActivity() {
 
@@ -102,10 +102,10 @@ data class HelloBean(val data: String)
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/3 11:44
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 object EasyEventBus {
 
@@ -225,10 +225,10 @@ annotation class Event
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/3 17:33
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 data class EventMethodInfo(val methodName: String, val eventType: Class<*>)
 
@@ -242,10 +242,10 @@ data class SubscriberInfo(
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/3 15:55
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class EasyEventBusProcessor : AbstractProcessor() {
 
@@ -485,10 +485,10 @@ EasyEventBus 的逻辑就很简单了，主要是通过反射来生成 EventBusI
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/3 11:44
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 object EasyEventBus {
 
@@ -546,4 +546,4 @@ object EasyEventBus {
 
 # 四、GitHub
 
-文本实现的 EasyEventBus 挺简陋的😂😂因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+文本实现的 EasyEventBus 挺简陋的😂😂因为我的想法也只是通过自己动手来加深对 EventBus 的理解而已，这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

@@ -22,7 +22,7 @@
 
 在使用 OkHttp 或者 Retrofit 的时候，我觉得大部分开发者会做得最多的自定义实现就是**拦截器**了。因为 OkHttp 的拦截器真的是太有用了，我们的很多需求：**添加 Header、计算并添加签名信息、网络请求记录**等都可以通过拦截器来自动完成，只要定义好规则，就可以覆盖到全局的 OkHttp 网络请求
 
-按照我写 **[三方库源码笔记]** 这系列文章的习惯，我是每写一篇关于源码讲解的文章，就会接着写一篇关于该三方库的自定义实现或者是扩展阅读。所以，承接上一篇文章：[三方库源码笔记（11）-OkHttp 源码详解](https://juejin.im/post/6895369745445748749)  本篇文章就来写关于 OkHttp 的实战内容，来实现一个在移动端的可视化抓包工具：[Monitor](https://github.com/leavesC/Monitor)
+按照我写 **[三方库源码笔记]** 这系列文章的习惯，我是每写一篇关于源码讲解的文章，就会接着写一篇关于该三方库的自定义实现或者是扩展阅读。所以，承接上一篇文章：[三方库源码笔记（11）-OkHttp 源码详解](https://juejin.im/post/6895369745445748749)  本篇文章就来写关于 OkHttp 的实战内容，来实现一个在移动端的可视化抓包工具：[Monitor](https://github.com/leavesCZY/Monitor)
 
 # 一、Monitor 
 
@@ -42,10 +42,9 @@ debug 版本的 MonitorInterceptor 的大体框架如下所示。HttpInformation
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/20 18:26
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/20 18:26
+ * @Github：https://github.com/leavesCZY
  */
 class MonitorInterceptor(context: Context) : Interceptor {
 
@@ -139,7 +138,7 @@ HttpInformation 则是用 Room 数据库来持久化保存，不得不说的是�
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/14 16:14
  * @Desc:
  */
@@ -197,4 +196,4 @@ UI 层则不用自己去考虑线程切换和内存泄露这类问题，直接�
 
 # 四、Github
 
-GitHub 链接点击这里：[Monitor](https://github.com/leavesC/Monitor)
+GitHub 链接点击这里：[Monitor](https://github.com/leavesCZY/Monitor)

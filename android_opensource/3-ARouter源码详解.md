@@ -71,10 +71,9 @@ dependencies {
 package github.leavesc.user
 
 /**
- * 作者：leavesC
- * 时间：2020/10/3 18:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/3 18:05
+ * @Github：https://github.com/leavesCZY
  */
 @Route(path = RoutePath.USER_HOME)
 class UserHomeActivity : AppCompatActivity() {
@@ -121,10 +120,9 @@ ARouter 一般是通过在 Application 中调用 `init` 方法来完成初始化
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/4 18:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/4 18:05
+ * @Github：https://github.com/leavesCZY
  */
 class MyApp : Application() {
 
@@ -643,10 +641,9 @@ object RoutePath {
 package github.leavesc.user
 
 /**
- * 作者：leavesC
- * 时间：2020/10/4 14:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/4 14:05
+ * @Github：https://github.com/leavesCZY
  */
 @Route(path = RoutePath.USER_HOME)
 class UserHomeActivity : AppCompatActivity() {
@@ -756,10 +753,9 @@ public class AutowiredServiceImpl implements AutowiredService {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/4 13:49
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/4 13:49
+ * @Github：https://github.com/leavesCZY
  */
 interface ISayHelloService : IProvider {
 
@@ -914,10 +910,9 @@ ARouter 的拦截器对于某些需要控制页面跳转流程的业务逻辑来
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/5 11:49
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/5 11:49
+ * @Github：https://github.com/leavesCZY
  */
 @Interceptor(priority = 100, name = "啥也不做的拦截器")
 class NothingInterceptor : IInterceptor {
@@ -1213,10 +1208,9 @@ ARouter 源码中和注解处理器相关的 module 有两个：
 package github.leavesc.user
 
 /**
- * 作者：leavesC
- * 时间：2020/10/5 11:49
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/5 11:49
+ * @Github：https://github.com/leavesCZY
  */
 @Interceptor(priority = 100, name = "啥也不做的拦截器")
 class NothingInterceptor : IInterceptor {

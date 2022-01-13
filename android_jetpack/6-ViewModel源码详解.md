@@ -23,10 +23,9 @@ ViewModel 基本是按照如下方式来进行初始化和使用的：
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/9/16 21:37
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/9/16 21:37
+ * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 
@@ -437,10 +436,9 @@ ViewModelProvider 提供的 Factory 接口实现类有两个：
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/9/17 14:07
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/9/17 14:07
+ * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 
@@ -624,10 +622,9 @@ public class ViewModelStore {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/9/17 14:07
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/9/17 14:07
+ * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 

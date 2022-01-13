@@ -133,7 +133,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
         android:layout_height="200dp"
         android:background="#2196F3"
         android:gravity="center"
-        android:text="https://github.com/leavesC"
+        android:text="https://github.com/leavesCZY"
         android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -950,10 +950,10 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/26 22:06
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class LayerActivity : AppCompatActivity() {
 
@@ -995,10 +995,10 @@ ConstraintSet 可以理解为 ConstraintLayout 对其所有子控件的约束规
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/26 23:02
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class ConstraintSetActivity : AppCompatActivity() {
 
@@ -1067,10 +1067,10 @@ Flow 和 Layer 都是 ConstraintHelper 的子类，这两者都属于辅助布�
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/26 23:47
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class CircularRevealHelper @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
@@ -1181,10 +1181,10 @@ ImageFilterView 直接继承于 AppCompatImageView，在其基础上扩展了很
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/27 0:17
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class ImageFilterViewActivity : AppCompatActivity() {
 
@@ -1226,7 +1226,7 @@ class ImageFilterViewActivity : AppCompatActivity() {
 
 # 十八、Demo 下载
 
-示例代码我均已放到 Github，请查收：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+示例代码我均已放到 Github，请查收：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 
 # 十九、参考资料
 

@@ -70,7 +70,7 @@ Json 数组与字符串数组
     public static void main(String[] args) {
         //Json数组 转为 字符串数组
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesCZY\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         String[] strings = gson.fromJson(jsonArray, String[].class);
         System.out.println("Json数组 转为 字符串数组: ");
         for (String string : strings) {
@@ -92,7 +92,7 @@ Json 数组 与 List
     public static void main(String[] args) {
         //Json数组 转为 List
         Gson gson = new Gson();
-        String jsonArray = "[\"https://github.com/leavesC\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
+        String jsonArray = "[\"https://github.com/leavesCZY\",\"https://www.jianshu.com/u/9df45b87cfdf\",\"Java\",\"Kotlin\",\"Git\",\"GitHub\"]";
         List<String> stringList = gson.fromJson(jsonArray, new TypeToken<List<String>>() {
         }.getType());
         System.out.println("\nJson数组 转为 List: ");
@@ -117,9 +117,9 @@ Gson 也提供了 `toJson()` 和 `fromJson()` 两个方法用于转化 Model 与
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -231,9 +231,9 @@ SerializedName 的作用是为了在序列化或反序列化时，指导 Gson �
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -280,9 +280,9 @@ public class User {
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -355,9 +355,9 @@ Expose 注解的注解值声明情况有四种
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -441,9 +441,9 @@ public @interface Until {
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -509,9 +509,9 @@ public class User {
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class ModifierSample {
 
@@ -548,9 +548,9 @@ GsonBuilder 类包含 `setExclusionStrategies(ExclusionStrategy... strategies)`�
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class Strategies {
 
@@ -625,9 +625,9 @@ addDeserializationExclusionStrategy(ExclusionStrategy strategy);
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class Strategies {
 
@@ -677,9 +677,9 @@ Gson 也可以对时间值进行格式化
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class Strategies {
 
@@ -741,9 +741,9 @@ public abstract T read(JsonReader var1) throws IOException;
 
 ```java
 /**
- * 作者：chenZY
- * 时间：2018/3/17 18:32
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/3/17 18:32
+ * @Github：https://github.com/leavesCZY
  */
 public class User {
 
@@ -935,4 +935,4 @@ TypeAdapterFactory 是用于创建 TypeAdapter 的工厂类，通过参数 TypeT
 
 这一篇文章好像写得太长了一点？Gson 的知识点介绍到这里也差不多了，以后如果还发现新内容的话我会继续补充，现在就先这样啦
 
-我的 GitHub： [leavesC](https://github.com/leavesC)  -> https://github.com/leavesC
+我的 GitHub： [leavesC](https://github.com/leavesCZY)  -> https://github.com/leavesCZY

@@ -256,7 +256,7 @@ git checkout -- one.txt
 ## 六、远程仓库
 
 这里来尝试将本地仓库提交到GitHub上，需要用户先有一个GitHub账号
-我的GitHub账号是：https://github.com/leavesC
+我的GitHub账号是：https://github.com/leavesCZY
 现在也是啥都没有，之后会逐渐把自己之前做的东西上传上去的
 或者是可以看我的CSDN博客：http://blog.csdn.net/new_one_object
 

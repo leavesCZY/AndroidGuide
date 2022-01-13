@@ -6,7 +6,7 @@ flutter 中的自定义 Widget 算作是 flutter 体系中比较高阶的知识�
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6ecd9c54e5e049708a4b990bca004998~tplv-k3u1fbpfcp-zoom-1.image)
 
-源代码点击这里下载：https://github.com/leavesC/flutter_do
+源代码点击这里下载：https://github.com/leavesCZY/flutter_do
 
 先来总结下该 WaveLoadingWidget 的特点，这样才能归纳出实现该效果所需的步骤
 
@@ -394,6 +394,6 @@ class WaveLoadingWidget extends StatefulWidget {
 
 
 
-源代码点击这里下载：https://github.com/leavesC/flutter_do
+源代码点击这里下载：https://github.com/leavesCZY/flutter_do
 
 此外该项目也提供了 N 多个常用 Widget 和自定义 Widget 的使用及实现方法，涵盖了系统 Widget 、布局容器、动画、高阶功能、自定义 Widget 等内容，欢迎 star

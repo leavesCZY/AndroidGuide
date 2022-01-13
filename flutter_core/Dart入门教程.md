@@ -100,7 +100,7 @@ const 变量代表的是编译时常量，例如字面量就是一种编译时�
 
 ```dart
 void main() {
-  const URL = "https://github.com/leavesC/AndroidGuide";
+  const URL = "https://github.com/leavesCZY/AndroidGuide";
   var booleValue = true;
   final name = getName(booleValue);
   print(name);
@@ -239,8 +239,8 @@ map 是一个关联键和值的数据类型，键和值可以是任何类型的�
 ```dart
 void main() {
   var mapValue = {"name": "leavesC", "age": 24};
-  mapValue["url"] = "https://github.com/leavesC";
-  print(mapValue); //{name: leavesC, age: 24, url: https://github.com/leavesC}
+  mapValue["url"] = "https://github.com/leavesCZY";
+  print(mapValue); //{name: leavesC, age: 24, url: https://github.com/leavesCZY}
   print(mapValue.length); //3
   print(mapValue.runtimeType); //_InternalLinkedHashMap<String, Object>
 }

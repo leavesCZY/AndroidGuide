@@ -62,10 +62,10 @@ MediatorLiveData 是 MutableLiveData 的子类，源码也比较简单，总的�
 
 ```kotlin
     /**
-     * @Author: leavesC
+     * @Author: leavesCZY
      * @Date: 2021/03/24 18:04
      * @Desc:
-     * @Github：https://github.com/leavesC
+     * @Github：https://github.com/leavesCZY
      */
     private val nameLiveData = MutableLiveData<String>()
 
@@ -215,10 +215,10 @@ Transformations 类是 `lifecycle-livedata` 这个依赖库提供的一个工具
 
 ```kotlin
     /**
-     * @Author: leavesC
+     * @Author: leavesCZY
      * @Date: 2021/03/24 18:04
      * @Desc:
-     * @Github：https://github.com/leavesC
+     * @Github：https://github.com/leavesCZY
      */
     private val nameLiveData = MutableLiveData<String>()
 

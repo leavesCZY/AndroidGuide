@@ -555,7 +555,7 @@ DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActi
 
 # 九、一个 Demo
 
-这里我也提供一个自定义 Window 的 Demo，实现了基本的拖拽移动和点击事件，代码点击这里：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+这里我也提供一个自定义 Window 的 Demo，实现了基本的拖拽移动和点击事件，代码点击这里：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8222b030014d4aa99f39e673f60e9ea7~tplv-k3u1fbpfcp-zoom-1.image)
 

@@ -22,10 +22,10 @@ Handler 在整个 Android 开发体系中占据着很重要的地位，是一种
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public final class Message {
     //唯一标识
@@ -50,10 +50,10 @@ public final class Message {
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public final class Message {
     //唯一标识
@@ -71,10 +71,10 @@ MessageQueue 需要提供一个 `enqueueMessage`方法用来向链表插入 Mess
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public class MessageQueue {
 
@@ -201,10 +201,10 @@ public class MessageQueue {
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public final class Message {
     //唯一标识
@@ -226,10 +226,10 @@ Handler 至少需要包含几个方法：用于发送 Message 和 Runnable 的�
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public class Handler {
 
@@ -306,7 +306,7 @@ public class Handler {
         };
         Message messageA = new Message();
         messageA.what = 1;
-        messageA.obj = "https://github.com/leavesC";
+        messageA.obj = "https://github.com/leavesCZY";
         Message messageB = new Message();
         messageB.what = 2;
         messageB.obj = new ArrayList<String>();
@@ -326,10 +326,10 @@ public class Handler {
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/12/1 13:31
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 final class Looper {
 
@@ -432,7 +432,7 @@ Looper 还需要有一个用于循环从 MessageQueue 获取消息并处理的�
                 };
                 Message messageA = new Message();
                 messageA.what = 1;
-                messageA.obj = "https://github.com/leavesC";
+                messageA.obj = "https://github.com/leavesCZY";
                 Message messageB = new Message();
                 messageB.what = 2;
                 messageB.obj = new ArrayList<String>();

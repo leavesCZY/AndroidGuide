@@ -8,10 +8,9 @@
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/03/14 11:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/03/14 11:05
+ * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 

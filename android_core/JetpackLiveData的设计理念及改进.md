@@ -234,7 +234,7 @@ LiveData 内部包含一个 `mVersion` 变量用来标记**当前值的版本，
 
 # 七、引入依赖
 
-EventLiveData 已托管到 jitpack，可以直接远程依赖。GitHub 地址：https://github.com/leavesC/EventLiveData
+EventLiveData 已托管到 jitpack，可以直接远程依赖。GitHub 地址：https://github.com/leavesCZY/EventLiveData
 
 ```groovy
 allprojects {

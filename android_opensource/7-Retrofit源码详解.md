@@ -46,10 +46,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/13 0:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/13 0:05
+ * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
 
@@ -102,10 +101,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/13 0:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/13 0:05
+ * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
 
@@ -152,10 +150,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/13 0:05
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/13 0:05
+ * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
 
@@ -1122,10 +1119,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/19 22:00
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/19 22:00
+ * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
 
@@ -1596,10 +1592,9 @@ final class DefaultCallAdapterFactory extends CallAdapter.Factory {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/20 22:53
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/20 22:53
+ * @Github：https://github.com/leavesCZY
  */
 data class UserBean(val userName: String, val userAge: Long)
 

@@ -805,10 +805,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/01 12:17
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/01 12:17
+ * @Github：https://github.com/leavesCZY
  */
 class MainActivity : AppCompatActivity() {
 
@@ -927,10 +926,9 @@ EventBus.builder().addIndex(MyEventBusIndex()).installDefaultEventBus()
 
 ```java
 /**
- * 作者：leavesC
- * 时间：2020/10/01 12:49
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/01 12:49
+ * @Github：https://github.com/leavesCZY
  */
 open class BaseActivity : AppCompatActivity() {
 

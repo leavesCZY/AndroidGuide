@@ -24,10 +24,9 @@
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/24 12:45
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/24 12:45
+ * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
 
@@ -221,10 +220,9 @@ LiveDataCallAdapter 的逻辑也比较简单，如果**网络请求成功且状�
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/22 21:06
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/22 21:06
+ * @Github：https://github.com/leavesCZY
  */
 class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdapter<R, LiveData<R>> {
 
@@ -286,10 +284,9 @@ object RetrofitManager {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/24 12:39
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/24 12:39
+ * @Github：https://github.com/leavesCZY
  */
 @Router(EasyRouterPath.PATH_RETROFIT)
 class LiveDataCallAdapterActivity : AppCompatActivity() {
@@ -317,4 +314,4 @@ class LiveDataCallAdapterActivity : AppCompatActivity() {
 
 # 三、GitHub
 
-LiveDataCallAdapter 的实现逻辑挺简单的，在使用上也很简单。本篇文章也算作是在了解了 Retrofit 源码后所做的一个实战 😁😁 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+LiveDataCallAdapter 的实现逻辑挺简单的，在使用上也很简单。本篇文章也算作是在了解了 Retrofit 源码后所做的一个实战 😁😁 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

@@ -11,9 +11,9 @@ import android.os.Looper;
 import android.os.Message;
 
 /**
- * 作者：leavesc
- * 时间：2018/6/22 13:39
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/6/22 13:39
+ * @Github：https://github.com/leavesCZY
  */
 public abstract class IntentService extends Service {
 

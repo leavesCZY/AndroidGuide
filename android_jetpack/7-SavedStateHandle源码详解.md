@@ -46,10 +46,9 @@ SavedStateHandle 的引入使得开发者无需直接使用 `onSaveInstanceState
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/9/19 15:21
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/9/19 15:21
+ * @Github：https://github.com/leavesCZY
  */
 class SavedStateViewModel(savedStateHandle: SavedStateHandle) : ViewModel() {
 

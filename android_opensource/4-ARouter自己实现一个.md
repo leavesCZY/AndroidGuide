@@ -111,10 +111,10 @@ public class EasyRouterRouterTestLoader {
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/6 1:08
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 @MustBeDocumented
 @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
@@ -130,10 +130,10 @@ data class RouterBean(val targetClass: Class<*>, val path: String, val group: St
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/5 22:17
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class EasyRouterProcessor : AbstractProcessor() {
 
@@ -264,10 +264,10 @@ EasyRouter 这个单例对象即最终提供给外部的调用入口，总代码
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/10/5 23:45
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 object EasyRouter {
 
@@ -321,4 +321,4 @@ object EasyRouter {
 
 # 四、GitHub
 
-由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyRouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😂😂 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+由于只是为了加深对 ARouter 的实现原理的理解，所以才来尝试实现 EasyRouter，也不打算实现得多么功能齐全，但对于一些读者来说我觉得还是有参考价值的😂😂 这里也提供上述代码的 GitHub 链接：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

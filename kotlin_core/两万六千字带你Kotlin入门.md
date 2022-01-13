@@ -250,7 +250,7 @@ kotlin 中的数组是带有类型参数的类，其元素类型被指定为相�
 
 ```kotlin
     //包含给定元素的字符串数组
-    val array1 = arrayOf("leavesC", "叶", "https://github.com/leavesC")
+    val array1 = arrayOf("leavesC", "叶", "https://github.com/leavesCZY")
 
     array1[0] = "leavesC"
     println(array1[1])
@@ -2008,10 +2008,9 @@ interface Clickable {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/6 21:28
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/6 21:28
+ * @Github：https://github.com/leavesCZY
  */
 interface SelfRunnable {
 
@@ -2042,10 +2041,9 @@ fun main() {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/10/6 21:28
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/10/6 21:28
+ * @Github：https://github.com/leavesCZY
  */
 fun interface SelfRunnable {
 
@@ -4233,7 +4231,7 @@ class Example {
 fun main() {
     val student = Student(
         mapOf(
-            "name" to "leavesC",
+            "name" to "leavesCZY",
             "age" to 24
         )
     )

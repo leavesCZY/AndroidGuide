@@ -48,10 +48,10 @@ fun Canvas(modifier: Modifier, onDraw: DrawScope.() -> Unit) =
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2021/8/14 16:24
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 @Preview(showBackground = true, widthDp = 160, heightDp = 160)
 @Composable
@@ -416,5 +416,5 @@ private fun drawText(
 
 # 五、结尾
 
-最后当然也少不了 WaveLoadingView 的完整示例代码了，有需要的同学点击这里下载：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+最后当然也少不了 WaveLoadingView 的完整示例代码了，有需要的同学点击这里下载：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 

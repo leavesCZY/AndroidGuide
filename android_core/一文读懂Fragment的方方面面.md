@@ -89,10 +89,10 @@ Fragment 一般情况下都需要和 FragmentActivity 组合使用，而我们�
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2021/9/12 17:16
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class MyFragmentActivity : AppCompatActivity() {
 
@@ -1159,10 +1159,10 @@ Fragment 还有一种特殊的用法。我们平时是通过 `requestPermissions
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2021/9/5 17:10
  * @Desc:
- * @Github：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class RequestPermissionsFragment : Fragment() {
 
@@ -1243,4 +1243,4 @@ class RequestPermissionsFragment : Fragment() {
 
 自我感觉本篇文章已经讲清楚了 Fragment 大部分的知识点了，陆陆续续写了一万多字，有基础知识也有新知识，也许也包含了一些你还没了解过的知识点，看完之后你有觉得 Fragment 如今真的在变得越来越好用了吗 🤣🤣 有遗漏的知识点欢迎补充
 
-最后当然也少不了本文的全部示例代码了：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+最后当然也少不了本文的全部示例代码了：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

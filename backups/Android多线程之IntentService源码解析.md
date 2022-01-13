@@ -1,12 +1,12 @@
 > 本系列文章会陆续对 Android 的多线程机制进行整体介绍，帮助读者了解 Android 环境下如何实现多线程编程，也算是对自己所学内容的一个总结归纳
 >
-> 项目主页：https://github.com/leavesC/AndroidGuide
+> 项目主页：https://github.com/leavesCZY/AndroidGuide
 >
 > 想要了解 IntentService 的工作原理需要先对 Android 系统中以 Handler、Looper、MessageQueue 组成的异步消息处理机制以及 HandlerThread 有所了解，如果你还没有这方面的知识，可以先看我写的另外两篇文章：
 >
-> [Handler、Looper与MessageQueue源码解析](https://github.com/leavesC/AndroidGuide/blob/master/android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
+> [Handler、Looper与MessageQueue源码解析](https://github.com/leavesCZY/AndroidGuide/blob/master/android_multithreading/Android多线程之Handler、Looper与MessageQueue源码解析.md)
 >
-> [Android 多线程之 HandlerThread 源码解析](https://github.com/leavesC/AndroidGuide/blob/master/android_multithreading/Android多线程之HandlerThread源码解析.md)
+> [Android 多线程之 HandlerThread 源码解析](https://github.com/leavesCZY/AndroidGuide/blob/master/android_multithreading/Android多线程之HandlerThread源码解析.md)
 
 在介绍 Service 时我们经常会说 Service 适合于完成一些在后台工作的任务，例如播放音乐、下载文件等，但 Service 默认是运行于 UI 线程的，如果想要依靠其来完成一些耗时任务，就需要自己来建立子线程，这相对比较繁琐，所以官方也为开发者提供了 IntentService 来解决这一问题
 
@@ -176,9 +176,9 @@ import android.os.Looper;
 import android.os.Message;
 
 /**
- * 作者：leavesc
- * 时间：2018/6/22 13:39
- * 描述：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2018/6/22 13:39
+ * @Github：https://github.com/leavesCZY
  */
 public abstract class IntentService extends Service {
 

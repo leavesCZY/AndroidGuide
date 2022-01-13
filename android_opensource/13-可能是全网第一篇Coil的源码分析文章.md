@@ -1389,9 +1389,9 @@ Coil 默认提供了以下几个 Transformation 实现类
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/22 11:32
- * @GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  * @Desc: 为图片添加水印
  */
 class WatermarkTransformation(
@@ -1447,9 +1447,9 @@ Android 的 Paint 原生就支持为 Bitmap 添加一个蒙层，只需要使用
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/22 11:17
- * @GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  * @Desc: 添加蒙层
  */
 class ColorFilterTransformation(
@@ -1555,9 +1555,9 @@ object Coil {
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/22 13:06
- * @GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  * @Desc:
  */
 object CoilHolder {
@@ -1709,9 +1709,9 @@ internal class EngineInterceptor(
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/22 13:52
- * @GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  * @Desc:
  */
 class VolleyFetcher(private val application: Application) : Fetcher<Uri> {
@@ -1784,4 +1784,4 @@ class VolleyFetcher(private val application: Application) : Fetcher<Uri> {
 
 # 十三、GitHub
 
-上述的所有示例代码我都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+上述的所有示例代码我都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)

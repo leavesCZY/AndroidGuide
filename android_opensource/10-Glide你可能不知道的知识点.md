@@ -28,10 +28,9 @@
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/5 23:16
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/5 23:16
+ * @Github：https://github.com/leavesCZY
  */
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -186,10 +185,9 @@ dependencies {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/5 23:16
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/5 23:16
+ * @Github：https://github.com/leavesCZY
  */
 class OkHttpStreamFetcher(private val client: Call.Factory, private val url: GlideUrl) :
     DataFetcher<InputStream>, Callback {
@@ -265,10 +263,9 @@ class OkHttpStreamFetcher(private val client: Call.Factory, private val url: Gli
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/5 23:16
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/5 23:16
+ * @Github：https://github.com/leavesCZY
  */
 class OkHttpUrlLoader(private val client: Call.Factory) : ModelLoader<GlideUrl, InputStream> {
 
@@ -307,10 +304,9 @@ class OkHttpUrlLoader(private val client: Call.Factory) : ModelLoader<GlideUrl, 
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/5 23:16
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/5 23:16
+ * @Github：https://github.com/leavesCZY
  */
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
@@ -342,10 +338,9 @@ class MyAppGlideModule : AppGlideModule() {
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/6 21:58
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/6 21:58
+ * @Github：https://github.com/leavesCZY
  */
 internal class ProgressResponseBody constructor(
     private val imageUrl: String,
@@ -444,10 +439,9 @@ internal class ProgressResponseBody constructor(
 
 ```kotlin
 /**
- * 作者：leavesC
- * 时间：2020/11/6 22:08
- * 描述：
- * GitHub：https://github.com/leavesC
+ * @Author: leavesCZY
+ * @Date: 2020/11/6 22:08
+ * @Github：https://github.com/leavesCZY
  */
 class ProgressInterceptor : Interceptor {
 
@@ -479,10 +473,10 @@ https://images.pexels.com/photos/1425174/pexels-photo-1425174.jpeg?auto=compress
 
 ```java
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/6 15:13
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 public class GlideUrl implements Key {
     
@@ -509,10 +503,10 @@ public class GlideUrl implements Key {
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/6 15:13
  * @Desc:
- * GitHub：https://github.com/leavesC
+ * @Github：https://github.com/leavesCZY
  */
 class TokenGlideUrl(private val selfUrl: String) : GlideUrl(selfUrl) {
 
@@ -653,7 +647,7 @@ DefaultConnectivityMonitor 的逻辑比较简单，不过多赘述。我觉得�
 
 ```kotlin
 /**
- * @Author: leavesC
+ * @Author: leavesCZY
  * @Date: 2020/11/7 14:40
  * @Desc:
  */
@@ -733,4 +727,4 @@ internal class DefaultConnectivityMonitor(
 
 # 七、GitHub
 
-关于 Glide 的知识点扩展也介绍完了，上述的所有示例代码我也都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesC/AndroidOpenSourceDemo)
+关于 Glide 的知识点扩展也介绍完了，上述的所有示例代码我也都放到 GitHub 了，欢迎 star：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
