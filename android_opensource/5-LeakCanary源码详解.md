@@ -4,22 +4,6 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-系列文章导航：
-
-- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
-- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
-- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
-- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
-- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
-- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
-- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
-- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
-- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
-- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
-- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
-- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 [LeakCanary](https://github.com/square/leakcanary/) 是由 [Square](https://github.com/square) 公司开源的用于 Android 的内存泄漏检测工具，可以帮助开发者发现内存泄露情况并且找出泄露源头，有助于减少 `OutOfMemoryError` 情况的发生。在目前的应用开发中也算作是性能优化的一个重要实现途径，很多面试官在考察性能优化时都会问到 LeakCanary 的实现原理
 
 本文就基于其当前（2020/10/06）的最新一次提交来进行源码分析，具体的 Git 版本节点是：**9f62126e**，来了解 LeakCanary 的整体运行流程和实现原理 😂😂

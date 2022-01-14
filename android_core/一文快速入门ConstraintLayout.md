@@ -32,7 +32,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 - `layout_constraintEnd_toEndOf`
 - `layout_constraintBaseline_toBaselineOf`
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/2552605-fcbaeb45150186d9.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a66067a915cf4f88869e10eb4bf8fbb7~tplv-k3u1fbpfcp-zoom-1.image)
 
 例如，根据约束的不同，控件在不同的方向上进行对齐
 
@@ -97,7 +97,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224233451.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d0a8e2a7fdc14e73b9229a5bfb76f2d4~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 二、约束力的强度
 
@@ -158,7 +158,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226133740.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f59660e7f97c43e69bc53757eee93819~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 三、宽高比
 
@@ -204,7 +204,7 @@ ConstraintLayout 最基本的属性包含以下几个，即 `layout_constraintXX
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226134656.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d6a42850140f424283c51fbfdf48481b~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 四、控件之间的宽高占比
 
@@ -286,7 +286,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226140239.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c84f96f08de24153a344fd376525a6c4~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 五、Dimensions
 
@@ -330,7 +330,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225003233.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/12db0e5e023a422ba2caa3c98f8c4836~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 六、Visibility
 
@@ -374,11 +374,11 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224231209.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/664894bb01c7434abcc7e06a52948630~tplv-k3u1fbpfcp-zoom-1.image)
 
 而如果将黄色方块的 visibility 属性设置为 gone，那么红色方块的位置会发生变化。可以理解为黄色方块缩小为一个不可见的小点，位于其原先位置的中间，而红色方块则改为依照该点来进行定位
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224231313.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/38ef1220662d4e48aac3e13204486ab3~tplv-k3u1fbpfcp-zoom-1.image)
 
 此外，红色方块也可以依靠以下几个属性来控制当黄色方块为 Gone 时红色方块的 margin 值，这类属性只有在黄色方块的 visibility 属性设置为 gone 时才会生效
 
@@ -397,7 +397,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 2. app:layout_constraintCircleAngle           - 对齐的角度
 3. app:layout_constraintCircleRadius          - 与目标 View 之间的距离（顺时针方向，0~360度）
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/circle1.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/13a0d5b1164348b28232f0f1d71287d3~tplv-k3u1fbpfcp-zoom-1.image)
 
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
@@ -439,7 +439,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225002744.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4a457c3aae054a2a8b080bb7ec75688d~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 八、Guideline
 
@@ -490,7 +490,7 @@ ConstraintLayout 也可以像 LinearLayout 一样为子控件设置 `layout_weig
 
 设置横向指示线距离顶部 100dp，黄色方块根据该指示线来设定顶部位置。竖向指示线设置其横向距离百分比为 0.5，所以黄色方块的左侧会位于屏幕的中间位置
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201224231530.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1f0c0ee3e75c4bf5a6455d2b2e2d8e78~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 九、Barrier
 
@@ -557,11 +557,11 @@ Barrier 可以使用的属性有：
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226151844.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c698f1adf0644004b72b044cc0812beb~tplv-k3u1fbpfcp-zoom-1.image)
 
 布局文件中约束了红色方块必须是一直处于**蓝色方块+绿色方块**这个整体的右侧，此时还看不出来 Barrier 的作用，但当文本内容增多时，就可以看出来了。不管是蓝色方块还是绿色方块的宽度变大，红色方块都会自动向右侧移动
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226152135.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1955f02165f74691af35d0878f9b2050~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十、Group
 
@@ -656,7 +656,7 @@ Placeholder （占位符）用于和一个视图关联起来，通过 `setConten
         placeholder.setContentId(R.id.iv_target)
 ```
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/setContentId.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a1f97f54c0b1437b8d05ed83059fbaf6~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十二、Chains
 
@@ -710,7 +710,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
 </androidx.constraintlayout.widget.ConstraintLayout>
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225001232.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8ee9dab7873f4ff896678bea2ae4257a~tplv-k3u1fbpfcp-zoom-1.image)
 
 链条分为**水平链条**和**竖直链条**两种，分别用 `layout_constraintHorizontal_chainStyle` 和 `layout_constraintVertical_chainStyle` 两个属性来设置，属性值有以下三种：
 
@@ -718,7 +718,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
 - spread_inside
 - packed
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/2552605-dd99a16344da8c4a.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/638fe275a53c40d090c5a9dd470cc54e~tplv-k3u1fbpfcp-zoom-1.image)
 
 直接看效果图才容易理解各种效果
 
@@ -729,7 +729,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
  app:layout_constraintHorizontal_chainStyle="spread"
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225001521.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ad5562837e0a4551972de1a94034c151~tplv-k3u1fbpfcp-zoom-1.image)
 
 当参数值为 spread 以及控件宽度为 0dp 时
 
@@ -738,7 +738,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
  app:layout_constraintHorizontal_chainStyle="spread"
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225001830.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ea70fe30e32b4728858ada8a0725b8fd~tplv-k3u1fbpfcp-zoom-1.image)
 
 当参数值为 spread_inside 以及控件宽度为 wrap_content 时
 
@@ -747,7 +747,7 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
  app:layout_constraintHorizontal_chainStyle="spread_inside"
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225002028.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a8bd8c54ed434caf98a239e6edf58b9d~tplv-k3u1fbpfcp-zoom-1.image)
 
 当参数值为 packed 以及控件宽度为 wrap_content 时
 
@@ -756,13 +756,13 @@ Chain 比较难描述，它是一种特殊的约束形式，多个控件通过�
  app:layout_constraintHorizontal_chainStyle="packed"
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201225001927.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b481a25ccdae4ee2837e3aea61ea5d0a~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十三、Flow
 
 [Flow](https://developer.android.google.cn/reference/androidx/constraintlayout/helper/widget/Flow?hl=en) 是一种新的虚拟布局，它专门用来构建链式排版效果，当出现空间不足的情况时能够自动换行，甚至是自动延展到屏幕的另一区域。当需要对多个元素进行链式布局，但不确定在运行时布局空间的实际大小是多少时 Flow 对你来说就非常有用。你可以使用 Flow 来实现让布局随着应用屏幕尺寸的变化 (比如设备发生旋转后出现的屏幕宽度变化) 而动态地进行自适应。此外，Flow 是一种虚拟布局，并不会作为视图添加到视图层级结构中，而是仅仅引用其它视图来辅助它们在布局系统中完成各自的布局功能
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/2d4b3159aeec49e6a40d07f123efd095_tplv-k3u1fbpfcp-zoom-1.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0dbd005661204baab6d67d9a37679e7d~tplv-k3u1fbpfcp-zoom-1.image)
 
 
 
@@ -772,7 +772,7 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 - **chain** – 当出现溢出时，溢出的内容会自动换行，以新的一条链的方式进行布局
 - **align** – 同 chain 类似，但是不以行而是以列的方式进行布局
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/8ab1b82a76714c20842697309f260693_tplv-k3u1fbpfcp-zoom-1.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1b15efcbaf9c4613ab72e037baa11b72~tplv-k3u1fbpfcp-zoom-1.image)
 
 例如，你可以在布局文件中引入五个 CardView，每个 CardView 的方向约束均交由 Flow 来控制，Flow 默认是以水平方向来展示，可以主动设置 `android:orientation="vertical"`改为竖直方向
 
@@ -824,7 +824,7 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 
 此模式下控件不会自动换行，且由于屏幕宽度无法完整展示，所以只会展示一部分内容
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226163218.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/90bf76c9ceb340a29c7060c930cfb5c1~tplv-k3u1fbpfcp-zoom-1.image)
 
 该模式下可以同时使用的配置项有：
 
@@ -841,7 +841,7 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 
 此模式下控件会自动换行，且不足一行的内容会居中显示
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226170636.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/15b6191f80dd49a7ae6e14583a3df355~tplv-k3u1fbpfcp-zoom-1.image)
 
 此模式下可以同时使用的配置项有：
 
@@ -873,13 +873,13 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 
 由于 `flow_firstHorizontalStyle` 值为 `spread_inside`，所以首行会往两侧靠边。由于 `flow_lastHorizontalBias`值为 1，所以最后一行也会直接往右靠拢
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226171313.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3273a92cf6ba43b896a030914cc9fa48~tplv-k3u1fbpfcp-zoom-1.image)
 
 ## aligned
 
 此模式和 chain 类似，区别在于不足一行的内容会靠边对齐显示
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/QQ%E6%88%AA%E5%9B%BE20201226171558.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0016cfa93f594a95bad5dc8ea43a744f~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十四、Layer
 
@@ -981,7 +981,7 @@ class LayerActivity : AppCompatActivity() {
 }
 ```
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/layer.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/6db7a6d8cdb648028b3178a21b57e833~tplv-k3u1fbpfcp-zoom-1.image)
 
 此外，Layer 比较有用的一个点就是可以用于设置背景色，以前如果我们想要对某块区域设置一个背景色的话往往需要多嵌套一层，而如果使用 Layer 的话则可以直接设置，不需要进行嵌套
 
@@ -1053,7 +1053,7 @@ class ConstraintSetActivity : AppCompatActivity() {
 }
 ```
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/ConstraintSetsassa.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/df94a80a045747569cd1ac8a75ec0a33~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十六、ConstraintHelper
 
@@ -1061,7 +1061,7 @@ Flow 和 Layer 都是 ConstraintHelper 的子类，这两者都属于辅助布�
 
 例如，我们可以来实现这么一种逐步展开的动画效果
 
-![](https://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/ConstraintHelperSAFSAFSAFS.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b9012626344d4bc8abcaccc825c5abf7~tplv-k3u1fbpfcp-zoom-1.image)
 
 继承 ConstraintHelper，在 `updatePostLayout`方法中遍历其引用的所有控件，然后对每个控件应用 CircularReveal 动画。`updatePostLayout`方法会在执行 onLayout 之前被调用
 
@@ -1222,7 +1222,7 @@ class ImageFilterViewActivity : AppCompatActivity() {
 }
 ```
 
-![](http://testczy.oss-cn-beijing.aliyuncs.com/%E6%96%87%E7%AB%A0/ConstraintLayout/ImageFilterViewsafafsa.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4d118fd497624c29913dd0905b2e1e3d~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 十八、Demo 下载
 

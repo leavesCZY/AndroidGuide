@@ -4,22 +4,6 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-系列文章导航：
-
-- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
-- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
-- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
-- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
-- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
-- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
-- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
-- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
-- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
-- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
-- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
-- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 上一篇文章中对 ARouter 的源码进行了一次全面解析，原理懂得了，那么就也需要进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理、懂得如何改造甚至自己实现。本文就来自己动手实现一个路由框架，自己实现的目的不在于做到和 ARouter 一样功能完善，而只是一个练手项目，目的是在于加深对 ARouter 的原理理解，所以自己的自定义实现就叫 EasyRouter 吧 😂😂
 
 EasyRouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需要指定一个字符串 path 即可：
@@ -30,7 +14,7 @@ EasyRouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需�
 
 最终实现的效果：
 
-![](https://s1.ax1x.com/2020/10/06/0tcEPP.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aba28a3aebf24575a181d2b9d116a02f~tplv-k3u1fbpfcp-zoom-1.image)
 
 EasyRouter 的实现及使用一共涉及以下几个模块：
 

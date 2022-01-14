@@ -12,7 +12,7 @@ Activity 的启动模式本身是一个挺难理解的知识点，大多数开�
 
 任务栈代表的是一个整体，本身包含了多个 Activity，当任务栈中的所有 Activity 都被弹出后，任务栈也就随之就被回收了。就像下图所示，三个 Activity 通过相继启动组成了一个任务栈，Activity 1 是整个任务栈的根 Activity，当用户不断按返回键，Activity 就会依次被弹出
 
-![](https://z3.ax1x.com/2021/04/16/cWkBwD.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/4f2312098b3d4fb28c3bbd272beb85bb~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 2、返回栈
 
@@ -79,7 +79,7 @@ launchMode 一共包含以下四种属性值：
 
 采用 `singleTask` 启动的 Activity 添加到返回栈的过程就如下图所示。一开始返回栈中只包含 Activity 1 和 Activity 2 组成的任务栈，当 Activity 2 启动了处于后台的 Activity Y 时，Activity Y 和 Activity X 组成的任务栈就会被转到前台，覆盖住当前任务栈。最终返回栈中就变成了四个 Activity
 
-![](https://z3.ax1x.com/2021/04/16/cWhbjK.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/3afd90bba8ee4b1187de27622f25cead~tplv-k3u1fbpfcp-zoom-1.image)
 
 再来写个 Demo 来验证下这四种 launchMode 的效果
 

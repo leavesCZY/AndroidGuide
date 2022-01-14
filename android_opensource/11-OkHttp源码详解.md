@@ -45,22 +45,6 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-系列文章导航：
-
-- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
-- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
-- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
-- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
-- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
-- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
-- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
-- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
-- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
-- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
-- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
-- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 本文基于当前 OkHttp 的最新版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
 
 ```groovy
@@ -871,7 +855,7 @@ Interceptor 和 NetworkInterceptor 分别被称为**应用拦截器**和**网络
 
 借用官方的一张图片来表示
 
-![](https://s3.ax1x.com/2020/11/14/DCQKbV.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/46eebdde38824c5491cdb54450dadc7e~tplv-k3u1fbpfcp-zoom-1.image)
 
 这里可以根据 [square](https://github.com/square/okhttp/blob/master/samples/guide/src/main/java/okhttp3/recipes/Progress.java) 官方提供的一个例子，来实现在下载一张 10 MB 图片的时候通过拦截器对下载进度进行监听，并同时把图片下载到系统的桌面
 
@@ -1005,4 +989,3 @@ completed
 OkHttp 的运行效率很高，但在使用上还是比较原始，一般我们还是需要在 OkHttp 之上进行一层封装，Retrofit 就是一个对 OkHttp 的优秀封装库，对 Retrofit 的源码讲解可以看我的这篇文章：[三方库源码笔记（7）-Retrofit 源码详解](https://juejin.im/post/6886121327845965838)
 
 下篇文章就来写关于 OkHttp 拦截器的实战内容吧
-

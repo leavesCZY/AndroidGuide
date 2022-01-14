@@ -4,22 +4,6 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-系列文章导航：
-
-- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
-- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
-- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
-- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
-- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
-- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
-- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
-- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
-- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
-- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
-- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
-- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 # 一、利用 AppGlideModule 实现默认配置
 
 在大多数情况下 Glide 的默认配置就已经能够满足我们的需求了，像缓存池大小，磁盘缓存策略等都不需要我们主动去设置，但 Glide 也提供了 AppGlideModule 让开发者可以去实现自定义配置。对于一个 App 来说，在加载图片的时候一般都是使用同一张 placeholder，如果每次加载图片时都需要来手动设置一遍的话就显得很多余了，此时就可以通过 AppGlideModule 来设置默认的 placeholder
@@ -459,7 +443,7 @@ class ProgressInterceptor : Interceptor {
 
 最终实现的效果：
 
-![](https://s1.ax1x.com/2020/11/07/B44aAU.gif)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dc45cc83a1f745af92317d2d735a9ad6~tplv-k3u1fbpfcp-zoom-1.image)
 
 # 四、自定义磁盘缓存  key
 

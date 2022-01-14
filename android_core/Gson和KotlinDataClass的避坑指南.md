@@ -66,13 +66,13 @@ Exception in thread "main" java.lang.NullPointerException: Parameter specified a
 - 通过 `constructor.construct()`得到一个 UserBean 对象，此时该对象内部的属性值都为默认值
 - 遍历 JsonReader，根据 Json 内部的 key 值和 UserBean 包含的字段进行对应，对应得上的话就进行赋值
 
-![](https://s3.ax1x.com/2020/12/20/rdlMrT.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8b74fe9e1124f7ca21525923749d3b7~tplv-k3u1fbpfcp-zoom-1.image)
 
 第二步很好理解，那第一步又是具体怎么实现的？再断点看下`constructor.construct()`是如何实现的
 
 constructor 的取值途径可以在 ConstructorConstructor 这个类中看到
 
-![](https://s3.ax1x.com/2020/12/20/rdGCWj.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/2205a73a877b46b9a293623f4c4ab71a~tplv-k3u1fbpfcp-zoom-1.image)
 
 分为三种可能：
 
@@ -133,7 +133,7 @@ Unsafe 提供了一个非常规实例化对象的方法：`allocateInstance`，�
 
 Gson 的 UnsafeAllocator 类中就通过 `allocateInstance` 方法来完成了 UserBean 的初始化，因此也不会调用到其构造函数
 
-![](https://s3.ax1x.com/2020/12/20/rdtJ00.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/dfe8cc0d04ac4e3d8da970a7420867a1~tplv-k3u1fbpfcp-zoom-1.image)
 
 做下总结：
 

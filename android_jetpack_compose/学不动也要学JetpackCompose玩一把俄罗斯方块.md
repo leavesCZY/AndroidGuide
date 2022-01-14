@@ -653,6 +653,4 @@ private fun TetrisState.finalize(): TetrisState {
 
 游戏的大体实现思路就如上所述，表达能力所限，有些地方没法讲得太清楚，实现细节欢迎查阅源码了解 😂😂
 
-Github 地址：https://github.com/leavesCZY/compose-tetris
-
-apk 下载体验：https://github.com/leavesCZY/compose-tetris/releases/tag/0.0.1
+Github 地址：https://github.com/leavesCZY/compose_tetris

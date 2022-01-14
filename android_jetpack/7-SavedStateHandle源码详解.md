@@ -28,7 +28,7 @@ implementation "androidx.savedstate:savedstate:1.1.0"
 
 Google 官方也对这两种情况进行了对比：
 
-![](https://s1.ax1x.com/2020/09/19/w5Xbuj.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/00b6ddc7920f4a84bbf2c5ec0e0175e8~tplv-k3u1fbpfcp-zoom-1.image)
 
 对于第二种情况，数据的保存和恢复流程被限制在了 Activity 的特定方法里，我们无法直接在 ViewModel 中决定哪些数据需要被保留，也无法直接拿到恢复后的数据，使得整个重建流程和 ViewModel 分裂开了
 

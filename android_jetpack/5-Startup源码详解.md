@@ -27,7 +27,7 @@ Startup 允许 Library 开发者和 App 开发者共享同一个 ContentProvider
 Initializer 是 Startup 提供的用于声明初始化逻辑和初始化顺序的接口，在 `create(context: Context)`方法中完成初始化过程并返回结果值，在`dependencies()`中指定初始化此 Initializer 前需要先初始化的其它 Initializer 
 
 ```kotlin
-	class InitializerA : Initializer<A> {
+    class InitializerA : Initializer<A> {
 
         //在此处完成组件的初始化，并返回初始化结果值
         override fun create(context: Context): A {

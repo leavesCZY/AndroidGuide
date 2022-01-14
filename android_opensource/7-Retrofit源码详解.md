@@ -4,22 +4,6 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-系列文章导航：
-
-- [三方库源码笔记（1）-EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
-- [三方库源码笔记（2）-EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
-- [三方库源码笔记（3）-ARouter 源码详解](https://juejin.cn/post/6882553066285957134)
-- [三方库源码笔记（4）-ARouter 自己实现一个](https://juejin.cn/post/6883105868326862856)
-- [三方库源码笔记（5）-LeakCanary 源码详解](https://juejin.cn/post/6884225131015569421)
-- [三方库源码笔记（6）-LeakCanary 扩展阅读](https://juejin.cn/post/6884526739646185479)
-- [三方库源码笔记（7）-Retrofit 源码详解](https://juejin.cn/post/6886121327845965838)
-- [三方库源码笔记（8）-Retrofit 与 LiveData 的结合使用](https://juejin.cn/post/6887408273213882375)
-- [三方库源码笔记（9）-Glide 源码详解](https://juejin.cn/post/6891307560557608967)
-- [三方库源码笔记（10）-Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
-- [三方库源码笔记（11）-OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
-- [三方库源码笔记（12）-OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-- [三方库源码笔记（13）-可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
-
 # 一、前言
 
 Retrofit 也是现在 Android 应用开发中的标配之一了吧？笔者使用 Retrofit 蛮久的了，一直以来用着也挺舒心的，没遇到啥大的坑。总这样用着不来了解下其底层实现好像也不太好，趁着动笔写 [**三方库源码笔记**](https://juejin.cn/user/923245496518439/posts) 系列文章就来对 Retrofit 进行一次（~~自我感觉的~~）全面的源码解析吧 ~
@@ -1634,6 +1618,6 @@ userBean: UserBean(userName=leavesC, userAge=26)
 
 # 十五、结尾
 
-Retrofit 的源码就讲到这里了，自我感觉还是讲得挺全面的，虽然可能讲得没那么易于理解  =_=  从开始看源码到写完文章花了要十天出一些，断断续续地看源码，断断续续地写文章，总算写完了。觉得对你有所帮助就请点个赞吧 😂😂
+Retrofit 的源码就讲到这里了，自我感觉还是讲得挺全面的，虽然可能讲得没那么易于理解。从开始看源码到写完文章花了要十天出一些，断断续续地看源码，断断续续地写文章，总算写完了。觉得对你有所帮助就请点个赞吧 😂😂
 
 下篇文章就再来写关于 Retrofit 的扩展知识吧 ~~

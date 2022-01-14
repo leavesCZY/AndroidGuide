@@ -1505,4 +1505,9 @@ FrameLayout 的 specMode 是 AT_MOST，能占据的最大空间 specSize 即整�
 
 点击这里获取代码：[AndroidOpenSourceDemo](https://github.com/leavesCZY/AndroidOpenSourceDemo)
 
-![](https://s3.ax1x.com/2021/03/14/60p8US.gif) ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef4ec5a3a18f46f1997c7115c91c5967~tplv-k3u1fbpfcp-zoom-1.image)![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7c7d3cd985a4e4ebababc0b7e1c1a0c~tplv-k3u1fbpfcp-zoom-1.image)
+
+![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/b406f719153140a8aaff808730665813~tplv-k3u1fbpfcp-watermark.image?)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/ef4ec5a3a18f46f1997c7115c91c5967~tplv-k3u1fbpfcp-zoom-1.image)
+
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c7c7d3cd985a4e4ebababc0b7e1c1a0c~tplv-k3u1fbpfcp-zoom-1.image)
