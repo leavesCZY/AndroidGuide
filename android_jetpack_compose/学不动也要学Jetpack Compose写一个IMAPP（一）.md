@@ -36,7 +36,7 @@
 
 实践出真理，学不动也要学 🤣🤣 Jetpack Compose 大概率会成为以后 Android 原生应用开发时的首选技术方案，所以我也做了一次实战演练，花了两个月时间断断续续写了一个完全用 Compose 实现的 IM APP，实现了基本的好友聊天功能
 
-![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03d22bd09d194396b6e40ada7bb7eed7~tplv-k3u1fbpfcp-watermark.image?)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbeccad79d94d0dbff85bc02d7ccf04~tplv-k3u1fbpfcp-zoom-1.image)
 
 整个 APP 采用的是单 Activity 形式，内部通过 navigation 来模拟多屏幕跳转，使用了单向数据流模式，所有业务逻辑均通过 ViewModel 来完成，业务逻辑的处理结果再以可组合函数的入参参数的形式回传给 UI 层，底层通过腾讯云的 IM SDK 来实现通信
 
