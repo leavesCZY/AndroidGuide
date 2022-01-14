@@ -20,7 +20,7 @@
 
 到现在又过了有几个月时间，在这段时间里我对 compose_chat 进行了大量优化，并且也新增了一些功能，最大的一个功能点就是当前已经支持 **群聊** 功能了，compose_chat 中预留了三个聊天群，有兴趣的同学可以去体验下
 
-![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/22cfd6b6fcbe4e019d42a1f7c29405e6~tplv-k3u1fbpfcp-zoom-1.image)
+![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/03d22bd09d194396b6e40ada7bb7eed7~tplv-k3u1fbpfcp-watermark.image?)
 
 上一篇文章中我主要讲解的是概念，对于具体的代码介绍得比较少，此篇文章就再来补充具体的代码细节，以及一些可以和 Jetpack Compose 无缝结合使用的 Jetpack 库和三方开源库。由于现在关于 Jetpack Compose 的学习资料还比较少，有些地方也许我也理解错了，如有错误希望读者能指出来，也希望对你有所帮助 🤣🤣
 
