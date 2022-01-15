@@ -983,7 +983,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.leavesC:KVHolder:latest_version'
+    implementation 'com.github.leavesCZY:KVHolder:latest_version'
 }
 ```
 

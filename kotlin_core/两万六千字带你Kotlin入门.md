@@ -250,9 +250,9 @@ kotlin 中的数组是带有类型参数的类，其元素类型被指定为相�
 
 ```kotlin
     //包含给定元素的字符串数组
-    val array1 = arrayOf("leavesC", "叶", "https://github.com/leavesCZY")
+    val array1 = arrayOf("leavesCZY", "叶", "https://github.com/leavesCZY")
 
-    array1[0] = "leavesC"
+    array1[0] = "leavesCZY"
     println(array1[1])
     println(array1.size)
 
