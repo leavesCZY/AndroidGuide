@@ -46,7 +46,7 @@ Compose Multiplatform 在移动端的跨平台框架子集叫做 Kotlin Multipla
 
 通过 IDEA 的 Kotlin Multiplatform Mobile 插件生成的模板项目，不同平台的代码已经分属于不同的模块了，同时包含一个 `common` 模块用于存放公用的业务逻辑，通过划分模块来实现代码隔离
 
-以 compose_tetris 为例，其目标平台是 Android 和 Desktop，所以包含三个主模块：`common、android、desktop`。`common`又划分为三个子模块：`commonMain、commonMain、desktopMain`。`commonMain` 包含的是同时适用于 Android 和 Desktop 的业务逻辑，由于其并不隶属于特定平台，因此也不具备直接调用平台 API 的能力，而是交由 `androidMain` 和 `desktopMain` 来实现特定的平台能力
+以 compose_tetris 为例，其目标平台是 Android 和 Desktop，所以包含三个主模块：`common、android、desktop`。`common`又划分为三个子模块：`commonMain、androidMain、desktopMain`。`commonMain` 包含的是同时适用于 Android 和 Desktop 的业务逻辑，由于其并不隶属于特定平台，因此也不具备直接调用平台 API 的能力，而是交由 `androidMain` 和 `desktopMain` 来实现特定的平台能力
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0403b4cbc8f4b798e3d756515a414bc~tplv-k3u1fbpfcp-zoom-1.image)
 
@@ -266,7 +266,6 @@ fun DesktopMainScreen() {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2022/1/20 15:06
  * @Github: https://github.com/leavesCZY
  * @Desc:
  */

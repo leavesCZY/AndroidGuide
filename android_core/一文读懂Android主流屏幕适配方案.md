@@ -88,8 +88,8 @@ px = dp * (dpi / 160)
 在布局文件中声明的 dp 值，最终都需要通过 TypedValue 的 applyDimension 方法来转换为 px，转换公式即：density * dp
 
 ```java
-    public static float applyDimension(int unit, float value, DisplayMetrics metrics) {
-        switch (unit) {
+public static float applyDimension(int unit, float value, DisplayMetrics metrics) {
+    switch (unit) {
         case COMPLEX_UNIT_PX:
             return value;
         case COMPLEX_UNIT_DIP:
@@ -102,9 +102,9 @@ px = dp * (dpi / 160)
             return value * metrics.xdpi;
         case COMPLEX_UNIT_MM:
             return value * metrics.xdpi * (1.0f/25.4f);
-        }
-        return 0;
     }
+    return 0;
+}
 ```
 
 那么，如果我们能够动态修改 density 值的大小，要求修改后计算出的屏幕宽度就等于设计稿的宽度，不就可以在布局文件中直接使用设计稿给出的各个 dp 宽高值，且使得 View 在不同手机屏幕上都能占据同样的比例吗？
@@ -126,21 +126,21 @@ px = dp * (dpi / 160)
 实际上 density 只是 DisplayMetrics 类中的一个 public 变量，不涉及任何私有 API，修改后理论上也不会影响到应用的稳定性。因此，只要我们在 Activity 的 onCreate 方法中完成对 density 和 densityDpi 的修改，我们就可以在布局文件中直接使用设计稿给出的 dp 值，不用准备多套 dimens 就能完成适配，十分简洁
 
 ```kotlin
-    fun setCustomDensity(activity: Activity, application: Application, designWidthDp: Int) {
-        val appDisplayMetrics = application.resources.displayMetrics
-        val targetDensity = 1.0f * appDisplayMetrics.widthPixels / designWidthDp
-        val targetDensityDpi = (targetDensity * 160).toInt()
-        appDisplayMetrics.density = targetDensity
-        appDisplayMetrics.densityDpi = targetDensityDpi
-        val activityDisplayMetrics = activity.resources.displayMetrics
-        activityDisplayMetrics.density = targetDensity
-        activityDisplayMetrics.densityDpi = targetDensityDpi
-    }
+fun setCustomDensity(activity: Activity, application: Application, designWidthDp: Int) {
+    val appDisplayMetrics = application.resources.displayMetrics
+    val targetDensity = 1.0f * appDisplayMetrics.widthPixels / designWidthDp
+    val targetDensityDpi = (targetDensity * 160).toInt()
+    appDisplayMetrics.density = targetDensity
+    appDisplayMetrics.densityDpi = targetDensityDpi
+    val activityDisplayMetrics = activity.resources.displayMetrics
+    activityDisplayMetrics.density = targetDensity
+    activityDisplayMetrics.densityDpi = targetDensityDpi
+}
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        setCustomDensity(this, application, 420)
-        super.onCreate(savedInstanceState)
-    }
+override fun onCreate(savedInstanceState: Bundle?) {
+    setCustomDensity(this, application, 420)
+    super.onCreate(savedInstanceState)
+}
 ```
 
 > 字节跳动技术团队的文章只给出了示例代码，并没有给出最终落地可用的代码，但在 GitHub 上有一个挺出名的落地实践库，读者值得一看：[AndroidAutoSize](https://github.com/JessYanCoding/AndroidAutoSize)

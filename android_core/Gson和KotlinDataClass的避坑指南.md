@@ -9,9 +9,8 @@
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/21 12:23
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 data class UserBean(val userName: String, val userAge: Int)
 
@@ -46,9 +45,9 @@ Exception in thread "main" java.lang.NullPointerException: Parameter specified a
 通过 IDEA 将`printMsg`反编译为 Java 方法，可以发现方法内部会对入参进行空校验，当发现为 null 时就会直接抛出 NullPointerException
 
 ```java
-   public static final void printMsg(@NotNull String msg) {
-      Intrinsics.checkNotNullParameter(msg, "msg");
-   }
+public static final void printMsg(@NotNull String msg) {
+  Intrinsics.checkNotNullParameter(msg, "msg");
+}
 ```
 
 这个比较好理解，毕竟 Kotlin 的类型系统会严格区分**可 null** 和**不可为 null** 两种类型，其区分手段之一就是会自动在我们的代码里插入一些类型校验逻辑，即自动加上了非空断言，当发现不可为 null 的参数传入了 null 的话就会马上就抛出 NPE，即使我们并没有用到该参数
@@ -149,9 +148,8 @@ Gson 的 UnsafeAllocator 类中就通过 `allocateInstance` 方法来完成了 U
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/21 12:23
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 data class UserBean(val userName: String = "leavesC", val userAge: Int)
 

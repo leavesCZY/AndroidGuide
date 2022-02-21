@@ -26,50 +26,50 @@ Context 是一个抽象类，像我们平时经常使用的 `startActivity、sen
 - 第四步，通过 attach 方法将 appContext 和 app 传给 activity，完成 mBase 和 Application 的初始化
 
 ```java
-    /**  Core implementation of activity launch. */
-    private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+/**  Core implementation of activity launch. */
+private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    ···
+    //第一步
+    ContextImpl appContext = createBaseContextForActivity(r);
+    Activity activity = null;
+    try {
+        java.lang.ClassLoader cl = appContext.getClassLoader();
+        //第二步
+        activity = mInstrumentation.newActivity(
+                cl, component.getClassName(), r.intent);
         ···
-        //第一步
-        ContextImpl appContext = createBaseContextForActivity(r);
-        Activity activity = null;
-        try {
-            java.lang.ClassLoader cl = appContext.getClassLoader();
-            //第二步
-            activity = mInstrumentation.newActivity(
-                    cl, component.getClassName(), r.intent);
-            ···
-        } catch (Exception e) {
-            ···
-        }
-
-        try {
-            //第三步
-            Application app = r.packageInfo.makeApplication(false, mInstrumentation);
-            ···
-            if (activity != null) {
-                ···
-                appContext.setOuterContext(activity);
-                //第四步
-                activity.attach(appContext, this, getInstrumentation(), r.token,
-                        r.ident, app, r.intent, r.activityInfo, title, r.parent,
-                        r.embeddedID, r.lastNonConfigurationInstances, config,
-                        r.referrer, r.voiceInteractor, window, r.configCallback,
-                        r.assistToken);
-
-                ···
-            }
-            ···
-        } catch (SuperNotCalledException e) {
-            throw e;
-        } catch (Exception e) {
-            if (!mInstrumentation.onException(activity, e)) {
-                throw new RuntimeException(
-                    "Unable to start activity " + component
-                    + ": " + e.toString(), e);
-            }
-        }
-        return activity;
+    } catch (Exception e) {
+        ···
     }
+
+    try {
+        //第三步
+        Application app = r.packageInfo.makeApplication(false, mInstrumentation);
+        ···
+        if (activity != null) {
+            ···
+            appContext.setOuterContext(activity);
+            //第四步
+            activity.attach(appContext, this, getInstrumentation(), r.token,
+                    r.ident, app, r.intent, r.activityInfo, title, r.parent,
+                    r.embeddedID, r.lastNonConfigurationInstances, config,
+                    r.referrer, r.voiceInteractor, window, r.configCallback,
+                    r.assistToken);
+
+            ···
+        }
+        ···
+    } catch (SuperNotCalledException e) {
+        throw e;
+    } catch (Exception e) {
+        if (!mInstrumentation.onException(activity, e)) {
+            throw new RuntimeException(
+                "Unable to start activity " + component
+                + ": " + e.toString(), e);
+        }
+    }
+    return activity;
+}
 ```
 
 Activity 的 `attach`方法又会向 `mApplication` 和 `mBase` 两个成员变量赋值。以下属于伪代码，`mBase` 和 `attachBaseContext` 其实是声明在父类 ContextWrapper 中的，读者意会即可
@@ -117,54 +117,54 @@ public class Activity extends ContextThemeWrapper {
 Service 的 Context 创建过程与 Activity 类似，主要看 ActivityThread 的 `handleCreateService` 方法，该方法就用于创建 Service 实例并回调其 `onCreate` 方法
 
 ```java
-    @UnsupportedAppUsage
-    private void handleCreateService(CreateServiceData data) {
-        ···
-        Service service = null;
-        try {
-            if (localLOGV) Slog.v(TAG, "Creating service " + data.info.name);
-            
-            ContextImpl context = ContextImpl.createAppContext(this, packageInfo);
-            Application app = packageInfo.makeApplication(false, mInstrumentation);
+@UnsupportedAppUsage
+private void handleCreateService(CreateServiceData data) {
+    ···
+    Service service = null;
+    try {
+        if (localLOGV) Slog.v(TAG, "Creating service " + data.info.name);
 
-            ···
-                
-            service = packageInfo.getAppFactory()
-                    .instantiateService(cl, data.info.name, data.intent);
-            service.attach(context, this, data.info.name, data.token, app,
-                    ActivityManager.getService());
-            service.onCreate();
-            
-            mServices.put(data.token, service);
-            try {
-                ActivityManager.getService().serviceDoneExecuting(
-                        data.token, SERVICE_DONE_EXECUTING_ANON, 0, 0);
-            } catch (RemoteException e) {
-                throw e.rethrowFromSystemServer();
-            }
-        } catch (Exception e) {
-            if (!mInstrumentation.onException(service, e)) {
-                throw new RuntimeException(
-                    "Unable to create service " + data.info.name
-                    + ": " + e.toString(), e);
-            }
+        ContextImpl context = ContextImpl.createAppContext(this, packageInfo);
+        Application app = packageInfo.makeApplication(false, mInstrumentation);
+
+        ···
+
+        service = packageInfo.getAppFactory()
+                .instantiateService(cl, data.info.name, data.intent);
+        service.attach(context, this, data.info.name, data.token, app,
+                ActivityManager.getService());
+        service.onCreate();
+
+        mServices.put(data.token, service);
+        try {
+            ActivityManager.getService().serviceDoneExecuting(
+                    data.token, SERVICE_DONE_EXECUTING_ANON, 0, 0);
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+    } catch (Exception e) {
+        if (!mInstrumentation.onException(service, e)) {
+            throw new RuntimeException(
+                "Unable to create service " + data.info.name
+                + ": " + e.toString(), e);
         }
     }
+}
 ```
 
 在拿到 ContextImpl 与 Application 实例后，Service 的 `attach` 方法也完成了自身 mBase 和 mApplication 两个成员变量的初始化，整个过程和 Activity 十分类似
 
 ```java
-    @UnsupportedAppUsage
-    public final void attach(
-            Context context,
-            ActivityThread thread, String className, IBinder token,
-            Application application, Object activityManager) {
-        attachBaseContext(context);
-        ···
-        mApplication = application;
-        ···
-    }
+@UnsupportedAppUsage
+public final void attach(
+        Context context,
+        ActivityThread thread, String className, IBinder token,
+        Application application, Object activityManager) {
+    attachBaseContext(context);
+    ···
+    mApplication = application;
+    ···
+}
 ```
 
 # 三、BroadcastReceiver
@@ -172,29 +172,29 @@ Service 的 Context 创建过程与 Activity 类似，主要看 ActivityThread �
 BroadcastReceiver 的 Context 创建过程主要看 ActivityThread 的 `handleReceiver` 方法，该方法就用于创建 BroadcastReceiver 实例并回调其 `onReceive` 方法。由于系统限制了 BroadcastReceiver 不能用于注册广播和绑定服务，所以其 `onReceive` 方法传入的 Context 对象实际上属于 ContextWrapper 的子类  ReceiverRestrictedContext
 
 ```java
-    @UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P, trackingBug = 115609023)
-    private void handleReceiver(ReceiverData data) {
+@UnsupportedAppUsage(maxTargetSdk = Build.VERSION_CODES.P, trackingBug = 115609023)
+private void handleReceiver(ReceiverData data) {
+    ···
+    Application app;
+    BroadcastReceiver receiver;
+    ContextImpl context;
+    try {
+        app = packageInfo.makeApplication(false, mInstrumentation);
+        context = (ContextImpl) app.getBaseContext();
         ···
-        Application app;
-        BroadcastReceiver receiver;
-        ContextImpl context;
-        try {
-            app = packageInfo.makeApplication(false, mInstrumentation);
-            context = (ContextImpl) app.getBaseContext();
-            ···
-            receiver = packageInfo.getAppFactory()
-                    .instantiateReceiver(cl, data.info.name, data.intent);
-        } catch (Exception e) {
-            ···
-        }
-        try {
-            ···
-            //传递的是 ReceiverRestrictedContext
-            receiver.onReceive(context.getReceiverRestrictedContext(),
-                    data.intent);
-        }
+        receiver = packageInfo.getAppFactory()
+                .instantiateReceiver(cl, data.info.name, data.intent);
+    } catch (Exception e) {
         ···
     }
+    try {
+        ···
+        //传递的是 ReceiverRestrictedContext
+        receiver.onReceive(context.getReceiverRestrictedContext(),
+                data.intent);
+    }
+    ···
+}
 ```
 
 ReceiverRestrictedContext 重载了`registerReceiver` 和 `bindService` 等方法，当被调用时会直接抛出异常，从而限制了 BroadcastReceiver 的相应功能
@@ -234,66 +234,66 @@ ContentProvider 并不是 Context 的子类，但由于其属于四大组件之�
 ContentProvider 的 Context 创建过程主要看 ActivityThread 的 `installProvider` 方法，该方法就用于创建 ContentProvider 实例。该方法在拿到 ContextImpl 实例后，就会再通过反射得到 ContentProvider 实例，然后再调用 ContentProvider 的 `attachInfo` 方法
 
 ```java
-    @UnsupportedAppUsage
-    private ContentProviderHolder installProvider(Context context,
-            ContentProviderHolder holder, ProviderInfo info,
-            boolean noisy, boolean noReleaseNeeded, boolean stable) {
-        ContentProvider localProvider = null;
-        IContentProvider provider;
-        if (holder == null || holder.provider == null) {
-            if (DEBUG_PROVIDER || noisy) {
-                Slog.d(TAG, "Loading provider " + info.authority + ": "
-                        + info.name);
-            }
-            Context c = null;
-            //得到 ContextImpl 对象
-            c = context.createPackageContext(ai.packageName,
-                            Context.CONTEXT_INCLUDE_CODE);
-            ···
-            try {
-                ···
-                //通过反射实例化 ContentProvider
-                localProvider = packageInfo.getAppFactory()
-                        .instantiateProvider(cl, info.name);
-                ···
-                //传入 Context 对象
-                localProvider.attachInfo(c, info);
-            } catch (java.lang.Exception e) {
-                if (!mInstrumentation.onException(null, e)) {
-                    throw new RuntimeException(
-                            "Unable to get provider " + info.name
-                            + ": " + e.toString(), e);
-                }
-                return null;
-            }
-        } else {
-            provider = holder.provider;
-            if (DEBUG_PROVIDER) Slog.v(TAG, "Installing external provider " + info.authority + ": "
+@UnsupportedAppUsage
+private ContentProviderHolder installProvider(Context context,
+        ContentProviderHolder holder, ProviderInfo info,
+        boolean noisy, boolean noReleaseNeeded, boolean stable) {
+    ContentProvider localProvider = null;
+    IContentProvider provider;
+    if (holder == null || holder.provider == null) {
+        if (DEBUG_PROVIDER || noisy) {
+            Slog.d(TAG, "Loading provider " + info.authority + ": "
                     + info.name);
         }
-		···
-        return retHolder;
+        Context c = null;
+        //得到 ContextImpl 对象
+        c = context.createPackageContext(ai.packageName,
+                        Context.CONTEXT_INCLUDE_CODE);
+        ···
+        try {
+            ···
+            //通过反射实例化 ContentProvider
+            localProvider = packageInfo.getAppFactory()
+                    .instantiateProvider(cl, info.name);
+            ···
+            //传入 Context 对象
+            localProvider.attachInfo(c, info);
+        } catch (java.lang.Exception e) {
+            if (!mInstrumentation.onException(null, e)) {
+                throw new RuntimeException(
+                        "Unable to get provider " + info.name
+                        + ": " + e.toString(), e);
+            }
+            return null;
+        }
+    } else {
+        provider = holder.provider;
+        if (DEBUG_PROVIDER) Slog.v(TAG, "Installing external provider " + info.authority + ": "
+                + info.name);
     }
+    ···
+    return retHolder;
+}
 ```
 
 ContentProvider 的 `attachInfo` 方法最终就会初始化自身的 mContext 变量，然后再回调自身的 `onCreate()` 方法，从而完成自身的初始化
 
 ```java
-    @UnsupportedAppUsage
-    private Context mContext = null;
+@UnsupportedAppUsage
+private Context mContext = null;
 
-    public void attachInfo(Context context, ProviderInfo info) {
-        attachInfo(context, info, false);
-    }
+public void attachInfo(Context context, ProviderInfo info) {
+    attachInfo(context, info, false);
+}
 
-    private void attachInfo(Context context, ProviderInfo info, boolean testing) {
+private void attachInfo(Context context, ProviderInfo info, boolean testing) {
+    ···
+    if (mContext == null) {
+        mContext = context;
         ···
-        if (mContext == null) {
-            mContext = context;
-            ···
-            ContentProvider.this.onCreate();
-        }
+        ContentProvider.this.onCreate();
     }
+}
 ```
 
 # 五、Application
@@ -308,54 +308,54 @@ ContentProvider 的 `attachInfo` 方法最终就会初始化自身的 mContext �
 - 第四步，回调 Application 的 onCreate 方法
 
 ```java
-    @UnsupportedAppUsage
-    private Application mApplication;	
+@UnsupportedAppUsage
+private Application mApplication;	
 
-    @UnsupportedAppUsage
-    public Application makeApplication(boolean forceDefaultAppClass,
-            Instrumentation instrumentation) {
-        if (mApplication != null) {
-            return mApplication;
-        }
-        Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "makeApplication");
-        
-        Application app = null;
-        
+@UnsupportedAppUsage
+public Application makeApplication(boolean forceDefaultAppClass,
+        Instrumentation instrumentation) {
+    if (mApplication != null) {
+        return mApplication;
+    }
+    Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "makeApplication");
+
+    Application app = null;
+
+    ···
+    try {
         ···
-        try {
-            ···
-            //第一步
-            ContextImpl appContext = ContextImpl.createAppContext(mActivityThread, this);
-          	···
-            //第二步    
-            app = mActivityThread.mInstrumentation.newApplication(
-                    cl, appClass, appContext);
-            appContext.setOuterContext(app);
-        } catch (Exception e) {
-            ···
-        }
-        mActivityThread.mAllApplications.add(app);
-        //第三步
-        mApplication = app;
+        //第一步
+        ContextImpl appContext = ContextImpl.createAppContext(mActivityThread, this);
+        ···
+        //第二步    
+        app = mActivityThread.mInstrumentation.newApplication(
+                cl, appClass, appContext);
+        appContext.setOuterContext(app);
+    } catch (Exception e) {
+        ···
+    }
+    mActivityThread.mAllApplications.add(app);
+    //第三步
+    mApplication = app;
 
-        if (instrumentation != null) {
-            try {
-                //第四步
-                instrumentation.callApplicationOnCreate(app);
-            } catch (Exception e) {
-                if (!instrumentation.onException(app, e)) {
-                    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
-                    throw new RuntimeException(
-                        "Unable to create application " + app.getClass().getName()
-                        + ": " + e.toString(), e);
-                }
+    if (instrumentation != null) {
+        try {
+            //第四步
+            instrumentation.callApplicationOnCreate(app);
+        } catch (Exception e) {
+            if (!instrumentation.onException(app, e)) {
+                Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+                throw new RuntimeException(
+                    "Unable to create application " + app.getClass().getName()
+                    + ": " + e.toString(), e);
             }
         }
-
-        Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
-
-        return app;
     }
+
+    Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+
+    return app;
+}
 ```
 
 Context 类还包含一个 `getApplicationContext()`方法用于获取 Application 类型的 Context，该方法的具体逻辑由 ContextImpl 实现。如果 `mPackageInfo` 不为 null 的话，则调用其 `getApplication()` 方法拿到上述第三步保存的 Application 对象，否则通过 `mMainThread` 来获取
@@ -363,16 +363,15 @@ Context 类还包含一个 `getApplicationContext()`方法用于获取 Applicati
 由于在 Activity、Service、BroadcastReceiver 中调用`getApplicationContext()`方法时，应用已经是启动的了，所以此时 mPackageInfo 不会为 null，因此我们就这可以在这几个类中获取到当前进程中唯一的 ApplicationContext 实例
 
 ```java
-    @UnsupportedAppUsage
-    final @NonNull ActivityThread mMainThread;
+@UnsupportedAppUsage
+final @NonNull ActivityThread mMainThread;
 
-    @UnsupportedAppUsage
-    final @NonNull LoadedApk mPackageInfo;
+@UnsupportedAppUsage
+final @NonNull LoadedApk mPackageInfo;
 
-    @Override
-    public Context getApplicationContext() {
-        return (mPackageInfo != null) ?
-                mPackageInfo.getApplication() : mMainThread.getApplication();
-    }
+@Override
+public Context getApplicationContext() {
+    return (mPackageInfo != null) ? mPackageInfo.getApplication() : mMainThread.getApplication();
+}
 ```
 

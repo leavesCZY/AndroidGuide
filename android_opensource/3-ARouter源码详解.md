@@ -10,7 +10,7 @@
 
 而 ARouter 就是一个用于帮助 Android App 进行组件化改造的框架，支持模块间的路由、通信、解耦
 
-## 1、支持的功能
+## 支持的功能
 
 1. 支持直接解析标准 URL 进行跳转，并自动注入参数到目标页面中
 2. 支持多模块工程使用
@@ -29,7 +29,7 @@
 15. 提供 IDE 插件便捷的关联路径和目标类
 16. 支持增量编译(开启文档生成后无法增量编译)
 
-## 2、典型应用
+## 典型应用
 
 1. 从外部 URL 映射到内部页面，以及参数传递与解析
 2. 跨模块页面跳转，模块间解耦
@@ -38,7 +38,7 @@
 
 以上介绍来自于 ARouter 的 Github 官网：[README_CN](https://github.com/alibaba/ARouter/blob/master/README_CN.md)
 
-本文就基于其当前（2020/10/04）ARouter 的最新版本，对 ARouter 进行一次全面的源码解析和原理介绍，做到知其然也知其所以然，希望对你有所帮助 😂😂
+本文就基于以下版本，对 ARouter 进行一次全面的源码解析和原理介绍，做到知其然也知其所以然，希望对你有所帮助 😂😂
 
 ```groovy
 dependencies {
@@ -56,7 +56,6 @@ package github.leavesc.user
 
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/3 18:05
  * @Github：https://github.com/leavesCZY
  */
 @Route(path = RoutePath.USER_HOME)
@@ -105,7 +104,6 @@ ARouter 一般是通过在 Application 中调用 `init` 方法来完成初始化
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/4 18:05
  * @Github：https://github.com/leavesCZY
  */
 class MyApp : Application() {
@@ -345,39 +343,39 @@ ARouter.getInstance().build(RoutePath.USER_HOME).navigation()
 `build()` 方法会通过 `ARouter` 中转调用到 `_ARouter` 的 `build()` 方法，最终返回一个 Postcard 对象
 
 ```java
-    /**
-     * Build postcard by path and default group
-     */
-    protected Postcard build(String path) {
-        if (TextUtils.isEmpty(path)) {
-            throw new HandlerException(Consts.TAG + "Parameter is invalid!");
-        } else {
-            PathReplaceService pService = ARouter.getInstance().navigation(PathReplaceService.class);
-            if (null != pService) {
-                //用于路径替换，这对于某些需要控制页面跳转流程的场景比较有用
-                //例如，如果某个页面需要登录才可以展示的话
-                //就可以通过 PathReplaceService 将 path 替换 loginPagePath
-                path = pService.forString(path);
-            }
-            //使用字符串 path 包含的第一个单词作为 group
-            return build(path, extractGroup(path));
+/**
+ * Build postcard by path and default group
+ */
+protected Postcard build(String path) {
+    if (TextUtils.isEmpty(path)) {
+        throw new HandlerException(Consts.TAG + "Parameter is invalid!");
+    } else {
+        PathReplaceService pService = ARouter.getInstance().navigation(PathReplaceService.class);
+        if (null != pService) {
+            //用于路径替换，这对于某些需要控制页面跳转流程的场景比较有用
+            //例如，如果某个页面需要登录才可以展示的话
+            //就可以通过 PathReplaceService 将 path 替换 loginPagePath
+            path = pService.forString(path);
         }
+        //使用字符串 path 包含的第一个单词作为 group
+        return build(path, extractGroup(path));
     }
+}
 
-    /**
-     * Build postcard by path and group
-     */
-    protected Postcard build(String path, String group) {
-        if (TextUtils.isEmpty(path) || TextUtils.isEmpty(group)) {
-            throw new HandlerException(Consts.TAG + "Parameter is invalid!");
-        } else {
-            PathReplaceService pService = ARouter.getInstance().navigation(PathReplaceService.class);
-            if (null != pService) {
-                path = pService.forString(path);
-            }
-            return new Postcard(path, group);
+/**
+ * Build postcard by path and group
+ */
+protected Postcard build(String path, String group) {
+    if (TextUtils.isEmpty(path) || TextUtils.isEmpty(group)) {
+        throw new HandlerException(Consts.TAG + "Parameter is invalid!");
+    } else {
+        PathReplaceService pService = ARouter.getInstance().navigation(PathReplaceService.class);
+        if (null != pService) {
+            path = pService.forString(path);
         }
+        return new Postcard(path, group);
     }
+}
 ```
 
 返回的 Postcard 对象可以用于传入一些跳转配置参数，例如：携带参数 `mBundle`、开启绿色通道 `greenChannel` 、跳转动画 `optionsCompat` 等
@@ -540,58 +538,58 @@ final class _ARouter {
 `completion` 方法就是用来获取详细的路由对应信息的。该方法会通过 `postcard` 携带的 path 和 group 信息从 `Warehouse` 取值，如果值不为 null 的话就将信息保存到 `postcard` 中，如果值为 null 的话就抛出 `NoRouteFoundException`
 
 ```java
-	/**
-     * Completion the postcard by route metas
-     *
-     * @param postcard Incomplete postcard, should complete by this method.
-     */
-    public synchronized static void completion(Postcard postcard) {
-        if (null == postcard) {
-            throw new NoRouteFoundException(TAG + "No postcard!");
-        }
-
-        RouteMeta routeMeta = Warehouse.routes.get(postcard.getPath());
-        if (null == routeMeta) {    //为 null 说明目标类不存在或者是该 group 还未加载过
-            Class<? extends IRouteGroup> groupMeta = Warehouse.groupsIndex.get(postcard.getGroup());  // Load route meta.
-            if (null == groupMeta) {
-                //groupMeta 为 null，说明 postcard 的 path 对应的 group 不存在，抛出异常
-                throw new NoRouteFoundException(TAG + "There is no route match the path [" + postcard.getPath() + "], in group [" + postcard.getGroup() + "]");
-            } else {
-                // Load route and cache it into memory, then delete from metas.
-                try {
-                    if (ARouter.debuggable()) {
-                        logger.debug(TAG, String.format(Locale.getDefault(), "The group [%s] starts loading, trigger by [%s]", postcard.getGroup(), postcard.getPath()));
-                    }
-				  //会执行到这里，说明此 group 还未加载过，那么就来反射加载 group 对应的所有 path 信息
-                   //获取后就保存到 Warehouse.routes
-                    IRouteGroup iGroupInstance = groupMeta.getConstructor().newInstance();
-                    iGroupInstance.loadInto(Warehouse.routes);
-                    
-                    //移除此 group
-                    Warehouse.groupsIndex.remove(postcard.getGroup());
-
-                    if (ARouter.debuggable()) {
-                        logger.debug(TAG, String.format(Locale.getDefault(), "The group [%s] has already been loaded, trigger by [%s]", postcard.getGroup(), postcard.getPath()));
-                    }
-                } catch (Exception e) {
-                    throw new HandlerException(TAG + "Fatal exception when loading group meta. [" + e.getMessage() + "]");
-                }
-			   
-                //重新执行一遍
-                completion(postcard);   // Reload
-            }
-        } else {
-            //拿到详细的路由信息了，将这些信息存到 postcard 中
-            
-            postcard.setDestination(routeMeta.getDestination());
-            postcard.setType(routeMeta.getType());
-            postcard.setPriority(routeMeta.getPriority());
-            postcard.setExtra(routeMeta.getExtra());
-
-            //省略一些和本例子无关的代码
-            ···
-        }
+/**
+ * Completion the postcard by route metas
+ *
+ * @param postcard Incomplete postcard, should complete by this method.
+ */
+public synchronized static void completion(Postcard postcard) {
+    if (null == postcard) {
+        throw new NoRouteFoundException(TAG + "No postcard!");
     }
+
+    RouteMeta routeMeta = Warehouse.routes.get(postcard.getPath());
+    if (null == routeMeta) {    //为 null 说明目标类不存在或者是该 group 还未加载过
+        Class<? extends IRouteGroup> groupMeta = Warehouse.groupsIndex.get(postcard.getGroup());  // Load route meta.
+        if (null == groupMeta) {
+            //groupMeta 为 null，说明 postcard 的 path 对应的 group 不存在，抛出异常
+            throw new NoRouteFoundException(TAG + "There is no route match the path [" + postcard.getPath() + "], in group [" + postcard.getGroup() + "]");
+        } else {
+            // Load route and cache it into memory, then delete from metas.
+            try {
+                if (ARouter.debuggable()) {
+                    logger.debug(TAG, String.format(Locale.getDefault(), "The group [%s] starts loading, trigger by [%s]", postcard.getGroup(), postcard.getPath()));
+                }
+              //会执行到这里，说明此 group 还未加载过，那么就来反射加载 group 对应的所有 path 信息
+               //获取后就保存到 Warehouse.routes
+                IRouteGroup iGroupInstance = groupMeta.getConstructor().newInstance();
+                iGroupInstance.loadInto(Warehouse.routes);
+
+                //移除此 group
+                Warehouse.groupsIndex.remove(postcard.getGroup());
+
+                if (ARouter.debuggable()) {
+                    logger.debug(TAG, String.format(Locale.getDefault(), "The group [%s] has already been loaded, trigger by [%s]", postcard.getGroup(), postcard.getPath()));
+                }
+            } catch (Exception e) {
+                throw new HandlerException(TAG + "Fatal exception when loading group meta. [" + e.getMessage() + "]");
+            }
+
+            //重新执行一遍
+            completion(postcard);   // Reload
+        }
+    } else {
+        //拿到详细的路由信息了，将这些信息存到 postcard 中
+
+        postcard.setDestination(routeMeta.getDestination());
+        postcard.setType(routeMeta.getType());
+        postcard.setPriority(routeMeta.getPriority());
+        postcard.setExtra(routeMeta.getExtra());
+
+        //省略一些和本例子无关的代码
+        ···
+    }
+}
 ```
 
 # 五、跳转到 Activity 并注入参数
@@ -626,7 +624,6 @@ package github.leavesc.user
 
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/4 14:05
  * @Github：https://github.com/leavesCZY
  */
 @Route(path = RoutePath.USER_HOME)
@@ -738,7 +735,6 @@ public class AutowiredServiceImpl implements AutowiredService {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/4 13:49
  * @Github：https://github.com/leavesCZY
  */
 interface ISayHelloService : IProvider {
@@ -815,75 +811,75 @@ Warehouse.providersIndex：
 `ARouter.getInstance().navigation(ISayHelloService::class.java)` 最终会中转调用到 `_ARouter` 的以下方法
 
 ```java
-	protected <T> T navigation(Class<? extends T> service) {
-        try {
-            //从 Warehouse.providersIndex 取值拿到 RouteMeta 中存储的 path 和 group
-            Postcard postcard = LogisticsCenter.buildProvider(service.getName());
+protected <T> T navigation(Class<? extends T> service) {
+    try {
+        //从 Warehouse.providersIndex 取值拿到 RouteMeta 中存储的 path 和 group
+        Postcard postcard = LogisticsCenter.buildProvider(service.getName());
 
-            // Compatible 1.0.5 compiler sdk.
-            // Earlier versions did not use the fully qualified name to get the service
-            if (null == postcard) {
-                // No service, or this service in old version.
-                postcard = LogisticsCenter.buildProvider(service.getSimpleName());
-            }
+        // Compatible 1.0.5 compiler sdk.
+        // Earlier versions did not use the fully qualified name to get the service
+        if (null == postcard) {
+            // No service, or this service in old version.
+            postcard = LogisticsCenter.buildProvider(service.getSimpleName());
+        }
 
-            if (null == postcard) {
-                return null;
-            }
-		   //重点
-            LogisticsCenter.completion(postcard);
-            return (T) postcard.getProvider();
-        } catch (NoRouteFoundException ex) {
-            logger.warning(Consts.TAG, ex.getMessage());
+        if (null == postcard) {
             return null;
         }
+       //重点
+        LogisticsCenter.completion(postcard);
+        return (T) postcard.getProvider();
+    } catch (NoRouteFoundException ex) {
+        logger.warning(Consts.TAG, ex.getMessage());
+        return null;
     }
+}
 ```
 
 `LogisticsCenter.completion(postcard)` 方法的流程和之前讲解的差不多，只是在获取对象实例的时候同时将实例缓存起来，留待之后复用，至此就完成了控制反转的流程了
 
 ```java
-	/**
-     * Completion the postcard by route metas
-     *
-     * @param postcard Incomplete postcard, should complete by this method.
-     */
-    public synchronized static void completion(Postcard postcard) {
-	   ... //省略之前已经讲解过的代码	
-  
-	   RouteMeta routeMeta = Warehouse.routes.get(postcard.getPath());
-        
-        switch (routeMeta.getType()) {
-                case PROVIDER:  // if the route is provider, should find its instance
-                    // Its provider, so it must implement IProvider
-                	//拿到 SayHelloService Class 对象
-                    Class<? extends IProvider> providerMeta = (Class<? extends IProvider>) routeMeta.getDestination();
-                    IProvider instance = Warehouse.providers.get(providerMeta);
-                    if (null == instance) { // There's no instance of this provider
-                        //instance 等于 null 说明是第一次取值
-                        //那么就通过反射构建 SayHelloService 对象，然后将之缓存到 Warehouse.providers 中
-                        //所以通过控制反转获取的对象在应用的整个生命周期内只会有一个实例
-                        IProvider provider;
-                        try {
-                            provider = providerMeta.getConstructor().newInstance();
-                            provider.init(mContext);
-                            Warehouse.providers.put(providerMeta, provider);
-                            instance = provider;
-                        } catch (Exception e) {
-                            throw new HandlerException("Init provider failed! " + e.getMessage());
-                        }
+/**
+ * Completion the postcard by route metas
+ *
+ * @param postcard Incomplete postcard, should complete by this method.
+ */
+public synchronized static void completion(Postcard postcard) {
+   ... //省略之前已经讲解过的代码	
+
+   RouteMeta routeMeta = Warehouse.routes.get(postcard.getPath());
+
+    switch (routeMeta.getType()) {
+            case PROVIDER:  // if the route is provider, should find its instance
+                // Its provider, so it must implement IProvider
+                //拿到 SayHelloService Class 对象
+                Class<? extends IProvider> providerMeta = (Class<? extends IProvider>) routeMeta.getDestination();
+                IProvider instance = Warehouse.providers.get(providerMeta);
+                if (null == instance) { // There's no instance of this provider
+                    //instance 等于 null 说明是第一次取值
+                    //那么就通过反射构建 SayHelloService 对象，然后将之缓存到 Warehouse.providers 中
+                    //所以通过控制反转获取的对象在应用的整个生命周期内只会有一个实例
+                    IProvider provider;
+                    try {
+                        provider = providerMeta.getConstructor().newInstance();
+                        provider.init(mContext);
+                        Warehouse.providers.put(providerMeta, provider);
+                        instance = provider;
+                    } catch (Exception e) {
+                        throw new HandlerException("Init provider failed! " + e.getMessage());
                     }
-                	//将获取到的实例存起来
-                    postcard.setProvider(instance);
-                    postcard.greenChannel();    // Provider should skip all of interceptors
-                    break;
-                case FRAGMENT:
-                    postcard.greenChannel();    // Fragment needn't interceptors
-                default:
-                    break;
-            }
-        
-    }
+                }
+                //将获取到的实例存起来
+                postcard.setProvider(instance);
+                postcard.greenChannel();    // Provider should skip all of interceptors
+                break;
+            case FRAGMENT:
+                postcard.greenChannel();    // Fragment needn't interceptors
+            default:
+                break;
+        }
+
+}
 ```
 
 # 七、拦截器
@@ -895,7 +891,6 @@ ARouter 的拦截器对于某些需要控制页面跳转流程的业务逻辑来
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/5 11:49
  * @Github：https://github.com/leavesCZY
  */
 @Interceptor(priority = 100, name = "啥也不做的拦截器")
@@ -957,30 +952,30 @@ public class ARouter$$Interceptors$$user implements IInterceptorGroup {
 而这些拦截器一样是会在初始化的时候，通过`LogisticsCenter.init`方法存到 `Warehouse.interceptorsIndex`中
 
 ```java
- /**
-     * LogisticsCenter init, load all metas in memory. Demand initialization
-     */
-    public synchronized static void init(Context context, ThreadPoolExecutor tpe) throws HandlerException {
-        
-        ···
-            
-        for (String className : routerMap) {
-                    if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_ROOT)) {
-                        // This one of root elements, load root.
-                        ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.groupsIndex);
-                    } else if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_INTERCEPTORS)) {
-                        // Load interceptorMeta
-                        //拿到自定义的拦截器实现类
-                        ((IInterceptorGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.interceptorsIndex);
-                    } else if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_PROVIDERS)) {
-                        // Load providerIndex
-                        ((IProviderGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.providersIndex);
-                    }
-                }
-        
-          ···
-        
+/**
+ * LogisticsCenter init, load all metas in memory. Demand initialization
+ */
+public synchronized static void init(Context context, ThreadPoolExecutor tpe) throws HandlerException {
+
+    ···
+
+    for (String className : routerMap) {
+        if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_ROOT)) {
+            // This one of root elements, load root.
+            ((IRouteRoot) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.groupsIndex);
+        } else if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_INTERCEPTORS)) {
+            // Load interceptorMeta
+            //拿到自定义的拦截器实现类
+            ((IInterceptorGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.interceptorsIndex);
+        } else if (className.startsWith(ROUTE_ROOT_PAKCAGE + DOT + SDK_NAME + SEPARATOR + SUFFIX_PROVIDERS)) {
+            // Load providerIndex
+            ((IProviderGroup) (Class.forName(className).getConstructor().newInstance())).loadInto(Warehouse.providersIndex);
+        }
     }
+
+    ···
+
+}
 ```
 
 然后，在 `_ARouter` 的 `navigation` 方法中，如何判断到此次路由请求没有开启绿色通道模式的话，那么就会将此次请求转交给 `interceptorService`，让其去遍历每个拦截器
@@ -1193,7 +1188,6 @@ package github.leavesc.user
 
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/5 11:49
  * @Github：https://github.com/leavesCZY
  */
 @Interceptor(priority = 100, name = "啥也不做的拦截器")

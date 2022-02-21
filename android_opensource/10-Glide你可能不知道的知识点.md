@@ -13,7 +13,6 @@
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/5 23:16
  * @Github：https://github.com/leavesCZY
  */
 @GlideModule
@@ -170,7 +169,6 @@ dependencies {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/5 23:16
  * @Github：https://github.com/leavesCZY
  */
 class OkHttpStreamFetcher(private val client: Call.Factory, private val url: GlideUrl) :
@@ -248,7 +246,6 @@ class OkHttpStreamFetcher(private val client: Call.Factory, private val url: Gli
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/5 23:16
  * @Github：https://github.com/leavesCZY
  */
 class OkHttpUrlLoader(private val client: Call.Factory) : ModelLoader<GlideUrl, InputStream> {
@@ -289,7 +286,6 @@ class OkHttpUrlLoader(private val client: Call.Factory) : ModelLoader<GlideUrl, 
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/5 23:16
  * @Github：https://github.com/leavesCZY
  */
 @GlideModule
@@ -323,7 +319,6 @@ class MyAppGlideModule : AppGlideModule() {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/6 21:58
  * @Github：https://github.com/leavesCZY
  */
 internal class ProgressResponseBody constructor(
@@ -424,7 +419,6 @@ internal class ProgressResponseBody constructor(
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/6 22:08
  * @Github：https://github.com/leavesCZY
  */
 class ProgressInterceptor : Interceptor {
@@ -458,7 +452,6 @@ https://images.pexels.com/photos/1425174/pexels-photo-1425174.jpeg?auto=compress
 ```java
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/6 15:13
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -488,7 +481,6 @@ public class GlideUrl implements Key {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/6 15:13
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -513,7 +505,7 @@ class TokenGlideUrl(private val selfUrl: String) : GlideUrl(selfUrl) {
 然后在加载图片的时候使用 TokenGlideUrl 来传递图片 Url 即可
 
 ```kotlin
-      Glide.with(Context).load(TokenGlideUrl(ImageUrl)).into(ImageView)
+Glide.with(Context).load(TokenGlideUrl(ImageUrl)).into(ImageView)
 ```
 
 # 五、如何直接拿到图片
@@ -521,51 +513,51 @@ class TokenGlideUrl(private val selfUrl: String) : GlideUrl(selfUrl) {
 如果想直接取得 Bitmap 而非显示在 ImageView 上的话，可以用以下同步请求的方式来获得 Bitmap。需要注意的是，`submit()`方法就会触发 Glide 去请求图片，此时请求操作还是运行于 Glide 内部的线程池的，但 `get()`操作就会直接阻塞所在线程，直到图片加载结束（不管成功与否）才会返回
 
 ```kotlin
-            thread {
-                val futureTarget = Glide.with(this)
-                    .asBitmap()
-                    .load(url)
-                    .submit()
-                val bitmap = futureTarget.get()
-                runOnUiThread {
-                    iv_tokenUrl.setImageBitmap(bitmap)
-                }
-            }
+thread {
+    val futureTarget = Glide.with(this)
+        .asBitmap()
+        .load(url)
+        .submit()
+    val bitmap = futureTarget.get()
+    runOnUiThread {
+        iv_tokenUrl.setImageBitmap(bitmap)
+    }
+}
 ```
 
 也可以用类似的方式来拿到 File 或者 Drawable
 
 ```kotlin
-            thread {
-                val futureTarget = Glide.with(this)
-                    .asFile()
-                    .load(url)
-                    .submit()
-                val file = futureTarget.get()
-                runOnUiThread {
-                    showToast(file.absolutePath)
-                }
-            }
+thread {
+    val futureTarget = Glide.with(this)
+        .asFile()
+        .load(url)
+        .submit()
+    val file = futureTarget.get()
+    runOnUiThread {
+        showToast(file.absolutePath)
+    }
+}
 ```
 
 Glide 也提供了以下的异步加载方式
 
 ```kotlin
-            Glide.with(this)
-                .asBitmap()
-                .load(url)
-                .into(object : CustomTarget<Bitmap>() {
-                    override fun onLoadCleared(placeholder: Drawable?) {
-                        showToast("onLoadCleared")
-                    }
+Glide.with(this)
+    .asBitmap()
+    .load(url)
+    .into(object : CustomTarget<Bitmap>() {
+        override fun onLoadCleared(placeholder: Drawable?) {
+            showToast("onLoadCleared")
+        }
 
-                    override fun onResourceReady(
-                        resource: Bitmap,
-                        transition: Transition<in Bitmap>?
-                    ) {
-                        iv_tokenUrl.setImageBitmap(resource)
-                    }
-                })
+        override fun onResourceReady(
+            resource: Bitmap,
+            transition: Transition<in Bitmap>?
+        ) {
+            iv_tokenUrl.setImageBitmap(resource)
+        }
+    })
 ```
 
 # 六、Glide 如何实现网络监听
@@ -632,7 +624,6 @@ DefaultConnectivityMonitor 的逻辑比较简单，不过多赘述。我觉得�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/7 14:40
  * @Desc:
  */
 internal interface ConnectivityListener {

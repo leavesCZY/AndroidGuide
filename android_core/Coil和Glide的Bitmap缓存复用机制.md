@@ -579,19 +579,19 @@ private Bitmap decodeFromWrappedStreams(
 此外，从系统源码中对 inBitmap 的注释说明可以看到，设置了此字段后如果解码失败将导致抛出 IllegalArgumentException
 
 ```java
-        /**
-         * If set, decode methods that take the Options object will attempt to
-         * reuse this bitmap when loading content. If the decode operation
-         * cannot use this bitmap, the decode method will throw an
-         * {@link java.lang.IllegalArgumentException}. 
-         */
-        public Bitmap inBitmap;
+/**
+ * If set, decode methods that take the Options object will attempt to
+ * reuse this bitmap when loading content. If the decode operation
+ * cannot use this bitmap, the decode method will throw an
+ * {@link java.lang.IllegalArgumentException}. 
+ */
+public Bitmap inBitmap;
 ```
 
 Glide 的 `decodeStream` 方法就捕获了这个异常。如果在执行 `imageReader.decodeBitmap` 的过程中抛出了 IllegalArgumentException 且当前 inBitmap 不为 null 的话，那么就会捕获该异常，然后将 inBitmap 置为 null 再重新解码一次。如果 inBitmap 为 null 的情况下也发生了异常的话，`decodeStream`方法则会将异常直接抛出，即该方法最多进行两次解码。而 Coil 只会解码一次，没有 Glide 这种降级处理规则
 
 ```kotlin
-  private static Bitmap decodeStream(
+private static Bitmap decodeStream(
       ImageReader imageReader,
       BitmapFactory.Options options,
       DecodeCallbacks callbacks,

@@ -13,7 +13,6 @@
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/1/15 23:42
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -87,7 +86,6 @@ data class HelloBean(val data: String)
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/3 11:44
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -153,7 +151,7 @@ EasyEventBus 的核心重点就在于其通过**注解处理器**生成辅助文
 
 ```java
 /**
- * 这是自动生成的代码 by leavesC
+ * 这是自动生成的代码 by leavesCZY
  */
 public class EventBusInject {
 
@@ -210,7 +208,6 @@ annotation class Event
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/3 17:33
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -227,7 +224,6 @@ data class SubscriberInfo(
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/3 15:55
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -270,197 +266,197 @@ class EasyEventBusProcessor : AbstractProcessor() {
 
 ```kotlin
 override fun process(
-        set: Set<TypeElement>,
-        roundEnvironment: RoundEnvironment
-    ): Boolean {
-        val messager = processingEnv.messager
-        collectSubscribers(set, roundEnvironment, messager)
-        if (methodsByClass.isEmpty()) {
-            messager.printMessage(Diagnostic.Kind.WARNING, "No @Event annotations found")
-        } else {
-            
-           ···
-            
-        }
-        return true
-    }
+    set: Set<TypeElement>,
+    roundEnvironment: RoundEnvironment
+): Boolean {
+    val messager = processingEnv.messager
+    collectSubscribers(set, roundEnvironment, messager)
+    if (methodsByClass.isEmpty()) {
+        messager.printMessage(Diagnostic.Kind.WARNING, "No @Event annotations found")
+    } else {
 
-    private fun collectSubscribers(
-        annotations: Set<TypeElement>,
-        env: RoundEnvironment,
-        messager: Messager
-    ) {
-        for (annotation in annotations) {
-            val elements = env.getElementsAnnotatedWith(annotation)
-            for (element in elements) {
-                if (element is ExecutableElement) {
-                    if (checkHasNoErrors(element, messager)) {
-                        val classElement = element.enclosingElement as TypeElement
-                        var list = methodsByClass[classElement]
-                        if (list == null) {
-                            list = mutableListOf()
-                            methodsByClass[classElement] = list
-                        }
-                        list.add(element)
+       ···
+
+    }
+    return true
+}
+
+private fun collectSubscribers(
+    annotations: Set<TypeElement>,
+    env: RoundEnvironment,
+    messager: Messager
+) {
+    for (annotation in annotations) {
+        val elements = env.getElementsAnnotatedWith(annotation)
+        for (element in elements) {
+            if (element is ExecutableElement) {
+                if (checkHasNoErrors(element, messager)) {
+                    val classElement = element.enclosingElement as TypeElement
+                    var list = methodsByClass[classElement]
+                    if (list == null) {
+                        list = mutableListOf()
+                        methodsByClass[classElement] = list
                     }
-                } else {
-                    //@Event 只能用于修改方法
-                    messager.printMessage(
-                        Diagnostic.Kind.ERROR,
-                        "@Event is only valid for methods",
-                        element
-                    )
+                    list.add(element)
                 }
+            } else {
+                //@Event 只能用于修改方法
+                messager.printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "@Event is only valid for methods",
+                    element
+                )
             }
         }
     }
+}
 
-    /**
-     * 校验方法签名是否合法
-     */
-    private fun checkHasNoErrors(element: ExecutableElement, messager: Messager): Boolean {
-        //不能是静态方法
-        if (element.modifiers.contains(Modifier.STATIC)) {
-            messager.printMessage(Diagnostic.Kind.ERROR, "Event method must not be static", element)
-            return false
-        }
-        //必须是 public 方法
-        if (!element.modifiers.contains(Modifier.PUBLIC)) {
-            messager.printMessage(Diagnostic.Kind.ERROR, "Event method must be public", element)
-            return false
-        }
-        //方法最多且只能包含一个参数
-        val parameters = element.parameters
-        if (parameters.size != 1) {
-            messager.printMessage(
-                Diagnostic.Kind.ERROR,
-                "Event method must have exactly 1 parameter",
-                element
-            )
-            return false
-        }
-        return true
+/**
+ * 校验方法签名是否合法
+ */
+private fun checkHasNoErrors(element: ExecutableElement, messager: Messager): Boolean {
+    //不能是静态方法
+    if (element.modifiers.contains(Modifier.STATIC)) {
+        messager.printMessage(Diagnostic.Kind.ERROR, "Event method must not be static", element)
+        return false
     }
+    //必须是 public 方法
+    if (!element.modifiers.contains(Modifier.PUBLIC)) {
+        messager.printMessage(Diagnostic.Kind.ERROR, "Event method must be public", element)
+        return false
+    }
+    //方法最多且只能包含一个参数
+    val parameters = element.parameters
+    if (parameters.size != 1) {
+        messager.printMessage(
+            Diagnostic.Kind.ERROR,
+            "Event method must have exactly 1 parameter",
+            element
+        )
+        return false
+    }
+    return true
+}
 ```
 
 然后，再来生成 `subscriberIndex` 这个静态常量，以及对应的静态方法块、`putIndex` 方法
 
 ```kotlin
-	//生成 subscriberIndex 这个静态常量
-    private fun generateSubscriberField(): FieldSpec {
-        val subscriberIndex = ParameterizedTypeName.get(
-            ClassName.get(Map::class.java),
-            getClassAny(),
-            ClassName.get(SubscriberInfo::class.java)
+//生成 subscriberIndex 这个静态常量
+private fun generateSubscriberField(): FieldSpec {
+    val subscriberIndex = ParameterizedTypeName.get(
+        ClassName.get(Map::class.java),
+        getClassAny(),
+        ClassName.get(SubscriberInfo::class.java)
+    )
+    return FieldSpec.builder(subscriberIndex, "subscriberIndex")
+        .addModifiers(
+            Modifier.PRIVATE,
+            Modifier.STATIC,
+            Modifier.FINAL
         )
-        return FieldSpec.builder(subscriberIndex, "subscriberIndex")
-            .addModifiers(
-                Modifier.PRIVATE,
-                Modifier.STATIC,
-                Modifier.FINAL
-            )
-            .initializer(
-                "new ${"$"}T<Class<?>, ${"$"}T>()",
-                HashMap::class.java,
-                SubscriberInfo::class.java
-            )
-            .build()
-    }
+        .initializer(
+            "new ${"$"}T<Class<?>, ${"$"}T>()",
+            HashMap::class.java,
+            SubscriberInfo::class.java
+        )
+        .build()
+}
 
-    //生成静态方法块
-    private fun generateInitializerBlock(builder: TypeSpec.Builder) {
-        for (item in methodsByClass) {
-            val methods = item.value
-            if (methods.isEmpty()) {
-                break
-            }
-            val codeBuilder = CodeBlock.builder()
+//生成静态方法块
+private fun generateInitializerBlock(builder: TypeSpec.Builder) {
+    for (item in methodsByClass) {
+        val methods = item.value
+        if (methods.isEmpty()) {
+            break
+        }
+        val codeBuilder = CodeBlock.builder()
+        codeBuilder.add(
+            "${"$"}T<${"$"}T> eventMethodInfoList = new ${"$"}T<${"$"}T>();",
+            List::class.java,
+            EventMethodInfo::class.java,
+            ArrayList::class.java,
+            EventMethodInfo::class.java
+        )
+        methods.forEach {
+            val methodName = it.simpleName.toString()
+            val eventType = it.parameters[0].asType()
             codeBuilder.add(
-                "${"$"}T<${"$"}T> eventMethodInfoList = new ${"$"}T<${"$"}T>();",
-                List::class.java,
-                EventMethodInfo::class.java,
-                ArrayList::class.java,
-                EventMethodInfo::class.java
-            )
-            methods.forEach {
-                val methodName = it.simpleName.toString()
-                val eventType = it.parameters[0].asType()
-                codeBuilder.add(
-                    "eventMethodInfoList.add(new EventMethodInfo(${"$"}S, ${"$"}T.class));",
-                    methodName,
-                    eventType
-                )
-            }
-            codeBuilder.add(
-                "SubscriberInfo subscriberInfo = new SubscriberInfo(${"$"}T.class, eventMethodInfoList); putIndex(subscriberInfo);",
-                item.key.asType()
-            )
-            builder.addInitializerBlock(
-                codeBuilder.build()
+                "eventMethodInfoList.add(new EventMethodInfo(${"$"}S, ${"$"}T.class));",
+                methodName,
+                eventType
             )
         }
+        codeBuilder.add(
+            "SubscriberInfo subscriberInfo = new SubscriberInfo(${"$"}T.class, eventMethodInfoList); putIndex(subscriberInfo);",
+            item.key.asType()
+        )
+        builder.addInitializerBlock(
+            codeBuilder.build()
+        )
     }
+}
 
-	//生成 putIndex 方法
-	private fun generateMethodPutIndex(): MethodSpec {
-        return MethodSpec.methodBuilder("putIndex")
-            .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
-            .returns(Void.TYPE)
-            .addParameter(SubscriberInfo::class.java, "info")
-            .addCode(
-                CodeBlock.builder().add("subscriberIndex.put(info.getSubscriberClass() , info);")
-                    .build()
-            )
-            .build()
-    }
+//生成 putIndex 方法
+private fun generateMethodPutIndex(): MethodSpec {
+    return MethodSpec.methodBuilder("putIndex")
+        .addModifiers(Modifier.PRIVATE, Modifier.STATIC, Modifier.FINAL)
+        .returns(Void.TYPE)
+        .addParameter(SubscriberInfo::class.java, "info")
+        .addCode(
+            CodeBlock.builder().add("subscriberIndex.put(info.getSubscriberClass() , info);")
+                .build()
+        )
+        .build()
+}
 ```
 
 然后，再来生成 `getSubscriberInfo` 这个公开方法，用于运行时调用
 
 ```kotlin
-    //生成 getSubscriberInfo 方法
-    private fun generateMethodGetSubscriberInfo(): MethodSpec {
-        return MethodSpec.methodBuilder("getSubscriberInfo")
-            .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-            .returns(SubscriberInfo::class.java)
-            .addParameter(getClassAny(), "subscriberClass")
-            .addCode(
-                CodeBlock.builder().add("return subscriberIndex.get(subscriberClass);")
-                    .build()
-            )
-            .build()
-    }
+//生成 getSubscriberInfo 方法
+private fun generateMethodGetSubscriberInfo(): MethodSpec {
+    return MethodSpec.methodBuilder("getSubscriberInfo")
+        .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+        .returns(SubscriberInfo::class.java)
+        .addParameter(getClassAny(), "subscriberClass")
+        .addCode(
+            CodeBlock.builder().add("return subscriberIndex.get(subscriberClass);")
+                .build()
+        )
+        .build()
+}
 ```
 
 完成以上方法的定义后，就可以在 `process` 方法中完成 EventBusInject 整个类文件的构建了
 
 ```kotlin
-	override fun process(
-        set: Set<TypeElement>,
-        roundEnvironment: RoundEnvironment
-    ): Boolean {
-        val messager = processingEnv.messager
-        collectSubscribers(set, roundEnvironment, messager)
-        if (methodsByClass.isEmpty()) {
-            messager.printMessage(Diagnostic.Kind.WARNING, "No @Event annotations found")
-        } else {
-            val typeSpec = TypeSpec.classBuilder(CLASS_NAME)
-                .addModifiers(Modifier.PUBLIC)
-                .addJavadoc(DOC)
-                .addField(generateSubscriberField())
-                .addMethod(generateMethodPutIndex())
-                .addMethod(generateMethodGetSubscriberInfo())
-            generateInitializerBlock(typeSpec)
-            val javaFile = JavaFile.builder(PACKAGE_NAME, typeSpec.build())
-                .build()
-            try {
-                javaFile.writeTo(processingEnv.filer)
-            } catch (e: Throwable) {
-                e.printStackTrace()
-            }
+override fun process(
+    set: Set<TypeElement>,
+    roundEnvironment: RoundEnvironment
+): Boolean {
+    val messager = processingEnv.messager
+    collectSubscribers(set, roundEnvironment, messager)
+    if (methodsByClass.isEmpty()) {
+        messager.printMessage(Diagnostic.Kind.WARNING, "No @Event annotations found")
+    } else {
+        val typeSpec = TypeSpec.classBuilder(CLASS_NAME)
+            .addModifiers(Modifier.PUBLIC)
+            .addJavadoc(DOC)
+            .addField(generateSubscriberField())
+            .addMethod(generateMethodPutIndex())
+            .addMethod(generateMethodGetSubscriberInfo())
+        generateInitializerBlock(typeSpec)
+        val javaFile = JavaFile.builder(PACKAGE_NAME, typeSpec.build())
+            .build()
+        try {
+            javaFile.writeTo(processingEnv.filer)
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
-        return true
     }
+    return true
+}
 ```
 
 # 三、EasyEventBus
@@ -470,7 +466,6 @@ EasyEventBus 的逻辑就很简单了，主要是通过反射来生成 EventBusI
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/3 11:44
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */

@@ -305,67 +305,67 @@ data class Tetris constructor(
 简单起见，可以事先就定义好 Tetris 各种可能的方块类型，以及该方块的各种旋转结果
 
 ```kotlin
-		private val allShapes = listOf(
-            //I
-            listOf(
-                listOf(Location(0, 3), Location(1, 3), Location(2, 3), Location(3, 3)),
-                listOf(Location(1, 0), Location(1, 1), Location(1, 2), Location(1, 3)),
-            ),
-            //S
-            listOf(
-                listOf(Location(0, 3), Location(1, 2), Location(1, 3), Location(2, 2)),
-                listOf(Location(0, 1), Location(0, 2), Location(1, 2), Location(1, 3)),
-            ),
-            //Z
-            listOf(
-                listOf(Location(0, 2), Location(1, 2), Location(1, 3), Location(2, 3)),
-                listOf(Location(0, 2), Location(0, 3), Location(1, 1), Location(1, 2)),
-            ),
-            //L
-            listOf(
-                listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 3)),
-                listOf(Location(0, 2), Location(0, 3), Location(1, 2), Location(2, 2)),
-                listOf(Location(0, 1), Location(1, 1), Location(1, 2), Location(1, 3)),
-                listOf(Location(0, 3), Location(1, 3), Location(2, 3), Location(2, 2)),
-            ),
-            //O
-            listOf(
-                listOf(Location(0, 2), Location(0, 3), Location(1, 2), Location(1, 3)),
-            ),
-            //J
-            listOf(
-                listOf(Location(0, 3), Location(1, 1), Location(1, 2), Location(1, 3)),
-                listOf(Location(0, 2), Location(0, 3), Location(1, 3), Location(2, 3)),
-                listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 1)),
-                listOf(Location(0, 2), Location(1, 2), Location(2, 2), Location(2, 3)),
-            ),
-            //T
-            listOf(
-                listOf(Location(0, 2), Location(1, 2), Location(2, 2), Location(1, 3)),
-                listOf(Location(1, 1), Location(0, 2), Location(1, 2), Location(1, 3)),
-                listOf(Location(1, 2), Location(0, 3), Location(1, 3), Location(2, 3)),
-                listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 2)),
-            ),
-        )
+private val allShapes = listOf(
+    //I
+    listOf(
+        listOf(Location(0, 3), Location(1, 3), Location(2, 3), Location(3, 3)),
+        listOf(Location(1, 0), Location(1, 1), Location(1, 2), Location(1, 3)),
+    ),
+    //S
+    listOf(
+        listOf(Location(0, 3), Location(1, 2), Location(1, 3), Location(2, 2)),
+        listOf(Location(0, 1), Location(0, 2), Location(1, 2), Location(1, 3)),
+    ),
+    //Z
+    listOf(
+        listOf(Location(0, 2), Location(1, 2), Location(1, 3), Location(2, 3)),
+        listOf(Location(0, 2), Location(0, 3), Location(1, 1), Location(1, 2)),
+    ),
+    //L
+    listOf(
+        listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 3)),
+        listOf(Location(0, 2), Location(0, 3), Location(1, 2), Location(2, 2)),
+        listOf(Location(0, 1), Location(1, 1), Location(1, 2), Location(1, 3)),
+        listOf(Location(0, 3), Location(1, 3), Location(2, 3), Location(2, 2)),
+    ),
+    //O
+    listOf(
+        listOf(Location(0, 2), Location(0, 3), Location(1, 2), Location(1, 3)),
+    ),
+    //J
+    listOf(
+        listOf(Location(0, 3), Location(1, 1), Location(1, 2), Location(1, 3)),
+        listOf(Location(0, 2), Location(0, 3), Location(1, 3), Location(2, 3)),
+        listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 1)),
+        listOf(Location(0, 2), Location(1, 2), Location(2, 2), Location(2, 3)),
+    ),
+    //T
+    listOf(
+        listOf(Location(0, 2), Location(1, 2), Location(2, 2), Location(1, 3)),
+        listOf(Location(1, 1), Location(0, 2), Location(1, 2), Location(1, 3)),
+        listOf(Location(1, 2), Location(0, 3), Location(1, 3), Location(2, 3)),
+        listOf(Location(0, 1), Location(0, 2), Location(0, 3), Location(1, 2)),
+    ),
+)
 ```
 
 之后在每次生成 Tetris 对象时，都随机从 allShapes 中取值。并且每个 Tetris 对象的初始偏移量 offset 的 Y 值固定是 -4，即默认处于屏幕之外，当方块不断移动时，其 Offset 就会变成 `Location(0, -3)`、`Location(1, -2)` .... `Location(2, 10)`等各种值，通过改变 X 值来实现左右移动、改变 Y 值来实现下移
 
 ```kotlin
-        operator fun invoke(): Tetris {
-            val shapes = allShapes.random()
-            val type = Random.nextInt(0, shapes.size)
-            return Tetris(
-                shapes = shapes,
-                type = type,
-                offset = Location(
-                    Random.nextInt(
-                        0,
-                        BRICK_WIDTH - 3
-                    ), -4
-                )
-            )
-        }
+operator fun invoke(): Tetris {
+    val shapes = allShapes.random()
+    val type = Random.nextInt(0, shapes.size)
+    return Tetris(
+        shapes = shapes,
+        type = type,
+        offset = Location(
+            Random.nextInt(
+                0,
+                BRICK_WIDTH - 3
+            ), -4
+        )
+    )
+}
 ```
 
 每个方块就可以通过 Canvas 来进行绘制，方便起见就将其定义为扩展函数，通过 color 来控制是要绘制实心方块还是虚心方块
@@ -399,39 +399,39 @@ fun DrawScope.drawBrick(brickSize: Float, color: Color) {
 之后只需要遍历代表整个屏幕坐标值的 screenMatrix 进行绘制就可以绘制出屏幕背景以及下落的方块，如果值等于一就使用 BrickFill 颜色，否则就使用 BrickAlpha。每当有方块无法继续下落时，该方块所在的坐标值就都会被写入到 screenMatrix 中，以此来保存各个固定的实心方块
 
 ```kotlin
-	Canvas(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = ScreenBackground)
-            .padding(
-                start = screenPadding, top = screenPadding,
-                end = screenPadding, bottom = screenPadding
-            )
-    ) {
-        val width = size.width
-        val height = size.height
-        val screenPaddingPx = screenPadding.toPx()
-        val spiritPaddingPx = spiritPadding.toPx()
-        val brickSize = (height - spiritPaddingPx * (matrixHeight - 1)) / matrixHeight
+Canvas(
+    modifier = Modifier
+        .fillMaxSize()
+        .background(color = ScreenBackground)
+        .padding(
+            start = screenPadding, top = screenPadding,
+            end = screenPadding, bottom = screenPadding
+        )
+) {
+    val width = size.width
+    val height = size.height
+    val screenPaddingPx = screenPadding.toPx()
+    val spiritPaddingPx = spiritPadding.toPx()
+    val brickSize = (height - spiritPaddingPx * (matrixHeight - 1)) / matrixHeight
 
-        kotlin.run {
-            screenMatrix.forEachIndexed { y, ints ->
-                ints.forEachIndexed { x, isFill ->
-                    translate(
-                        left = x * (brickSize + spiritPaddingPx),
-                        top = y * (brickSize + spiritPaddingPx)
-                    ) {
-                        drawBrick(
-                            brickSize = brickSize,
-                            color = if (isFill == 1) BrickFill else BrickAlpha
-                        )
-                    }
+    kotlin.run {
+        screenMatrix.forEachIndexed { y, ints ->
+            ints.forEachIndexed { x, isFill ->
+                translate(
+                    left = x * (brickSize + spiritPaddingPx),
+                    top = y * (brickSize + spiritPaddingPx)
+                ) {
+                    drawBrick(
+                        brickSize = brickSize,
+                        color = if (isFill == 1) BrickFill else BrickAlpha
+                    )
                 }
             }
         }
-
-        ···
     }
+
+    ···
+}
 ```
 
 # 调度器 - TetrisViewModel
@@ -507,21 +507,21 @@ enum class TransformationType {
 游戏第一次启动时，由 MainActivity 来主动下发 Action.Welcome 事件，执行欢迎动画。当后续用户点击 Start 按钮启动游戏时，则会下发 Action.Start 事件，从而启动一个执行延时任务的协程任务 downJob，downJob 负责下发 TransformationType.Down 事件，即方块下落事件，当消耗了该事件后，又会重复调用 `startDownJob()` 方法，从而实现自我驱动方块匀速下降
 
 ```kotlin
-    private var downJob: Job? = null
+private var downJob: Job? = null
 
-    private fun onStartGame() {
-        dispatchState(TetrisState().copy(gameStatus = GameStatus.Running))
-        startDownJob()
-    }
+private fun onStartGame() {
+    dispatchState(TetrisState().copy(gameStatus = GameStatus.Running))
+    startDownJob()
+}
 
-    private fun startDownJob() {
-        cancelDownJob()
-        cancelClearScreenJob()
-        downJob = viewModelScope.launch {
-            delay(DOWN_SPEED)
-            dispatch(Action.Transformation(TransformationType.Down))
-        }
+private fun startDownJob() {
+    cancelDownJob()
+    cancelClearScreenJob()
+    downJob = viewModelScope.launch {
+        delay(DOWN_SPEED)
+        dispatch(Action.Transformation(TransformationType.Down))
     }
+}
 ```
 
 Action.Transformation 代表的是多种操作行为，例如左右移动、旋转等。但并不是每种操作都能生效，因为执行该操作可能会导致方块超出屏幕。所以如果 `onTransformation` 方法返回 null 的话，说明此次行为无效，无需更新界面

@@ -6,7 +6,7 @@
 
 [LeakCanary](https://github.com/square/leakcanary/) 是由 [Square](https://github.com/square) 公司开源的用于 Android 的内存泄漏检测工具，可以帮助开发者发现内存泄露情况并且找出泄露源头，有助于减少 `OutOfMemoryError` 情况的发生。在目前的应用开发中也算作是性能优化的一个重要实现途径，很多面试官在考察性能优化时都会问到 LeakCanary 的实现原理
 
-本文就基于其当前（2020/10/06）的最新一次提交来进行源码分析，具体的 Git 版本节点是：**9f62126e**，来了解 LeakCanary 的整体运行流程和实现原理 😂😂
+本文就来对其实现原理进行分析，具体的 Git 版本节点是：**9f62126e**，来了解 LeakCanary 的整体运行流程和实现原理 😂😂
 
 # 一、支持的内存泄露类型
 
@@ -170,7 +170,6 @@ LeakCanary 具体进行内存泄露检测的逻辑可以分为三类：
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/06 14:26
  * @Github：https://github.com/leavesCZY
  */
 fun main() {
@@ -199,37 +198,37 @@ fun main() {
 `ObjectWatcher` 的起始方法是 `watch(Any, String)`，该方法就用于监听指定对象
 
 ```kotlin
-	/**
-     * References passed to [watch].
-     * 用于保存要监听的对象，mapKey 是该对象的唯一标识、mapValue 是该对象的弱引用
-     */
-    private val watchedObjects = mutableMapOf<String, KeyedWeakReference>()
+/**
+ * References passed to [watch].
+ * 用于保存要监听的对象，mapKey 是该对象的唯一标识、mapValue 是该对象的弱引用
+ */
+private val watchedObjects = mutableMapOf<String, KeyedWeakReference>()
 
-    //KeyedWeakReference 关联的引用队列
-    private val queue = ReferenceQueue<Any>()
+//KeyedWeakReference 关联的引用队列
+private val queue = ReferenceQueue<Any>()
 
-	/**
-     * Watches the provided [watchedObject].
-     *
-     * @param description Describes why the object is watched.
-     */
-    @Synchronized
-    fun watch(watchedObject: Any, description: String) {
-        if (!isEnabled()) {
-            return
-        }
-        removeWeaklyReachableObjects()
-        //为 watchedObject 生成一个唯一标识
-        val key = UUID.randomUUID().toString()
-        val watchUptimeMillis = clock.uptimeMillis()
-        //创建 watchedObject 关联的弱引用
-        val reference = KeyedWeakReference(watchedObject, key, description, watchUptimeMillis, queue)
-        ···
-        watchedObjects[key] = reference
-        checkRetainedExecutor.execute {
-            moveToRetained(key)
-        }
+/**
+ * Watches the provided [watchedObject].
+ *
+ * @param description Describes why the object is watched.
+ */
+@Synchronized
+fun watch(watchedObject: Any, description: String) {
+    if (!isEnabled()) {
+        return
     }
+    removeWeaklyReachableObjects()
+    //为 watchedObject 生成一个唯一标识
+    val key = UUID.randomUUID().toString()
+    val watchUptimeMillis = clock.uptimeMillis()
+    //创建 watchedObject 关联的弱引用
+    val reference = KeyedWeakReference(watchedObject, key, description, watchUptimeMillis, queue)
+    ···
+    watchedObjects[key] = reference
+    checkRetainedExecutor.execute {
+        moveToRetained(key)
+    }
+}
 ```
 
 `watch()` 方法的主要逻辑：
@@ -269,31 +268,31 @@ class KeyedWeakReference(
 `moveToRetained` 方法就用于判断指定 key 关联的对象是否已经泄露，如果没有泄露则移除对该对象的弱引用，有泄露的话则更新其 `retainedUptimeMillis` 值，以此来标记其发生了泄露，并同时通过回调 `onObjectRetainedListeners` 来分析内存泄露链
 
 ```kotlin
-    @Synchronized
-    private fun moveToRetained(key: String) {
-        removeWeaklyReachableObjects()
-        val retainedRef = watchedObjects[key]
-        if (retainedRef != null) {
-            //记录当前时间
-            retainedRef.retainedUptimeMillis = clock.uptimeMillis()
-            onObjectRetainedListeners.forEach { it.onObjectRetained() }
-        }
+@Synchronized
+private fun moveToRetained(key: String) {
+    removeWeaklyReachableObjects()
+    val retainedRef = watchedObjects[key]
+    if (retainedRef != null) {
+        //记录当前时间
+        retainedRef.retainedUptimeMillis = clock.uptimeMillis()
+        onObjectRetainedListeners.forEach { it.onObjectRetained() }
     }
+}
 
-    //如果判断到一个对象没有发生内存泄露，那么就移除对该对象的弱引用
-    //此方法会先后调用多次
-    private fun removeWeaklyReachableObjects() {
-        // WeakReferences are enqueued as soon as the object to which they point to becomes weakly
-        // reachable. This is before finalization or garbage collection has actually happened.
-        var ref: KeyedWeakReference?
-        do {
-            ref = queue.poll() as KeyedWeakReference?
-            if (ref != null) {
-                //如果 ref 不为 null，说明 ref 关联的对象没有发生内存泄露，那么就移除对该对象的引用
-                watchedObjects.remove(ref.key)
-            }
-        } while (ref != null)
-    }
+//如果判断到一个对象没有发生内存泄露，那么就移除对该对象的弱引用
+//此方法会先后调用多次
+private fun removeWeaklyReachableObjects() {
+    // WeakReferences are enqueued as soon as the object to which they point to becomes weakly
+    // reachable. This is before finalization or garbage collection has actually happened.
+    var ref: KeyedWeakReference?
+    do {
+        ref = queue.poll() as KeyedWeakReference?
+        if (ref != null) {
+            //如果 ref 不为 null，说明 ref 关联的对象没有发生内存泄露，那么就移除对该对象的引用
+            watchedObjects.remove(ref.key)
+        }
+    } while (ref != null)
+}
 ```
 
 # 四、ActivityDestroyWatcher：检测Activity 

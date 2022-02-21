@@ -45,7 +45,7 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-本文基于当前 OkHttp 的最新版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
+本文基于 OkHttp 的以下来版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
 
 ```groovy
 dependencies {
@@ -58,7 +58,6 @@ dependencies {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/10 22:11
  * @Github：https://github.com/leavesCZY
  */
 const val URL = "https://publicobject.com/helloworld.txt"
@@ -158,12 +157,12 @@ Request 包含了网络请求时的所有请求参数，一共包含以下五个
 5. tags。可用来唯一标识本次请求
 
 ```kotlin
-    internal var url: HttpUrl? = null
-    internal var method: String
-    internal var headers: Headers.Builder
-    internal var body: RequestBody? = null
-    /** A mutable map of tags, or an immutable empty map if we don't have any. */
-    internal var tags: MutableMap<Class<*>, Any> = mutableMapOf()
+internal var url: HttpUrl? = null
+internal var method: String
+internal var headers: Headers.Builder
+internal var body: RequestBody? = null
+/** A mutable map of tags, or an immutable empty map if we don't have any. */
+internal var tags: MutableMap<Class<*>, Any> = mutableMapOf()
 ```
 
 # 三、Call 
@@ -171,8 +170,8 @@ Request 包含了网络请求时的所有请求参数，一共包含以下五个
 当调用 `okHttClient.newCall(request)`时就会得到一个 Call 对象
 
 ```kotlin
-  /** Prepares the [request] to be executed at some point in the future. */
-  override fun newCall(request: Request): Call = RealCall(this, request, forWebSocket = false)
+/** Prepares the [request] to be executed at some point in the future. */
+override fun newCall(request: Request): Call = RealCall(this, request, forWebSocket = false)
 ```
 
 Call 是一个接口，我们可以将其看做是网络请求的启动器，可用于发起同步请求或异步请求，**但重复发起多次请求的话会抛出异常**
@@ -250,18 +249,18 @@ class RealCall(
 Dispatcher 是一个调度器，用于对全局的网络请求进行缓存调度，其包含以下几个成员变量
 
 ```kotlin
-  var maxRequests = 64
+var maxRequests = 64
 
-  var maxRequestsPerHost = 5
+var maxRequestsPerHost = 5
 
-  /** Ready async calls in the order they'll be run. */
-  private val readyAsyncCalls = ArrayDeque<AsyncCall>()
+/** Ready async calls in the order they'll be run. */
+private val readyAsyncCalls = ArrayDeque<AsyncCall>()
 
-  /** Running asynchronous calls. Includes canceled calls that haven't finished yet. */
-  private val runningAsyncCalls = ArrayDeque<AsyncCall>()
+/** Running asynchronous calls. Includes canceled calls that haven't finished yet. */
+private val runningAsyncCalls = ArrayDeque<AsyncCall>()
 
-  /** Running synchronous calls. Includes canceled calls that haven't finished yet. */
-  private val runningSyncCalls = ArrayDeque<RealCall>()
+/** Running synchronous calls. Includes canceled calls that haven't finished yet. */
+private val runningSyncCalls = ArrayDeque<RealCall>()
 ```
 
 - maxRequests。同一时间允许并发执行网络请求的最大线程数
@@ -361,63 +360,62 @@ class RealCall(
 AsyncCall 是 RealCall 的非静态内部类，所以 AsyncCall 可以访问到 RealCall 的所有变量和方法。此外，AsyncCall 继承了 Runnable 接口，其 `executeOn` 方法就用于传入一个线程池对象来执行`run` 方法。`run` 方法内还是调用了 `getResponseWithInterceptorChain()`方法来获取 response，并通过 Callback 来将执行结果（不管成功还是失败）回调出去，在请求结束后也会将自身从 dispatcher 中移除
 
 ```kotlin
-  internal inner class AsyncCall(
-    private val responseCallback: Callback
-  ) : Runnable {
+internal inner class AsyncCall(private val responseCallback: Callback) : Runnable {
+	
     @Volatile var callsPerHost = AtomicInteger(0)
-      private set
+  		private set
 
-    fun reuseCallsPerHostFrom(other: AsyncCall) {
-      this.callsPerHost = other.callsPerHost
-    }
+	fun reuseCallsPerHostFrom(other: AsyncCall) {
+  		this.callsPerHost = other.callsPerHost
+	}
 
-    fun executeOn(executorService: ExecutorService) {
-      client.dispatcher.assertThreadDoesntHoldLock()
-      var success = false
-      try {
-        executorService.execute(this)
-        success = true
-      } catch (e: RejectedExecutionException) {
-        val ioException = InterruptedIOException("executor rejected")
-        ioException.initCause(e)
-        noMoreExchanges(ioException)
-        responseCallback.onFailure(this@RealCall, ioException)
-      } finally {
-        if (!success) {
-          client.dispatcher.finished(this) // This call is no longer running!
+	fun executeOn(executorService: ExecutorService) {
+        client.dispatcher.assertThreadDoesntHoldLock()
+        var success = false
+        try {
+            executorService.execute(this)
+            success = true
+        } catch (e: RejectedExecutionException) {
+            val ioException = InterruptedIOException("executor rejected")
+            ioException.initCause(e)
+            noMoreExchanges(ioException)
+            responseCallback.onFailure(this@RealCall, ioException)
+        } finally {
+            if (!success) {
+                client.dispatcher.finished(this) // This call is no longer running!
+            }
         }
-      }
     }
 
     override fun run() {
-      threadName("OkHttp ${redactedUrl()}") {
-        var signalledCallback = false
-        timeout.enter()
-        try {
-          val response = getResponseWithInterceptorChain()
-          signalledCallback = true
-          responseCallback.onResponse(this@RealCall, response)
-        } catch (e: IOException) {
-          if (signalledCallback) {
-            // Do not signal the callback twice!
-            Platform.get().log("Callback failure for ${toLoggableString()}", Platform.INFO, e)
-          } else {
-            responseCallback.onFailure(this@RealCall, e)
-          }
-        } catch (t: Throwable) {
-          cancel()
-          if (!signalledCallback) {
-            val canceledException = IOException("canceled due to $t")
-            canceledException.addSuppressed(t)
-            responseCallback.onFailure(this@RealCall, canceledException)
-          }
-          throw t
-        } finally {
-          client.dispatcher.finished(this)
+        threadName("OkHttp ${redactedUrl()}") {
+            var signalledCallback = false
+            timeout.enter()
+            try {
+                val response = getResponseWithInterceptorChain()
+                signalledCallback = true
+                responseCallback.onResponse(this@RealCall, response)
+            } catch (e: IOException) {
+                if (signalledCallback) {
+                    // Do not signal the callback twice!
+                    Platform.get().log("Callback failure for ${toLoggableString()}", Platform.INFO, e)
+                } else {
+                    responseCallback.onFailure(this@RealCall, e)
+                }
+            } catch (t: Throwable) {
+                cancel()
+                if (!signalledCallback) {
+                    val canceledException = IOException("canceled due to $t")
+                    canceledException.addSuppressed(t)
+                    responseCallback.onFailure(this@RealCall, canceledException)
+                }
+                throw t
+            } finally {
+                client.dispatcher.finished(this)
+            }
         }
-      }
     }
-  }
+}
 ```
 
 Dispatcher 在拿到 AsyncCall 对象后，会先将其存到 readyAsyncCalls 中，然后通过 `findExistingCallWithHost`方法来查找当前是否有指向同一 Host 的异步请求，有的话则交换 callsPerHost 变量，该变量就用于标记当前指向同一 Host 的请求数量，最后调用 `promoteAndExecute` 方法来判断当前是否允许发起请求
@@ -505,17 +503,17 @@ private fun promoteAndExecute(): Boolean {
 OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池就长这样：
 
 ```kotlin
-  private var executorServiceOrNull: ExecutorService? = null
+private var executorServiceOrNull: ExecutorService? = null
 
-  @get:Synchronized
-  @get:JvmName("executorService") val executorService: ExecutorService
-    get() {
-      if (executorServiceOrNull == null) {
-        executorServiceOrNull = ThreadPoolExecutor(0, Int.MAX_VALUE, 60, TimeUnit.SECONDS,
-            SynchronousQueue(), threadFactory("$okHttpName Dispatcher", false))
-      }
-      return executorServiceOrNull!!
-    }
+@get:Synchronized
+@get:JvmName("executorService") val executorService: ExecutorService
+get() {
+  if (executorServiceOrNull == null) {
+    executorServiceOrNull = ThreadPoolExecutor(0, Int.MAX_VALUE, 60, TimeUnit.SECONDS,
+        SynchronousQueue(), threadFactory("$okHttpName Dispatcher", false))
+  }
+  return executorServiceOrNull!!
+}
 ```
 
 该线程池的参数设置有什么优势呢？以我粗浅的眼光来看，有以下两点：
@@ -532,30 +530,30 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
 同步请求和异步请求结束后都会调用到 Dispatcher 的两个 `finished` 方法，在这两个方法里又会触发到 `promoteAndExecute()`方法去遍历任务列表来执行，此时就推动了待处理列表的任务执行操作。所以说，Dispatcher 中的请求都可以看做是在自发性地启动，每个请求结束都会自动触发下一个请求执行（如果有的话），省去了多余的定时检查这类操作
 
 ```kotlin
-  /** Used by [AsyncCall.run] to signal completion. */
-  internal fun finished(call: AsyncCall) {
-    call.callsPerHost.decrementAndGet()
-    finished(runningAsyncCalls, call)
-  }
+/** Used by [AsyncCall.run] to signal completion. */
+internal fun finished(call: AsyncCall) {
+	call.callsPerHost.decrementAndGet()
+	finished(runningAsyncCalls, call)
+}
 
-  /** Used by [Call.execute] to signal completion. */
-  internal fun finished(call: RealCall) {
-    finished(runningSyncCalls, call)
-  }
+/** Used by [Call.execute] to signal completion. */
+internal fun finished(call: RealCall) {
+	finished(runningSyncCalls, call)
+}
 
-  private fun <T> finished(calls: Deque<T>, call: T) {
-    val idleCallback: Runnable?
-    synchronized(this) {
-      if (!calls.remove(call)) throw AssertionError("Call wasn't in-flight!")
-      idleCallback = this.idleCallback
-    }
+private fun <T> finished(calls: Deque<T>, call: T) {
+	val idleCallback: Runnable?
+	synchronized(this) {
+  		if (!calls.remove(call)) throw AssertionError("Call wasn't in-flight!")
+  		idleCallback = this.idleCallback
+	}
 	//判断当前是否有可以启动的待执行任务，有的话则启动
-    val isRunning = promoteAndExecute()
+	val isRunning = promoteAndExecute()
 
-    if (!isRunning && idleCallback != null) {
-      idleCallback.run()
-    }
-  }
+	if (!isRunning && idleCallback != null) {
+  		idleCallback.run()
+	}
+}
 ```
 
 ## 6、总结
@@ -578,8 +576,8 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
 最后，request 和 interceptors 会用来生成一个 RealInterceptorChain 对象，由其来最终返回 response
 
 ```kotlin
-  @Throws(IOException::class)
-  internal fun getResponseWithInterceptorChain(): Response {
+@Throws(IOException::class)
+internal fun getResponseWithInterceptorChain(): Response {
     // Build a full stack of interceptors.
     val interceptors = mutableListOf<Interceptor>()
     //添加开发者设置的拦截器
@@ -626,7 +624,7 @@ OkHttp 的异步请求是交由其内部的线程池来完成的，该线程池�
         noMoreExchanges(null)
       }
     }
-  }  
+}  
 ```
 
 **Interceptor 是 OkHttp 里很重要的一环，OkHttp 也是靠此为开发者提供了很高的自由度**。Interceptor 接口本身只包含一个 `intercept` 方法，在此方法内可拿到原始的 Request 对象以及最终的 Response
@@ -663,10 +661,6 @@ Interceptor 的实现初衷是为了给开发者提供一个可以控制网络�
 假设我们自己定义的 Interceptor 实现类有两个：LogInterceptor 和 HeaderInterceptor，这里只是简单地将获取到 request 和 response 的时机给打印出来，重点是要看每个 Interceptor 的先后调用顺序。为了将两个 Interceptor 给串联起来，RealInterceptorChain 会循环获取 index 指向的下一个 Interceptor 对象，每次构建一个新的 RealInterceptorChain 对象作为参数来调用 `intercept` 方法，这样外部只需要调用一次 `realInterceptorChain.proceed` 就可以拿到最终的 response 对象
 
 ```kotlin
-/**
- * @Author: leavesCZY
- * @Date: 2020/11/11 16:08
- */
 class Request
 
 class Response
@@ -822,14 +816,14 @@ class RealInterceptorChain(
 我们在构建 OkHttpClient 的时候，添加拦截器的方法分为两类：`addInterceptor`和`addNetworkInterceptor`
 
 ```kotlin
-    val okHttClient = OkHttpClient.Builder()
-        .addInterceptor { chain ->
-            chain.proceed(chain.request())
-        }
-        .addNetworkInterceptor { chain ->
-            chain.proceed(chain.request())
-        }
-        .build()
+val okHttClient = OkHttpClient.Builder()
+    .addInterceptor { chain ->
+        chain.proceed(chain.request())
+    }
+    .addNetworkInterceptor { chain ->
+        chain.proceed(chain.request())
+    }
+    .build()
 ```
 
 Interceptor 和 NetworkInterceptor 分别被称为**应用拦截器**和**网络拦截器**，那么它们有什么区别呢？
@@ -837,16 +831,16 @@ Interceptor 和 NetworkInterceptor 分别被称为**应用拦截器**和**网络
 前面有讲到，OkHttp 在执行拦截器的时候，是按照如下顺序的，这个顺序就已经决定了不同拦截器的调用时机差异
 
 ```kotlin
-	val interceptors = mutableListOf<Interceptor>()
-    interceptors += client.interceptors
-    interceptors += RetryAndFollowUpInterceptor(client)
-    interceptors += BridgeInterceptor(client.cookieJar)
-    interceptors += CacheInterceptor(client.cache)
-    interceptors += ConnectInterceptor
-    if (!forWebSocket) {
-      interceptors += client.networkInterceptors
-    }
-    interceptors += CallServerInterceptor(forWebSocket)
+val interceptors = mutableListOf<Interceptor>()
+interceptors += client.interceptors
+interceptors += RetryAndFollowUpInterceptor(client)
+interceptors += BridgeInterceptor(client.cookieJar)
+interceptors += CacheInterceptor(client.cache)
+interceptors += ConnectInterceptor
+if (!forWebSocket) {
+  	interceptors += client.networkInterceptors
+}
+interceptors += CallServerInterceptor(forWebSocket)
 ```
 
 - 由于应用拦截器处于列表头部，所以在整个责任链路中应用拦截器会首先被执行，即使之后在 RetryAndFollowUpInterceptor 中发生了**请求失败重试或者网络重定向**等情况，应用拦截器也只会被触发一次，但网络拦截器会被调用多次
@@ -864,7 +858,6 @@ Interceptor 和 NetworkInterceptor 分别被称为**应用拦截器**和**网络
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/14 15:49
  * @Github：https://github.com/leavesCZY
  */
 fun main() {

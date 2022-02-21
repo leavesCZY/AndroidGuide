@@ -126,29 +126,29 @@ BitmapFactory 提供了很多个方法用于加载 Bitmap 对象：`decodeFile�
 `decodeResource` 方法也会调用到`decodeResourceStream`方法，`decodeResourceStream`方法如果判断到`inDensity` 和 `inTargetDensity` 两个属性外部没有主动赋值的话，就会根据实际情况进行赋值
 
 ```java
-    @Nullable
-    public static Bitmap decodeResourceStream(@Nullable Resources res, @Nullable TypedValue value,
-            @Nullable InputStream is, @Nullable Rect pad, @Nullable Options opts) {
-        validate(opts);
-        if (opts == null) {
-            opts = new Options();
-        }
-        if (opts.inDensity == 0 && value != null) {
-            final int density = value.density;
-            if (density == TypedValue.DENSITY_DEFAULT) {
-                //如果 density 没有赋值的话（等于0），那么就使用基准值 160 dpi
-                opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;
-            } else if (density != TypedValue.DENSITY_NONE) {
-                //在这里进行赋值，density 就等于 drawable 对应的 dpi
-                opts.inDensity = density;
-            }
-        }  
-        if (opts.inTargetDensity == 0 && res != null) {
-            //如果没有主动设置 inTargetDensity 的话，inTargetDensity 就等于设备的 dpi
-            opts.inTargetDensity = res.getDisplayMetrics().densityDpi;
-        }
-        return decodeStream(is, pad, opts);
+@Nullable
+public static Bitmap decodeResourceStream(@Nullable Resources res, @Nullable TypedValue value,
+        @Nullable InputStream is, @Nullable Rect pad, @Nullable Options opts) {
+    validate(opts);
+    if (opts == null) {
+        opts = new Options();
     }
+    if (opts.inDensity == 0 && value != null) {
+        final int density = value.density;
+        if (density == TypedValue.DENSITY_DEFAULT) {
+            //如果 density 没有赋值的话（等于0），那么就使用基准值 160 dpi
+            opts.inDensity = DisplayMetrics.DENSITY_DEFAULT;
+        } else if (density != TypedValue.DENSITY_NONE) {
+            //在这里进行赋值，density 就等于 drawable 对应的 dpi
+            opts.inDensity = density;
+        }
+    }  
+    if (opts.inTargetDensity == 0 && res != null) {
+        //如果没有主动设置 inTargetDensity 的话，inTargetDensity 就等于设备的 dpi
+        opts.inTargetDensity = res.getDisplayMetrics().densityDpi;
+    }
+    return decodeStream(is, pad, opts);
+}
 ```
 
 # 6、BitmapConfig

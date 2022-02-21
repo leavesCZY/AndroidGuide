@@ -6,7 +6,7 @@
 
 上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 中几个开发者比较容易忽略的衍生产物，希望对你有所帮助 🤣🤣
 
-本文所讲的源码基于以下依赖库当前最新的 release 版本：
+本文所讲的源码基于以下版本
 
 ```groovy
 implementation "androidx.lifecycle:lifecycle-service:2.2.0"
@@ -183,21 +183,21 @@ ProcessLifecycleOwner 是 `androidx.lifecycle:lifecycle-process:xxx` 库下的�
 使用方式如下所示：
 
 ```kotlin
-        ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
+ProcessLifecycleOwner.get().lifecycle.addObserver(object : DefaultLifecycleObserver {
 
-            override fun onCreate(owner: LifecycleOwner) {
-                Log.e("TAG", "应用被启动")
-            }
+    override fun onCreate(owner: LifecycleOwner) {
+        Log.e("TAG", "应用被启动")
+    }
 
-            override fun onResume(owner: LifecycleOwner) {
-                Log.e("TAG", "应用进入前台")
-            }
+    override fun onResume(owner: LifecycleOwner) {
+        Log.e("TAG", "应用进入前台")
+    }
 
-            override fun onStop(owner: LifecycleOwner) {
-                Log.e("TAG", "应用进入后台")
-            }
+    override fun onStop(owner: LifecycleOwner) {
+        Log.e("TAG", "应用进入后台")
+    }
 
-        })
+})
 ```
 
 ProcessLifecycleOwner 使用到了单例模式，获取到其唯一实例后向直接其添加 Observer 即可。需要注意的是，ProcessLifecycleOwner 是依靠于应用内所有 Activity 的生命周期的变化来定义整个应用的生命周期事件的（其实对于 Activity 的具体类型有所限制，最后会讲到），所以对于那些完全无 UI 界面的应用来说使用 ProcessLifecycleOwner 是没有意义的
@@ -329,80 +329,79 @@ public class ProcessLifecycleOwner implements LifecycleOwner {
 至此，就实现了对应用内所有 Activity 的生命周期事件监听，再之后只要再来计算处于前台的 Activity 数量的变化，就可以判断出应用所处的状态了
 
 ```java
-    private Handler mHandler;
+private Handler mHandler;
 
-    private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
+private final LifecycleRegistry mRegistry = new LifecycleRegistry(this);
 
-	ActivityInitializationListener mInitializationListener =
-            new ActivityInitializationListener() {
+ActivityInitializationListener mInitializationListener = new ActivityInitializationListener() {
+            @Override
+            public void onCreate() {
+            }
+
+            @Override
+            public void onStart() {
+                activityStarted();
+            }
+
+            @Override
+            public void onResume() {
+                activityResumed();
+            }
+        };
+
+static void init(Context context) {
+    sInstance.attach(context);
+}
+
+void attach(Context context) {
+    mHandler = new Handler();
+    //因为 ProcessLifecycleOwner 是针对于对整个应用的生命周期的监听
+    //会执行到这一步的话说明应用肯定被启动了，此时就到了 Lifecycle.Event.ON_CREATE
+    //且由于 attach 方法只会被调用一次，所以外部也只会收到一次 Lifecycle.Event.ON_CREATE 事件
+    mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
+    Application app = (Application) context.getApplicationContext();
+    app.registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
+
+        //此方法是 SDK 29 时新增的，所以当 SDK 版本小于 29 时此方法是无效的
+        @Override
+        public void onActivityPreCreated(@NonNull Activity activity,
+                                         @Nullable Bundle savedInstanceState) {
+            //当 SDK 版本大于等于 29 时 activityStarted 和 activityResumed 这两个事件依靠于
+            //EmptyActivityLifecycleCallbacks 的回调
+            //当 SDK 版本小于 29 时，则需要依赖于 ReportFragment 的回调
+            activity.registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
                 @Override
-                public void onCreate() {
-                }
-
-                @Override
-                public void onStart() {
+                public void onActivityPostStarted(@NonNull Activity activity) {
                     activityStarted();
                 }
 
                 @Override
-                public void onResume() {
+                public void onActivityPostResumed(@NonNull Activity activity) {
                     activityResumed();
                 }
-            };
+            });
+        }
 
-	static void init(Context context) {
-        sInstance.attach(context);
-    }
-
-	void attach(Context context) {
-        mHandler = new Handler();
-        //因为 ProcessLifecycleOwner 是针对于对整个应用的生命周期的监听
-        //会执行到这一步的话说明应用肯定被启动了，此时就到了 Lifecycle.Event.ON_CREATE
-        //且由于 attach 方法只会被调用一次，所以外部也只会收到一次 Lifecycle.Event.ON_CREATE 事件
-        mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE);
-        Application app = (Application) context.getApplicationContext();
-        app.registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
-            
-            //此方法是 SDK 29 时新增的，所以当 SDK 版本小于 29 时此方法是无效的
-            @Override
-            public void onActivityPreCreated(@NonNull Activity activity,
-                                             @Nullable Bundle savedInstanceState) {
-                //当 SDK 版本大于等于 29 时 activityStarted 和 activityResumed 这两个事件依靠于
-                //EmptyActivityLifecycleCallbacks 的回调
-                //当 SDK 版本小于 29 时，则需要依赖于 ReportFragment 的回调
-                activity.registerActivityLifecycleCallbacks(new EmptyActivityLifecycleCallbacks() {
-                    @Override
-                    public void onActivityPostStarted(@NonNull Activity activity) {
-                        activityStarted();
-                    }
-
-                    @Override
-                    public void onActivityPostResumed(@NonNull Activity activity) {
-                        activityResumed();
-                    }
-                });
+        @Override
+        public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
+            if (Build.VERSION.SDK_INT < 29) {
+                //在 LifecycleDispatcher 中已经为每个 Activity 注入了 ReportFragment
+                //所以此处都可以成功获取到 ReportFragment 对象并设置回调事件
+                ReportFragment.get(activity).setProcessListener(mInitializationListener);
             }
+        }
 
-            @Override
-            public void onActivityCreated(Activity activity, Bundle savedInstanceState) {
-                if (Build.VERSION.SDK_INT < 29) {
-                    //在 LifecycleDispatcher 中已经为每个 Activity 注入了 ReportFragment
-                    //所以此处都可以成功获取到 ReportFragment 对象并设置回调事件
-                    ReportFragment.get(activity).setProcessListener(mInitializationListener);
-                }
-            }
+        @Override
+        public void onActivityPaused(Activity activity) {
+            activityPaused();
+        }
 
-            @Override
-            public void onActivityPaused(Activity activity) {
-                activityPaused();
-            }
-
-            @Override
-            public void onActivityStopped(Activity activity) {
-                activityStopped();
-            }
-        });
-    }
+        @Override
+        public void onActivityStopped(Activity activity) {
+            activityStopped();
+        }
+    });
+}
 ```
 
 一般情况下，一个应用的 Activity 启动流程可以概括为以下几种：
@@ -420,22 +419,22 @@ public class ProcessLifecycleOwner implements LifecycleOwner {
 ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
 
 ```java
-	// ground truth counters
-	//当有 Activity 走到 Started 状态时，则 mStartedCounter 加一
-	//当有 Activity 走到 Stopped 状态时，则 mStartedCounter 减一
-    private int mStartedCounter = 0;
+// ground truth counters
+//当有 Activity 走到 Started 状态时，则 mStartedCounter 加一
+//当有 Activity 走到 Stopped 状态时，则 mStartedCounter 减一
+private int mStartedCounter = 0;
 
-	//当有 Activity 走到 Resumed 状态时，则 mResumedCounter 加一
-	//当有 Activity 走到 Paused 状态时，则 mResumedCounter 减一
-    private int mResumedCounter = 0;
-	
-	//当发布了 ON_RESUME 事件时，值变为 false
-	//当发布了 ON_PAUSE 事件时，值变为 true
-    private boolean mPauseSent = true;
+//当有 Activity 走到 Resumed 状态时，则 mResumedCounter 加一
+//当有 Activity 走到 Paused 状态时，则 mResumedCounter 减一
+private int mResumedCounter = 0;
 
-	//当发布了 ON_START 事件时，值变为 false
-	//当发布了 ON_STOP 事件时，值变为 true
-    private boolean mStopSent = true;
+//当发布了 ON_RESUME 事件时，值变为 false
+//当发布了 ON_PAUSE 事件时，值变为 true
+private boolean mPauseSent = true;
+
+//当发布了 ON_START 事件时，值变为 false
+//当发布了 ON_STOP 事件时，值变为 true
+private boolean mStopSent = true;
 ```
 
 当有 Activity 走到 `onStart` 状态时会调用 `activityStarted()`函数，而需要向外发布 ON_START 事件只在以下两种场景发生：
@@ -444,13 +443,13 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
 2. 应用从后台切换到了前台。此时需确保上一次发布的是 ON_STOP 事件，即 mStopSent 为 true 时，等式才能成立。因为存在这么一种特殊情况：应用只包含一个 Activity，且用户旋转了屏幕导致了该 Activity 被重建，此时 Activity 会重新走一遍生命周期流程，但对于开发者来说，Activity 还是处于前台，此时就不应该再次发布 ON_START 事件，所以 ProcessLifecycleOwner 内部对这种情况做了延时判断处理，只有上一次发布的是 ON_STOP 事件时，才会向外发布 ON_START 事件
 
 ```java
-	void activityStarted() {
-        mStartedCounter++;
-        if (mStartedCounter == 1 && mStopSent) {
-            mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
-            mStopSent = false;
-        }
+void activityStarted() {
+    mStartedCounter++;
+    if (mStartedCounter == 1 && mStopSent) {
+        mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START);
+        mStopSent = false;
     }
+}
 ```
 
 当有 Activity 走到 `onResumed` 状态时会调用 `activityResumed()`函数，而需要向外发布 ON_RESUME 事件只在以下两种场景发生：
@@ -459,18 +458,18 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
 2. 当前处于前台的 Activity 数量为 1，且上一次发布的是 ON_PAUSE 事件时（即 mPauseSent 为 true），才会发布 ON_RESUME 事件。此时一样是为了兼容用户旋转了屏幕导致了 Activity 被重建的情况
 
 ```java
-	//当有 Activity 走到 onResumed 时被调用
-    void activityResumed() {
-        mResumedCounter++;
-        if (mResumedCounter == 1) {
-            if (mPauseSent) {
-                mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
-                mPauseSent = false;
-            } else {
-                mHandler.removeCallbacks(mDelayedPauseRunnable);
-            }
+//当有 Activity 走到 onResumed 时被调用
+void activityResumed() {
+    mResumedCounter++;
+    if (mResumedCounter == 1) {
+        if (mPauseSent) {
+            mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_RESUME);
+            mPauseSent = false;
+        } else {
+            mHandler.removeCallbacks(mDelayedPauseRunnable);
         }
     }
+}
 ```
 
 当有 Activity 走到 `onPaused` 状态时会调用 `activityPaused()`函数，而 `mResumedCounter == 0` 这个条件成立的可能原因有两种：
@@ -481,42 +480,42 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
 因此对于开发者来说，ON_PAUSE 事件是会有一定延时的
 
 ```java
-    @VisibleForTesting
-    static final long TIMEOUT_MS = 700; //mls
+@VisibleForTesting
+static final long TIMEOUT_MS = 700; //mls
 
-    private Runnable mDelayedPauseRunnable = new Runnable() {
-        @Override
-        public void run() {
-            dispatchPauseIfNeeded();
-            dispatchStopIfNeeded();
-        }
-    };
-
-    void activityPaused() {
-        mResumedCounter--;
-        if (mResumedCounter == 0) {
-            mHandler.postDelayed(mDelayedPauseRunnable, TIMEOUT_MS);
-        }
+private Runnable mDelayedPauseRunnable = new Runnable() {
+    @Override
+    public void run() {
+        dispatchPauseIfNeeded();
+        dispatchStopIfNeeded();
     }
+};
 
-	//判断是否有需要向外传递 ON_PAUSE 事件
-    void dispatchPauseIfNeeded() {
-        if (mResumedCounter == 0) {
-            //如果当前处于前台的 Activity 数量为 0，则向外传递 ON_PAUSE 事件
-            mPauseSent = true;
-            mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
-        }
+void activityPaused() {
+    mResumedCounter--;
+    if (mResumedCounter == 0) {
+        mHandler.postDelayed(mDelayedPauseRunnable, TIMEOUT_MS);
     }
+}
 
-	//判断是否有需要向外传递 ON_STOP 事件
-    void dispatchStopIfNeeded() {
-        if (mStartedCounter == 0 && mPauseSent) {
-           	//如果当前处于 Started 状态的 Activity 数量还是为 0，则向外发送了 ON_PAUSE 事件
-            //则向外传递 ON_STOP 事件
-            mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
-            mStopSent = true;
-        }
+//判断是否有需要向外传递 ON_PAUSE 事件
+void dispatchPauseIfNeeded() {
+    if (mResumedCounter == 0) {
+        //如果当前处于前台的 Activity 数量为 0，则向外传递 ON_PAUSE 事件
+        mPauseSent = true;
+        mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_PAUSE);
     }
+}
+
+//判断是否有需要向外传递 ON_STOP 事件
+void dispatchStopIfNeeded() {
+    if (mStartedCounter == 0 && mPauseSent) {
+        //如果当前处于 Started 状态的 Activity 数量还是为 0，则向外发送了 ON_PAUSE 事件
+        //则向外传递 ON_STOP 事件
+        mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
+        mStopSent = true;
+    }
+}
 ```
 
 当有 Activity 走到 `onStopped` 状态时会调用 `activityStopped()`函数，而需要向外发布 ON_STOP 事件只在以下一种场景发生：
@@ -524,17 +523,17 @@ ProcessLifecycleOwner 内部有几个变量作为状态标记位而存在
 1. 应用从前台退到了后台。此时需要发布 ON_STOP 事件
 
 ```java
-    void activityStopped() {
-        mStartedCounter--;
-        dispatchStopIfNeeded();
-    }
+void activityStopped() {
+    mStartedCounter--;
+    dispatchStopIfNeeded();
+}
 
-	void dispatchStopIfNeeded() {
-        if (mStartedCounter == 0 && mPauseSent) {
-            mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
-            mStopSent = true;
-        }
+void dispatchStopIfNeeded() {
+    if (mStartedCounter == 0 && mPauseSent) {
+        mRegistry.handleLifecycleEvent(Lifecycle.Event.ON_STOP);
+        mStopSent = true;
     }
+}
 ```
 
 ## ProcessLifecycleOwnerInitializer

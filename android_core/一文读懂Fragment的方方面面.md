@@ -12,7 +12,7 @@ Fragment 是 Android 中历史十分悠久的一个组件，在 Android 3.0 （A
 
 本篇文章就来介绍新时代 AndroidX Fragment 的方方方面，陆陆续续写了一万多字，有基础知识也有新知识，也许就包含了一些你还没了解过的知识点，看完之后你会发现 Fragment 如今好像真的在变得越来越好用了，希望对你有所帮助 🤣🤣
 
-本文所有示例代码均使用以下依赖库当前的最新版本
+本文所有示例代码基于以下版本进行讲解
 
 ```groovy
 dependencies {
@@ -90,9 +90,8 @@ Fragment 一般情况下都需要和 FragmentActivity 组合使用，而我们�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/9/12 17:16
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 class MyFragmentActivity : AppCompatActivity() {
 
@@ -166,15 +165,15 @@ Fragment 的大部分生命周期方法都和 Activity 相映射，但两者的�
 如果实在需要得到 Activity 的 `onCreate` 事件通知，可以通过在 `onAttach(Context)`方法中添加 LifecycleObserver 来实现
 
 ```kotlin
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        requireActivity().lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
-                owner.lifecycle.removeObserver(this)
-                //TODO            
-            }
-        })
-    }
+override fun onAttach(context: Context) {
+    super.onAttach(context)
+    requireActivity().lifecycle.addObserver(object : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
+            owner.lifecycle.removeObserver(this)
+            //TODO            
+        }
+    })
+}
 ```
 
 ## 2、回退栈 & 事务
@@ -339,13 +338,13 @@ class PageFragment : Fragment() {
 `Lifecycle.State` 一共包含五种值，FragmentLifecycle 会在这五个值中不断流转，例如当切换为 DESTROYED 状态时，也即意味 `onDestory()、onDetach()` 等方法被调用了，至此 Fragment 的本次生命周期也就结束了
 
 ```kotlin
-    public enum State {
-        DESTROYED,
-        INITIALIZED,
-        CREATED,
-        STARTED,
-        RESUMED;
-    }
+public enum State {
+    DESTROYED,
+    INITIALIZED,
+    CREATED,
+    STARTED,
+    RESUMED;
+}
 ```
 
 ## 4、FragmentViewLifecycle
@@ -373,18 +372,18 @@ static final int RESUMED = 7;                // Created started and resumed.
 Fragment 提供了一个`getViewLifecycleOwner()`方法由于提供 FragmentViewLifecycle，从中可以看出该方法只能在 `onCreateView()` 到 `onDestroyView()` 之间被调用，即只能在 FragmentView 创建了且销毁之前使用，否则将直接抛出异常
 
 ```java
-    @Nullable
-    FragmentViewLifecycleOwner mViewLifecycleOwner;
+@Nullable
+FragmentViewLifecycleOwner mViewLifecycleOwner;
 
-    @MainThread
-    @NonNull
-    public LifecycleOwner getViewLifecycleOwner() {
-        if (mViewLifecycleOwner == null) {
-            throw new IllegalStateException("Can't access the Fragment View's LifecycleOwner when "
-                    + "getView() is null i.e., before onCreateView() or after onDestroyView()");
-        }
-        return mViewLifecycleOwner;
+@MainThread
+@NonNull
+public LifecycleOwner getViewLifecycleOwner() {
+    if (mViewLifecycleOwner == null) {
+        throw new IllegalStateException("Can't access the Fragment View's LifecycleOwner when "
+                + "getView() is null i.e., before onCreateView() or after onDestroyView()");
     }
+    return mViewLifecycleOwner;
+}
 
 ```
 
@@ -395,26 +394,26 @@ FragmentViewLifecycle 非常有用，我们在日常开发中可以根据实际�
 举个例子。假设我们的 Fragment 需要监听 ViewModel 中某个 LiveData 值的变化，并根据监听到的值来设置界面，此时就要考虑在 Fragment 中的哪里来订阅 LiveData 了。看了以上内容后，我们已经知道 `onCreateView` 方法到 `onDestoryView`之间是可能会先后执行多次的，那么监听操作就不应该放在这里面了，否则就会造成重复订阅。此时我们想到的可能就是这两种方式了：**声明全局变量 ViewModel 时顺便监听** 或者是 **在 onCreate 方法中进行监听**
 
 ```kotlin
-    private val pageViewModel by lazy {
-        ViewModelProvider(this).get(PageViewModel::class.java).apply {
-            textLiveData.observe(this@PageFragment, Observer {
-                //TODO
-            })
-        }
-    }
-```
-
-```kotlin
-    private val pageViewModel by lazy {
-        ViewModelProvider(this).get(PageViewModel::class.java)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        pageViewModel.textLiveData.observe(this@PageFragment, Observer {
+private val pageViewModel by lazy {
+    ViewModelProvider(this).get(PageViewModel::class.java).apply {
+        textLiveData.observe(this@PageFragment, Observer {
             //TODO
         })
     }
+}
+```
+
+```kotlin
+private val pageViewModel by lazy {
+    ViewModelProvider(this).get(PageViewModel::class.java)
+}
+
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    pageViewModel.textLiveData.observe(this@PageFragment, Observer {
+        //TODO
+    })
+}
 ```
 
 这两种方式都可以避免重复订阅的问题，但此时还存在另一个藏得很深的问题：**假如 FragmentView 真的销毁重建了，重建后的 FragmentView 也收不到 textLiveData 已有的数据！！！**
@@ -424,16 +423,16 @@ FragmentViewLifecycle 非常有用，我们在日常开发中可以根据实际�
 为了解决该问题，就需要使用到 FragmentViewLifecycle 了。由于 FragmentViewLifecycle 的生命周期在 `onDestoryView`的时候就结束了，此时也会自动移除 Observer，因此我们可以直接在 `onViewCreated` 方法中使用 `viewLifecycleOwner` 来监听 textLiveData，从而保证每次重建后的 FragmentView 都能收到回调
 
 ```kotlin
-    private val pageViewModel by lazy {
-        ViewModelProvider(this).get(PageViewModel::class.java)
-    }
-    
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        pageViewModel.textLiveData.observe(viewLifecycleOwner, Observer {
-            //TODO
-        })
-    }
+private val pageViewModel by lazy {
+    ViewModelProvider(this).get(PageViewModel::class.java)
+}
+
+override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    super.onViewCreated(view, savedInstanceState)
+    pageViewModel.textLiveData.observe(viewLifecycleOwner, Observer {
+        //TODO
+    })
+}
 ```
 
 在大部分情况下，我们在 Fragment 中执行的操作都是和 FragmentView 强关联的，属于视图操纵行为，此时就可以使用 FragmentViewLifecycle 来替代 FragmentLifecycle，从而保证事件一定只有在 FragmentView 存在且活跃的情况下才会被回调，且保证了每次 FragmentView 被销毁重建的时候都能够得到最新数据。而对于那些依赖于 Fragment 完整生命周期的事件，就还是只能继续使用 FragmentLifecycle 了
@@ -464,39 +463,39 @@ FragmentViewLifecycle 非常有用，我们在日常开发中可以根据实际�
 现如今我们也有了更好的选择，`setUserVisibleHint`方法已经被废弃了，从注释可以看到官方现在推荐使用`setMaxLifecycle` 方法来更为精准地控制 Fragment 的生命周期
 
 ```kotlin
-    /**
-     * @deprecated If you are manually calling this method, use
-     * {@link FragmentTransaction#setMaxLifecycle(Fragment, Lifecycle.State)} instead. If
-     * overriding this method, behavior implemented when passing in <code>true</code> should be
-     * moved to {@link Fragment#onResume()}, and behavior implemented when passing in
-     * <code>false</code> should be moved to {@link Fragment#onPause()}.
-     */
-    @Deprecated
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        if (!mUserVisibleHint && isVisibleToUser && mState < STARTED
-                && mFragmentManager != null && isAdded() && mIsCreated) {
-            mFragmentManager.performPendingDeferredStart(
-                    mFragmentManager.createOrGetFragmentStateManager(this));
-        }
-        mUserVisibleHint = isVisibleToUser;
-        mDeferStart = mState < STARTED && !isVisibleToUser;
-        if (mSavedFragmentState != null) {
-            // Ensure that if the user visible hint is set before the Fragment has
-            // restored its state that we don't lose the new value
-            mSavedUserVisibleHint = isVisibleToUser;
-        }
+/**
+ * @deprecated If you are manually calling this method, use
+ * {@link FragmentTransaction#setMaxLifecycle(Fragment, Lifecycle.State)} instead. If
+ * overriding this method, behavior implemented when passing in <code>true</code> should be
+ * moved to {@link Fragment#onResume()}, and behavior implemented when passing in
+ * <code>false</code> should be moved to {@link Fragment#onPause()}.
+ */
+@Deprecated
+public void setUserVisibleHint(boolean isVisibleToUser) {
+    if (!mUserVisibleHint && isVisibleToUser && mState < STARTED
+            && mFragmentManager != null && isAdded() && mIsCreated) {
+        mFragmentManager.performPendingDeferredStart(
+                mFragmentManager.createOrGetFragmentStateManager(this));
     }
+    mUserVisibleHint = isVisibleToUser;
+    mDeferStart = mState < STARTED && !isVisibleToUser;
+    if (mSavedFragmentState != null) {
+        // Ensure that if the user visible hint is set before the Fragment has
+        // restored its state that we don't lose the new value
+        mSavedUserVisibleHint = isVisibleToUser;
+    }
+}
 ```
 
 `setMaxLifecycle`方法从名字就可以看出来是用于为 Fragment 设置一个最大的生命周期状态，实际上也的确是，state 参数值我们只能选择 CREATED、STARTED、RESUMED 三者之一
 
 ```kotlin
-    @NonNull
-    public FragmentTransaction setMaxLifecycle(@NonNull Fragment fragment,
-            @NonNull Lifecycle.State state) {
-        addOp(new Op(OP_SET_MAX_LIFECYCLE, fragment, state));
-        return this;
-    }
+@NonNull
+public FragmentTransaction setMaxLifecycle(@NonNull Fragment fragment,
+        @NonNull Lifecycle.State state) {
+    addOp(new Op(OP_SET_MAX_LIFECYCLE, fragment, state));
+    return this;
+}
 ```
 
 在正常情况下，我们在 Activity 中 add 一个 Fragment 后其生命周期流程是会直接执行到 `onResume` 方法的
@@ -574,34 +573,34 @@ Fragment-1: onPause
 `setMaxLifecycle` 方法目前已经应用于 ViewPager2 中的 FragmentStateAdapter 了。当 Fragment 被切出时，就将其最大状态设置为 STARTED，当 Fragment 被切入时，就将其最大状态设置为 RESUMED，从而使得只有当前可见的 Fragment 才会被回调 `onResume` 方法，被切出的 Fragment 则会回调 `onPause` 方法，保证了每个 Fragment 都能处于正确的生命周期状态
 
 ```java
-        void updateFragmentMaxLifecycle(boolean dataSetChanged) {
-            ···
-            Fragment toResume = null;
-            for (int ix = 0; ix < mFragments.size(); ix++) {
-                long itemId = mFragments.keyAt(ix);
-                Fragment fragment = mFragments.valueAt(ix);
+void updateFragmentMaxLifecycle(boolean dataSetChanged) {
+    ···
+    Fragment toResume = null;
+    for (int ix = 0; ix < mFragments.size(); ix++) {
+        long itemId = mFragments.keyAt(ix);
+        Fragment fragment = mFragments.valueAt(ix);
 
-                if (!fragment.isAdded()) {
-                    continue;
-                }
-
-                if (itemId != mPrimaryItemId) {
-                    //重点
-                    transaction.setMaxLifecycle(fragment, STARTED);
-                } else {
-                    toResume = fragment; // itemId map key, so only one can match the predicate
-                }
-                fragment.setMenuVisibility(itemId == mPrimaryItemId);
-            }
-            if (toResume != null) { // in case the Fragment wasn't added yet
-                //重点
-                transaction.setMaxLifecycle(toResume, RESUMED);
-            }
-
-            if (!transaction.isEmpty()) {
-                transaction.commitNow();
-            }
+        if (!fragment.isAdded()) {
+            continue;
         }
+
+        if (itemId != mPrimaryItemId) {
+            //重点
+            transaction.setMaxLifecycle(fragment, STARTED);
+        } else {
+            toResume = fragment; // itemId map key, so only one can match the predicate
+        }
+        fragment.setMenuVisibility(itemId == mPrimaryItemId);
+    }
+    if (toResume != null) { // in case the Fragment wasn't added yet
+        //重点
+        transaction.setMaxLifecycle(toResume, RESUMED);
+    }
+
+    if (!transaction.isEmpty()) {
+        transaction.commitNow();
+    }
+}
 ```
 
 # 4、FragmentFactory
@@ -639,35 +638,35 @@ class FragmentFactoryFragment : BaseFragment(R.layout.fragment_fragment_factory)
 通过反射无参构造函数来实例化 Fragment 并注入 `arguments` 的过程，就对应 Fragment 中的 `instantiate` 方法
 
 ```java
-    public static Fragment instantiate(@NonNull Context context, @NonNull String fname,
-            @Nullable Bundle args) {
-        try {
-            Class<? extends Fragment> clazz = FragmentFactory.loadFragmentClass(
-                    context.getClassLoader(), fname);
-            //反射无参构造函数
-            Fragment f = clazz.getConstructor().newInstance();
-            if (args != null) {
-                args.setClassLoader(f.getClass().getClassLoader());
-                //注入 Bundle
-                f.setArguments(args);
-            }
-            return f;
-        } catch (java.lang.InstantiationException e) {
-            throw new InstantiationException("Unable to instantiate fragment " + fname
-                    + ": make sure class name exists, is public, and has an"
-                    + " empty constructor that is public", e);
-        } catch (IllegalAccessException e) {
-            throw new InstantiationException("Unable to instantiate fragment " + fname
-                    + ": make sure class name exists, is public, and has an"
-                    + " empty constructor that is public", e);
-        } catch (NoSuchMethodException e) {
-            throw new InstantiationException("Unable to instantiate fragment " + fname
-                    + ": could not find Fragment constructor", e);
-        } catch (InvocationTargetException e) {
-            throw new InstantiationException("Unable to instantiate fragment " + fname
-                    + ": calling Fragment constructor caused an exception", e);
+public static Fragment instantiate(@NonNull Context context, @NonNull String fname,
+        @Nullable Bundle args) {
+    try {
+        Class<? extends Fragment> clazz = FragmentFactory.loadFragmentClass(
+                context.getClassLoader(), fname);
+        //反射无参构造函数
+        Fragment f = clazz.getConstructor().newInstance();
+        if (args != null) {
+            args.setClassLoader(f.getClass().getClassLoader());
+            //注入 Bundle
+            f.setArguments(args);
         }
+        return f;
+    } catch (java.lang.InstantiationException e) {
+        throw new InstantiationException("Unable to instantiate fragment " + fname
+                + ": make sure class name exists, is public, and has an"
+                + " empty constructor that is public", e);
+    } catch (IllegalAccessException e) {
+        throw new InstantiationException("Unable to instantiate fragment " + fname
+                + ": make sure class name exists, is public, and has an"
+                + " empty constructor that is public", e);
+    } catch (NoSuchMethodException e) {
+        throw new InstantiationException("Unable to instantiate fragment " + fname
+                + ": could not find Fragment constructor", e);
+    } catch (InvocationTargetException e) {
+        throw new InstantiationException("Unable to instantiate fragment " + fname
+                + ": calling Fragment constructor caused an exception", e);
     }
+}
 ```
 
 为了解决**无法自由定义有参构造函数的问题**，Fragment 如今也提供了 FragmentFactory 来参与实例化 Fragment 的过程
@@ -1028,56 +1027,56 @@ class PlaceholderFragment(private val sectionNumber: Int) :
 现在我们在日常开发中使用的 AppCompatActivity 最终会继承于 ComponentActivity，ComponentActivity 的 `onCreate` 方法是这样的：
 
 ```kotlin
-    @SuppressLint("RestrictedApi")
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ReportFragment.injectIfNeededIn(this);
-    }
+@SuppressLint("RestrictedApi")
+@Override
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ReportFragment.injectIfNeededIn(this);
+}
 ```
 
 ReportFragment 的 `injectIfNeededIn()` 是一个静态方法，以 `android.app.Activity` 对象作为入参参数，此方法内部就会向 Activity 添加一个无 UI 界面的 ReportFragment
 
 ```kotlin
-     public static void injectIfNeededIn(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            // On API 29+, we can register for the correct Lifecycle callbacks directly
-            activity.registerActivityLifecycleCallbacks(
-                    new LifecycleCallbacks());
-        }
-        //向 activity 添加一个不可见的 framework 中的 fragment，以此来取得 Activity 生命周期事件的回调
-        android.app.FragmentManager manager = activity.getFragmentManager();
-        if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
-            manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
-            // Hopefully, we are the first to make a transaction.
-            manager.executePendingTransactions();
-        }
+ public static void injectIfNeededIn(Activity activity) {
+    if (Build.VERSION.SDK_INT >= 29) {
+        // On API 29+, we can register for the correct Lifecycle callbacks directly
+        activity.registerActivityLifecycleCallbacks(
+                new LifecycleCallbacks());
     }
+    //向 activity 添加一个不可见的 framework 中的 fragment，以此来取得 Activity 生命周期事件的回调
+    android.app.FragmentManager manager = activity.getFragmentManager();
+    if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
+        manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
+        // Hopefully, we are the first to make a transaction.
+        manager.executePendingTransactions();
+    }
+}
 ```
 
 ReportFragment 就通过自身的各个回调方法来间接获得 Activity 生命周期事件的回调通知
 
 ```java
-	@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ···
-        dispatch(Lifecycle.Event.ON_CREATE);
-    }
+@Override
+public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    ···
+    dispatch(Lifecycle.Event.ON_CREATE);
+}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ···
-        dispatch(Lifecycle.Event.ON_START);
-    }
+@Override
+public void onStart() {
+    super.onStart();
+    ···
+    dispatch(Lifecycle.Event.ON_START);
+}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dispatch(Lifecycle.Event.ON_DESTROY);
-        ···
-    }
+@Override
+public void onDestroy() {
+    super.onDestroy();
+    dispatch(Lifecycle.Event.ON_DESTROY);
+    ···
+}
 ```
 
 > 更多细节看这篇文章：[从源码看 Jetpack（1）-Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
@@ -1160,9 +1159,8 @@ Fragment 还有一种特殊的用法。我们平时是通过 `requestPermissions
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/9/5 17:10
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 class RequestPermissionsFragment : Fragment() {
 
@@ -1223,18 +1221,18 @@ class RequestPermissionsFragment : Fragment() {
 之后在 FragmentActivity 或者 Fragment 中就可以通过以下方式来完成整个权限申请操作了，直接在回调里拿到申请结果
 
 ```kotlin
-        RequestPermissionsFragment.request(
-            fragmentActivity,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.CAMERA
-            )
-        ) { permissions: Array<String>,
-            grantResults: IntArray ->
-            permissions.forEachIndexed { index, s ->
-                showToast("permission：" + s + " grantResult：" + grantResults[index])
-            }
-        }
+RequestPermissionsFragment.request(
+    fragmentActivity,
+    arrayOf(
+        Manifest.permission.ACCESS_FINE_LOCATION,
+        Manifest.permission.CAMERA
+    )
+) { permissions: Array<String>,
+    grantResults: IntArray ->
+    permissions.forEachIndexed { index, s ->
+        showToast("permission：" + s + " grantResult：" + grantResults[index])
+    }
+}
 ```
 
 ![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/05db3926efb84aedac886cb298ab40e0~tplv-k3u1fbpfcp-watermark.image)

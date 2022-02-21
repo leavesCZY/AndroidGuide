@@ -9,7 +9,6 @@
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/24 12:45
  * @Github：https://github.com/leavesCZY
  */
 interface ApiService {
@@ -205,7 +204,6 @@ LiveDataCallAdapter 的逻辑也比较简单，如果**网络请求成功且状�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/22 21:06
  * @Github：https://github.com/leavesCZY
  */
 class LiveDataCallAdapter<R>(private val responseType: Type) : CallAdapter<R, LiveData<R>> {
@@ -269,7 +267,6 @@ object RetrofitManager {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/24 12:39
  * @Github：https://github.com/leavesCZY
  */
 @Router(EasyRouterPath.PATH_RETROFIT)

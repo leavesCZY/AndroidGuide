@@ -167,69 +167,69 @@ EventLiveData 是基于 LiveData 的源码来改造实现的，在理解了 Live
 LiveData 内部包含一个 `mVersion` 变量用来标记**当前值的版本，即值的新旧程度**，当外部传递了新值时（不管是 setValue 还是 postValue），mVersion 均会递增 +1
 
 ```java
-    @MainThread
-    private fun setValue(value: T) {
-        assertMainThread(
-            "setValue"
-        )
-        mVersion++
-        mData = value
-        dispatchingValue(null)
-    }
+@MainThread
+private fun setValue(value: T) {
+    assertMainThread(
+        "setValue"
+    )
+    mVersion++
+    mData = value
+    dispatchingValue(null)
+}
 ```
 
 同时 ObserverWrapper 内部包含一个 `mLastVersion` 用于标记 Observer 内最后一个被回调的 value 的新旧程度
 
 ```java
-	private abstract class ObserverWrapper {
-    	
-    	//外部传进来的对 LiveData 进行数据监听的 Observer
-        final Observer<? super T> mObserver;
-    	
-    	//用于标记 mObserver 是否处于活跃状态
-        boolean mActive;
-    
-    	//用于标记 Observer 内最后一个被回调的 value 的新旧程度
-        int mLastVersion = START_VERSION;
+private abstract class ObserverWrapper {
 
-        ObserverWrapper(Observer<? super T> observer) {
-            mObserver = observer;
-        }
-		
+    //外部传进来的对 LiveData 进行数据监听的 Observer
+    final Observer<? super T> mObserver;
+
+    //用于标记 mObserver 是否处于活跃状态
+    boolean mActive;
+
+    //用于标记 Observer 内最后一个被回调的 value 的新旧程度
+    int mLastVersion = START_VERSION;
+
+    ObserverWrapper(Observer<? super T> observer) {
+        mObserver = observer;
     }
+
+}
 ```
 
 而 `considerNotify` 方法会根据 mLastVersion 的大小来决定是否需要向 Observer 回调值，那么我们只要控制 Observer 的 mLastVersion 的初始值大小不就可以避免旧值的通知了吗？
 
 ```java
-   private void considerNotify(ObserverWrapper observer) {
-  		···
-        if (observer.mLastVersion >= mVersion) {
-            return;
-        }
-        observer.mLastVersion = mVersion;
-        observer.mObserver.onChanged((T) mData);
+private void considerNotify(ObserverWrapper observer) {
+    ···
+    if (observer.mLastVersion >= mVersion) {
+        return;
     }
+    observer.mLastVersion = mVersion;
+    observer.mObserver.onChanged((T) mData);
+}
 ```
 
 再然后，LifecycleBoundObserver 的 `shouldBeActive()` 方法就限制了只有当 Lifecycle 的当前状态是 STARTED 或者 RESUMED 时才进行数据回调，那么我们只要改变此限制条件，就可以增大 Observer 的有效生命周期范围了
 
 ```java
-	class LifecycleBoundObserver extends ObserverWrapper implements LifecycleEventObserver {
-        @NonNull
-        final LifecycleOwner mOwner;
+class LifecycleBoundObserver extends ObserverWrapper implements LifecycleEventObserver {
+    @NonNull
+    final LifecycleOwner mOwner;
 
-        LifecycleBoundObserver(@NonNull LifecycleOwner owner, Observer<? super T> observer) {
-            super(observer);
-            mOwner = owner;
-        }
-
-        @Override
-        boolean shouldBeActive() {
-            return mOwner.getLifecycle().getCurrentState().isAtLeast(STARTED);
-        }
-
+    LifecycleBoundObserver(@NonNull LifecycleOwner owner, Observer<? super T> observer) {
+        super(observer);
+        mOwner = owner;
     }
+
+    @Override
+    boolean shouldBeActive() {
+        return mOwner.getLifecycle().getCurrentState().isAtLeast(STARTED);
+    }
+
+}
 ```
 
 # 七、引入依赖

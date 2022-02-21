@@ -6,7 +6,7 @@
 
 Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单高效了许多，使得我们可以用一种统一的方式来监听 Activity、Fragment、Service、甚至是 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文就来对 Lifecycle 进行一次全面的源码解读，希望对你有所帮助 🤣🤣
 
-本文所讲的源码基于以下依赖库当前最新的 release 版本：
+本文所讲的源码基于以下版本
 
 ```groovy
 implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -22,46 +22,46 @@ implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
 现如今，如果我们想要根据 Activity 的生命周期状态的变化来管理我们的业务逻辑的话，那么可以很方便的使用如下方式来进行监听。以基于回调接口方法的形式来进行事件通知，每当 Activity 的生命周期方法被触发时，该接口的相应同名方法就会在**之前或者之后被调用**
 
 ```kotlin
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
-            override fun onCreate(owner: LifecycleOwner) {
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    lifecycle.addObserver(object : DefaultLifecycleObserver {
+        override fun onCreate(owner: LifecycleOwner) {
 
-            }
+        }
 
-            override fun onResume(owner: LifecycleOwner) {
+        override fun onResume(owner: LifecycleOwner) {
 
-            }
+        }
 
-            override fun onDestroy(owner: LifecycleOwner) {
-                
-            }
-        })
-    }
+        override fun onDestroy(owner: LifecycleOwner) {
+
+        }
+    })
+}
 ```
 
 此外还有一种基于 `@OnLifecycleEvent` 注解来进行回调的方式，这种方式不对方法名做要求，但是对方法的**入参类型、入参顺序、入参个数**有特定要求，这个在后续章节会有介绍。这种方式面向的是基于 Java 7 作为编译版本的平台，但在以后会被逐步废弃，Google 官方也建议开发者尽量使用接口回调的形式
 
 ```kotlin
-		lifecycle.addObserver(object : LifecycleObserver {
+lifecycle.addObserver(object : LifecycleObserver {
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-            fun onCreateEvent(lifecycleOwner: LifecycleOwner) {
-               
-            }
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    fun onCreateEvent(lifecycleOwner: LifecycleOwner) {
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-            fun onDestroyEvent(lifecycleOwner: LifecycleOwner) {
-              
-            }
+    }
 
-            @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-            fun onAnyEvent(lifecycleOwner: LifecycleOwner, event: Lifecycle.Event) {
-                
-            }
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroyEvent(lifecycleOwner: LifecycleOwner) {
 
-        })
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+    fun onAnyEvent(lifecycleOwner: LifecycleOwner, event: Lifecycle.Event) {
+
+    }
+
+})
 ```
 
 ## 源码
@@ -253,23 +253,23 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 再来回顾下我们如今是如何通过 Lifecycle 来实现 Activity 的生命周期监听的
 
 ```kotlin
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        lifecycle.addObserver(object : LifecycleEventObserver {
-            override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
-				when (event) {
-                    Lifecycle.Event.ON_CREATE -> TODO()
-                    Lifecycle.Event.ON_START -> TODO()
-                    Lifecycle.Event.ON_RESUME -> TODO()
-                    Lifecycle.Event.ON_PAUSE -> TODO()
-                    Lifecycle.Event.ON_STOP -> TODO()
-                    Lifecycle.Event.ON_DESTROY -> TODO()
-                    Lifecycle.Event.ON_ANY -> TODO()
-                }
+override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    setContentView(R.layout.activity_main)
+    lifecycle.addObserver(object : LifecycleEventObserver {
+        override fun onStateChanged(source: LifecycleOwner, event: Lifecycle.Event) {
+            when (event) {
+                Lifecycle.Event.ON_CREATE -> TODO()
+                Lifecycle.Event.ON_START -> TODO()
+                Lifecycle.Event.ON_RESUME -> TODO()
+                Lifecycle.Event.ON_PAUSE -> TODO()
+                Lifecycle.Event.ON_STOP -> TODO()
+                Lifecycle.Event.ON_DESTROY -> TODO()
+                Lifecycle.Event.ON_ANY -> TODO()
             }
-        })
-    }
+        }
+    })
+}
 ```
 
 用是这样就能用了，但深究起来，此时一个很显而易见的问题就是，LifecycleEventObserver 是如何取得各个生命周期状态变化的事件 Lifecycle.Event 呢？或者说，是谁回调了`onStateChanged` 方法呢？
@@ -277,12 +277,12 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 现在我们在日常开发中使用的 Activity 往往都是继承于 `androidx.appcompat.appcompat:xxx` 这个包内的 AppCompatActivity，而 AppCompatActivity 最终会继承于 `androidx.core.app.ComponentActivity`， ComponentActivity 的 `onCreate` 方法是这样的：
 
 ```kotlin
-    @SuppressLint("RestrictedApi")
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        ReportFragment.injectIfNeededIn(this);
-    }
+@SuppressLint("RestrictedApi")
+@Override
+protected void onCreate(@Nullable Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    ReportFragment.injectIfNeededIn(this);
+}
 ```
 
 而正是通过 ReportFragment 使得 LifecycleEventObserver 可以接收到 Activity 所有的的 Lifecycle.Event。这里就来详细看看 ReportFragment 的内部源码，一步步了解其实现逻辑
@@ -290,25 +290,25 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 `injectIfNeededIn()` 是一个静态方法，以 `android.app.Activity` 对象作为入参参数
 
 ```java
-     public static void injectIfNeededIn(Activity activity) {
-        if (Build.VERSION.SDK_INT >= 29) {
-            // On API 29+, we can register for the correct Lifecycle callbacks directly
-            //直接向 android.app.Activity 注册生命周期回调
-            activity.registerActivityLifecycleCallbacks(
-                    new LifecycleCallbacks());
-        }
-        // Prior to API 29 and to maintain compatibility with older versions of
-        // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
-        // need to support activities that don't extend from FragmentActivity from support lib),
-        // use a framework fragment to get the correct timing of Lifecycle events
-        //向 activity 添加一个不可见的 fragment
-        android.app.FragmentManager manager = activity.getFragmentManager();
-        if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
-            manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
-            // Hopefully, we are the first to make a transaction.
-            manager.executePendingTransactions();
-        }
+public static void injectIfNeededIn(Activity activity) {
+    if (Build.VERSION.SDK_INT >= 29) {
+        // On API 29+, we can register for the correct Lifecycle callbacks directly
+        //直接向 android.app.Activity 注册生命周期回调
+        activity.registerActivityLifecycleCallbacks(
+                new LifecycleCallbacks());
     }
+    // Prior to API 29 and to maintain compatibility with older versions of
+    // ProcessLifecycleOwner (which may not be updated when lifecycle-runtime is updated and
+    // need to support activities that don't extend from FragmentActivity from support lib),
+    // use a framework fragment to get the correct timing of Lifecycle events
+    //向 activity 添加一个不可见的 fragment
+    android.app.FragmentManager manager = activity.getFragmentManager();
+    if (manager.findFragmentByTag(REPORT_FRAGMENT_TAG) == null) {
+        manager.beginTransaction().add(new ReportFragment(), REPORT_FRAGMENT_TAG).commit();
+        // Hopefully, we are the first to make a transaction.
+        manager.executePendingTransactions();
+    }
+}
 ```
 
 `injectIfNeededIn()` 方法会根据两种情况来进行事件分发：
@@ -323,49 +323,49 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 先来看下 LifecycleCallbacks，其作用就是会在 Activity 的 `onCreate、onStart、onResume` 等方法**被调用后**通过 `dispatch(activity, Lifecycle.Event.ON_XXX)` 方法发送相应的 Event 值，并在 `onPause、onStop、onDestroy` 等方法**被调用前**发送相应的 Event 值
 
 ```java
-    static class LifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
-        @Override
-        public void onActivityCreated(@NonNull Activity activity,
-                @Nullable Bundle bundle) {
-        }
-
-        @Override
-        public void onActivityPostCreated(@NonNull Activity activity,
-                @Nullable Bundle savedInstanceState) {
-            dispatch(activity, Lifecycle.Event.ON_CREATE);
-        }
-		
-    	···
-
-        @Override
-        public void onActivityPreDestroyed(@NonNull Activity activity) {
-            dispatch(activity, Lifecycle.Event.ON_DESTROY);
-        }
-
-        @Override
-        public void onActivityDestroyed(@NonNull Activity activity) {
-        }
+static class LifecycleCallbacks implements Application.ActivityLifecycleCallbacks {
+    @Override
+    public void onActivityCreated(@NonNull Activity activity,
+            @Nullable Bundle bundle) {
     }
+
+    @Override
+    public void onActivityPostCreated(@NonNull Activity activity,
+            @Nullable Bundle savedInstanceState) {
+        dispatch(activity, Lifecycle.Event.ON_CREATE);
+    }
+
+    ···
+
+    @Override
+    public void onActivityPreDestroyed(@NonNull Activity activity) {
+        dispatch(activity, Lifecycle.Event.ON_DESTROY);
+    }
+
+    @Override
+    public void onActivityDestroyed(@NonNull Activity activity) {
+    }
+}
 ```
 
 `dispatch()` 方法拿到 Event 值后，就会先通过 Activity 拿到 Lifecycle 对象，再通过类型判断拿到 LifecycleRegistry 对象，最终通过调用 `handleLifecycleEvent()` 方法将 Event 值传递出去，从而使得外部得到各个生命周期事件的通知
 
 ```java
-    @SuppressWarnings("deprecation")
-    static void dispatch(@NonNull Activity activity, @NonNull Lifecycle.Event event) {
-        //LifecycleRegistryOwner 已被废弃，主要看 LifecycleOwner
-        if (activity instanceof LifecycleRegistryOwner) {
-            ((LifecycleRegistryOwner) activity).getLifecycle().handleLifecycleEvent(event);
-            return;
-        }
+@SuppressWarnings("deprecation")
+static void dispatch(@NonNull Activity activity, @NonNull Lifecycle.Event event) {
+    //LifecycleRegistryOwner 已被废弃，主要看 LifecycleOwner
+    if (activity instanceof LifecycleRegistryOwner) {
+        ((LifecycleRegistryOwner) activity).getLifecycle().handleLifecycleEvent(event);
+        return;
+    }
 
-        if (activity instanceof LifecycleOwner) {
-            Lifecycle lifecycle = ((LifecycleOwner) activity).getLifecycle();
-            if (lifecycle instanceof LifecycleRegistry) {
-                ((LifecycleRegistry) lifecycle).handleLifecycleEvent(event);
-            }
+    if (activity instanceof LifecycleOwner) {
+        Lifecycle lifecycle = ((LifecycleOwner) activity).getLifecycle();
+        if (lifecycle instanceof LifecycleRegistry) {
+            ((LifecycleRegistry) lifecycle).handleLifecycleEvent(event);
         }
     }
+}
 ```
 
 从这也可以猜到，`androidx.appcompat.app.AppCompatActivity` 实现了 LifecycleOwner 接口后返回的 Lifecycle 对象就是 LifecycleRegistry，实际上 `androidx.fragment.app.Fragment` 也一样
@@ -375,36 +375,36 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 再来看下向 Activity 添加的 ReportFragment 是如何生效的。由于 ReportFragment 是挂载在 Activity 身上的，ReportFragment 本身的生命周期方法和所在的 Activity 是相关联的，通过在 ReportFragment 相应的生命周期方法里调用 `dispatch(Lifecycle.Event.ON_XXXX)` 方法发送相应的 Event 值，以此来间接获得 Activity 的各个生命周期事件的回调通知
 
 ```java
-	@Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        ···
-        dispatch(Lifecycle.Event.ON_CREATE);
-    }
+@Override
+public void onActivityCreated(Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+    ···
+    dispatch(Lifecycle.Event.ON_CREATE);
+}
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        ···
-        dispatch(Lifecycle.Event.ON_START);
-    }
+@Override
+public void onStart() {
+    super.onStart();
+    ···
+    dispatch(Lifecycle.Event.ON_START);
+}
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        dispatch(Lifecycle.Event.ON_DESTROY);
-        ···
-    }
+@Override
+public void onDestroy() {
+    super.onDestroy();
+    dispatch(Lifecycle.Event.ON_DESTROY);
+    ···
+}
 ```
 
 `dispatch()` 方法内部会判断目标设备的版本号来决定是否真的分发 Event 值，避免当 SDK 版本号大于 29 时和 LifecycleCallbacks 重复发送
 
 ```java
-    private void dispatch(@NonNull Lifecycle.Event event) {
-        if (Build.VERSION.SDK_INT < 29) {
-            dispatch(getActivity(), event);
-        }
+private void dispatch(@NonNull Lifecycle.Event event) {
+    if (Build.VERSION.SDK_INT < 29) {
+        dispatch(getActivity(), event);
     }
+}
 ```
 
 这样，ReportFragment 就通过上述逻辑向外部转发了 Activity 发生的 Event 值
@@ -479,55 +479,55 @@ public class LifecycleRegistry extends Lifecycle {
 `addObserver()` 方法的主要逻辑是：将传入的 observer 对象包装为 ObserverWithState 类型，方便将 **注解形式的 LifecycleObserver（Java 7）和接口实现的 LifecycleObserver（Java 8）** 进行状态回调时的入口统一为 `dispatchEvent()` 方法。此外，由于当添加 LifecycleObserver 时 Lifecycle 可能已经处于非 INITIALIZED 状态了，所以需要通过循环检查的方式来向 ObserverWithState 逐步下发 Event 值
 
 ```java
-	//Lifecycle 类中对 addObserver 方法添加了 @MainThread 注解，意思是该方法只能用于主线程调用
-    //所以此处不考虑多线程的情况
-	@Override
-    public void addObserver(@NonNull LifecycleObserver observer) {
-        State initialState = mState == DESTROYED ? DESTROYED : INITIALIZED;
-        ObserverWithState statefulObserver = new ObserverWithState(observer, initialState);
-        ObserverWithState previous = mObserverMap.putIfAbsent(observer, statefulObserver);
+//Lifecycle 类中对 addObserver 方法添加了 @MainThread 注解，意思是该方法只能用于主线程调用
+//所以此处不考虑多线程的情况
+@Override
+public void addObserver(@NonNull LifecycleObserver observer) {
+    State initialState = mState == DESTROYED ? DESTROYED : INITIALIZED;
+    ObserverWithState statefulObserver = new ObserverWithState(observer, initialState);
+    ObserverWithState previous = mObserverMap.putIfAbsent(observer, statefulObserver);
 
-        if (previous != null) {
-            //如果 observer 之前已经传进来过了，则不重复添加，直接返回
-            return;
-        }
-        LifecycleOwner lifecycleOwner = mLifecycleOwner.get();
-        if (lifecycleOwner == null) {
-            //如果 LifecycleOwner 对象已经被回收了，则直接返回
-            return;
-        }
-
-        //如果 isReentrance 为 true，意味着当前存在重入的情况：
-        //1. mAddingObserverCounter != 0。会出现这种情况，是由于开发者先添加了一个 LifecycleObserver ，当还在向其回调事件的过程中，在回调方法里又再次调用了 addObserver 方法添加了一个新的 LifecycleObserver
-        //2.mHandlingEvent 为 true。即此时正处于向外回调 Lifecycle.Event 的状态
-        boolean isReentrance = mAddingObserverCounter != 0 || mHandlingEvent;
-
-        State targetState = calculateTargetState(observer);
-
-        //递增加一，标记当前正处于向新添加的 LifecycleObserver 回调 Event 值的过程
-        mAddingObserverCounter++;
-
-        //statefulObserver.mState.compareTo(targetState) < 0 成立的话说明 State 值还没遍历到目标状态
-        //mObserverMap.contains(observer) 成立的话说明 observer 还没有并移除
-        //因为有可能在遍历过程中开发者主动在回调方法里将 observer 给移除掉了，所以这里每次循环都检查下
-        while ((statefulObserver.mState.compareTo(targetState) < 0
-                && mObserverMap.contains(observer))) {
-            //将 observer 已经遍历到的当前的状态值 mState 保存下来
-            pushParentState(statefulObserver.mState);
-            //向 observer 回调进入“statefulObserver.mState”前需要收到的 Event 值
-            statefulObserver.dispatchEvent(lifecycleOwner, upEvent(statefulObserver.mState));
-            //移除 mState
-            popParentState();
-            // mState / subling may have been changed recalculate
-            targetState = calculateTargetState(observer);
-        }
-
-        if (!isReentrance) {
-            // we do sync only on the top level.
-            sync();
-        }
-        mAddingObserverCounter--;
+    if (previous != null) {
+        //如果 observer 之前已经传进来过了，则不重复添加，直接返回
+        return;
     }
+    LifecycleOwner lifecycleOwner = mLifecycleOwner.get();
+    if (lifecycleOwner == null) {
+        //如果 LifecycleOwner 对象已经被回收了，则直接返回
+        return;
+    }
+
+    //如果 isReentrance 为 true，意味着当前存在重入的情况：
+    //1. mAddingObserverCounter != 0。会出现这种情况，是由于开发者先添加了一个 LifecycleObserver ，当还在向其回调事件的过程中，在回调方法里又再次调用了 addObserver 方法添加了一个新的 LifecycleObserver
+    //2.mHandlingEvent 为 true。即此时正处于向外回调 Lifecycle.Event 的状态
+    boolean isReentrance = mAddingObserverCounter != 0 || mHandlingEvent;
+
+    State targetState = calculateTargetState(observer);
+
+    //递增加一，标记当前正处于向新添加的 LifecycleObserver 回调 Event 值的过程
+    mAddingObserverCounter++;
+
+    //statefulObserver.mState.compareTo(targetState) < 0 成立的话说明 State 值还没遍历到目标状态
+    //mObserverMap.contains(observer) 成立的话说明 observer 还没有并移除
+    //因为有可能在遍历过程中开发者主动在回调方法里将 observer 给移除掉了，所以这里每次循环都检查下
+    while ((statefulObserver.mState.compareTo(targetState) < 0
+            && mObserverMap.contains(observer))) {
+        //将 observer 已经遍历到的当前的状态值 mState 保存下来
+        pushParentState(statefulObserver.mState);
+        //向 observer 回调进入“statefulObserver.mState”前需要收到的 Event 值
+        statefulObserver.dispatchEvent(lifecycleOwner, upEvent(statefulObserver.mState));
+        //移除 mState
+        popParentState();
+        // mState / subling may have been changed recalculate
+        targetState = calculateTargetState(observer);
+    }
+
+    if (!isReentrance) {
+        // we do sync only on the top level.
+        sync();
+    }
+    mAddingObserverCounter--;
+}
 ```
 
 向 LifecycleObserver 回调事件的过程可以用以下这张官方提供的图来展示
@@ -540,46 +540,46 @@ public class LifecycleRegistry extends Lifecycle {
 ObserverWithState 将外界传入的 LifecycleObserver 对象传给 Lifecycling 进行类型包装，将反射逻辑和接口回调逻辑都给汇总综合成一个新的 LifecycleEventObserver 对象，从而使得 Event 分发过程都统一为 `mLifecycleObserver.onStateChanged`
 
 ```java
-    static class ObserverWithState {
-        State mState;
-        LifecycleEventObserver mLifecycleObserver;
+static class ObserverWithState {
+    State mState;
+    LifecycleEventObserver mLifecycleObserver;
 
-        ObserverWithState(LifecycleObserver observer, State initialState) {
-            mLifecycleObserver = Lifecycling.lifecycleEventObserver(observer);
-            mState = initialState;
-        }
-
-        void dispatchEvent(LifecycleOwner owner, Event event) {
-            State newState = getStateAfter(event);
-            mState = min(mState, newState);
-            mLifecycleObserver.onStateChanged(owner, event);
-            mState = newState;
-        }
+    ObserverWithState(LifecycleObserver observer, State initialState) {
+        mLifecycleObserver = Lifecycling.lifecycleEventObserver(observer);
+        mState = initialState;
     }
+
+    void dispatchEvent(LifecycleOwner owner, Event event) {
+        State newState = getStateAfter(event);
+        mState = min(mState, newState);
+        mLifecycleObserver.onStateChanged(owner, event);
+        mState = newState;
+    }
+}
 ```
 
 在上文提到过，ReportFragment 最终在向外传出 Lifecycle.Event 值时，调用的都是 LifecycleRegistry 对象的 `handleLifecycleEvent(Lifecycle.Event)` 方法，该方法会根据接收到的 Event 值换算出对应的 State 值，然后更新本地的 `mState`，再向所有 Observer 进行事件通知，最终还是会调用到 ObserverWithState 的 `dispatchEvent` 方法，所以后边我们再来重点关注 `dispatchEvent` 方法即可
 
 ```java
-    public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
-        State next = getStateAfter(event);
-        moveToState(next);
-    }
+public void handleLifecycleEvent(@NonNull Lifecycle.Event event) {
+    State next = getStateAfter(event);
+    moveToState(next);
+}
 
-    private void moveToState(State next) {
-        if (mState == next) {
-            return;
-        }
-        mState = next;
-        if (mHandlingEvent || mAddingObserverCounter != 0) {
-            mNewEventOccurred = true;
-            // we will figure out what to do on upper level.
-            return;
-        }
-        mHandlingEvent = true;
-        sync();
-        mHandlingEvent = false;
+private void moveToState(State next) {
+    if (mState == next) {
+        return;
     }
+    mState = next;
+    if (mHandlingEvent || mAddingObserverCounter != 0) {
+        mNewEventOccurred = true;
+        // we will figure out what to do on upper level.
+        return;
+    }
+    mHandlingEvent = true;
+    sync();
+    mHandlingEvent = false;
+}
 ```
 
 需要注意的一点是，对 `androidx.fragment.app.Fragment` 生命周期事件的监听一样需要使用到 LifecycleRegistry，Fragment 内部最终也是通过调用其 `handleLifecycleEvent(Lifecycle.Event)` 方法来完成其本身的生命周期事件通知，代码较为简单，这里不再赘述
@@ -596,46 +596,46 @@ ObserverWithState 将外界传入的 LifecycleObserver 对象传给 Lifecycling 
 那现在就来看下 `lifecycleEventObserver 方法的逻辑`
 
 ```java
-	@NonNull
-    static LifecycleEventObserver lifecycleEventObserver(Object object) {
-        //对应于上述的第一点
-        boolean isLifecycleEventObserver = object instanceof LifecycleEventObserver;
-        boolean isFullLifecycleObserver = object instanceof FullLifecycleObserver;
-        if (isLifecycleEventObserver && isFullLifecycleObserver) {
-            //如果 object 对象同时继承了 LifecycleEventObserver 和 FullLifecycleObserver 接口
-            //则将其包装为 FullLifecycleObserverAdapter 对象来进行事件转发
-            return new FullLifecycleObserverAdapter((FullLifecycleObserver) object,
-                    (LifecycleEventObserver) object);
-        }
-        if (isFullLifecycleObserver) {
-            //同上
-            return new FullLifecycleObserverAdapter((FullLifecycleObserver) object, null);
-        }
-        if (isLifecycleEventObserver) {
-            //object 已经是需要的目标类型了（LifecycleEventObserver），直接原样返回即可
-            return (LifecycleEventObserver) object;
-        }
-	
-        
-        //对应于上述所说的第二点，即反射操作
-        final Class<?> klass = object.getClass();
-        int type = getObserverConstructorType(klass);
-        if (type == GENERATED_CALLBACK) {
-            List<Constructor<? extends GeneratedAdapter>> constructors =
-                    sClassToAdapters.get(klass);
-            if (constructors.size() == 1) {
-                GeneratedAdapter generatedAdapter = createGeneratedAdapter(
-                        constructors.get(0), object);
-                return new SingleGeneratedAdapterObserver(generatedAdapter);
-            }
-            GeneratedAdapter[] adapters = new GeneratedAdapter[constructors.size()];
-            for (int i = 0; i < constructors.size(); i++) {
-                adapters[i] = createGeneratedAdapter(constructors.get(i), object);
-            }
-            return new CompositeGeneratedAdaptersObserver(adapters);
-        }
-        return new ReflectiveGenericLifecycleObserver(object);
+@NonNull
+static LifecycleEventObserver lifecycleEventObserver(Object object) {
+    //对应于上述的第一点
+    boolean isLifecycleEventObserver = object instanceof LifecycleEventObserver;
+    boolean isFullLifecycleObserver = object instanceof FullLifecycleObserver;
+    if (isLifecycleEventObserver && isFullLifecycleObserver) {
+        //如果 object 对象同时继承了 LifecycleEventObserver 和 FullLifecycleObserver 接口
+        //则将其包装为 FullLifecycleObserverAdapter 对象来进行事件转发
+        return new FullLifecycleObserverAdapter((FullLifecycleObserver) object,
+                (LifecycleEventObserver) object);
     }
+    if (isFullLifecycleObserver) {
+        //同上
+        return new FullLifecycleObserverAdapter((FullLifecycleObserver) object, null);
+    }
+    if (isLifecycleEventObserver) {
+        //object 已经是需要的目标类型了（LifecycleEventObserver），直接原样返回即可
+        return (LifecycleEventObserver) object;
+    }
+
+
+    //对应于上述所说的第二点，即反射操作
+    final Class<?> klass = object.getClass();
+    int type = getObserverConstructorType(klass);
+    if (type == GENERATED_CALLBACK) {
+        List<Constructor<? extends GeneratedAdapter>> constructors =
+                sClassToAdapters.get(klass);
+        if (constructors.size() == 1) {
+            GeneratedAdapter generatedAdapter = createGeneratedAdapter(
+                    constructors.get(0), object);
+            return new SingleGeneratedAdapterObserver(generatedAdapter);
+        }
+        GeneratedAdapter[] adapters = new GeneratedAdapter[constructors.size()];
+        for (int i = 0; i < constructors.size(); i++) {
+            adapters[i] = createGeneratedAdapter(constructors.get(i), object);
+        }
+        return new CompositeGeneratedAdaptersObserver(adapters);
+    }
+    return new ReflectiveGenericLifecycleObserver(object);
+}
 ```
 
 ## 第一种情况
@@ -713,158 +713,158 @@ class FullLifecycleObserverAdapter implements LifecycleEventObserver {
 ClassesInfoCache 内部会判断指定的 class 对象是否包含使用了 OnLifecycleEvent 进行注解的方法，并将判断结果缓存在 `mHasLifecycleMethods` 内，缓存信息会根据 `createInfo(klass, methods)` 来进行获取
 
 ```java
-	//判断指定的 class 对象是否包含使用了 OnLifecycleEvent 进行注解的方法
-    boolean hasLifecycleMethods(Class<?> klass) {
-        Boolean hasLifecycleMethods = mHasLifecycleMethods.get(klass);
-        if (hasLifecycleMethods != null) {
-            //如果本地有缓存的话则直接返回缓存值
-            return hasLifecycleMethods;
-        }
-        //本地还没有缓存值，以下逻辑就是来通过反射判断 klass 是否包含使用 OnLifecycleEvent 进行注解的方法
-
-        //获取 klass 包含的所有方法
-        Method[] methods = getDeclaredMethods(klass);
-        for (Method method : methods) {
-            OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);
-            if (annotation != null) {
-                // Optimization for reflection, we know that this method is called
-                // when there is no generated adapter. But there are methods with @OnLifecycleEvent
-                // so we know that will use ReflectiveGenericLifecycleObserver,
-                // so we createInfo in advance.
-                // CreateInfo always initialize mHasLifecycleMethods for a class, so we don't do it
-                // here.
-                createInfo(klass, methods);
-                return true;
-            }
-        }
-        mHasLifecycleMethods.put(klass, false);
-        return false;
+//判断指定的 class 对象是否包含使用了 OnLifecycleEvent 进行注解的方法
+boolean hasLifecycleMethods(Class<?> klass) {
+    Boolean hasLifecycleMethods = mHasLifecycleMethods.get(klass);
+    if (hasLifecycleMethods != null) {
+        //如果本地有缓存的话则直接返回缓存值
+        return hasLifecycleMethods;
     }
+    //本地还没有缓存值，以下逻辑就是来通过反射判断 klass 是否包含使用 OnLifecycleEvent 进行注解的方法
+
+    //获取 klass 包含的所有方法
+    Method[] methods = getDeclaredMethods(klass);
+    for (Method method : methods) {
+        OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);
+        if (annotation != null) {
+            // Optimization for reflection, we know that this method is called
+            // when there is no generated adapter. But there are methods with @OnLifecycleEvent
+            // so we know that will use ReflectiveGenericLifecycleObserver,
+            // so we createInfo in advance.
+            // CreateInfo always initialize mHasLifecycleMethods for a class, so we don't do it
+            // here.
+            createInfo(klass, methods);
+            return true;
+        }
+    }
+    mHasLifecycleMethods.put(klass, false);
+    return false;
+}
 ```
 
 而正是在 `createInfo`方法内部对被注解方法的入参类型、入参顺序、入参个数等进行了限制，如果不符合规定，在运行时就会直接抛出异常
 
 ```java
-    //以下三个整数值用于标记被注解的方法的入参参数的个数
-	//不包含入参参数
-	private static final int CALL_TYPE_NO_ARG = 0;
-	//包含一个入参参数    
-	private static final int CALL_TYPE_PROVIDER = 1;
-	//包含两个入参参数	    
-	private static final int CALL_TYPE_PROVIDER_WITH_EVENT = 2;
+//以下三个整数值用于标记被注解的方法的入参参数的个数
+//不包含入参参数
+private static final int CALL_TYPE_NO_ARG = 0;
+//包含一个入参参数    
+private static final int CALL_TYPE_PROVIDER = 1;
+//包含两个入参参数	    
+private static final int CALL_TYPE_PROVIDER_WITH_EVENT = 2;
 
-	private CallbackInfo createInfo(Class<?> klass, @Nullable Method[] declaredMethods) {
-        Class<?> superclass = klass.getSuperclass();
-        Map<MethodReference, Lifecycle.Event> handlerToEvent = new HashMap<>();
-        if (superclass != null) {
-            CallbackInfo superInfo = getInfo(superclass);
-            if (superInfo != null) {
-                handlerToEvent.putAll(superInfo.mHandlerToEvent);
-            }
+private CallbackInfo createInfo(Class<?> klass, @Nullable Method[] declaredMethods) {
+    Class<?> superclass = klass.getSuperclass();
+    Map<MethodReference, Lifecycle.Event> handlerToEvent = new HashMap<>();
+    if (superclass != null) {
+        CallbackInfo superInfo = getInfo(superclass);
+        if (superInfo != null) {
+            handlerToEvent.putAll(superInfo.mHandlerToEvent);
         }
-
-        Class<?>[] interfaces = klass.getInterfaces();
-        for (Class<?> intrfc : interfaces) {
-            for (Map.Entry<MethodReference, Lifecycle.Event> entry : getInfo(
-                    intrfc).mHandlerToEvent.entrySet()) {
-                verifyAndPutHandler(handlerToEvent, entry.getKey(), entry.getValue(), klass);
-            }
-        }
-
-        Method[] methods = declaredMethods != null ? declaredMethods : getDeclaredMethods(klass);
-        boolean hasLifecycleMethods = false;
-        for (Method method : methods) {
-            //找到包含 OnLifecycleEvent 注解的方法
-            OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);
-            if (annotation == null) {
-                continue;
-            }
-            hasLifecycleMethods = true;
-
-            //以下的所有逻辑是这样的：
-            //1. 获取 method 所对应的方法的参数个数和参数类型，即 params
-            //2. 如果参数个数为 0，则 callType = CALL_TYPE_NO_ARG，method 不包含入参参数
-            //3. 如果参数个数大于 0，则第一个参数必须是 LifecycleOwner 类型的对象，否则抛出异常
-            //3.1、如果参数个数为 1，则 callType = CALL_TYPE_PROVIDER
-            //3.2、如果参数个数为 2，则注解值 annotation 必须是 Lifecycle.Event.ON_ANY
-            //     且第二个参数必须是 Lifecycle.Event 类型的对象，否则抛出异常
-            //     如果一切都符合条件，则 callType = CALL_TYPE_PROVIDER_WITH_EVENT
-            //3.3、如果参数个数大于 2，则抛出异常，即要求 method 最多包含两个参数，且对参数类型和参数顺序进行了限制
-            Class<?>[] params = method.getParameterTypes();
-            int callType = CALL_TYPE_NO_ARG;
-            if (params.length > 0) {
-                callType = CALL_TYPE_PROVIDER;
-                if (!params[0].isAssignableFrom(LifecycleOwner.class)) {
-                    throw new IllegalArgumentException(
-                            "invalid parameter type. Must be one and instanceof LifecycleOwner");
-                }
-            }
-            Lifecycle.Event event = annotation.value();
-
-            if (params.length > 1) {
-                callType = CALL_TYPE_PROVIDER_WITH_EVENT;
-                if (!params[1].isAssignableFrom(Lifecycle.Event.class)) {
-                    throw new IllegalArgumentException(
-                            "invalid parameter type. second arg must be an event");
-                }
-                if (event != Lifecycle.Event.ON_ANY) {
-                    throw new IllegalArgumentException(
-                            "Second arg is supported only for ON_ANY value");
-                }
-            }
-            if (params.length > 2) {
-                throw new IllegalArgumentException("cannot have more than 2 params");
-            }
-            MethodReference methodReference = new MethodReference(callType, method);
-            verifyAndPutHandler(handlerToEvent, methodReference, event, klass);
-        }
-        CallbackInfo info = new CallbackInfo(handlerToEvent);
-        mCallbackMap.put(klass, info);
-        mHasLifecycleMethods.put(klass, hasLifecycleMethods);
-        return info;
     }
+
+    Class<?>[] interfaces = klass.getInterfaces();
+    for (Class<?> intrfc : interfaces) {
+        for (Map.Entry<MethodReference, Lifecycle.Event> entry : getInfo(
+                intrfc).mHandlerToEvent.entrySet()) {
+            verifyAndPutHandler(handlerToEvent, entry.getKey(), entry.getValue(), klass);
+        }
+    }
+
+    Method[] methods = declaredMethods != null ? declaredMethods : getDeclaredMethods(klass);
+    boolean hasLifecycleMethods = false;
+    for (Method method : methods) {
+        //找到包含 OnLifecycleEvent 注解的方法
+        OnLifecycleEvent annotation = method.getAnnotation(OnLifecycleEvent.class);
+        if (annotation == null) {
+            continue;
+        }
+        hasLifecycleMethods = true;
+
+        //以下的所有逻辑是这样的：
+        //1. 获取 method 所对应的方法的参数个数和参数类型，即 params
+        //2. 如果参数个数为 0，则 callType = CALL_TYPE_NO_ARG，method 不包含入参参数
+        //3. 如果参数个数大于 0，则第一个参数必须是 LifecycleOwner 类型的对象，否则抛出异常
+        //3.1、如果参数个数为 1，则 callType = CALL_TYPE_PROVIDER
+        //3.2、如果参数个数为 2，则注解值 annotation 必须是 Lifecycle.Event.ON_ANY
+        //     且第二个参数必须是 Lifecycle.Event 类型的对象，否则抛出异常
+        //     如果一切都符合条件，则 callType = CALL_TYPE_PROVIDER_WITH_EVENT
+        //3.3、如果参数个数大于 2，则抛出异常，即要求 method 最多包含两个参数，且对参数类型和参数顺序进行了限制
+        Class<?>[] params = method.getParameterTypes();
+        int callType = CALL_TYPE_NO_ARG;
+        if (params.length > 0) {
+            callType = CALL_TYPE_PROVIDER;
+            if (!params[0].isAssignableFrom(LifecycleOwner.class)) {
+                throw new IllegalArgumentException(
+                        "invalid parameter type. Must be one and instanceof LifecycleOwner");
+            }
+        }
+        Lifecycle.Event event = annotation.value();
+
+        if (params.length > 1) {
+            callType = CALL_TYPE_PROVIDER_WITH_EVENT;
+            if (!params[1].isAssignableFrom(Lifecycle.Event.class)) {
+                throw new IllegalArgumentException(
+                        "invalid parameter type. second arg must be an event");
+            }
+            if (event != Lifecycle.Event.ON_ANY) {
+                throw new IllegalArgumentException(
+                        "Second arg is supported only for ON_ANY value");
+            }
+        }
+        if (params.length > 2) {
+            throw new IllegalArgumentException("cannot have more than 2 params");
+        }
+        MethodReference methodReference = new MethodReference(callType, method);
+        verifyAndPutHandler(handlerToEvent, methodReference, event, klass);
+    }
+    CallbackInfo info = new CallbackInfo(handlerToEvent);
+    mCallbackMap.put(klass, info);
+    mHasLifecycleMethods.put(klass, hasLifecycleMethods);
+    return info;
+}
 ```
 
 然后在 MethodReference 类内部的 `invokeCallback()` 方法完成最终的反射调用。MethodReference 用于缓存具有 OnLifecycleEvent 注解的方法（Method）以及该方法所具有的入参个数（知道了入参个数就知道了该如何进行反射调用），通过 `invokeCallback()` 方法来进行 Lifecycle.Event 事件通知
 
 ```java
-	static class MethodReference {
-        final int mCallType;
-        final Method mMethod;
-		
-        MethodReference(int callType, Method method) {
-            mCallType = callType;
-            mMethod = method;
-            mMethod.setAccessible(true);
-        }
+static class MethodReference {
+    final int mCallType;
+    final Method mMethod;
 
-        void invokeCallback(LifecycleOwner source, Lifecycle.Event event, Object target) {
-            //noinspection TryWithIdenticalCatches
-            //根据入参个数来传递特定的参数并进行反射回调
-            //因此用 OnLifecycleEvent 进行注解的方法，其入参个数、入参类型、入参声明顺序都有固定的要求
-            //当不符合要求时会导致反射失败从而抛出异常
-            try {
-                switch (mCallType) {
-                    case CALL_TYPE_NO_ARG:
-                        mMethod.invoke(target);
-                        break;
-                    case CALL_TYPE_PROVIDER:
-                        mMethod.invoke(target, source);
-                        break;
-                    case CALL_TYPE_PROVIDER_WITH_EVENT:
-                        mMethod.invoke(target, source, event);
-                        break;
-                }
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException("Failed to call observer method", e.getCause());
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-    	//省略无关方法
-        ····
+    MethodReference(int callType, Method method) {
+        mCallType = callType;
+        mMethod = method;
+        mMethod.setAccessible(true);
     }
+
+    void invokeCallback(LifecycleOwner source, Lifecycle.Event event, Object target) {
+        //noinspection TryWithIdenticalCatches
+        //根据入参个数来传递特定的参数并进行反射回调
+        //因此用 OnLifecycleEvent 进行注解的方法，其入参个数、入参类型、入参声明顺序都有固定的要求
+        //当不符合要求时会导致反射失败从而抛出异常
+        try {
+            switch (mCallType) {
+                case CALL_TYPE_NO_ARG:
+                    mMethod.invoke(target);
+                    break;
+                case CALL_TYPE_PROVIDER:
+                    mMethod.invoke(target, source);
+                    break;
+                case CALL_TYPE_PROVIDER_WITH_EVENT:
+                    mMethod.invoke(target, source, event);
+                    break;
+            }
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException("Failed to call observer method", e.getCause());
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    //省略无关方法
+    ····
+}
 ```
 
 # 六、总结

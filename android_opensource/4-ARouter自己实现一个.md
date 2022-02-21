@@ -9,7 +9,7 @@
 EasyRouter 支持同个模块间及跨模块实现 Activity 的跳转，仅需要指定一个字符串 path 即可：
 
 ```kotlin
-	EasyRouter.navigation(EasyRouterPath.PATH_HOME)
+EasyRouter.navigation(EasyRouterPath.PATH_HOME)
 ```
 
 最终实现的效果：
@@ -96,7 +96,6 @@ public class EasyRouterRouterTestLoader {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/6 1:08
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -115,7 +114,6 @@ data class RouterBean(val targetClass: Class<*>, val path: String, val group: St
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/5 22:17
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -168,78 +166,78 @@ class EasyRouterProcessor : AbstractProcessor() {
 首先需要生成的 `routerMap`这个用于存储路由表信息的 Map 字段，其 key 值即 path，value 值即 path 对应的页面信息
 
 ```kotlin
-    //生成 routerMap 这个静态常量
-    private fun generateSubscriberField(): FieldSpec {
-        val subscriberIndex = ParameterizedTypeName.get(
-            ClassName.get(Map::class.java),
-            ClassName.get(String::class.java),
-            ClassName.get(RouterBean::class.java)
+//生成 routerMap 这个静态常量
+private fun generateSubscriberField(): FieldSpec {
+    val subscriberIndex = ParameterizedTypeName.get(
+        ClassName.get(Map::class.java),
+        ClassName.get(String::class.java),
+        ClassName.get(RouterBean::class.java)
+    )
+    return FieldSpec.builder(subscriberIndex, "routerMap")
+        .addModifiers(
+            Modifier.PUBLIC,
+            Modifier.STATIC,
+            Modifier.FINAL
         )
-        return FieldSpec.builder(subscriberIndex, "routerMap")
-            .addModifiers(
-                Modifier.PUBLIC,
-                Modifier.STATIC,
-                Modifier.FINAL
-            )
-            .initializer("new ${"$"}T<>()", HashMap::class.java)
-            .build()
-    }
+        .initializer("new ${"$"}T<>()", HashMap::class.java)
+        .build()
+}
 ```
 
 之后就需要生成静态方法块。拿到 `@Router` 注解包含的 path 属性，及被注解的类对应的 Class 对象，以此来构建一个 RouterBean 对象并存到 `routerMap`中
 
 ```kotlin
-	//生成静态方法块
-    private fun generateInitializerBlock(
-        elements: MutableSet<out Element>,
-        builder: TypeSpec.Builder
-    ) {
-        val codeBuilder = CodeBlock.builder()
-        elements.forEach {
-            val router = it.getAnnotation(Router::class.java)
-            val path = router.path
-            val group = path.substring(0, path.indexOf("/"))
-            codeBuilder.add(
-                "routerMap.put(${"$"}S, new ${"$"}T(${"$"}T.class, ${"$"}S, ${"$"}S));",
-                path,
-                RouterBean::class.java,
-                it.asType(),
-                path,
-                group
-            )
-        }
-        builder.addInitializerBlock(
-            codeBuilder.build()
+//生成静态方法块
+private fun generateInitializerBlock(
+    elements: MutableSet<out Element>,
+    builder: TypeSpec.Builder
+) {
+    val codeBuilder = CodeBlock.builder()
+    elements.forEach {
+        val router = it.getAnnotation(Router::class.java)
+        val path = router.path
+        val group = path.substring(0, path.indexOf("/"))
+        codeBuilder.add(
+            "routerMap.put(${"$"}S, new ${"$"}T(${"$"}T.class, ${"$"}S, ${"$"}S));",
+            path,
+            RouterBean::class.java,
+            it.asType(),
+            path,
+            group
         )
     }
+    builder.addInitializerBlock(
+        codeBuilder.build()
+    )
+}
 ```
 
 然后在 `process`方法中完成辅助文件的生成
 
 ```kotlin
-	override fun process(
-        mutableSet: MutableSet<out TypeElement>,
-        roundEnvironment: RoundEnvironment
-    ): Boolean {
-        val elements: MutableSet<out Element> =
-            roundEnvironment.getElementsAnnotatedWith(Router::class.java)
-        if (elements.isNullOrEmpty()) {
-            return true
-        }
-        val typeSpec = TypeSpec.classBuilder("EasyRouter" + moduleName + "Loader")
-            .addModifiers(Modifier.PUBLIC)
-            .addField(generateSubscriberField())
-            .addJavadoc(DOC)
-        generateInitializerBlock(elements, typeSpec)
-        val javaFile = JavaFile.builder(PACKAGE_NAME, typeSpec.build())
-            .build()
-        try {
-            javaFile.writeTo(processingEnv.filer)
-        } catch (e: Throwable) {
-            e.printStackTrace()
-        }
+override fun process(
+    mutableSet: MutableSet<out TypeElement>,
+    roundEnvironment: RoundEnvironment
+): Boolean {
+    val elements: MutableSet<out Element> =
+        roundEnvironment.getElementsAnnotatedWith(Router::class.java)
+    if (elements.isNullOrEmpty()) {
         return true
     }
+    val typeSpec = TypeSpec.classBuilder("EasyRouter" + moduleName + "Loader")
+        .addModifiers(Modifier.PUBLIC)
+        .addField(generateSubscriberField())
+        .addJavadoc(DOC)
+    generateInitializerBlock(elements, typeSpec)
+    val javaFile = JavaFile.builder(PACKAGE_NAME, typeSpec.build())
+        .build()
+    try {
+        javaFile.writeTo(processingEnv.filer)
+    } catch (e: Throwable) {
+        e.printStackTrace()
+    }
+    return true
+}
 ```
 
 # 三、EasyRouter
@@ -249,7 +247,6 @@ EasyRouter 这个单例对象即最终提供给外部的调用入口，总代码
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/5 23:45
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */

@@ -47,7 +47,6 @@
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/12/18 17:57
  * @Desc:
  * @公众号：字节数组
  */
@@ -80,9 +79,8 @@ class OptimizedThread(runnable: Runnable?, name: String?, className: String) :
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/12/16 15:11
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 class OptimizedThreadTransform(private val config: OptimizedThreadConfig) : BaseTransform() {
 
@@ -229,8 +227,8 @@ JDK 中的源码我们是没法进行 hook 的，而如果要在字节码层面�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/12/16 15:58
  * @Desc:
+ * @公众号：字节数组
  */
 object OptimizedExecutors {
 
@@ -313,9 +311,8 @@ object OptimizedExecutors {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/12/16 15:11
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 class OptimizedThreadTransform(private val config: OptimizedThreadConfig) : BaseTransform() {
 

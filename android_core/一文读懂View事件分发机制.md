@@ -24,13 +24,13 @@ View 坐标系以 View 所在的 ViewGroup 的左上角作为坐标原点，水�
 View 就依赖于这四个距离值来计算宽高大小
 
 ```java
-    public final int getWidth() {
-        return mRight - mLeft;
-    }
+public final int getWidth() {
+    return mRight - mLeft;
+}
 
-    public final int getHeight() {
-        return mBottom - mTop;
-    }
+public final int getHeight() {
+    return mBottom - mTop;
+}
 ```
 
 # 二、MotionEvent
@@ -112,15 +112,15 @@ public boolean onTouchEvent(MotionEvent event)
 ViewGroup 完整包含以上三个过程，而 View 只包含**分发和消费**两个，既 View 类不包含 `onInterceptTouchEvent(MotionEvent)` 方法。三个方法之间的联系可以用如下伪代码来表示：
 
 ```kotlin
-    fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        var consume = false
-        consume = if (onInterceptTouchEvent(event)) {
-            onTouchEvent(event)
-        } else {
-            child.dispatchTouchEvent(event)
-        }
-        return consume
+fun dispatchTouchEvent(event: MotionEvent): Boolean {
+    var consume = false
+    consume = if (onInterceptTouchEvent(event)) {
+        onTouchEvent(event)
+    } else {
+        child.dispatchTouchEvent(event)
     }
+    return consume
+}
 ```
 
 当触摸事件发生时，事件分发流程会按照如下执行：
@@ -530,33 +530,33 @@ View 的 dispatchTouchEvent 方法逻辑上还比较简单，可以总结为：
 4. 所以说，外部设置的 OnTouchListener 的优先级会高于自身的 onTouchEvent 方法，OnTouchListener 可以通过返回 true 使得 onTouchEvent 方法不被调用
 
 ```java
-    public boolean dispatchTouchEvent(MotionEvent event) {
-        ···
-        //用于表示当前 View 是否消费了该事件
-        boolean result = false;
-        final int actionMasked = event.getActionMasked();
-        ···
-        if (onFilterTouchEventForSecurity(event)) {
-            //第一步
-            if ((mViewFlags & ENABLED_MASK) == ENABLED && handleScrollBarDragging(event)) {
-                result = true;
-            }
-            //第二步
-            ListenerInfo li = mListenerInfo;
-            if (li != null && li.mOnTouchListener != null
-                    && (mViewFlags & ENABLED_MASK) == ENABLED
-                    && li.mOnTouchListener.onTouch(this, event)) {
-                result = true;
-            }
-
-           	//第三步
-            if (!result && onTouchEvent(event)) {
-                result = true;
-            }
+public boolean dispatchTouchEvent(MotionEvent event) {
+    ···
+    //用于表示当前 View 是否消费了该事件
+    boolean result = false;
+    final int actionMasked = event.getActionMasked();
+    ···
+    if (onFilterTouchEventForSecurity(event)) {
+        //第一步
+        if ((mViewFlags & ENABLED_MASK) == ENABLED && handleScrollBarDragging(event)) {
+            result = true;
         }
-		···
-        return result;
+        //第二步
+        ListenerInfo li = mListenerInfo;
+        if (li != null && li.mOnTouchListener != null
+                && (mViewFlags & ENABLED_MASK) == ENABLED
+                && li.mOnTouchListener.onTouch(this, event)) {
+            result = true;
+        }
+
+        //第三步
+        if (!result && onTouchEvent(event)) {
+            result = true;
+        }
     }
+    ···
+    return result;
+}
 ```
 
 ## onTouchEvent 
@@ -569,40 +569,40 @@ onTouchEvent 方法就比较复杂了，我们只看其主干思路即可，可�
 4. 对应第四步。在接收到 ACTION_UP 事件的时候，判断是否回调外部设置的 OnClickListener。因此如果外部设置的 OnTouchListener 返回了 true，那么 OnClickListener 就根本没有机会被调用，且如果上层视图消耗了 ACTION_UP 事件或者是当前 View 处于禁用状态 DISABLED 的话，OnClickListener 也不会被调用
 
 ```java
-    public boolean onTouchEvent(MotionEvent event) {
-        ···
-        final boolean clickable = ((viewFlags & CLICKABLE) == CLICKABLE
-                || (viewFlags & LONG_CLICKABLE) == LONG_CLICKABLE)
-                || (viewFlags & CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE;
+public boolean onTouchEvent(MotionEvent event) {
+    ···
+    final boolean clickable = ((viewFlags & CLICKABLE) == CLICKABLE
+            || (viewFlags & LONG_CLICKABLE) == LONG_CLICKABLE)
+            || (viewFlags & CONTEXT_CLICKABLE) == CONTEXT_CLICKABLE;
 
-        if ((viewFlags & ENABLED_MASK) == DISABLED) {
-           	···
-            //第一步
-            return clickable;
-        }
-        //第二步
-        if (mTouchDelegate != null) {
-            if (mTouchDelegate.onTouchEvent(event)) {
-                return true;
-            }
-        }
-        //第三步
-        if (clickable || (viewFlags & TOOLTIP) == TOOLTIP) {
-            ···
-            if (!focusTaken) {
-                if (mPerformClick == null) {
-                    mPerformClick = new PerformClick();
-                }
-                if (!post(mPerformClick)) {
-                    //第四步
-                    performClickInternal();
-                }
-            }
-            ···
+    if ((viewFlags & ENABLED_MASK) == DISABLED) {
+        ···
+        //第一步
+        return clickable;
+    }
+    //第二步
+    if (mTouchDelegate != null) {
+        if (mTouchDelegate.onTouchEvent(event)) {
             return true;
         }
-        return false;
     }
+    //第三步
+    if (clickable || (viewFlags & TOOLTIP) == TOOLTIP) {
+        ···
+        if (!focusTaken) {
+            if (mPerformClick == null) {
+                mPerformClick = new PerformClick();
+            }
+            if (!post(mPerformClick)) {
+                //第四步
+                performClickInternal();
+            }
+        }
+        ···
+        return true;
+    }
+    return false;
+}
 ```
 
 所以说，dispatchTouchEvent 内部的确是会调用 onTouchEvent 方法，且如果 View 处于可点击状态的话，那么就会消耗该触摸事件，且 OnClickListener 是在  onTouchEvent 方法中被调用的
@@ -610,12 +610,12 @@ onTouchEvent 方法就比较复杂了，我们只看其主干思路即可，可�
 举个例子。TextView 默认是不可点击状态，而 Button 是直接继承于 TextView 的，因此 Button 默认状态也是不可点击且不会消耗任何触摸事件的，而 Button 之所以在我们日常使用过程中会消耗掉触摸事件，是因为往往我们都会为其设置 OnClickListener，此时就会将 Button 的 Clickable 置为 true
 
 ```java
-    public void setOnClickListener(@Nullable OnClickListener l) {
-        if (!isClickable()) {
-            setClickable(true);
-        }
-        getListenerInfo().mOnClickListener = l;
+public void setOnClickListener(@Nullable OnClickListener l) {
+    if (!isClickable()) {
+        setClickable(true);
     }
+    getListenerInfo().mOnClickListener = l;
+}
 ```
 
 # 七、ViewGroup
@@ -627,109 +627,109 @@ ViewGroup 直接继承于 View，其逻辑是在 View 的基础上来做扩展�
 ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因为 View 在整个视图体系中处于最基础的底层，只需要管理好自己就可以，而 ViewGroup 还需要管理其内嵌的布局，可能会包含多个子 ViewGroup 和子 View
 
 ```java
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
+@Override
+public boolean dispatchTouchEvent(MotionEvent ev) {
+    ···
+    boolean handled = false;
+    if (onFilterTouchEventForSecurity(ev)) {
+        final int action = ev.getAction();
+        final int actionMasked = action & MotionEvent.ACTION_MASK;
+
+        //第一步
+        if (actionMasked == MotionEvent.ACTION_DOWN) {
+            cancelAndClearTouchTargets(ev);
+            resetTouchState();
+        }
+
+        //第二步
+        final boolean intercepted;
+        if (actionMasked == MotionEvent.ACTION_DOWN
+                || mFirstTouchTarget != null) {
+            final boolean disallowIntercept = (mGroupFlags & FLAG_DISALLOW_INTERCEPT) != 0;
+            if (!disallowIntercept) {
+                intercepted = onInterceptTouchEvent(ev);
+                ev.setAction(action);
+            } else {
+                intercepted = false;
+            }
+        } else {
+            intercepted = true;
+        }
+
         ···
-        boolean handled = false;
-        if (onFilterTouchEventForSecurity(ev)) {
-            final int action = ev.getAction();
-            final int actionMasked = action & MotionEvent.ACTION_MASK;
 
-            //第一步
-            if (actionMasked == MotionEvent.ACTION_DOWN) {
-                cancelAndClearTouchTargets(ev);
-                resetTouchState();
-            }
+        if (!canceled && !intercepted) {
+            View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()
+                    ? findChildWithAccessibilityFocus() : null;
 
-            //第二步
-            final boolean intercepted;
             if (actionMasked == MotionEvent.ACTION_DOWN
-                    || mFirstTouchTarget != null) {
-                final boolean disallowIntercept = (mGroupFlags & FLAG_DISALLOW_INTERCEPT) != 0;
-                if (!disallowIntercept) {
-                    intercepted = onInterceptTouchEvent(ev);
-                    ev.setAction(action);
+                    || (split && actionMasked == MotionEvent.ACTION_POINTER_DOWN)
+                    || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
+                final int actionIndex = ev.getActionIndex(); // always 0 for down
+                final int idBitsToAssign = split ? 1 << ev.getPointerId(actionIndex)
+                        : TouchTarget.ALL_POINTER_IDS;
+
+                // Clean up earlier touch targets for this pointer id in case they
+                // have become out of sync.
+                removePointersFromTouchTargets(idBitsToAssign);
+
+                //第三步
+                final int childrenCount = mChildrenCount;
+                if (newTouchTarget == null && childrenCount != 0) {
+                    ···
+                    final View[] children = mChildren;
+                    for (int i = childrenCount - 1; i >= 0; i--) {
+                        ···
+                        }
+                    }
+                    ···
+                }
+               ···
+            }
+        }
+
+        if (mFirstTouchTarget == null) {
+            //第四步
+            handled = dispatchTransformedTouchEvent(ev, canceled, null,
+                    TouchTarget.ALL_POINTER_IDS);
+        } else {
+            //第五步
+            TouchTarget predecessor = null;
+            TouchTarget target = mFirstTouchTarget;
+            while (target != null) {
+                final TouchTarget next = target.next;
+                if (alreadyDispatchedToNewTouchTarget && target == newTouchTarget) {
+                    handled = true;
                 } else {
-                    intercepted = false;
-                }
-            } else {
-                intercepted = true;
-            }
-
-            ···
-
-            if (!canceled && !intercepted) {
-                View childWithAccessibilityFocus = ev.isTargetAccessibilityFocus()
-                        ? findChildWithAccessibilityFocus() : null;
-
-                if (actionMasked == MotionEvent.ACTION_DOWN
-                        || (split && actionMasked == MotionEvent.ACTION_POINTER_DOWN)
-                        || actionMasked == MotionEvent.ACTION_HOVER_MOVE) {
-                    final int actionIndex = ev.getActionIndex(); // always 0 for down
-                    final int idBitsToAssign = split ? 1 << ev.getPointerId(actionIndex)
-                            : TouchTarget.ALL_POINTER_IDS;
-
-                    // Clean up earlier touch targets for this pointer id in case they
-                    // have become out of sync.
-                    removePointersFromTouchTargets(idBitsToAssign);
-
-                    //第三步
-                    final int childrenCount = mChildrenCount;
-                    if (newTouchTarget == null && childrenCount != 0) {
-                        ···
-                        final View[] children = mChildren;
-                        for (int i = childrenCount - 1; i >= 0; i--) {
-                            ···
-                            }
-                        }
-                        ···
-                    }
-				   ···
-                }
-            }
-
-            if (mFirstTouchTarget == null) {
-                //第四步
-                handled = dispatchTransformedTouchEvent(ev, canceled, null,
-                        TouchTarget.ALL_POINTER_IDS);
-            } else {
-                //第五步
-                TouchTarget predecessor = null;
-                TouchTarget target = mFirstTouchTarget;
-                while (target != null) {
-                    final TouchTarget next = target.next;
-                    if (alreadyDispatchedToNewTouchTarget && target == newTouchTarget) {
+                    final boolean cancelChild = resetCancelNextUpFlag(target.child)
+                            || intercepted;
+                    if (dispatchTransformedTouchEvent(ev, cancelChild,
+                            target.child, target.pointerIdBits)) {
                         handled = true;
-                    } else {
-                        final boolean cancelChild = resetCancelNextUpFlag(target.child)
-                                || intercepted;
-                        if (dispatchTransformedTouchEvent(ev, cancelChild,
-                                target.child, target.pointerIdBits)) {
-                            handled = true;
-                        }
-                        if (cancelChild) {
-                            if (predecessor == null) {
-                                mFirstTouchTarget = next;
-                            } else {
-                                predecessor.next = next;
-                            }
-                            target.recycle();
-                            target = next;
-                            continue;
-                        }
                     }
-                    predecessor = target;
-                    target = next;
+                    if (cancelChild) {
+                        if (predecessor == null) {
+                            mFirstTouchTarget = next;
+                        } else {
+                            predecessor.next = next;
+                        }
+                        target.recycle();
+                        target = next;
+                        continue;
+                    }
                 }
+                predecessor = target;
+                target = next;
             }
-			···
         }
-
-        if (!handled && mInputEventConsistencyVerifier != null) {
-            mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);
-        }
-        return handled;
+        ···
     }
+
+    if (!handled && mInputEventConsistencyVerifier != null) {
+        mInputEventConsistencyVerifier.onUnhandledEvent(ev, 1);
+    }
+    return handled;
+}
 ```
 
 该方法的主要流程可以总结为：
@@ -749,15 +749,15 @@ ViewGroup 的 dispatchTouchEvent 方法相对 View 就要复杂很多了，因�
 onInterceptTouchEvent 方法只在特定几种情况下才会返回 true，成立条件似乎是当存在外置鼠标设备的时候才有可能成立，读者只需要记住该方法默认返回 false 即可，既默认不进行拦截
 
 ```java
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-        if (ev.isFromSource(InputDevice.SOURCE_MOUSE)
-                && ev.getAction() == MotionEvent.ACTION_DOWN
-                && ev.isButtonPressed(MotionEvent.BUTTON_PRIMARY)
-                && isOnScrollbarThumb(ev.getX(), ev.getY())) {
-            return true;
-        }
-        return false;
+public boolean onInterceptTouchEvent(MotionEvent ev) {
+    if (ev.isFromSource(InputDevice.SOURCE_MOUSE)
+            && ev.getAction() == MotionEvent.ACTION_DOWN
+            && ev.isButtonPressed(MotionEvent.BUTTON_PRIMARY)
+            && isOnScrollbarThumb(ev.getX(), ev.getY())) {
+        return true;
     }
+    return false;
+}
 ```
 
 ## onTouchEvent
@@ -1119,64 +1119,64 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 此外，TouchTarget 中的静态成员变量 sRecycleBin 就用于提供对象复用功能，以链表的形式最多缓存 MAX_RECYCLED 个对象，调用 `obtain` 方法的时候就会以切换 next 引用的形式来获取一个独立的 TouchTarget 对象
 
 ```java
-    private static final class TouchTarget {
-        private static final int MAX_RECYCLED = 32;
-        private static final Object sRecycleLock = new Object[0];
-        private static TouchTarget sRecycleBin;
-        private static int sRecycledCount;
+private static final class TouchTarget {
+    private static final int MAX_RECYCLED = 32;
+    private static final Object sRecycleLock = new Object[0];
+    private static TouchTarget sRecycleBin;
+    private static int sRecycledCount;
 
-        public static final int ALL_POINTER_IDS = -1; // all ones
+    public static final int ALL_POINTER_IDS = -1; // all ones
 
-        // The touched child view.
-        @UnsupportedAppUsage
-        public View child;
+    // The touched child view.
+    @UnsupportedAppUsage
+    public View child;
 
-        // The combined bit mask of pointer ids for all pointers captured by the target.
-        public int pointerIdBits;
+    // The combined bit mask of pointer ids for all pointers captured by the target.
+    public int pointerIdBits;
 
-        // The next target in the target list.
-        public TouchTarget next;
+    // The next target in the target list.
+    public TouchTarget next;
 
-        @UnsupportedAppUsage
-        private TouchTarget() {
+    @UnsupportedAppUsage
+    private TouchTarget() {
+    }
+
+    public static TouchTarget obtain(@NonNull View child, int pointerIdBits) {
+        if (child == null) {
+            throw new IllegalArgumentException("child must be non-null");
         }
-
-        public static TouchTarget obtain(@NonNull View child, int pointerIdBits) {
-            if (child == null) {
-                throw new IllegalArgumentException("child must be non-null");
+        final TouchTarget target;
+        synchronized (sRecycleLock) {
+            if (sRecycleBin == null) {
+                target = new TouchTarget();
+            } else {
+                target = sRecycleBin;
+                sRecycleBin = target.next;
+                 sRecycledCount--;
+                target.next = null;
             }
-            final TouchTarget target;
-            synchronized (sRecycleLock) {
-                if (sRecycleBin == null) {
-                    target = new TouchTarget();
-                } else {
-                    target = sRecycleBin;
-                    sRecycleBin = target.next;
-                     sRecycledCount--;
-                    target.next = null;
-                }
-            }
-            target.child = child;
-            target.pointerIdBits = pointerIdBits;
-            return target;
         }
+        target.child = child;
+        target.pointerIdBits = pointerIdBits;
+        return target;
+    }
 
-        public void recycle() {
-            if (child == null) {
-                throw new IllegalStateException("already recycled once");
+    public void recycle() {
+        if (child == null) {
+            throw new IllegalStateException("already recycled once");
+        }
+        synchronized (sRecycleLock) {
+            if (sRecycledCount < MAX_RECYCLED) {
+                next = sRecycleBin;
+                sRecycleBin = this;
+                sRecycledCount += 1;
+            } else {
+                next = null;
             }
-            synchronized (sRecycleLock) {
-                if (sRecycledCount < MAX_RECYCLED) {
-                    next = sRecycleBin;
-                    sRecycleBin = this;
-                    sRecycledCount += 1;
-                } else {
-                    next = null;
-                }
-                child = null;
-            }
+            child = null;
         }
     }
+}
 ```
 
 ## 讲下 ACTION_CANCEL 事件？
@@ -1186,25 +1186,25 @@ mFirstTouchTarget 中的 child 变量指向消费了触摸事件的下游 View�
 当存在上诉情况时，ViewGroup 就会通过 `dispatchTransformedTouchEvent` 方法构造一个 ACTION_CANCEL 事件并将之下发给 View，从而使得 View 即使没有接受到 ACTION_UP 事件也可以知道本次事件序列已经结束了
 
 ```java
-    private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
-            View child, int desiredPointerIdBits) {
-        final boolean handled;
+private boolean dispatchTransformedTouchEvent(MotionEvent event, boolean cancel,
+        View child, int desiredPointerIdBits) {
+    final boolean handled;
 
-        // Canceling motions is a special case.  We don't need to perform any transformations
-        // or filtering.  The important part is the action, not the contents.
-        final int oldAction = event.getAction();
-        if (cancel || oldAction == MotionEvent.ACTION_CANCEL) {
-            event.setAction(MotionEvent.ACTION_CANCEL);
-            if (child == null) {
-                handled = super.dispatchTouchEvent(event);
-            } else {
-                handled = child.dispatchTouchEvent(event);
-            }
-            event.setAction(oldAction);
-            return handled;
+    // Canceling motions is a special case.  We don't need to perform any transformations
+    // or filtering.  The important part is the action, not the contents.
+    final int oldAction = event.getAction();
+    if (cancel || oldAction == MotionEvent.ACTION_CANCEL) {
+        event.setAction(MotionEvent.ACTION_CANCEL);
+        if (child == null) {
+            handled = super.dispatchTouchEvent(event);
+        } else {
+            handled = child.dispatchTouchEvent(event);
         }
-  			···
+        event.setAction(oldAction);
+        return handled;
     }
+        ···
+}
 ```
 
 同时，ViewGroup 也会将 View 从 mFirstTouchTarget 中移除，这样后续事件也就不会再尝试向 View 下发了

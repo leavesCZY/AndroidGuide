@@ -2,7 +2,7 @@
 >
 > 希望对你有所帮助 🤣🤣
 
-开头先说一下，我不是标题党，本教程真的有两万六千字（严格点说应该是两万六千五百八十四），以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 🤣🤣
+开头先说一下，我不是标题党，本教程真的有两万六千字，以前我也曾写过 Kotlin 的入门教程，但由于隔得比较久了，所以就对原有教程进行了修正，并且补充了 Kotlin 新版本的一些新特性，希望对你有所帮助 🤣🤣
 
 # 一、Hello World
 
@@ -164,46 +164,46 @@ fun main() {
 - 不支持八进制
 
 ```kotlin
-    //在 kotlin 中，int、long、float 等类型仍然存在，但是是作为对象存在的
+//在 kotlin 中，int、long、float 等类型仍然存在，但是是作为对象存在的
 
-    val intIndex: Int = 100
-    //等价于，编译器会自动进行类型推导
-    val intIndex = 100
+val intIndex: Int = 100
+//等价于，编译器会自动进行类型推导
+val intIndex = 100
 
-    //数字类型不会自动转型，必须要进行明确的类型转换
-    val doubleIndex: Double = intIndex.toDouble()
-    //以下代码会提示错误，需要进行明确的类型转换
-    //val doubleIndex: Double = intIndex
+//数字类型不会自动转型，必须要进行明确的类型转换
+val doubleIndex: Double = intIndex.toDouble()
+//以下代码会提示错误，需要进行明确的类型转换
+//val doubleIndex: Double = intIndex
 
-    val intValue: Int = 1
-    val longValue: Long = 1
-    //以下代码会提示错误，因为两者的数据类型不一致，需要转换为同一类型后才能进行比较
-    //println(intValue == longValue)
+val intValue: Int = 1
+val longValue: Long = 1
+//以下代码会提示错误，因为两者的数据类型不一致，需要转换为同一类型后才能进行比较
+//println(intValue == longValue)
 
-    //Char 不能直接作为数字来处理，需要主动转换
-    val ch: Char = 'c'
-    val charValue: Int = ch.toInt()
-    //以下代码会提示错误
-    //val charValue: Int = ch
+//Char 不能直接作为数字来处理，需要主动转换
+val ch: Char = 'c'
+val charValue: Int = ch.toInt()
+//以下代码会提示错误
+//val charValue: Int = ch
 
-    //二进制
-    val value1 = 0b00101
-    //十六进制
-    val value2 = 0x123
+//二进制
+val value1 = 0b00101
+//十六进制
+val value2 = 0x123
 ```
 
 此外，kotlin 的可空类型不能用 Java 的基本数据类型表示，因为 null 只能被存储在 Java 的引用类型的变量中，这意味着只要使用了基本数据类型的可空版本，它就会被编译成对应的包装类型
 
 ```kotlin
-    //基本数据类型
-    val intValue_1: Int = 200
-    //包装类
-    val intValue_2: Int? = intValue_1
-    val intValue_3: Int? = intValue_1
-    //== 比较的是数值相等性，因此结果是 true
-    println(intValue_2 == intValue_3)
-    //=== 比较的是引用是否相等，因此结果是 false
-    println(intValue_2 === intValue_3)
+//基本数据类型
+val intValue_1: Int = 200
+//包装类
+val intValue_2: Int? = intValue_1
+val intValue_3: Int? = intValue_1
+//== 比较的是数值相等性，因此结果是 true
+println(intValue_2 == intValue_3)
+//=== 比较的是引用是否相等，因此结果是 false
+println(intValue_2 === intValue_3)
 ```
 
 > 如果 intValue_1 的值是100，就会发现 intValue_2 === intValue_3 的比较结果是 true，这就涉及到 Java 对包装类对象的复用问题了
@@ -213,29 +213,29 @@ fun main() {
 kotlin 与 Java 一样用  String  类型来表示字符串，字符串是不可变的，可以使用索引运算符访问`[]` 来访问包含的单个字符，也可以用  for  循环来迭代字符串，此外也可以用 + 来连接字符串
 
 ```kotlin
-    val str = "leavesC"
-    println(str[1])
-    for (c in str) {
-        println(c)
-    }
-    val str1 = str + " hello"
+val str = "leavesCZY"
+println(str[1])
+for (c in str) {
+    println(c)
+}
+val str1 = str + " hello"
 ```
 
 kotlin 支持在字符串字面值中引用局部变量，只需要在变量名前加上字符 \$ 即可，此外还可以包含用花括号括起来的表达式，此时会自动求值并把结果合并到字符串中
 
 ```kotlin
-    val intValue = 100
-    //可以直接包含变量
-    println("intValue value is $intValue") //intValue value is 100
-    //也可以包含表达式
-    println("(intValue + 100) value is ${intValue + 100}")   //(intValue + 100) value is 200
+val intValue = 100
+//可以直接包含变量
+println("intValue value is $intValue") //intValue value is 100
+//也可以包含表达式
+println("(intValue + 100) value is ${intValue + 100}")   //(intValue + 100) value is 200
 ```
 
 如果你需要在原始字符串中表示字面值（$）字符（它不支持反斜杠转义），可以用下列语法：
 
 ```kotlin
-    val price = "${'$'}100.99"
-    println(price)  //$100.99
+val price = "${'$'}100.99"
+println(price)  //$100.99
 ```
 
 ## 3、数组
@@ -249,18 +249,18 @@ kotlin 中的数组是带有类型参数的类，其元素类型被指定为相�
 3. 调用 Array 类的构造方法，传递数组的大小和一个 lambda 表达式，调用 lambda 表达式来创建每一个数组元素
 
 ```kotlin
-    //包含给定元素的字符串数组
-    val array1 = arrayOf("leavesCZY", "叶", "https://github.com/leavesCZY")
+//包含给定元素的字符串数组
+val array1 = arrayOf("leavesCZY", "叶", "https://github.com/leavesCZY")
 
-    array1[0] = "leavesCZY"
-    println(array1[1])
-    println(array1.size)
+array1[0] = "leavesCZY"
+println(array1[1])
+println(array1.size)
 
-    //初始元素均为 null ，大小为 10 的字符数组
-    val array2 = arrayOfNulls<String>(10)
+//初始元素均为 null ，大小为 10 的字符数组
+val array2 = arrayOfNulls<String>(10)
 
-    //创建从 “a” 到 “z” 的字符串数组
-    val array3 = Array(26) { i -> ('a' + i).toString() }
+//创建从 “a” 到 “z” 的字符串数组
+val array3 = Array(26) { i -> ('a' + i).toString() }
 ```
 
 需要注意的是，数组类型的类型参数始终会变成对象类型，因此声明 **Array< Int >** 将是一个包含装箱类型（java.lang.Integer）的数组。如果想要创建没有装箱的基本数据类型的数组，必须使用一个基本数据类型数组的特殊类
@@ -274,12 +274,12 @@ kotlin 中的数组是带有类型参数的类，其元素类型被指定为相�
 3. 向工厂函数（如 charArrayOf）传递变长参数的值，从而得到指定元素值的数组
 
 ```kotlin
-    //指定数组大小，包含的元素将是对应基本数据类型的默认值(int 的默认值是 0)
-    val intArray = IntArray(5)
-    //指定数组大小以及用于初始化每个元素的 lambda
-    val doubleArray = DoubleArray(5) { Random().nextDouble() }
-    //接收变长参数的值来创建存储这些值的数组
-    val charArray = charArrayOf('H', 'e', 'l', 'l', 'o')
+//指定数组大小，包含的元素将是对应基本数据类型的默认值(int 的默认值是 0)
+val intArray = IntArray(5)
+//指定数组大小以及用于初始化每个元素的 lambda
+val doubleArray = DoubleArray(5) { Random().nextDouble() }
+//接收变长参数的值来创建存储这些值的数组
+val charArray = charArrayOf('H', 'e', 'l', 'l', 'o')
 ```
 
 ## 4、Any 和 Any?
@@ -360,26 +360,26 @@ fun main() {
 kotlin 中的函数以关键字 fun 作为开头，函数名称紧随其后，再之后是用括号包裹起来的参数列表，如果函数有返回值，则再加上返回值类型，用一个冒号与参数列表隔开
 
 ```kotlin
-        //fun 用于表示声明一个函数，getNameLastChar 是函数名
-        //空括号表示该函数无传入参数，Char 表示函数的返回值类型是字符
-        fun getNameLastChar(): Char {
-            return name.get(name.length - 1)
-        }
+//fun 用于表示声明一个函数，getNameLastChar 是函数名
+//空括号表示该函数无传入参数，Char 表示函数的返回值类型是字符
+fun getNameLastChar(): Char {
+    return name.get(name.length - 1)
+}
 
-        //带有两个不同类型的参数，一个是 String 类型，一个是 Int 类型
-        //返回值为 Int 类型
-        fun test1(str: String, int: Int): Int {
-            return str.length + int
-        }
+//带有两个不同类型的参数，一个是 String 类型，一个是 Int 类型
+//返回值为 Int 类型
+fun test1(str: String, int: Int): Int {
+    return str.length + int
+}
 ```
 
 此外，表达式函数体的返回值类型可以省略，返回值类型可以自动推断，这种用单行表达式与等号定义的函数叫做**表达式函数体**。但对于一般情况下的有返回值的**代码块函数体**，**必须显式地**写出返回类型和 return 语句
 
 ```kotlin
-        //getNameLastChar 函数的返回值类型以及 return 关键字是可以省略的
-        //返回值类型可以由编译器根据上下文进行推导
-        //因此，函数可以简写为以下形式
-        fun getNameLastChar() = name.get(name.length - 1)
+//getNameLastChar 函数的返回值类型以及 return 关键字是可以省略的
+//返回值类型可以由编译器根据上下文进行推导
+//因此，函数可以简写为以下形式
+fun getNameLastChar() = name.get(name.length - 1)
 ```
 
 如果函数没有有意义的返回值，则可以声明为 Unit ，也可以省略 Unit
@@ -387,15 +387,15 @@ kotlin 中的函数以关键字 fun 作为开头，函数名称紧随其后，�
 以下三种写法都是等价的
 
 ```kotlin
-        fun test(str: String, int: Int): Unit {
-            println(str.length + int)
-        }
+fun test(str: String, int: Int): Unit {
+    println(str.length + int)
+}
 
-        fun test(str: String, int: Int) {
-            println(str.length + int)
-        }
+fun test(str: String, int: Int) {
+    println(str.length + int)
+}
 
-        fun test(str: String, int: Int) = println(str.length + int)
+fun test(str: String, int: Int) = println(str.length + int)
 ```
 
 ## 1、命名参数
@@ -520,10 +520,10 @@ fun compute(name: String, country: String) {
 例如，以下的赋值操作、流程控制、打印输出都是语句，其是作为一个整体存在的，且不包含返回值
 
 ```kotlin
-    val a = 10
-    for (i in 0..a step 2) {
-        println(i)
-    }
+val a = 10
+for (i in 0..a step 2) {
+    println(i)
+}
 ```
 
 再看几个表达式的例子
@@ -544,29 +544,29 @@ fun getLength(str: String?): Int {
 if 的分支可以是代码块，最后的表达式作为该块的返回值
 
 ```kotlin
-    val maxValue = if (20 > 10) {
-        println("maxValue is 20")
-        20
-    } else {
-        println("maxValue is 10")
-        10
-    }
-    println(maxValue) //20
+val maxValue = if (20 > 10) {
+    println("maxValue is 20")
+    20
+} else {
+    println("maxValue is 10")
+    10
+}
+println(maxValue) //20
 ```
 
 以下代码可以显示地看出 if 的返回值，完全可以用来替代 Java 中的**三元运算符**，因此 kotlin 并没有**三元运算符**
 
 ```kotlin
-    val list = listOf(1, 4, 10, 4, 10, 30)
-    val value = if (list.size > 0) list.size else null
-    println(value)  //6
+val list = listOf(1, 4, 10, 4, 10, 30)
+val value = if (list.size > 0) list.size else null
+println(value)  //6
 ```
 
 如果 if 表达式分支是用于执行某个命令，那么此时的返回值类型就是 Unit ，此时的 if 语句就看起来和 Java 的一样了
 
 ```kotlin
-    val value1 = if (list.size > 0) println("1") else println("2")
-    println(value1.javaClass)   //class kotlin.Unit
+val value1 = if (list.size > 0) println("1") else println("2")
+println(value1.javaClass)   //class kotlin.Unit
 ```
 
 如果将 if 作为表达式而不是语句（例如：返回它的值或者把它赋给变量），该表达式需要有 else 分支
@@ -580,14 +580,14 @@ when 表达式与 Java 中的 **switch/case** 类似，但是要强大得多。w
 如果 when 作为一个表达式使用，则必须有 else 分支， 除非编译器能够检测出所有的可能情况都已经覆盖了。如果很多分支需要用相同的方式处理，则可以把多个分支条件放在一起，用逗号分隔
 
 ```kotlin
-    val value = 2
-    when (value) {
-        in 4..9 -> println("in 4..9") //区间判断
-        3 -> println("value is 3")    //相等性判断
-        2, 6 -> println("value is 2 or 6")    //多值相等性判断
-        is Int -> println("is Int")   //类型判断
-        else -> println("else")       //如果以上条件都不满足，则执行 else
-    }
+val value = 2
+when (value) {
+    in 4..9 -> println("in 4..9") //区间判断
+    3 -> println("value is 3")    //相等性判断
+    2, 6 -> println("value is 2 or 6")    //多值相等性判断
+    is Int -> println("is Int")   //类型判断
+    else -> println("else")       //如果以上条件都不满足，则执行 else
+}
 ```
 
 ```kotlin
@@ -617,10 +617,10 @@ unknown
 此外，when 语句也可以不带参数来使用
 
 ```kotlin
-    when {
-        1 > 5 -> println("1 > 5")
-        3 > 1 -> println("3 > 1")
-    }
+when {
+    1 > 5 -> println("1 > 5")
+    3 > 1 -> println("3 > 1")
+}
 ```
 
 ## 4、for 循环
@@ -628,37 +628,37 @@ unknown
 和 Java 中的 for 循环最为类似的形式是
 
 ```kotlin
-    val list = listOf(1, 4, 10, 34, 10)
-    for (value in list) {
-        println(value)
-    }
+val list = listOf(1, 4, 10, 34, 10)
+for (value in list) {
+    println(value)
+}
 ```
 
 通过索引来遍历
 
 ```kotlin
-    val items = listOf("H", "e", "l", "l", "o")
-    //通过索引来遍历List
-    for (index in items.indices) {
-        println("${index}对应的值是：${items[index]}")
-    }
+val items = listOf("H", "e", "l", "l", "o")
+//通过索引来遍历List
+for (index in items.indices) {
+    println("${index}对应的值是：${items[index]}")
+}
 ```
 
 也可以在每次循环中获取当前索引和相应的值
 
 ```kotlin
-    val list = listOf(1, 4, 10, 34, 10)
-    for ((index, value) in list.withIndex()) {
-        println("index : $index , value :$value")
-    }
+val list = listOf(1, 4, 10, 34, 10)
+for ((index, value) in list.withIndex()) {
+    println("index : $index , value :$value")
+}
 ```
 
 也可以自定义循环区间
 
 ```kotlin
-    for (index in 2..10) {
-        println(index)
-    }
+for (index in 2..10) {
+    println(index)
+}
 ```
 
 ## 5、while 和 do/while 循环
@@ -666,21 +666,21 @@ unknown
 while 和 do/while 与 Java 中的区别不大
 
 ```kotlin
-    val list = listOf(1, 4, 15, 2, 4, 10, 0, 9)
-    var index = 0
-    while (index < list.size) {
-        println(list[index])
-        index++
-    }
+val list = listOf(1, 4, 15, 2, 4, 10, 0, 9)
+var index = 0
+while (index < list.size) {
+    println(list[index])
+    index++
+}
 ```
 
 ```kotlin
-    val list = listOf(1, 4, 15, 2, 4, 10, 0, 9)
-    var index = 0
-    do {
-        println(list[index])
-        index++
-    } while (index < list.size)
+val list = listOf(1, 4, 15, 2, 4, 10, 0, 9)
+var index = 0
+do {
+    println(list[index])
+    index++
+} while (index < list.size)
 ```
 
 ## 6、返回和跳转
@@ -822,19 +822,19 @@ Ranges 表达式使用一个 **..**  操作符来声明一个闭区间，它被�
 以下三种声明方式都是等价的
 
 ```kotlin
-    var index = 5
-    
-    if (index >= 0 && index <= 10) {
+var index = 5
 
-    }
+if (index >= 0 && index <= 10) {
 
-    if (index in 0..10) {
+}
 
-    }
+if (index in 0..10) {
 
-    if (index in 0.rangeTo(10)) {
-        
-    }
+}
+
+if (index in 0.rangeTo(10)) {
+
+}
 ```
 
 数字类型的 ranges 在被迭代时，编译器会将它们转换为与 Java 中使用 index 的 for 循环的相同字节码的方式来进行优化
@@ -842,48 +842,48 @@ Ranges 表达式使用一个 **..**  操作符来声明一个闭区间，它被�
 Ranges 默认会自增长，所以像以下的代码就不会被执行
 
 ```kotlin
-    for (index in 10..0) {
-        println(index)
-    }
+for (index in 10..0) {
+    println(index)
+}
 ```
 
 可以改用 downTo 函数来将之改为递减
 
 ```kotlin
-    for (index in 10 downTo 0) {
-        println(index)
-    }
+for (index in 10 downTo 0) {
+    println(index)
+}
 ```
 
 可以在 ranges 中使用 step 来定义每次循环递增或递增的长度：
 
 ```kotlin
-    for (index in 1..8 step 2){
-        println(index)
-    }
-    for (index in 8 downTo 1 step 2) {
-        println(index)
-    }
+for (index in 1..8 step 2){
+    println(index)
+}
+for (index in 8 downTo 1 step 2) {
+    println(index)
+}
 ```
 
 以上声明的都是闭区间，如果想声明的是开区间，可以使用 until 函数：
 
 ```kotlin
-    for (index in 0 until 4){
-        println(index)
-    }
+for (index in 0 until 4){
+    println(index)
+}
 ```
 
 扩展函数 `reversed()` 可用于返回将区间反转后的序列
 
 ```kotlin
-    val rangeTo = 1.rangeTo(3)
-    for (i in rangeTo) {
-        println(i) //1  2  3
-    }
-    for (i in rangeTo.reversed()) {
-        println(i) //3  2  1
-    }
+val rangeTo = 1.rangeTo(3)
+for (i in rangeTo) {
+    println(i) //1  2  3
+}
+for (i in rangeTo.reversed()) {
+    println(i) //3  2  1
+}
 ```
 
 # 七、修饰符
@@ -970,16 +970,16 @@ private  修饰符是限制级最高的修饰符，kotlin 允许在顶层声明�
 在 kotlin 中，类型系统将一个引用分为可以容纳  null （可空引用）或者不能容纳 null（非空引用）两种类型。 例如，String 类型的常规变量不能指向 null 
 
 ```kotlin
-    var name: String = "leavesC"
-    //编译错误
-    //name = null
+var name: String = "leavesC"
+//编译错误
+//name = null
 ```
 
 如果希望一个变量可以储存 null 引用，需要显式地在类型名称后面加上问号
 
 ```kotlin
-    var name: String? = "leavesC"
-    name = null
+var name: String? = "leavesC"
+name = null
 ```
 
 问号可以加在任何类型的后面来表示这个类型的变量可以存储 null 引用：`Int?、Doubld? 、Long?` 等
@@ -1080,8 +1080,8 @@ fun check(name: String?) {
 例如，如下方法可以被正常调用而不会发生空指针异常
 
 ```kotlin
-    val name: String? = null
-    println(name.isNullOrEmpty()) //true
+val name: String? = null
+println(name.isNullOrEmpty()) //true
 ```
 
 `isNullOrEmpty()` 的方法签名如下所示，可以看到这是为可空类型 **CharSequence?** 定义的扩展函数，方法中已经处理了方法调用者为 null 的情况
@@ -1135,19 +1135,19 @@ fun parserType(value: Any) {
 编译器会指定根据上下文环境，将变量智能转换为合适的类型
 
 ```kotlin
-    if (value !is String) return
-    //如果 value 非 String 类型时直接被 return 了，所以此处可以直接访问其 length 属性
-    println(value.length)
+if (value !is String) return
+//如果 value 非 String 类型时直接被 return 了，所以此处可以直接访问其 length 属性
+println(value.length)
 
-    // || 右侧的 value 被自动隐式转换为字符串，所以可以直接访问其 length 属性
-    if (value !is String || value.length > 0) {
+// || 右侧的 value 被自动隐式转换为字符串，所以可以直接访问其 length 属性
+if (value !is String || value.length > 0) {
 
-    }
+}
 
-    // && 右侧的 value 被自动隐式转换为字符串，所以可以直接访问其 length 属性
-    if (value is String && value.length > 0) {
+// && 右侧的 value 被自动隐式转换为字符串，所以可以直接访问其 length 属性
+if (value is String && value.length > 0) {
 
-    }
+}
 ```
 
 ## 2、不安全的转换操作符
@@ -1171,15 +1171,15 @@ fun parserType(value: Any) {
 因此如下转换会抛出异常
 
 ```kotlin
-    val x = null
-    val y: String = x as String //会抛出异常 TypeCastException
+val x = null
+val y: String = x as String //会抛出异常 TypeCastException
 ```
 
 为了匹配安全，可以转换的类型声明为可空类型
 
 ```kotlin
-    val x = null
-    val y: String? = x as String?
+val x = null
+val y: String? = x as String?
 ```
 
 ## 3、安全的转换操作符
@@ -1187,8 +1187,8 @@ fun parserType(value: Any) {
 可以使用安全转换操作符 as? 来避免在转换时抛出异常，它在失败时返回 null
 
 ```kotlin
-    val x = null
-    val y: String? = x as? String
+val x = null
+val y: String? = x as? String
 ```
 
 尽管以上例子 as? 的右边是一个非空类型的 String，但是其转换的结果是可空的
@@ -1888,10 +1888,10 @@ fun main() {
 例如，通过查看字节码可以看到`sendEmail` 方法会被解释为一个以 long 类型作为入参类型的函数，并不包含任何对象
 
 ```java
-   public static final void sendEmail_G1aXmDY/* $FF was: sendEmail-G1aXmDY*/(long delay) {
-      boolean var4 = false;
-      System.out.println(delay);
-   }
+public static final void sendEmail_G1aXmDY/* $FF was: sendEmail-G1aXmDY*/(long delay) {
+  boolean var4 = false;
+  System.out.println(delay);
+}
 ```
 
 # 十二、接口
@@ -2009,7 +2009,6 @@ interface Clickable {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/6 21:28
  * @Github：https://github.com/leavesCZY
  */
 interface SelfRunnable {
@@ -2042,7 +2041,6 @@ fun main() {
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/6 21:28
  * @Github：https://github.com/leavesCZY
  */
 fun interface SelfRunnable {
@@ -2291,16 +2289,16 @@ kotlin 的集合设计和 Java 不同的另一项特性是：kotlin 把访问数
 | Map      | mapOf  | mutableMapOf、hashMapOf、linkedMapOf、sortedMapOf |
 
 ```kotlin
-    val list = listOf(10, 20, 30, 40)
-    //不包含 add 方法
-    //list.add(100)
-    println(list.size)
-    println(list.contains(20))
+val list = listOf(10, 20, 30, 40)
+//不包含 add 方法
+//list.add(100)
+println(list.size)
+println(list.contains(20))
 
-    val mutableList = mutableListOf("leavesC", "leavesc", "叶")
-    mutableList.add("Ye")
-    println(mutableList.size)
-    println(mutableList.contains("leavesC"))
+val mutableList = mutableListOf("leavesC", "leavesc", "叶")
+mutableList.add("Ye")
+println(mutableList.size)
+println(mutableList.contains("leavesC"))
 ```
 
 ## 2、集合与 Java
@@ -2325,13 +2323,13 @@ public class JavaMain {
 在 kotlin 中可以用以下四种方式来引用变量 names 
 
 ```kotlin
-    val list1: List<String?> = JavaMain.names
+val list1: List<String?> = JavaMain.names
 
-    val list2: List<String> = JavaMain.names
+val list2: List<String> = JavaMain.names
 
-    val list3: MutableList<String> = JavaMain.names
+val list3: MutableList<String> = JavaMain.names
 
-    val list4: MutableList<String?> = JavaMain.names
+val list4: MutableList<String?> = JavaMain.names
 ```
 
 ## 3、只读集合的可变性
@@ -2341,14 +2339,14 @@ public class JavaMain {
 例如，list1 和 list1 引用到同一个集合对象， list3 对集合的修改同时会影响到 list1
 
 ```kotlin
-    val list1: List<String> = JavaMain.names
-    val list3: MutableList<String> = JavaMain.names
-    list1.forEach { it -> println(it) } //leavesC Ye
-    list3.forEach { it -> println(it) } //leavesC Ye
-    for (index in list3.indices) {
-        list3[index] = list3[index].toUpperCase()
-    }
-    list1.forEach { it -> println(it) } //LEAVESC YE
+val list1: List<String> = JavaMain.names
+val list3: MutableList<String> = JavaMain.names
+list1.forEach { it -> println(it) } //leavesC Ye
+list3.forEach { it -> println(it) } //leavesC Ye
+for (index in list3.indices) {
+    list3[index] = list3[index].toUpperCase()
+}
+list1.forEach { it -> println(it) } //LEAVESC YE
 ```
 
 ## 4、集合与可空性
@@ -2362,14 +2360,14 @@ public class JavaMain {
 例如，intList1 可以包含为 null 的集合元素，但集合本身不能指向 null；intList2 不可以包含为 null 的集合元素，但集合本身可以指向 null；intList3 可以包含为 null 的集合元素，且集合本身能指向 null
 
 ```kotlin
-    //List<Int?> 是能持有 Int? 类型值的列表
-    val intList1: List<Int?> = listOf(10, 20, 30, 40, null)
-    //List<Int>? 是可以为 null 的列表
-    var intList2: List<Int>? = listOf(10, 20, 30, 40)
-    intList2 = null
-    //List<Int?>? 是可以为 null 的列表，且能持有 Int? 类型值
-    var intList3: List<Int?>? = listOf(10, 20, 30, 40, null)
-    intList3 = null
+//List<Int?> 是能持有 Int? 类型值的列表
+val intList1: List<Int?> = listOf(10, 20, 30, 40, null)
+//List<Int>? 是可以为 null 的列表
+var intList2: List<Int>? = listOf(10, 20, 30, 40)
+intList2 = null
+//List<Int?>? 是可以为 null 的列表，且能持有 Int? 类型值
+var intList3: List<Int?>? = listOf(10, 20, 30, 40, null)
+intList3 = null
 ```
 
 # 十六、扩展函数和扩展属性
@@ -2522,11 +2520,11 @@ fun String?.check() {
 Lambda 表达式本质上就是可以传递给其它函数的一小段代码，通过 Lambda 表达式可以把通用的代码结构抽取成库函数，也可以把 Lambda 表达式存储在一个变量中，把这个变量当做普通函数对待
 
 ```kotlin
-    //由于存在类型推导，所以以下三种声明方式都是完全相同的
-    val plus1: (Int, Int) -> Int = { x: Int, y: Int -> x + y }
-    val plus2: (Int, Int) -> Int = { x, y -> x + y }
-    val plus3 = { x: Int, y: Int -> x + y }
-    println(plus3(1, 2))
+//由于存在类型推导，所以以下三种声明方式都是完全相同的
+val plus1: (Int, Int) -> Int = { x: Int, y: Int -> x + y }
+val plus2: (Int, Int) -> Int = { x, y -> x + y }
+val plus3 = { x: Int, y: Int -> x + y }
+println(plus3(1, 2))
 ```
 
 1. 一个 Lambda 表达式始终用花括号包围，通过箭头把实参列表和函数体分开
@@ -2612,14 +2610,14 @@ kotlin 和 Java 的一个显著区别就是，在 kotlin 中函数内部的 Lamb
 从 Lambda 内部访问外部变量，我们称这些变量被 Lambda 捕捉。当捕捉 final 变量时，变量值和使用这个值的 Lambda 代码一起存储，对非 final 变量来说，其值被封装在一个特殊的包装器中，对这个包装器的引用会和 Lambda 代码一起存储
 
 ```kotlin
-    var number = 0
-    val list = listOf(10, 20, 30, 40)
-    list.forEach {
-        if (it > 20) {
-            number++
-        }
+var number = 0
+val list = listOf(10, 20, 30, 40)
+list.forEach {
+    if (it > 20) {
+        number++
     }
-    println(number) //2
+}
+println(number) //2
 ```
 
 成员引用用于创建一个调用单个方法或者访问单个属性的函数值，通过双冒号把类名称和要引用的成员（一个方法或者一个属性）名称分隔开
@@ -2739,15 +2737,15 @@ fun main() {
 改为通过 with 函数来构建的话会代码会简洁许多
 
 ```kotlin
-    val result = with(StringBuilder()) {
-        append("leavesC")
-        append("\n")
-        for (letter in 'A'..'Z') {
-            append(letter)
-        }
-        toString()
+val result = with(StringBuilder()) {
+    append("leavesC")
+    append("\n")
+    for (letter in 'A'..'Z') {
+        append(letter)
     }
-    println(result)
+    toString()
+}
+println(result)
 ```
 
 with 函数是一个接受两个参数的函数，在这个例子中就是一个 StringBuilder 和一个 Lambda 表达式，这里利用了把 Lambda 表达式放在括号外的约定
@@ -2755,15 +2753,15 @@ with 函数是一个接受两个参数的函数，在这个例子中就是一个
 with 函数的返回值是执行 Lambda 表达式的结果，该结果就是 Lambda 中的最后一个表达式的返回值，因此如果将代码修改为如下所示的话，因为 println() 方法无返回值，所以打印出来的内容将是 kotlin.Unit
 
 ```kotlin
-    val result = with(StringBuilder()) {
-        append("leavesC")
-        append("\n")
-        for (letter in 'A'..'Z') {
-            append(letter)
-        }
-        println("Hello")
+val result = with(StringBuilder()) {
+    append("leavesC")
+    append("\n")
+    for (letter in 'A'..'Z') {
+        append(letter)
     }
-    println(result)  //kotin.Unit
+    println("Hello")
+}
+println(result)  //kotin.Unit
 ```
 
 ## 3、apply
@@ -2784,16 +2782,16 @@ public inline fun <T> T.apply(block: T.() -> Unit): T {
 所以apply 函数和 with 函数的唯一区别在于：apply 函数始终会返回作为实参传递给它的对象
 
 ```kotlin
- val result = StringBuilder().apply {
-        append("leavesC")
-        append("\n")
-        for (letter in 'A'..'Z') {
-            append(letter)
-        }
-        toString()
+val result = StringBuilder().apply {
+    append("leavesC")
+    append("\n")
+    for (letter in 'A'..'Z') {
+        append(letter)
     }
-    println(result)
-    println(result.javaClass) //class java.lang.StringBuilder
+    toString()
+}
+println(result)
+println(result.javaClass) //class java.lang.StringBuilder
 ```
 
 ## 4、also
@@ -2902,9 +2900,9 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
 如果至少有一个元素符合给出的判断条件，则返回 true
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.any { it > 13 })  //false
-    println(list.any { it > 7 })   //true
+val list = listOf(1, 3, 5, 7, 9)
+println(list.any { it > 13 })  //false
+println(list.any { it > 7 })   //true
 ```
 
 ### 2、all
@@ -2912,9 +2910,9 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
 如果全部的元素符合给出的判断条件，则返回 true
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.all { it > 13 })  //false
-    println(list.all { it > 0 })   //true
+val list = listOf(1, 3, 5, 7, 9)
+println(list.all { it > 13 })  //false
+println(list.all { it > 0 })   //true
 ```
 
 ### 3、count
@@ -2922,9 +2920,9 @@ public inline fun <T> T.takeUnless(predicate: (T) -> Boolean): T? {
 返回符合给出判断条件的元素总数
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.count { it > 7 })  //1
-    println(list.count { it > 2 })  //4
+val list = listOf(1, 3, 5, 7, 9)
+println(list.count { it > 7 })  //1
+println(list.count { it > 2 })  //4
 ```
 
 ### 4、fold
@@ -2955,11 +2953,11 @@ fun main() {
 与 fold  一样，但顺序是从最后一项到第一项
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.foldRight(2) { next, total->
-        println("$next , $total")
-        next + total
-    })
+val list = listOf(1, 3, 5, 7, 9)
+println(list.foldRight(2) { next, total->
+    println("$next , $total")
+    next + total
+})
 ```
 
 ```kotlin
@@ -2974,8 +2972,8 @@ fun main() {
 ### 6、forEach
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    list.forEach { print(it + 1) } //246810
+val list = listOf(1, 3, 5, 7, 9)
+list.forEach { print(it + 1) } //246810
 ```
 
 ### 7、forEachIndexed
@@ -2983,14 +2981,14 @@ fun main() {
 类似于 forEach ，同时可以得到元素的索引
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    list.forEachIndexed { index, value -> println("$index value is $value") }
+val list = listOf(1, 3, 5, 7, 9)
+list.forEachIndexed { index, value -> println("$index value is $value") }
 
-    0 value is 1
-	1 value is 3
-	2 value is 5
-    3 value is 7
-	4 value is 9
+0 value is 1
+1 value is 3
+2 value is 5
+3 value is 7
+4 value is 9
 ```
 
 ### 8、max
@@ -2998,8 +2996,8 @@ fun main() {
 返回最大的一项，如果没有则返回null
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.max()) //9
+val list = listOf(1, 3, 5, 7, 9)
+println(list.max()) //9
 ```
 
 ### 9、maxBy
@@ -3007,8 +3005,8 @@ fun main() {
 根据给定的函数返回最大的一项，如果没有则返回 null
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.maxBy { -it }) //1
+val list = listOf(1, 3, 5, 7, 9)
+println(list.maxBy { -it }) //1
 ```
 
 ### 10、min
@@ -3016,8 +3014,8 @@ fun main() {
 返回最小的一项，如果没有则返回null
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.min()) //1
+val list = listOf(1, 3, 5, 7, 9)
+println(list.min()) //1
 ```
 
 ### 11、minBy
@@ -3025,8 +3023,8 @@ fun main() {
 根据给定的函数返回最小的一项，如果没有则返回null
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.minBy { -it }) //9
+val list = listOf(1, 3, 5, 7, 9)
+println(list.minBy { -it }) //9
 ```
 
 ### 12、none
@@ -3034,8 +3032,8 @@ fun main() {
 如果没有任何元素与给定的函数匹配，则返回true
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.none { it > 10 }) //true
+val list = listOf(1, 3, 5, 7, 9)
+println(list.none { it > 10 }) //true
 ```
 
 ### 13、reduce
@@ -3043,16 +3041,16 @@ fun main() {
 与 fold  一样，但是没有一个初始值。通过一个函数从第一项到最后一项进行累计
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.reduce { total, next ->
-        println("$next , $total")
-        total + next
-    })
-	3 , 1
-	5 , 4
-	7 , 9
-	9 , 16
-	25
+val list = listOf(1, 3, 5, 7, 9)
+println(list.reduce { total, next ->
+    println("$next , $total")
+    total + next
+})
+3 , 1
+5 , 4
+7 , 9
+9 , 16
+25
 ```
 
 ### 14、reduceRight
@@ -3060,17 +3058,17 @@ fun main() {
 与 reduce  一样，但是顺序是从最后一项到第一项
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.reduceRight { next, total ->
-        println("$next , $total")
-        total + next
-    })
+val list = listOf(1, 3, 5, 7, 9)
+println(list.reduceRight { next, total ->
+    println("$next , $total")
+    total + next
+})
 
-	7 , 9
-	5 , 16
-	3 , 21
-	1 , 24
-	25
+7 , 9
+5 , 16
+3 , 21
+1 , 24
+25
 ```
 
 ### 15、sumBy
@@ -3078,8 +3076,8 @@ fun main() {
 返回所有每一项通过函数转换之后的数据的总和
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.sumBy { it + 1 }) //30
+val list = listOf(1, 3, 5, 7, 9)
+println(list.sumBy { it + 1 }) //30
 ```
 
 ## 2、过滤操作符
@@ -3089,8 +3087,8 @@ fun main() {
 返回包含去掉前n个元素的所有元素的列表
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9)
-    println(list.drop(2)) //[5, 7, 9]
+val list = listOf(1, 3, 5, 7, 9)
+println(list.drop(2)) //[5, 7, 9]
 ```
 
 ### 2、dropWhile
@@ -3098,8 +3096,8 @@ fun main() {
 返回从第一个开始不符合给定函数的元素起之后的列表
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2)
-    println(list.dropWhile { it < 4 }) //[5, 7, 9, 2]
+val list = listOf(1, 3, 5, 7, 9, 2)
+println(list.dropWhile { it < 4 }) //[5, 7, 9, 2]
 ```
 
 ### 3、dropLastWhile
@@ -3107,8 +3105,8 @@ fun main() {
 从最后一项开始，返回从开始不符合给定函数的元素起之后的列表
 
 ```kotlin
-    val list = listOf(10, 1, 3, 5, 7, 9)
-    println(list.dropLastWhile { it > 4 }) //[10, 1, 3]
+val list = listOf(10, 1, 3, 5, 7, 9)
+println(list.dropLastWhile { it > 4 }) //[10, 1, 3]
 ```
 
 ### 4、filter
@@ -3116,8 +3114,8 @@ fun main() {
 过滤所有符合给定函数条件的元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2)
-    println(list.filter { it < 4 }) //[1, 3, 2]
+val list = listOf(1, 3, 5, 7, 9, 2)
+println(list.filter { it < 4 }) //[1, 3, 2]
 ```
 
 ### 5、filterNot
@@ -3125,8 +3123,8 @@ fun main() {
 过滤所有不符合给定函数条件的元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2)
-    println(list.filterNot { it < 4 }) //[5, 7, 9]
+val list = listOf(1, 3, 5, 7, 9, 2)
+println(list.filterNot { it < 4 }) //[5, 7, 9]
 ```
 
 ### 6、filterNotNull
@@ -3134,8 +3132,8 @@ fun main() {
 过滤所有元素中不是null的元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2, null)
-    println(list.filterNotNull()) //[1, 3, 5, 7, 9, 2]
+val list = listOf(1, 3, 5, 7, 9, 2, null)
+println(list.filterNotNull()) //[1, 3, 5, 7, 9, 2]
 ```
 
 ### 7、slice
@@ -3143,8 +3141,8 @@ fun main() {
 过滤一个list中指定index的元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2, null)
-    println(list.slice(listOf(0, 3))) //[1, 7]
+val list = listOf(1, 3, 5, 7, 9, 2, null)
+println(list.slice(listOf(0, 3))) //[1, 7]
 ```
 
 ### 8、take
@@ -3152,8 +3150,8 @@ fun main() {
 返回从第一个开始的n个元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2, null)
-    println(list.take(2)) //[1, 3]
+val list = listOf(1, 3, 5, 7, 9, 2, null)
+println(list.take(2)) //[1, 3]
 ```
 
 ### 9、takeLast
@@ -3161,8 +3159,8 @@ fun main() {
 返回从最后一个开始的n个元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 7, 9, 2, null)
-    println(list.takeLast(2)) //[2, null]
+val list = listOf(1, 3, 5, 7, 9, 2, null)
+println(list.takeLast(2)) //[2, null]
 ```
 
 ### 10、takeWhile
@@ -3170,9 +3168,9 @@ fun main() {
 返回从第一个开始符合给定函数条件的元素。
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.takeWhile { it > 2 }) //[]
-    println(list.takeWhile { it > 0 }) //[1, 3, 5]
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.takeWhile { it > 2 }) //[]
+println(list.takeWhile { it > 0 }) //[1, 3, 5]
 ```
 
 ## 3、映射操作符
@@ -3182,8 +3180,8 @@ fun main() {
 遍历所有的元素，为每一个创建一个集合，最后把所有的集合放在一个集合中
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.flatMap { listOf(it, it + 1) }) //[1, 2, 3, 4, 5, 6, -1, 0, 7, 8, 9, 10, 2, 3]
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.flatMap { listOf(it, it + 1) }) //[1, 2, 3, 4, 5, 6, -1, 0, 7, 8, 9, 10, 2, 3]
 ```
 
 ### 2、groupBy
@@ -3191,9 +3189,9 @@ fun main() {
 返回一个根据给定函数分组后的map 
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.groupBy { listOf(it) }) //{[1]=[1], [3]=[3], [5]=[5], [-1]=[-1], [7]=[7], [9]=[9], [2]=[2]}
-    println(list.groupBy { listOf(it, it + 1) }) //{[1, 2]=[1], [3, 4]=[3], [5, 6]=[5], [-1, 0]=[-1], [7, 8]=[7], [9, 10]=[9], [2, 3]=[2]}
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.groupBy { listOf(it) }) //{[1]=[1], [3]=[3], [5]=[5], [-1]=[-1], [7]=[7], [9]=[9], [2]=[2]}
+println(list.groupBy { listOf(it, it + 1) }) //{[1, 2]=[1], [3, 4]=[3], [5, 6]=[5], [-1, 0]=[-1], [7, 8]=[7], [9, 10]=[9], [2, 3]=[2]}
 ```
 
 ### 3、map 
@@ -3201,9 +3199,9 @@ fun main() {
 返回一个每一个元素根据给定的函数转换所组成的List。 
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.map { listOf(it) }) //[[1], [3], [5], [-1], [7], [9], [2]]
-    println(list.map { listOf(it, it + 1) }) //[[1, 2], [3, 4], [5, 6], [-1, 0], [7, 8], [9, 10], [2, 3]]
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.map { listOf(it) }) //[[1], [3], [5], [-1], [7], [9], [2]]
+println(list.map { listOf(it, it + 1) }) //[[1, 2], [3, 4], [5, 6], [-1, 0], [7, 8], [9, 10], [2, 3]]
 ```
 
 ### 4、mapIndexed 
@@ -3211,9 +3209,9 @@ fun main() {
 返回一个每一个元素根据给定的包含元素index的函数转换所组成的List
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.mapIndexed { index, value -> index }) //[0, 1, 2, 3, 4, 5, 6]
-    println(list.mapIndexed { index, value -> index * value }) //[0, 3, 10, -3, 28, 45, 12]
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.mapIndexed { index, value -> index }) //[0, 1, 2, 3, 4, 5, 6]
+println(list.mapIndexed { index, value -> index * value }) //[0, 3, 10, -3, 28, 45, 12]
 ```
 
 ### 5、mapNotNull 
@@ -3221,8 +3219,8 @@ fun main() {
 返回一个每一个非null元素根据给定的函数转换所组成的List
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
-    println(list.mapNotNull { it }) //[1, 3, 5, -1, 7, 9, 2]
+val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
+println(list.mapNotNull { it }) //[1, 3, 5, -1, 7, 9, 2]
 ```
 
 ## 4、元素操作符 
@@ -3232,9 +3230,9 @@ fun main() {
 如果指定元素可以在集合中找到，则返回true
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
-    println(list.contains(3)) //true
-    println(list.contains(13)) //false
+val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
+println(list.contains(3)) //true
+println(list.contains(13)) //false
 ```
 
 ### 2、elementAt 
@@ -3242,9 +3240,9 @@ fun main() {
 返回给定index对应的元素，如果index数组越界则会抛出 IndexOutOfBoundsException
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
-    println(list.elementAt(3)) //-1
-    println(list.elementAt(6)) //null
+val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
+println(list.elementAt(3)) //-1
+println(list.elementAt(6)) //null
 ```
 
 ### 3、elementAtOrElse 
@@ -3252,9 +3250,9 @@ fun main() {
 返回给定index对应的元素，如果index数组越界则会根据给定函数返回默认值
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
-    println(list.elementAtOrElse(3, { it * 2 }))  //-1
-    println(list.elementAtOrElse(16, { it * 2 })) //32
+val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
+println(list.elementAtOrElse(3, { it * 2 }))  //-1
+println(list.elementAtOrElse(16, { it * 2 })) //32
 ```
 
 ### 4、elementAtOrNull 
@@ -3262,9 +3260,9 @@ fun main() {
 返回给定index对应的元素，如果index数组越界则会返回null
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
-    println(list.elementAtOrNull(3))  //-1
-    println(list.elementAtOrNull(16)) //null
+val list = listOf(1, 3, 5, -1, 7, 9, null, 2)
+println(list.elementAtOrNull(3))  //-1
+println(list.elementAtOrNull(16)) //null
 ```
 
 ### 5、first 
@@ -3272,8 +3270,8 @@ fun main() {
 返回符合给定函数条件的第一个元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.first { it % 3 == 0 })  //3
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.first { it % 3 == 0 })  //3
 ```
 
 ### 6、firstOrNull 
@@ -3281,9 +3279,9 @@ fun main() {
 返回符合给定函数条件的第一个元素，如果没有符合则返回null
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.firstOrNull { it % 3 == 0 })  //3
-    println(list.firstOrNull { it % 8 == 0 })  //null
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.firstOrNull { it % 3 == 0 })  //3
+println(list.firstOrNull { it % 8 == 0 })  //null
 ```
 
 ### 7、indexOf 
@@ -3291,9 +3289,9 @@ fun main() {
 返回指定元素的第一个index，如果不存在，则返回 -1
 
 ```kotlin
-    val list = listOf(1, 3, 5, -1, 7, 9, 2)
-    println(list.indexOf(5))  //2
-    println(list.indexOf(12)) //-1
+val list = listOf(1, 3, 5, -1, 7, 9, 2)
+println(list.indexOf(5))  //2
+println(list.indexOf(12)) //-1
 ```
 
 ### 8、indexOfFirst 
@@ -3301,9 +3299,9 @@ fun main() {
 返回第一个符合给定函数条件的元素的index，如果没有符合则返回 -1
 
 ```kotlin
-    val list = listOf(1, 3, 5, 1, 7, 9, 2)
-    println(list.indexOfFirst { it % 2 == 0 })   //6
-    println(list.indexOfFirst { it % 12 == 0 })  //-1
+val list = listOf(1, 3, 5, 1, 7, 9, 2)
+println(list.indexOfFirst { it % 2 == 0 })   //6
+println(list.indexOfFirst { it % 12 == 0 })  //-1
 ```
 
 ### 9、indexOfLast 
@@ -3311,9 +3309,9 @@ fun main() {
 返回最后一个符合给定函数条件的元素的index，如果没有符合则返回 -1
 
 ```kotlin
-    val list = listOf(1, 3, 5, 6, 7, 9, 2)
-    println(list.indexOfLast { it % 2 == 0 })   //6
-    println(list.indexOfLast { it % 12 == 0 })  //-1
+val list = listOf(1, 3, 5, 6, 7, 9, 2)
+println(list.indexOfLast { it % 2 == 0 })   //6
+println(list.indexOfLast { it % 12 == 0 })  //-1
 ```
 
 ### 10、last 
@@ -3321,9 +3319,9 @@ fun main() {
 返回符合给定函数条件的最后一个元素
 
 ```kotlin
-    val list = listOf(1, 3, 5, 6, 7, 9, 2)
-    println(list.last { it % 2 == 0 })   //2
-    println(list.last { it % 3 == 0 })   //9
+val list = listOf(1, 3, 5, 6, 7, 9, 2)
+println(list.last { it % 2 == 0 })   //2
+println(list.last { it % 3 == 0 })   //9
 ```
 
 ### 11、lastIndexOf 
@@ -3331,9 +3329,9 @@ fun main() {
 返回指定元素的最后一个index，如果不存在，则返回 -1
 
 ```kotlin
-    val list = listOf(1, 3, 2, 6, 7, 9, 2)
-    println(list.lastIndexOf(2))    //6
-    println(list.lastIndexOf(12))   //-1
+val list = listOf(1, 3, 2, 6, 7, 9, 2)
+println(list.lastIndexOf(2))    //6
+println(list.lastIndexOf(12))   //-1
 ```
 
 ### 12、lastOrNull 
@@ -3341,9 +3339,9 @@ fun main() {
 返回符合给定函数条件的最后一个元素，如果没有符合则返回null
 
 ```kotlin
-    val list = listOf(1, 3, 2, 6, 7, 9, 2)
-    println(list.lastOrNull { it / 3 == 3 })    //9
-    println(list.lastOrNull { it == 10 })       //null
+val list = listOf(1, 3, 2, 6, 7, 9, 2)
+println(list.lastOrNull { it / 3 == 3 })    //9
+println(list.lastOrNull { it == 10 })       //null
 ```
 
 ### 13、single 
@@ -3351,9 +3349,9 @@ fun main() {
 返回符合给定函数的单个元素，如果没有符合或者超过一个，则抛出异常
 
 ```kotlin
-    val list = listOf(1, 9, 2, 6, 7, 9, 2)
-    println(list.single { it % 7 == 0 })  //7
-    println(list.single { it == 2 })      //IllegalArgumentException
+val list = listOf(1, 9, 2, 6, 7, 9, 2)
+println(list.single { it % 7 == 0 })  //7
+println(list.single { it == 2 })      //IllegalArgumentException
 ```
 
 ### 14、singleOrNull 
@@ -3361,9 +3359,9 @@ fun main() {
 返回符合给定函数的单个元素，如果没有符合或者超过一个，则返回null
 
 ```kotlin
-    val list = listOf(1, 9, 2, 6, 7, 9, 2)
-    println(list.singleOrNull { it % 7 == 0 })  //7
-    println(list.singleOrNull { it == 2 })      //null
+val list = listOf(1, 9, 2, 6, 7, 9, 2)
+println(list.singleOrNull { it % 7 == 0 })  //7
+println(list.singleOrNull { it == 2 })      //null
 ```
 
 ## 5、生产操作符 
@@ -3373,10 +3371,10 @@ fun main() {
 把一个给定的集合分割成两个，第一个集合是由原集合每一项元素匹配给定函数条 件返回 true 的元素组成，第二个集合是由原集合每一项元素匹配给定函数条件返回 false 的元素组成
 
 ```kotlin
-    val list = listOf(1, 9, 2, 6, 7, 9, 2)
-    val (list1, list2) = list.partition { it % 2 == 0 }
-    println(list1)  //[2, 6, 2]
-    println(list2)  //[1, 9, 7, 9]
+val list = listOf(1, 9, 2, 6, 7, 9, 2)
+val (list1, list2) = list.partition { it % 2 == 0 }
+println(list1)  //[2, 6, 2]
+println(list2)  //[1, 9, 7, 9]
 ```
 
 ### 2、plus 
@@ -3384,10 +3382,10 @@ fun main() {
 返回一个包含原集合和给定集合中所有元素的集合，因为函数的名字原因，我们可以使用 + 操作符
 
 ```kotlin
-    val list1 = listOf(1, 9, 2, 6, 7, 9, 2)
-    val list2 = listOf(1, 2, 4, 6, 8, 10)
-    println(list1.plus(list2)) //[1, 9, 2, 6, 7, 9, 2, 1, 2, 4, 6, 8, 10]
-    println(list1 + list2)  //[1, 9, 2, 6, 7, 9, 2, 1, 2, 4, 6, 8, 10]
+val list1 = listOf(1, 9, 2, 6, 7, 9, 2)
+val list2 = listOf(1, 2, 4, 6, 8, 10)
+println(list1.plus(list2)) //[1, 9, 2, 6, 7, 9, 2, 1, 2, 4, 6, 8, 10]
+println(list1 + list2)  //[1, 9, 2, 6, 7, 9, 2, 1, 2, 4, 6, 8, 10]
 ```
 
 ### 3、zip 
@@ -3395,25 +3393,25 @@ fun main() {
 返回由 pair 组成的List，每个 pair 由两个集合中相同index的元素组成。这个返回的List的大小由最小的那个集合决定
 
 ```kotlin
-    val list1 = listOf(1, 9, 2, 6, 7, 9, 2)
-    val list2 = listOf(1, 2, 4, 6, 8, 10)
-    val list3 = list1.zip(list2)
-    println(list3.javaClass)
-    println(list3.get(0).javaClass)
-    println("${list3.get(0).first} , ${list3.get(0).second}")
-    list3.forEach { println(it) }
+val list1 = listOf(1, 9, 2, 6, 7, 9, 2)
+val list2 = listOf(1, 2, 4, 6, 8, 10)
+val list3 = list1.zip(list2)
+println(list3.javaClass)
+println(list3.get(0).javaClass)
+println("${list3.get(0).first} , ${list3.get(0).second}")
+list3.forEach { println(it) }
 ```
 
 ```kotlin
-    class java.util.ArrayList
-    class kotlin.Pair
-    1 , 1
-    (1, 1)
-    (9, 2)
-    (2, 4)
-    (6, 6)
-    (7, 8)
-    (9, 10)
+class java.util.ArrayList
+class kotlin.Pair
+1 , 1
+(1, 1)
+(9, 2)
+(2, 4)
+(6, 6)
+(7, 8)
+(9, 10)
 ```
 
 ### 4、unzip 
@@ -3421,17 +3419,17 @@ fun main() {
 从包含pair的List中生成包含List的Pair
 
 ```kotlin
-    val list1 = listOf(Pair("leavesC", 1), Pair("leavesC_2", 2), Pair("leavesC_3", 3))
-    val list2 = list1.unzip()
-    println(list2.javaClass)
-    println(list2.first)
-    println(list2.second)
+val list1 = listOf(Pair("leavesC", 1), Pair("leavesC_2", 2), Pair("leavesC_3", 3))
+val list2 = list1.unzip()
+println(list2.javaClass)
+println(list2.first)
+println(list2.second)
 ```
 
 ```kotlin
-    class kotlin.Pair
-    [leavesC, leavesC_2, leavesC_3]
-    [1, 2, 3]
+class kotlin.Pair
+[leavesC, leavesC_2, leavesC_3]
+[1, 2, 3]
 ```
 
 ## 6、顺序操作符 
@@ -3441,9 +3439,9 @@ fun main() {
 返回一个与指定list相反顺序的list
 
 ```kotlin
-    val list1 = listOf(Pair("leavesC", 1), Pair("leavesC_2", 2), Pair("leavesC_3", 3))
-    val list2 = list1.reversed()
-    println(list2)      //[(leavesC_3, 3), (leavesC_2, 2), (leavesC, 1)]
+val list1 = listOf(Pair("leavesC", 1), Pair("leavesC_2", 2), Pair("leavesC_3", 3))
+val list2 = list1.reversed()
+println(list2)      //[(leavesC_3, 3), (leavesC_2, 2), (leavesC, 1)]
 ```
 
 ### 2、sort 
@@ -3451,13 +3449,13 @@ fun main() {
 返回一个自然排序后的list
 
 ```kotlin
-    val list1 = listOf(2, 4, 1, 9, 5, 10)
-    val list2 = list1.sorted()
-    println(list2) //[1, 2, 4, 5, 9, 10]
+val list1 = listOf(2, 4, 1, 9, 5, 10)
+val list2 = list1.sorted()
+println(list2) //[1, 2, 4, 5, 9, 10]
 
-    val list3 = listOf("a", "c", "ab", "b", "cdd", "cda")
-    val list4 = list3.sorted()
-    println(list4) //[a, ab, b, c, cda, cdd]
+val list3 = listOf("a", "c", "ab", "b", "cdd", "cda")
+val list4 = list3.sorted()
+println(list4) //[a, ab, b, c, cda, cdd]
 ```
 
 ### 3、sortBy 
@@ -3465,9 +3463,9 @@ fun main() {
 返回一个根据指定函数排序后的list 
 
 ```kotlin
-    val list1 = listOf(2, 4, 1, 9, 5, 10)
-    val list2 = list1.sortedBy { it - 3 }
-    println(list2) //[1, 2, 4, 5, 9, 10]
+val list1 = listOf(2, 4, 1, 9, 5, 10)
+val list2 = list1.sortedBy { it - 3 }
+println(list2) //[1, 2, 4, 5, 9, 10]
 ```
 
 ### 4、sortDescending 
@@ -3475,9 +3473,9 @@ fun main() {
 返回一个降序排序后的List
 
 ```kotlin
-    val list1 = listOf(2, 4, 1, 9, 5, 10)
-    val list2 = list1.sortedDescending()
-    println(list2) //[10, 9, 5, 4, 2, 1]
+val list1 = listOf(2, 4, 1, 9, 5, 10)
+val list2 = list1.sortedDescending()
+println(list2) //[10, 9, 5, 4, 2, 1]
 ```
 
 ### 5、sortDescendingBy 
@@ -3485,9 +3483,9 @@ fun main() {
 返回一个根据指定函数降序排序后的list
 
 ```kotlin
-    val list1 = listOf(2, 4, 1, 9, 5, 10)
-    val list2 = list1.sortedByDescending { it % 2 }
-    println(list2) //[1, 9, 5, 2, 4, 10]
+val list1 = listOf(2, 4, 1, 9, 5, 10)
+val list2 = list1.sortedByDescending { it % 2 }
+println(list2) //[1, 9, 5, 2, 4, 10]
 ```
 
 # 二十、异常
@@ -3760,8 +3758,8 @@ fun main() {
 一个解构声明会被编译成以下代码：
 
 ```kotlin
-    val name = person.component1()
-    val age = person.component2()
+val name = person.component1()
+val age = person.component2()
 ```
 
 其中的 `component1()` 和 `component2()` 函数是在 kotlin 中广泛使用的约定原则的另一个例子。任何表达式都可以出现在解构声明的右侧，只要可以对它调用所需数量的 `component` 函数即可
@@ -3803,35 +3801,35 @@ fun main() {
 此外，解构声明也可以用在 for 循环中
 
 ```kotlin
-    val list = listOf(Person("leavesC", 24), Person("leavesC", 25))
-    for ((name, age) in list) {
-        println("Name: $name , age: $age")
-    }
+val list = listOf(Person("leavesC", 24), Person("leavesC", 25))
+for ((name, age) in list) {
+    println("Name: $name , age: $age")
+}
 ```
 
 对于遍历 map 同样适用
 
 ```kotlin
-    val map = mapOf("leavesC" to 24, "ye" to 25)
-    for ((name, age) in map) {
-        println("Name: $name , age: $age")
-    }
+val map = mapOf("leavesC" to 24, "ye" to 25)
+for ((name, age) in map) {
+    println("Name: $name , age: $age")
+}
 ```
 
 同样也适用于 lambda 表达式
 
 ```kotlin
-    val map = mapOf("leavesC" to 24, "ye" to 25)
-    map.mapKeys { (key, value) -> println("key : $key , value : $value") }
+val map = mapOf("leavesC" to 24, "ye" to 25)
+map.mapKeys { (key, value) -> println("key : $key , value : $value") }
 ```
 
 如果在解构声明中不需要某个变量，那么可以用下划线取代其名称，此时不会调用相应的 `componentN()` 操作符函数
 
 ```kotlin
-    val map = mapOf("leavesC" to 24, "ye" to 25)
-    for ((_, age) in map) {
-        println("age: $age")
-    }
+val map = mapOf("leavesC" to 24, "ye" to 25)
+for ((_, age) in map) {
+    println("age: $age")
+}
 ```
 
 # 二十三、Object 关键字
@@ -3892,10 +3890,10 @@ class Test {
 在 Java 代码中来访问这两个对象
 
 ```java
-    public static void main(String[] args) {
-        Test.SingleClass.INSTANCE.getNames();
-        Test.SingleClass2.INSTANCE.getNames();
-    }
+public static void main(String[] args) {
+    Test.SingleClass.INSTANCE.getNames();
+    Test.SingleClass2.INSTANCE.getNames();
+}
 ```
 
 ## 2、伴生对象
@@ -3954,8 +3952,8 @@ fun main() {
 如果使用的是其默认名 Companion（没有自定义名称），则以下两种引用方式都是等价的
 
 ```kotlin
-    val user2 = User.Companion.newById(10)
-    val user3 = User.newByDouble(1.3)
+val user2 = User.Companion.newById(10)
+val user3 = User.newByDouble(1.3)
 ```
 
 如果为伴生对象声明了自定义名称，引用方式等同
@@ -4290,7 +4288,7 @@ fun main() {
 注解的语法格式如下所示：
 
 ```kotlin
-    annotation class AnnotationName()
+annotation class AnnotationName()
 ```
 
 注解的附加属性可以通过用元注解标注注解类来指定：
@@ -4301,17 +4299,17 @@ fun main() {
 - @MustBeDocumented  指定该注解是公有 API 的一部分，并且应该包含在生成的 API 文档中显示的类或方法的签名中
 
 ```kotlin
-    @Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
-    @Retention(AnnotationRetention.RUNTIME)
-    @Repeatable
-    @MustBeDocumented
-    annotation class AnnotationName()
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.RUNTIME)
+@Repeatable
+@MustBeDocumented
+annotation class AnnotationName()
 ```
 
 注解可以声明包含有参数的构造函数
 
 ```kotlin
-    annotation class OnClick(val viewId: Long)
+annotation class OnClick(val viewId: Long)
 ```
 
 允许的参数类型有：

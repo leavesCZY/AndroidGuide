@@ -6,7 +6,7 @@
 
 Glide 的源码有点复杂，如果要细细展开来讲解，那么写个十篇文章也囊括不完 😂😂 所以我就想着换个思路来看源码：**以小点来划分，每个小点只包含 Glide 实现某个功能或目的时所涉及的流程，以此来简化理解难度，通过整合多个小的功能点来把控住 Glide 大的实现方向**
 
-本文基于 Glide 当前的最新版本来进行讲解
+本文基于 Glide 的以下版本来进行讲解
 
 ```groovy
 dependencies {
@@ -362,10 +362,10 @@ public class RequestManagerRetriever implements Handler.Callback {
 上面提到了，当我们调用了 `Glide.with(FragmentActivity)`时，就会完成 SupportRequestManagerFragment 的注入操作。且对于同一个 Activity 实例，在其单次生命周期过程中只会注入一次。从 `supportFragmentGet` 方法也可以看到，每个 SupportRequestManagerFragment 都会包含一个 RequestManager 实例
 
 ```java
-  public class RequestManagerRetriever implements Handler.Callback {
+public class RequestManagerRetriever implements Handler.Callback {
     
   @NonNull
-  private RequestManager supportFragmentGet(
+private RequestManager supportFragmentGet(
       @NonNull Context context,
       @NonNull FragmentManager fm,
       @Nullable Fragment parentHint,
@@ -510,8 +510,8 @@ public class RequestTracker {
 当 SupportRequestManagerFragment  走到 `onStop()` 状态时，就会中转调用到 RequestTracker，将 isPaused 置为 true。此外，当 SupportRequestManagerFragment 执行到 `onDestroy()` 时，就意味着 Activity 已经被 finish 了，此时就会回调通知到 RequestManager 的 `onDestroy()`方法，在这里完成任务的清理以及解除各种注册事件
 
 ```java
-  @Override
-  public synchronized void onDestroy() {
+@Override
+public synchronized void onDestroy() {
     targetTracker.onDestroy();
     for (Target<?> target : targetTracker.getAll()) {
       clear(target);
@@ -522,7 +522,7 @@ public class RequestTracker {
     lifecycle.removeListener(connectivityMonitor);
     mainHandler.removeCallbacks(addSelfToLifecycle);
     glide.unregisterRequestManager(this);
-  }
+}
 ```
 
 # 五、加载图片的具体流程
@@ -531,7 +531,7 @@ Request 是一个接口，代表的是每个图片加载请求，其包含有几
 
 ```java
   public final class SingleRequest<R> implements Request, SizeReadyCallback, ResourceCallback {
-    
+
   @Override
   public void begin() {
     synchronized (requestLock) {
@@ -751,40 +751,40 @@ public <R> LoadStatus load(
 Glide 类中包含一个 `registry` 变量，相当于一个注册器，存储了对于特定的入参类型，其对应的处理逻辑，以及该入参类型希望得到的结果值类型
 
 ```java
-    registry
-        .append(Uri.class, InputStream.class, new UriLoader.StreamFactory(contentResolver))
-        .append(
-            Uri.class,
-            ParcelFileDescriptor.class,
-            new UriLoader.FileDescriptorFactory(contentResolver))
-        .append(
-            Uri.class,
-            AssetFileDescriptor.class,
-            new UriLoader.AssetFileDescriptorFactory(contentResolver))
-        .append(Uri.class, InputStream.class, new UrlUriLoader.StreamFactory())
-        .append(URL.class, InputStream.class, new UrlLoader.StreamFactory())
-        .append(Uri.class, File.class, new MediaStoreFileLoader.Factory(context))
-        .append(GlideUrl.class, InputStream.class, new HttpGlideUrlLoader.Factory())
-        .append(byte[].class, ByteBuffer.class, new ByteArrayLoader.ByteBufferFactory())
-        .append(byte[].class, InputStream.class, new ByteArrayLoader.StreamFactory())
-        .append(Uri.class, Uri.class, UnitModelLoader.Factory.<Uri>getInstance())
-        .append(Drawable.class, Drawable.class, UnitModelLoader.Factory.<Drawable>getInstance())
-        .append(Drawable.class, Drawable.class, new UnitDrawableDecoder())
-        /* Transcoders */
-        .register(Bitmap.class, BitmapDrawable.class, new BitmapDrawableTranscoder(resources))
-        .register(Bitmap.class, byte[].class, bitmapBytesTranscoder)
-        .register(
-            Drawable.class,
-            byte[].class,
-            new DrawableBytesTranscoder(
-                bitmapPool, bitmapBytesTranscoder, gifDrawableBytesTranscoder))
-        .register(GifDrawable.class, byte[].class, gifDrawableBytesTranscoder);
+registry
+    .append(Uri.class, InputStream.class, new UriLoader.StreamFactory(contentResolver))
+    .append(
+        Uri.class,
+        ParcelFileDescriptor.class,
+        new UriLoader.FileDescriptorFactory(contentResolver))
+    .append(
+        Uri.class,
+        AssetFileDescriptor.class,
+        new UriLoader.AssetFileDescriptorFactory(contentResolver))
+    .append(Uri.class, InputStream.class, new UrlUriLoader.StreamFactory())
+    .append(URL.class, InputStream.class, new UrlLoader.StreamFactory())
+    .append(Uri.class, File.class, new MediaStoreFileLoader.Factory(context))
+    .append(GlideUrl.class, InputStream.class, new HttpGlideUrlLoader.Factory())
+    .append(byte[].class, ByteBuffer.class, new ByteArrayLoader.ByteBufferFactory())
+    .append(byte[].class, InputStream.class, new ByteArrayLoader.StreamFactory())
+    .append(Uri.class, Uri.class, UnitModelLoader.Factory.<Uri>getInstance())
+    .append(Drawable.class, Drawable.class, UnitModelLoader.Factory.<Drawable>getInstance())
+    .append(Drawable.class, Drawable.class, new UnitDrawableDecoder())
+    /* Transcoders */
+    .register(Bitmap.class, BitmapDrawable.class, new BitmapDrawableTranscoder(resources))
+    .register(Bitmap.class, byte[].class, bitmapBytesTranscoder)
+    .register(
+        Drawable.class,
+        byte[].class,
+        new DrawableBytesTranscoder(
+            bitmapPool, bitmapBytesTranscoder, gifDrawableBytesTranscoder))
+    .register(GifDrawable.class, byte[].class, gifDrawableBytesTranscoder);
 ```
 
 例如，我们最常见的一种请求方式就是通过图片的 Url 来从网络获取图片，这就对应着以下配置。GlideUrl 就对应着我们传入的 ImageUrl，InputStream 即希望根据该 Url 从网络获取到相应的资源输入流，HttpGlideUrlLoader 就用来实现将 ImageUrl 转换为 InputStream 的过程
 
 ```java
-	append(GlideUrl.class, InputStream.class, new HttpGlideUrlLoader.Factory())
+append(GlideUrl.class, InputStream.class, new HttpGlideUrlLoader.Factory())
 ```
 
 HttpGlideUrlLoader 会将 ImageUrl 传给 HttpUrlFetcher，由其来进行具体的网络请求
@@ -966,9 +966,9 @@ private <R> LoadStatus waitForExistingOrStartNewJob(
 这里主要看 DecodeJob 类。前文有讲到，Glide 最终缓存到磁盘中的图片类型可以分为两类，一类是原始图片，一类是将原始图片进行各种压缩裁剪变换等各种转换操作后得到的图片，该行为就通过 `diskCacheStrategy` 参数来决定
 
 ```kotlin
-            Glide.with(context).load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
-                .into(imageView)
+Glide.with(context).load(imageUrl)
+    .diskCacheStrategy(DiskCacheStrategy.DATA)
+    .into(imageView)
 ```
 
 如果我们使用的是 `DiskCacheStrategy.DATA`，那么就会缓存原图，在进行加载的时候也会去尝试加载本地缓存的原图，该属性即会影响写操作也会影响读操作。DecodeJob 会根据我们的缓存配置来选择相应的 DataFetcherGenerator 来进行处理，所以最终图片的来源类型就有三种可能：
@@ -978,7 +978,7 @@ private <R> LoadStatus waitForExistingOrStartNewJob(
 3. 本地没有符合条件的已缓存资源，需要全新加载（联网请求）。对应 SourceGenerator
 
 ```java
-  private DataFetcherGenerator getNextGenerator() {
+private DataFetcherGenerator getNextGenerator() {
     switch (stage) {
       case RESOURCE_CACHE:
         return new ResourceCacheGenerator(decodeHelper, this);
@@ -991,14 +991,14 @@ private <R> LoadStatus waitForExistingOrStartNewJob(
       default:
         throw new IllegalStateException("Unrecognized stage: " + stage);
     }
-  }
+}
 ```
 
 例如，DataCacheGenerator 的主要逻辑就是 `startNext()` 方法，该方法会从 DiskCache 中取出原图，拿到缓存文件 cacheFile 以及相应的处理器 modelLoaders，modelLoaders 就包含了所有可以实现本次转换操作（例如，File 转 Drawable、File 转 Bitmap 等）的实现器，如果最终判定到存在缓存文件及相应的转换器，那么方法就会返回 true。当 DataCacheGenerator 加载目标数据成功后，就会回调 DecodeJob 的 `onDataFetcherReady` 方法，最终将目标数据存到 ActiveResources 中并通知所有 Target
 
 ```java
-  @Override
-  public boolean startNext() {
+@Override
+public boolean startNext() {
     while (modelLoaders == null || !hasNextModelLoader()) {
       sourceIdIndex++;
       if (sourceIdIndex >= cacheKeys.size()) {
@@ -1297,9 +1297,9 @@ Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地�
 所幸的是 Glide 也考虑到了这种情况，提供了缓存内存的自动清理机制。Glide 类的 `initializeGlide`方法就默认向 Application 注册了一个 ComponentCallbacks，用于接收系统下发的内存状态变化的事件通知
 
 ```java
-  @GuardedBy("Glide.class")
-  @SuppressWarnings("deprecation")
-  private static void initializeGlide(
+@GuardedBy("Glide.class")
+@SuppressWarnings("deprecation")
+private static void initializeGlide(
       @NonNull Context context,
       @NonNull GlideBuilder builder,
       @Nullable GeneratedAppGlideModule annotationGeneratedModule) {
@@ -1307,27 +1307,27 @@ Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地�
     ···
     applicationContext.registerComponentCallbacks(glide);
     Glide.glide = glide;
-  }
+}
 ```
 
 对应的 ComponentCallbacks 实现类即 Glide 类本身，其相关的方法实现对应以下两个
 
 ```java
-  @Override
-  public void onTrimMemory(int level) {
-    trimMemory(level);
-  }
+@Override
+public void onTrimMemory(int level) {
+	trimMemory(level);
+}
 
-  @Override
-  public void onLowMemory() {
-    clearMemory();
-  }
+@Override
+public void onLowMemory() {
+	clearMemory();
+}
 ```
 
 这两个方法会自动触发对 memoryCache、bitmapPool 和 arrayPool 的清理工作
 
 ```java
-  public void trimMemory(int level) {
+public void trimMemory(int level) {
     // Engine asserts this anyway when removing resources, fail faster and consistently
     Util.assertMainThread();
     // Request managers need to be trimmed before the caches and pools, in order for the latter to
@@ -1339,16 +1339,16 @@ Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地�
     memoryCache.trimMemory(level);
     bitmapPool.trimMemory(level);
     arrayPool.trimMemory(level);
-  }
+}
 
-  public void clearMemory() {
+public void clearMemory() {
     // Engine asserts this anyway when removing resources, fail faster and consistently
     Util.assertMainThread();
     // memory cache needs to be cleared before bitmap pool to clear re-pooled Bitmaps too. See #687.
     memoryCache.clearMemory();
     bitmapPool.clearMemory();
     arrayPool.clearMemory();
-  }
+}
 ```
 
 # 七、包含几个线程池
@@ -1401,18 +1401,18 @@ class EngineJob<R> implements DecodeJob.Callback<R>, Poolable {
 **useUnlimitedSourceGeneratorPool 的意义还好理解，就是为了控制同时并发请求的最大线程数，但区分 useAnimationPool 的意义我就不太理解了，懂的同学麻烦解答下**
 
 ```java
-  public synchronized void start(DecodeJob<R> decodeJob) {
+public synchronized void start(DecodeJob<R> decodeJob) {
     this.decodeJob = decodeJob;
     GlideExecutor executor =
         decodeJob.willDecodeFromCache() ? diskCacheExecutor : getActiveSourceExecutor();
     executor.execute(decodeJob);
-  }
+}
 
-  private GlideExecutor getActiveSourceExecutor() {
+private GlideExecutor getActiveSourceExecutor() {
     return useUnlimitedSourceGeneratorPool
         ? sourceUnlimitedExecutor
         : (useAnimationPool ? animationExecutor : sourceExecutor);
-  }
+}
 ```
 
 第五个线程池就位于 ActiveResources 类中。该线程池就用于不断从 ReferenceQueue 中取值判断，将当前已经不再被外部使用的图片资源缓存到 MemoryCache 中

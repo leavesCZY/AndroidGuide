@@ -69,7 +69,7 @@
   * [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
   * [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
   * [学不动也要学，Jetpack Compose 玩一把俄罗斯方块](https://juejin.cn/post/6974585048762679310) 
-  * [学不动也要学，Jetpack Compose 自定义 View 你学不学](https://juejin.cn/post/6996568363581308959)
+  * [学不动也要学，Jetpack Compose 实现自定义绘制](https://juejin.cn/post/6996568363581308959)
 
 
 - Flutter
@@ -91,7 +91,7 @@
   - [三方库源码笔记（10）- Glide 你可能不知道的知识点](https://juejin.cn/post/6892751013544263687)
   - [三方库源码笔记（11）- OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
   - [三方库源码笔记（12）- OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
-  - [三方库源码笔记（13）- 可能是全网第一篇 Coil 的源码分析文章](https://juejin.cn/post/6897872882051842061)
+  - [三方库源码笔记（13）- 可能是全网第一篇 Coil 源码分析文章](https://juejin.cn/post/6897872882051842061)
 
 
 - Kotlin 协程

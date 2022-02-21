@@ -33,22 +33,22 @@ Activity 的启动模式本身是一个挺难理解的知识点，大多数开�
 在默认情况下，同一应用中的所有 Activity 会具有相同的亲和性，所有 Activity 默认会以当前应用的 applicationId 作为自己的 taskAffinity 属性值。我们可以手动为应用内的部分 Activity 指定特定的 taskAffinity，从而将这部分 Activity 进行分组
 
 ```xml
-        <activity
-            android:name=".StandardActivity"
-            android:launchMode="standard"
-            android:taskAffinity="task.test1" />
-        <activity
-            android:name=".SingleTopActivity"
-            android:launchMode="singleTop"
-            android:taskAffinity="task.test2" />
-        <activity
-            android:name=".SingleTaskActivity"
-            android:launchMode="singleTask"
-            android:taskAffinity="task.test3" />
-        <activity
-            android:name=".SingleInstanceActivity"
-            android:launchMode="singleInstance"
-            android:taskAffinity="task.test4" />
+<activity
+    android:name=".StandardActivity"
+    android:launchMode="standard"
+    android:taskAffinity="task.test1" />
+<activity
+    android:name=".SingleTopActivity"
+    android:launchMode="singleTop"
+    android:taskAffinity="task.test2" />
+<activity
+    android:name=".SingleTaskActivity"
+    android:launchMode="singleTask"
+    android:taskAffinity="task.test3" />
+<activity
+    android:name=".SingleInstanceActivity"
+    android:launchMode="singleInstance"
+    android:taskAffinity="task.test4" />
 ```
 
 从概念上讲，具有相同 taskAffinity 的 Activity 归属于同一任务栈（实际上并不一定）。从用户的角度来看则是归属于同一“应用”，因为每种 taskAffinity 在最近任务列表中会各自独占一个列表项，看起来就像一个个单独的应用，而实际上这些列表项可能是来自于同个应用
@@ -86,22 +86,22 @@ launchMode 一共包含以下四种属性值：
 声明四种不同 launchMode 的 Activity，每个 Activity 均声明了不同的 taskAffinity
 
 ```xml
-        <activity
-            android:name=".StandardActivity"
-            android:launchMode="standard"
-            android:taskAffinity="task.a" />
-        <activity
-            android:name=".SingleTopActivity"
-            android:launchMode="singleTop"
-            android:taskAffinity="task.b" />
-        <activity
-            android:name=".SingleTaskActivity"
-            android:launchMode="singleTask"
-            android:taskAffinity="task.c" />
-        <activity
-            android:name=".SingleInstanceActivity"
-            android:launchMode="singleInstance"
-            android:taskAffinity="task.d" />
+<activity
+    android:name=".StandardActivity"
+    android:launchMode="standard"
+    android:taskAffinity="task.a" />
+<activity
+    android:name=".SingleTopActivity"
+    android:launchMode="singleTop"
+    android:taskAffinity="task.b" />
+<activity
+    android:name=".SingleTaskActivity"
+    android:launchMode="singleTask"
+    android:taskAffinity="task.c" />
+<activity
+    android:name=".SingleInstanceActivity"
+    android:launchMode="singleInstance"
+    android:taskAffinity="task.d" />
 ```
 
 通过打印 Activity 的 `hashCode()` 方法返回值来判断 Activity 的实例是否被复用了，再通过 `getTaskId()` 方法来判断 Activity 处于哪个任务栈中
@@ -109,9 +109,8 @@ launchMode 一共包含以下四种属性值：
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2021/4/16 16:38
  * @Desc:
- * @Github：https://github.com/leavesCZY
+ * @公众号：字节数组
  */
 abstract class BaseLaunchModeActivity : BaseActivity() {
 
@@ -221,17 +220,17 @@ E/SingleTopActivity: onCreate hashCode: 254021317 taskId: 40
 Intent 提供的设置 flag 的方法有以下两个，一个是覆盖设置，一个是增量添加
 
 ```java
-    private int mFlags;
+private int mFlags;
 
-	public @NonNull Intent setFlags(@Flags int flags) {
-        mFlags = flags;
-        return this;
-    }
+public @NonNull Intent setFlags(@Flags int flags) {
+    mFlags = flags;
+    return this;
+}
 
-    public @NonNull Intent addFlags(@Flags int flags) {
-        mFlags |= flags;
-        return this;
-    }
+public @NonNull Intent addFlags(@Flags int flags) {
+    mFlags |= flags;
+    return this;
+}
 ```
 
 通过如下方式来添加 flag 并启动 Activity

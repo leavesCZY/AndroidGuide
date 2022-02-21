@@ -27,7 +27,6 @@ debug 版本的 MonitorInterceptor 的大体框架如下所示。HttpInformation
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/10/20 18:26
  * @Github：https://github.com/leavesCZY
  */
 class MonitorInterceptor(context: Context) : Interceptor {
@@ -123,7 +122,6 @@ HttpInformation 则是用 Room 数据库来持久化保存，不得不说的是�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/11/14 16:14
  * @Desc:
  */
 @Dao
@@ -144,38 +142,40 @@ interface MonitorHttpInformationDao {
 UI 层则不用自己去考虑线程切换和内存泄露这类问题，直接进行 observe 即可
 
 ```kotlin
-    private val monitorViewModel by lazy {
-        ViewModelProvider(this).get(MonitorViewModel::class.java).apply {
-            allRecordLiveData.observe(this@MonitorActivity, Observer {
-                monitorAdapter.setData(it)
-            })
-        }
+private val monitorViewModel by lazy {
+    ViewModelProvider(this).get(MonitorViewModel::class.java).apply {
+        allRecordLiveData.observe(this@MonitorActivity, Observer {
+            monitorAdapter.setData(it)
+        })
     }
+}
 ```
 
 # 三、远程引用
 
-代码我已经发布到了 jitpack，方便大家直接远程依赖使用。同时引入 debug 和 release 版本的依赖，**release 版本的 MonitorInterceptor 不会做任何操作，避免了信息泄露，也不会增加 Apk 体积大小**
+代码我已经发布到了 jitpack，方便大家直接远程依赖使用
+
+同时引入 debug 和 release 版本的依赖，release 版本的 MonitorInterceptor 不会做任何操作，避免了信息泄露，也不会增加 Apk 体积大小
 
 ```groovy
-        allprojects {
-            repositories {
-                maven { url 'https://jitpack.io' }
-            }
-        }
+allprojects {
+    repositories {
+        maven { url 'https://jitpack.io' }
+    }
+}
 
-        dependencies {
-           debugImplementation 'com.github.leavesC.Monitor:monitor:1.1.3'
-           releaseImplementation 'com.github.leavesC.Monitor:monitor-no-op:1.1.3'
-        }
+dependencies {
+    debugImplementation 'com.github.leavesCZY.Monitor:monitor:1.1.5'
+    releaseImplementation 'com.github.leavesCZY.Monitor:monitor-no-op:1.1.5'
+}
 ```
 
 只要向 OkHttpClient 添加了 MonitorInterceptor，之后的操作就都会自动完成
 
 ```kotlin
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(MonitorInterceptor(Context))
-            .build()
+val okHttpClient = OkHttpClient.Builder()
+    .addInterceptor(MonitorInterceptor(context = application))
+    .build()
 ```
 
 # 四、Github

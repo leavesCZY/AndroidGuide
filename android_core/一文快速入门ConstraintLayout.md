@@ -6,7 +6,7 @@ ConstraintLayout 目前是 Android Studio 的默认布局，其优势就是可�
 
 ConstraintLayout 能够灵活地定位和调整子 View 的大小，子 View 依靠约束关系来确定位置，且每个子 View 必须至少有一个**水平约束条件**加一个**垂直约束条件**，每个约束条件均表示与其它视图、父布局或隐形引导线之间连接或对齐方式。在一个约束关系中，需要有一个 Source（源）以及一个 Target（目标），Source 的位置依赖于 Target，可以理解为**通过约束关系 Source 与 Target 链接在了一起，Source 相对于 Target 的位置便是固定的了**
 
-引入当前最新的 release 版本：
+引入依赖：
 
 ```groovy
 dependencies {
@@ -855,20 +855,20 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 看个例子：
 
 ```xml
-    <androidx.constraintlayout.helper.widget.Flow
-        android:id="@+id/flow"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:constraint_referenced_ids="cardView1,cardView2,cardView3,cardView4,cardView5"
-        app:flow_firstHorizontalStyle="spread_inside"
-        app:flow_horizontalGap="30dp"
-        app:flow_lastHorizontalBias="1"
-        app:flow_lastHorizontalStyle="packed"
-        app:flow_verticalGap="30dp"
-        app:flow_wrapMode="chain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<androidx.constraintlayout.helper.widget.Flow
+    android:id="@+id/flow"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:constraint_referenced_ids="cardView1,cardView2,cardView3,cardView4,cardView5"
+    app:flow_firstHorizontalStyle="spread_inside"
+    app:flow_horizontalGap="30dp"
+    app:flow_lastHorizontalBias="1"
+    app:flow_lastHorizontalStyle="packed"
+    app:flow_verticalGap="30dp"
+    app:flow_wrapMode="chain"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
 ```
 
 由于 `flow_firstHorizontalStyle` 值为 `spread_inside`，所以首行会往两侧靠边。由于 `flow_lastHorizontalBias`值为 1，所以最后一行也会直接往右靠拢
@@ -951,7 +951,6 @@ Flow 中最重要的一个配置选项是 `wrapMode`，它可以决定在内容�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/26 22:06
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -996,7 +995,6 @@ ConstraintSet 可以理解为 ConstraintLayout 对其所有子控件的约束规
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/26 23:02
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -1068,7 +1066,6 @@ Flow 和 Layer 都是 ConstraintHelper 的子类，这两者都属于辅助布�
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/26 23:47
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */
@@ -1182,7 +1179,6 @@ ImageFilterView 直接继承于 AppCompatImageView，在其基础上扩展了很
 ```kotlin
 /**
  * @Author: leavesCZY
- * @Date: 2020/12/27 0:17
  * @Desc:
  * @Github：https://github.com/leavesCZY
  */

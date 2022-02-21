@@ -40,43 +40,43 @@ java.lang.Integer cannot be cast to java.lang.String
 而有了泛型后，我们就可以写出更加健壮安全的代码，以下错误就完全可以在编译阶段被发现，且取值的时候也不需要进行类型强转
 
 ```java
-    public static void main(String[] args) {
-        List<String> stringList = new ArrayList();
-        addData(stringList); //报错
-        String str = stringList.get(0);
-    }
+public static void main(String[] args) {
+    List<String> stringList = new ArrayList();
+    addData(stringList); //报错
+    String str = stringList.get(0);
+}
 
-    public static void addData(List<Integer> dataList) {
-        dataList.add(1);
-    }
+public static void addData(List<Integer> dataList) {
+    dataList.add(1);
+}
 ```
 
 此外，利用泛型我们可以写出更加具备通用性的代码。例如，假设我们需要从一个 List 中筛选出大于 0 的全部数字，那我们自然不想为 Integer、Float、Double 等多种类型各写一个筛选方法，此时就可以利用泛型来抽象筛选逻辑
 
 ```java
-    public static void main(String[] args) {
-        List<Integer> integerList = new ArrayList<>();
-        integerList.add(-1);
-        integerList.add(1);
-        integerList.add(2);
-        List<Integer> result1 = filter(integerList);
+public static void main(String[] args) {
+    List<Integer> integerList = new ArrayList<>();
+    integerList.add(-1);
+    integerList.add(1);
+    integerList.add(2);
+    List<Integer> result1 = filter(integerList);
 
-        List<Float> floatList = new ArrayList<>();
-        floatList.add(-1f);
-        floatList.add(1f);
-        floatList.add(2f);
-        List<Float> result2 = filter(floatList);
-    }
+    List<Float> floatList = new ArrayList<>();
+    floatList.add(-1f);
+    floatList.add(1f);
+    floatList.add(2f);
+    List<Float> result2 = filter(floatList);
+}
 
-    public static <T extends Number> List<T> filter(List<T> data) {
-        List<T> filterList = new ArrayList<>();
-        for (T datum : data) {
-            if (datum.doubleValue() > 0) {
-                filterList.add(datum);
-            }
+public static <T extends Number> List<T> filter(List<T> data) {
+    List<T> filterList = new ArrayList<>();
+    for (T datum : data) {
+        if (datum.doubleValue() > 0) {
+            filterList.add(datum);
         }
-        return filterList;
     }
+    return filterList;
+}
 ```
 
 总的来说，泛型有以下几点优势：
@@ -621,20 +621,20 @@ val anyArray: Array<Any?> = stringArray //报错
 假设我们定义了一个`copyAll`希望用于 List 数据迁移。那以下操作在我们看来就是完全安全的，因为 Integer 是 Number 的子类，按道理来说是能够将 Integer 保存为 Number 的，但由于泛型不变性，`List<Integer>`并不是`List<Number>`的子类型，所以实际上该操作将报错
 
 ```java
-    public static void main(String[] args) {
-        List<Number> numberList = new ArrayList<>();
+public static void main(String[] args) {
+    List<Number> numberList = new ArrayList<>();
 
-        List<Integer> integerList = new ArrayList<>();
-        integerList.add(1);
-        integerList.add(2);
-        integerList.add(3);
+    List<Integer> integerList = new ArrayList<>();
+    integerList.add(1);
+    integerList.add(2);
+    integerList.add(3);
 
-        copyAll(numberList, integerList); //报错
-    }
+    copyAll(numberList, integerList); //报错
+}
 
-    private static <T> void copyAll(List<T> to, List<T> from) {
-        to.addAll(from);
-    }
+private static <T> void copyAll(List<T> to, List<T> from) {
+    to.addAll(from);
+}
 ```
 
 思考下该操作为什么会报错？

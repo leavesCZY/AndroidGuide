@@ -17,32 +17,32 @@ Window 存在的意义是什么呢？
 想要在屏幕上显示一个 Window 并不算多复杂，代码大致如下所示
 
 ```kotlin
-    private val windowManager by lazy {
-        context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    }
+private val windowManager by lazy {
+    context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+}
 
-    private val floatBallView by lazy {
-        FloatBallView(context)
-    }
+private val floatBallView by lazy {
+    FloatBallView(context)
+}
 
-    private val floatBallWindowParams: WindowManager.LayoutParams by lazy {
-        WindowManager.LayoutParams().apply {
-            width = FloatBallView.VIEW_WIDTH
-            height = FloatBallView.VIEW_HEIGHT
-            gravity = Gravity.START or Gravity.CENTER_VERTICAL
-            flags =
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-            type = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
-            } else {
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-            }
+private val floatBallWindowParams: WindowManager.LayoutParams by lazy {
+    WindowManager.LayoutParams().apply {
+        width = FloatBallView.VIEW_WIDTH
+        height = FloatBallView.VIEW_HEIGHT
+        gravity = Gravity.START or Gravity.CENTER_VERTICAL
+        flags =
+            WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+        type = if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            WindowManager.LayoutParams.TYPE_SYSTEM_ALERT
+        } else {
+            WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
         }
     }
+}
 
-    fun showFloatBall() {
-        windowManager.addView(floatBallView, floatBallWindowParams)
-    }
+fun showFloatBall() {
+    windowManager.addView(floatBallView, floatBallWindowParams)
+}
 ```
 
 显示一个 Window 最基本的操作流程有：
@@ -66,28 +66,28 @@ Window 存在的意义是什么呢？
 WindowManager.LayoutParams 内就声明了这些层级值，我们可以择需选取。例如，系统状态栏本身也是一个 Window，其 type 值就是 TYPE_STATUS_BAR
 
 ```java
-    public static class LayoutParams extends ViewGroup.LayoutParams implements Parcelable {
+public static class LayoutParams extends ViewGroup.LayoutParams implements Parcelable {
 
-        public int type;
+    public int type;
 
-        //应用 Window 的开始值
-        public static final int FIRST_APPLICATION_WINDOW = 1;
-        //应用 Window 的结束值
-        public static final int LAST_APPLICATION_WINDOW = 99;
+    //应用 Window 的开始值
+    public static final int FIRST_APPLICATION_WINDOW = 1;
+    //应用 Window 的结束值
+    public static final int LAST_APPLICATION_WINDOW = 99;
 
-        //子 Window 的开始值
-        public static final int FIRST_SUB_WINDOW = 1000;
-        //子 Window 的结束值
-        public static final int LAST_SUB_WINDOW = 1999;
+    //子 Window 的开始值
+    public static final int FIRST_SUB_WINDOW = 1000;
+    //子 Window 的结束值
+    public static final int LAST_SUB_WINDOW = 1999;
 
-        //系统 Window 的开始值
-        public static final int FIRST_SYSTEM_WINDOW = 2000;
-        //系统状态栏
-        public static final int TYPE_STATUS_BAR = FIRST_SYSTEM_WINDOW;
-        //系统 Window 的结束值
-        public static final int LAST_SYSTEM_WINDOW = 2999;
-        
-    }
+    //系统 Window 的开始值
+    public static final int FIRST_SYSTEM_WINDOW = 2000;
+    //系统状态栏
+    public static final int TYPE_STATUS_BAR = FIRST_SYSTEM_WINDOW;
+    //系统 Window 的结束值
+    public static final int LAST_SYSTEM_WINDOW = 2999;
+
+}
 ```
 
 # 二、WindowManager
@@ -135,84 +135,84 @@ public final class WindowManagerImpl implements WindowManager {
 首先，WindowManagerGlobal 会对入参参数进行校验，并对 LayoutParams 做下参数调整。例如，如果当前要显示的是子 Window 的话，那么就需要使其 LayoutParams 遵循父 Window 的要求才行
 
 ```java
-    public void addView(View view, ViewGroup.LayoutParams params,
-            Display display, Window parentWindow, int userId) {
-        if (view == null) {
-            throw new IllegalArgumentException("view must not be null");
-        }
-        if (display == null) {
-            throw new IllegalArgumentException("display must not be null");
-        }
-        if (!(params instanceof WindowManager.LayoutParams)) {
-            throw new IllegalArgumentException("Params must be WindowManager.LayoutParams");
-        }
-
-        final WindowManager.LayoutParams wparams = (WindowManager.LayoutParams) params;
-        if (parentWindow != null) {
-            parentWindow.adjustLayoutParamsForSubWindow(wparams);
-        } else {
-            // If there's no parent, then hardware acceleration for this view is
-            // set from the application's hardware acceleration setting.
-            final Context context = view.getContext();
-            if (context != null
-                    && (context.getApplicationInfo().flags
-                            & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0) {
-                wparams.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
-            }
-        }
-        ···
+public void addView(View view, ViewGroup.LayoutParams params,
+        Display display, Window parentWindow, int userId) {
+    if (view == null) {
+        throw new IllegalArgumentException("view must not be null");
     }
+    if (display == null) {
+        throw new IllegalArgumentException("display must not be null");
+    }
+    if (!(params instanceof WindowManager.LayoutParams)) {
+        throw new IllegalArgumentException("Params must be WindowManager.LayoutParams");
+    }
+
+    final WindowManager.LayoutParams wparams = (WindowManager.LayoutParams) params;
+    if (parentWindow != null) {
+        parentWindow.adjustLayoutParamsForSubWindow(wparams);
+    } else {
+        // If there's no parent, then hardware acceleration for this view is
+        // set from the application's hardware acceleration setting.
+        final Context context = view.getContext();
+        if (context != null
+                && (context.getApplicationInfo().flags
+                        & ApplicationInfo.FLAG_HARDWARE_ACCELERATED) != 0) {
+            wparams.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+        }
+    }
+    ···
+}
 ```
 
 之后就会为当前的视图树（即 view）构建一个关联的 ViewRootImpl 对象，通过 ViewRootImpl 来绘制视图树并完成 Window 的添加过程。ViewRootImpl 的 `setView`方法会触发启动整个视图树的绘制流程，即完成视图树的 Measure、Layout、Draw 流程，具体流程可以看我的另一篇文章：[一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
 
 ```java
-    public void addView(View view, ViewGroup.LayoutParams params,
-        			Display display, Window parentWindow, int userId) {
-        ···
+public void addView(View view, ViewGroup.LayoutParams params,
+                Display display, Window parentWindow, int userId) {
+    ···
 
-        ViewRootImpl root;
-        View panelParentView = null;
+    ViewRootImpl root;
+    View panelParentView = null;
 
-        ···
+    ···
 
-        root = new ViewRootImpl (view.getContext(), display);
+    root = new ViewRootImpl (view.getContext(), display);
 
-        view.setLayoutParams(wparams);
+    view.setLayoutParams(wparams);
 
-        mViews.add(view);
-        mRoots.add(root);
-        mParams.add(wparams);
+    mViews.add(view);
+    mRoots.add(root);
+    mParams.add(wparams);
 
-        // do this last because it fires off messages to start doing things
-        try {
-            //启动和 view 关联的整个视图树的绘制流程
-            root.setView(view, wparams, panelParentView, userId);
-        } catch (RuntimeException e) {
-            // BadTokenException or InvalidDisplayException, clean up.
-            if (index >= 0) {
-                removeViewLocked(index, true);
-            }
-            throw e;
+    // do this last because it fires off messages to start doing things
+    try {
+        //启动和 view 关联的整个视图树的绘制流程
+        root.setView(view, wparams, panelParentView, userId);
+    } catch (RuntimeException e) {
+        // BadTokenException or InvalidDisplayException, clean up.
+        if (index >= 0) {
+            removeViewLocked(index, true);
         }
+        throw e;
     }
+}
 ```
 
 ViewRootImpl 内部最终会通过 WindowSession 来完成 Window 的添加过程，`mWindowSession` 是一个 Binder 对象，真正的实现类是 Session，也就是说，Window 的添加过程涉及到了 IPC 调用。后面就比较复杂了，能力有限就不继续看下去了
 
 ```java
-        mOrigWindowType = mWindowAttributes.type;
-        mAttachInfo.mRecomputeGlobalAttributes = true;
-        collectViewAttributes();
-        adjustLayoutParamsForCompatibility(mWindowAttributes);
-        res = mWindowSession.addToDisplayAsUser(
-            mWindow, mSeq, mWindowAttributes,
-            getHostVisibility(), mDisplay.getDisplayId(), userId, mTmpFrame,
-            mAttachInfo.mContentInsets, mAttachInfo.mStableInsets,
-            mAttachInfo.mDisplayCutout, inputChannel,
-            mTempInsets, mTempControls
-        );
-        setFrame(mTmpFrame);
+mOrigWindowType = mWindowAttributes.type;
+mAttachInfo.mRecomputeGlobalAttributes = true;
+collectViewAttributes();
+adjustLayoutParamsForCompatibility(mWindowAttributes);
+res = mWindowSession.addToDisplayAsUser(
+    mWindow, mSeq, mWindowAttributes,
+    getHostVisibility(), mDisplay.getDisplayId(), userId, mTmpFrame,
+    mAttachInfo.mContentInsets, mAttachInfo.mStableInsets,
+    mAttachInfo.mDisplayCutout, inputChannel,
+    mTempInsets, mTempControls
+);
+setFrame(mTmpFrame);
 ```
 
 需要注意的是，这里所讲的视图树代表的是很多种不同的视图形式。在启动一个 Activity 或者显示一个 Dialog 的时候，我们都需要为它们指定一个布局文件，布局文件会通过 LayoutInflater 加载映射为一个具体的 View 对象，即最终 Activity 和 Dialog 都会被映射为一个 View 类型的视图树，它们都会通过 WindowManager 的 `addView` 方法来显示到屏幕上，WindowManager 对于 Activity 和 Dialog 来说具有统一的操作行为入口
@@ -304,44 +304,44 @@ public class Activity extends ContextThemeWrapper implements LayoutInflater.Fact
 Activity  的`attach` 方法又是在 ActivityThread 的 `performLaunchActivity` 方法中被调用的，在通过反射生成 Activity 实例后就会调用`attach` 方法，且可以看到该方法的调用时机是早于 Activity 的 `onCreate` 方法的。所以说，在生成 Activity 实例后不久其 Window 对象就已经被初始化了，而且早于各个生命周期回调函数
 
 ```java
-    private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
-        ···
-        Activity activity = null;
-        try {
-            java.lang.ClassLoader cl = appContext.getClassLoader();
-            activity = mInstrumentation.newActivity(
-                    cl, component.getClassName(), r.intent);
-            StrictMode.incrementExpectedActivityCount(activity.getClass());
-            r.intent.setExtrasClassLoader(cl);
-            r.intent.prepareToEnterProcess();
-            if (r.state != null) {
-                r.state.setClassLoader(cl);
-            }
-        } catch (Exception e) {
-            if (!mInstrumentation.onException(activity, e)) {
-                throw new RuntimeException(
-                        "Unable to instantiate activity " + component
-                                + ": " + e.toString(), e);
-            }
+private Activity performLaunchActivity(ActivityClientRecord r, Intent customIntent) {
+    ···
+    Activity activity = null;
+    try {
+        java.lang.ClassLoader cl = appContext.getClassLoader();
+        activity = mInstrumentation.newActivity(
+                cl, component.getClassName(), r.intent);
+        StrictMode.incrementExpectedActivityCount(activity.getClass());
+        r.intent.setExtrasClassLoader(cl);
+        r.intent.prepareToEnterProcess();
+        if (r.state != null) {
+            r.state.setClassLoader(cl);
         }
-
-        ···
-            
-        activity.attach(appContext, this, getInstrumentation(), r.token,
-                r.ident, app, r.intent, r.activityInfo, title, r.parent,
-                r.embeddedID, r.lastNonConfigurationInstances, config,
-                r.referrer, r.voiceInteractor, window, r.configCallback,
-                r.assistToken);
-
-        ···
-            
-        if (r.isPersistable()) {
-            mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);
-        } else {
-            mInstrumentation.callActivityOnCreate(activity, r.state);
+    } catch (Exception e) {
+        if (!mInstrumentation.onException(activity, e)) {
+            throw new RuntimeException(
+                    "Unable to instantiate activity " + component
+                            + ": " + e.toString(), e);
         }
-        return activity;
     }
+
+    ···
+
+    activity.attach(appContext, this, getInstrumentation(), r.token,
+            r.ident, app, r.intent, r.activityInfo, title, r.parent,
+            r.embeddedID, r.lastNonConfigurationInstances, config,
+            r.referrer, r.voiceInteractor, window, r.configCallback,
+            r.assistToken);
+
+    ···
+
+    if (r.isPersistable()) {
+        mInstrumentation.callActivityOnCreate(activity, r.state, r.persistentState);
+    } else {
+        mInstrumentation.callActivityOnCreate(activity, r.state);
+    }
+    return activity;
+}
 ```
 
 此外，从 Activity 的`setContentView` 的方法签名来看，具体逻辑都交由了 Window 的同名方法来实现，传入的 `layoutResID` 就是我们希望在屏幕上呈现的布局，那么 PhoneWindow 自然就需要去加载该布局文件生成对应的 View。而为了能够有一个对 View 进行统一管理的入口，View 应该要包含在一个指定的 ViewGroup 中才行，该 ViewGroup 指的就是 DecorView
@@ -434,37 +434,37 @@ public class PhoneWindow extends Window implements MenuBuilder.Callback {
 3. DecorView 会拿到 `layoutResource` 生成对应的 View 对象并添加为自己的 childView，对应 DecorView 中的 `mContentRoot`，后续执行的 `findViewById(ID_ANDROID_CONTENT)` 操作就都是交由 DecorView 来实现的了，而正常来说每种 `layoutResource` 都会包含一个 ID 为 `content`的 FrameLayout，如果发现找不到的话就直接抛出异常，否则就成功返回拿到 `mContentParent`
 
 ```java
-    protected ViewGroup generateLayout(DecorView decor) {
-        // Apply data from current theme.
+protected ViewGroup generateLayout(DecorView decor) {
+    // Apply data from current theme.
 
-        TypedArray a = getWindowStyle();
+    TypedArray a = getWindowStyle();
 
-        ···
-		
-        //第一步
-        if (a.getBoolean(R.styleable.Window_windowNoTitle, false)) {
-            requestFeature(FEATURE_NO_TITLE);
-        } else if (a.getBoolean(R.styleable.Window_windowActionBar, false)) {
-            // Don't allow an action bar if there is no title.
-            requestFeature(FEATURE_ACTION_BAR);
-        }
+    ···
 
-        ···
-
-        //第二步
-        int layoutResource;
-        ···
-        mDecor.onResourcesLoaded(mLayoutInflater, layoutResource);
-
-        //第三步
-        ViewGroup contentParent = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
-        if (contentParent == null) {
-            throw new RuntimeException("Window couldn't find content container view");
-        }
-
-        ···
-        return contentParent;
+    //第一步
+    if (a.getBoolean(R.styleable.Window_windowNoTitle, false)) {
+        requestFeature(FEATURE_NO_TITLE);
+    } else if (a.getBoolean(R.styleable.Window_windowActionBar, false)) {
+        // Don't allow an action bar if there is no title.
+        requestFeature(FEATURE_ACTION_BAR);
     }
+
+    ···
+
+    //第二步
+    int layoutResource;
+    ···
+    mDecor.onResourcesLoaded(mLayoutInflater, layoutResource);
+
+    //第三步
+    ViewGroup contentParent = (ViewGroup)findViewById(ID_ANDROID_CONTENT);
+    if (contentParent == null) {
+        throw new RuntimeException("Window couldn't find content container view");
+    }
+
+    ···
+    return contentParent;
+}
 ```
 
 # 六、DecorView
@@ -521,25 +521,25 @@ public class DecorView extends FrameLayout implements RootViewSurfaceTaker, Wind
 DecorView 具体的提交时机还需要看 ActivityThread 的 `handleResumeActivity` 方法，该方法用于回调 Activity 的 `onResume` 方法，里面还会回调到 Activity 的`makeVisible` 方法，从方法名可以猜出来`makeVisible`方法就用于令 Activity 变为可见状态
 
 ```java
-    @Override
-    public void handleResumeActivity(IBinder token, boolean finalStateRequest, boolean isForward, String reason) {
-        ···
-        r.activity.makeVisible();    
-        ···    
-    }
+@Override
+public void handleResumeActivity(IBinder token, boolean finalStateRequest, boolean isForward, String reason) {
+    ···
+    r.activity.makeVisible();    
+    ···    
+}
 ```
 
 `makeVisible` 方法会判断当前 Activity 是否已经将 DecorView 提交给 WindowManager 了，如果还没的话就进行提交，最后将 DecorView 的可见状态设为 VISIBLE，至此才建立起 Activity 和 WindowManager 之间的关联关系，之后 Activity 才正式对用户可见
 
 ```java
-    void makeVisible() {
-        if (!mWindowAdded) {
-            ViewManager wm = getWindowManager();
-            wm.addView(mDecor, getWindow().getAttributes());
-            mWindowAdded = true;
-        }
-        mDecor.setVisibility(View.VISIBLE);
+void makeVisible() {
+    if (!mWindowAdded) {
+        ViewManager wm = getWindowManager();
+        wm.addView(mDecor, getWindow().getAttributes());
+        mWindowAdded = true;
     }
+    mDecor.setVisibility(View.VISIBLE);
+}
 ```
 
 # 八、做下总结
