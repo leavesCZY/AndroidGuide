@@ -1,27 +1,15 @@
 > 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 >
-> 希望对你有所帮助 🤣🤣
-
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
-
-本文所讲的源码基于以下版本
-
-```groovy
-compileSdkVersion 30
-
-implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
-implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
-implementation "androidx.savedstate:savedstate:1.1.0"
-```
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
 我们知道，Activity 意外销毁的情况可以分为两种：
 
 1. 由于屏幕旋转等配置更改的原因导致 Activity 被销毁
 2. 由于系统资源限制导致 Activity 被销毁
 
-对于这两种情况，我们当然希望 Activity 重建后之前**加载的数据**以及**用户状态**都能够得到恢复，每种情况目前有着不同的恢复方法
+对于这两种情况，我们当然希望 Activity 重建后之前 **加载的数据** 以及 **用户状态** 都能够得到恢复，每种情况目前有着不同的恢复方法
 
-- 对于第一种情况，Jetpack 提供了 ViewModel 来解决这个问题。ViewModel 可以在配置更改后继续存留，适合用于在内存中存储比较复杂或者量比较大的数据，例如，用 RecyclerView 加载的多个列表项对应的 Data。**但当第二种情况发生时 ViewModel 是无法被保留下来的，Activity 重建后也只会得到一个新的 ViewModel 实例，并且之前已经加载的数据也会丢失**。关于 ViewModel 的源码详解可以看我的另一篇文章：[从源码看 Jetpack（6）-ViewModel 源码详解](https://juejin.im/post/6873356946896846856)
+- 对于第一种情况，Jetpack 提供了 ViewModel 来解决这个问题。ViewModel 可以在配置更改后继续存留，适合用于在内存中存储比较复杂或者量比较大的数据，例如，用 RecyclerView 加载的多个列表项对应的 Data。**但当第二种情况发生时 ViewModel 是无法被保留下来的，Activity 重建后也只会得到一个新的 ViewModel 实例，并且之前已经加载的数据也会丢失**。关于 ViewModel 的源码详解可以看我的另一篇文章：[从源码看 Jetpack（6）- ViewModel 源码详解](https://juejin.im/post/6873356946896846856)
 - 对于第二种情况，需要依赖于 Activity 原生提供的数据保存及恢复机制，即依赖以下两类方法来实现数据保存和数据恢复
   - onSaveInstanceState(Bundle)。通过向 Bundle 插入键值对来保存数据，数据在上述两种情况发生时都会被保留下来，但该方法也有着存储容量和存取效率的限制。Bundle 有着容量限制，不适合用于存储大量数据，而且是通过将数据序列化到磁盘来进行保存的，所以如果要保存的数据很复杂或者很大，序列化就会消耗大量的内存和时间。因此 `onSaveInstanceState` 方法仅适合用于存储少量简单类型的数据
   - onCreate(Bundle) 或者 onRestoreInstanceState(Bundle)。用于从 Bundle 中取出数据进行状态恢复
@@ -32,7 +20,16 @@ Google 官方也对这两种情况进行了对比：
 
 对于第二种情况，数据的保存和恢复流程被限制在了 Activity 的特定方法里，我们无法直接在 ViewModel 中决定哪些数据需要被保留，也无法直接拿到恢复后的数据，使得整个重建流程和 ViewModel 分裂开了
 
-为了解决这个问题，Jetpack 提供了 SavedStateHandle 这么一个组件，可以看做是对 ViewModel 的功能扩展，使得开发者可以直接在 ViewModel 中直接操作整个数据的重建过程
+为了解决这个问题，Jetpack 提供了 SavedStateHandle 这么一个组件，可以看做是对 ViewModel 的功能扩展，使得开发者可以直接在 ViewModel 中直接操作整个数据的重建过程，本文要介绍的就是 SavedStateHandle 的使用方式和实现原理
+
+本文内容基于以下版本来进行讲解
+
+```kotlin
+compileSdkVersion 30
+implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
+implementation "androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0"
+implementation "androidx.savedstate:savedstate:1.1.0"
+```
 
 # 一、使用示例
 

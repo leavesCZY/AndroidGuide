@@ -6,9 +6,9 @@
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/259d24d1611d454ea49d453844377df2~tplv-k3u1fbpfcp-zoom-1.image)
 
-Coil 是我最后一个要来分析的开源库，本篇也是我 **Android 主流开源库源码分析** 这个系列的最后一篇文章了，包含 Coil 的入门介绍和源码分析。这一整个系列的文章从动笔开始到现在也要两个月了，到今天也就结尾了，原创不易，觉得有用就请给个赞吧 😂😂
+Coil 是我最后一个要来分析的开源库，本篇也是我 **Android 主流开源库源码分析** 这个系列的最后一篇文章，包含 Coil 的入门介绍和源码分析。这一个系列的文章从动笔到结束花了要两个月时间，到今天也就结尾了，原创不易，觉得有用就请给个赞吧 😂😂😂
 
-Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的。Coil 在 2020 年 10 月 22 日才发布了 1.0.0 版本，我在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而且本文写好的时候离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 源码分析文章** ~~~
+Coil 这个开源库我关注了蛮久的，因为其很多特性在我看来都挺有意思的。Coil 在 2020 年 10 月 22 日才发布了 1.0.0 版本，我当时在网上搜了搜 Coil 的资料，看到的文章都只是入门介绍，没看见到关于源码层次的分析，而本文的发表时间离 1.0.0 版本发布刚好才隔了一个月时间，应该没人比我还早了吧？就斗胆给文章起了这么个标题：**可能是全网第一篇 Coil 源码分析文章** ~
 
 # 一、Coil 是什么
 
@@ -61,7 +61,7 @@ Coil 一共包含五个组件，可以在 `mavenCentral()`上获取到
 - `io.coil-kt:coil-svg`。包含一个 [decoder](https://coil-kt.github.io/coil/api/coil-base/coil.decode/-decoder) 用于支持解码 SVG。有关更多详细信息，请参见 [SVG](https://coil-kt.github.io/coil/svgs/)
 - `io.coil-kt:coil-video`。包含两个 [fetchers](https://coil-kt.github.io/coil/api/coil-base/coil.fetch/-fetcher) 用于支持读取和解码 [任何 Android 的支持的视频格式](https://developer.android.com/guide/topics/media/media-formats#video-codecs) 的视频帧。有关更多详细信息，请参见 [videos](https://coil-kt.github.io/coil/videos/)
 
-当前 Coil 最新的 release 版本是 1.0.0，引入如下依赖就包含了 Coil 最基础的图片加载功能
+引入如下依赖就包含了 Coil 最基础的图片加载功能
 
 ```kotlin
 implementation("io.coil-kt:coil:1.0.0")

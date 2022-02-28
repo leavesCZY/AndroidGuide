@@ -6,7 +6,7 @@ Context 在我们的日常开发中经常会使用到，在代码层次上指的
 
 Context 是一个抽象类，像我们平时经常使用的 `startActivity、sendBroadcast、getSharedPreferences`等方法都是由其来定义的，Context 的大体继承关系如下图所示
 
-![](https://z3.ax1x.com/2021/05/25/2SDOk6.png)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/11bc4e18d88946c5bda641c72d89699f~tplv-k3u1fbpfcp-zoom-1.image)
 
 - ContextImpl 和 ContextWrapper 都直接地继承于 Context，但真正实现了父类方法的是 ContextImpl。ContextWrapper 则不包含实际的实现逻辑，其内部包含一个 ContextImpl 类型实例的成员变量`mBase`，ContextWrapper 中几乎所有方法都通过调用`mBase`的相同方法来实现，起到了方法传递的作用，隐藏了方法体的具体实现逻辑
 - ContextThemeWrapper、Service、Application 和 ReceiverRestrictedContext 都继承于 ContextWrapper，都可以通过 `mBase`来使用 Context 的方法，同时它们也是装饰类，在 ContextWrapper 的基础上又扩展了不同的功能
@@ -374,4 +374,3 @@ public Context getApplicationContext() {
     return (mPackageInfo != null) ? mPackageInfo.getApplication() : mMainThread.getApplication();
 }
 ```
-

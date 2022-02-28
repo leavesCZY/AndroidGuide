@@ -1,12 +1,10 @@
 > 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 >
-> 希望对你有所帮助 🤣🤣
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
+Lifecycle 是 Jetpack 整个家族体系内最为基础的组件之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单高效了许多，使得我们可以用一种统一的方式来监听 Activity、Fragment、Service、甚至是 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险
 
-Lifecycle 是 Jetpack 整个家族体系内最为基础的内容之一，正是因为有了 Lifecycle 的存在，使得如今开发者搭建依赖于生命周期变化的业务逻辑变得简单高效了许多，使得我们可以用一种统一的方式来监听 Activity、Fragment、Service、甚至是 Process 的生命周期变化，且大大减少了业务代码发生内存泄漏和 NPE 的风险。本文就来对 Lifecycle 进行一次全面的源码解读，希望对你有所帮助 🤣🤣
-
-本文所讲的源码基于以下版本
+本文就来对 Lifecycle 进行一次全面的源码解读，基于以下版本来进行讲解
 
 ```groovy
 implementation 'androidx.appcompat:appcompat:1.2.0'
@@ -16,8 +14,6 @@ implementation "androidx.lifecycle:lifecycle-runtime:2.2.0"
 ```
 
 # 一、Lifecycle 
-
-## 如何使用
 
 现如今，如果我们想要根据 Activity 的生命周期状态的变化来管理我们的业务逻辑的话，那么可以很方便的使用如下方式来进行监听。以基于回调接口方法的形式来进行事件通知，每当 Activity 的生命周期方法被触发时，该接口的相应同名方法就会在**之前或者之后被调用**
 
@@ -63,8 +59,6 @@ lifecycle.addObserver(object : LifecycleObserver {
 
 })
 ```
-
-## 源码
 
 Lifecycle 是一个抽象类，其本身的逻辑比较简单，在大多数时候我们会接触到的是其子类 LifecycleRegistry。Lifecycle 内部仅包含一个全局变量，三个抽象方法、两个枚举类
 
@@ -498,7 +492,8 @@ public void addObserver(@NonNull LifecycleObserver observer) {
     }
 
     //如果 isReentrance 为 true，意味着当前存在重入的情况：
-    //1. mAddingObserverCounter != 0。会出现这种情况，是由于开发者先添加了一个 LifecycleObserver ，当还在向其回调事件的过程中，在回调方法里又再次调用了 addObserver 方法添加了一个新的 LifecycleObserver
+    //1. mAddingObserverCounter != 0。会出现这种情况，是由于开发者先添加了一个 LifecycleObserver，
+   	//   当还在向其回调事件的过程中，在回调方法里又再次调用了 addObserver 方法添加了一个新的 LifecycleObserver
     //2.mHandlingEvent 为 true。即此时正处于向外回调 Lifecycle.Event 的状态
     boolean isReentrance = mAddingObserverCounter != 0 || mHandlingEvent;
 

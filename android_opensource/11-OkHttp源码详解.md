@@ -45,7 +45,7 @@
 
 > 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
 
-本文基于 OkHttp 的以下来版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
+本文基于 OkHttp 的以下版本进行讲解。值得一提的是，OkHttp 和 OkIO 目前已经被官方用 Kotlin 语言重写了一遍，所以还没学 Kotlin 的同学可能连源码都比较难看懂了，Kotlin 入门可以看我的这篇文章：[两万六千字带你 Kotlin 入门](https://juejin.im/post/6880602489297895438)
 
 ```groovy
 dependencies {
@@ -78,9 +78,9 @@ fun main() {
 
 以上代码就完成了一次 Get 请求，其包含的操作有：
 
-1. 通过 Builder 模式得到 OkHttpClient，OkHttpClient 包含了对网络请求的全局配置信息，包括**链接超时时间、读写超时时间、链接失败重试**等各种配置
+1. 通过 Builder 模式得到 OkHttpClient，OkHttpClient 包含了对网络请求的全局配置信息，包括 **链接超时时间、读写超时时间、链接失败重试** 等各种配置
 2. 通过 Builder 模式得到 Request，Request 包含了本次网络请求的所有请求参数，包括 **url、method、headers、body** 等
-3. 通过 newCall 方法得到 Call，Call 就用于发起请求，可用于执行**同步请求（execute）、异步请求（enqueue）、取消请求（cancel）**等各种操作
+3. 通过 newCall 方法得到 Call，Call 就用于发起请求，可用于执行 **同步请求（execute）、异步请求（enqueue）、取消请求（cancel）** 等各种操作
 4. 调用 execute 方法发起同步请求并返回一个 Response 对象，Response 就包含了此次网络请求的所有返回信息，如果请求失败的话此方法会抛出异常
 5. 拿到 Response 对象的 body 并以字符串流的方式进行读取，打印结果即文章开头的 Android 机器人彩蛋
 

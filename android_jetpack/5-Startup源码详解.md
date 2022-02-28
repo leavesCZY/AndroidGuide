@@ -1,12 +1,10 @@
 > 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 >
-> 希望对你有所帮助 🤣🤣
-
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
 最近，Google Jetpack 官网上新增了一个名为 [Startup](https://developer.android.com/topic/libraries/app-startup) 的组件。根据官方文档的介绍，Startup 提供了一种直接高效的方式用来在应用程序启动时对多个组件进行初始化，开发者可以依靠它来显式地设置多个组件间的初始化顺序并优化应用的启动时间
 
-本文所讲的源码基于以下版本
+本文内容基于以下版本来进行讲解
 
 ```java
 implementation "androidx.startup:startup-runtime:1.0.0-alpha01"

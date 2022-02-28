@@ -1,8 +1,6 @@
-公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
-
-> 希望对你有所帮助 🤣🤣
-
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
+> 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
+>
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
 LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到其身影。LiveData 可以和生命周期绑定，当 Activity 和 Fragment 处于活跃状态时才进行数据回调，并在 Lifecycle 处于销毁状态（DESTROYED）时自动移除数据监听行为，从而避免了常见的内存泄露和 NPE 问题
 
@@ -13,7 +11,7 @@ LiveData 是 Jetpack 的基础组件之一，在很多模块中都可以看到�
 - 存在丢值的可能性。如果连续 postValue，最终可能只有最后一个值能够被保留并回调
 - 存在仅有部分 Observer 收到了回调，其它 Observer 又没有的可能性。当单线程连续传值或者多线程同时传值时，假设是先后传 valueA 和 valueB，最终可能只有部分 Observer 接收到了 valueA，所有 Observer 都接收到了 valueB
 
-本文所讲的源码基于以下版本
+本文内容基于以下版本来进行讲解
 
 ```groovy
 implementation "androidx.lifecycle:lifecycle-livedata:2.2.0"

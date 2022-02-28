@@ -270,8 +270,8 @@ smallestWidth 方案和宽高限定符方案最大的差别就在于容错率，
 
 此外，我看到网络上很多开发者都在说 **dpi 的存在就是为了让大屏幕手机能够显示更多内容，屏幕适配导致 dpi 失去了其原有的意义**，但我其实并不理解这和屏幕适配有什么关系。现在的现实背景就是存在某些屏幕像素宽度相同的手机，其 dpi 却不一样，如果单纯直接使用 dp 而不进行额外适配的话，那在这类机型下控件就会相比设计稿多出一些空白或者是超出屏幕范围，这是开发者不得不解决的问题。如果说**显示更多内容**指的是让控件在大屏幕手机上能够占据更多的物理空间，那么前提也是要让各个控件的大小和位置都符合设计稿的要求，屏幕适配要做到的就是这一点，同等比例下控件在大屏幕手机上自然就会有更多物理空间。而如果说**显示更多内容**指的是当在大屏幕手机上有剩余空间时就相比小屏幕多显示其它控件，那么我觉得不仅开发要疯，设计师都要疯……
 
-最后，这里再提供一份用于生成 dimens 文件的代码，基于 smallestWidth 方案，代码总的不到一百行，实现思路在前文讲的很清楚了。仅需要填入设计稿的宽高像素大小就可以，默认基于 1080 x 1920 px 的设计稿，生成范围从 320 到 460 dp 之间，步长 10 dp，读者可以按需调整
+最后，这里再提供一份用于生成 dimens 文件的代码，基于 smallestWidth 方案，代码总的不到一百行，实现思路在前文讲的很清楚了。支持以 dp 或者 px 作为引用单位，按需填入设计稿的 dp 宽高或者 px 宽高，将 src-dp 或者 src-px 文件夹内的 dimens 文件复制到你的项目中即可
 
-![](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/f8e031bc52e24e08b19e25479aaeed7b~tplv-k3u1fbpfcp-watermark.image)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/d3fa751bcad6489d8f76bb701ab9edc4~tplv-k3u1fbpfcp-zoom-1.image)
 
 有需要的同学自取：[SmallestWidthGenerator](https://github.com/leavesCZY/SmallestWidthGenerator)

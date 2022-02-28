@@ -1,12 +1,8 @@
 > 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 >
-> 希望对你有所帮助 🤣🤣
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
-
-上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 中几个开发者比较容易忽略的衍生产物，希望对你有所帮助 🤣🤣
-
-本文所讲的源码基于以下版本
+上篇文章详细讲述了 Lifecycle 的整个事件分发逻辑，本篇文章再来介绍下 Lifecycle 中几个比较容易忽略的衍生产物，基于以下版本来进行讲解
 
 ```groovy
 implementation "androidx.lifecycle:lifecycle-service:2.2.0"
@@ -15,7 +11,7 @@ implementation "androidx.lifecycle:lifecycle-process:2.2.0"
 
 # 一、LifecycleService
 
-LifecycleOwner 接口用于标记其实现类具备 Lifecycle 对象，即具备生命周期。而四大组件之一的 Service 本身从被**启动/绑定**再到被**停止**，具有着类似 Activity / Fragment 从前台到退出页面之间的一系列行为，所以 Jetpack 也提供了 LifecycleService 这个 Service 的子类，用于监听 Service 的生命周期活动
+LifecycleOwner 接口用于标记其实现类具备 Lifecycle 对象，即具备生命周期。而四大组件之一的 Service 本身从 **启动/绑定** 再到 **停止**，具有着类似 Activity / Fragment 从前台到退出页面之间的一系列行为，所以 Jetpack 也提供了 LifecycleService 这个 Service 的子类，用于监听 Service 的生命周期活动
 
 LifecycleService 的源码较为简单，仅仅是在各个生命周期函数中将当前的 Event 事件转发给 ServiceLifecycleDispatcher 进行处理，由其来进行具体的事件分发。当中，`onBind` 和 `onStart`所触发的均是 `Lifecycle.Event.ON_START` 事件，这是为了兼顾 `startService` 和 `bindService` 两种不同的情况
 

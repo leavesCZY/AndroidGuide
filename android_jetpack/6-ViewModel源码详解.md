@@ -1,21 +1,8 @@
 > 公众号：[字节数组](https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg)
 >
-> 希望对你有所帮助 🤣🤣
+> Google Jetpack 自从推出以后，极大地改变了 Android 开发者们的开发模式，并降低了开发难度。这也要求我们对当中一些子组件的实现原理具有一定的了解，所以我就打算来写一系列 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣🤣
 
-> 对于现在的 Android Developer 来说，Google Jetpack 可以说是最为基础的架构组件之一了，自从推出以后极大地改变了我们的开发模式并降低了开发难度，这也要求我们对当中一些子组件的实现原理具有一定程度的了解，所以我就打算来写一系列关于 Jetpack 源码解析的文章，希望对你有所帮助 🤣🤣
-
-在两个多月前我开始写 **从源码看 Jetpack** 系列文章，从源码角度介绍了 Jetpack 多个组件的实现原理，写了一半就停笔去写 **Java 多线程编程** 的文章去了，本篇文章就再来补上 ViewModel 这一个最为基础也最为开发者熟悉的组件
-
-本文所讲的源码基于以下版本
-
-```groovy
-compileSdkVersion 30
-
-implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
-implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0"
-```
-
-ViewModel 基本是按照如下方式来进行初始化和使用的：
+ViewModel 是 Jetpack 整个家族体系内最为基础的组件之一，基本是按照如下方式来进行初始化和使用的：
 
 - ViewModelStoreOwner（Activity/Fragment）通过 ViewModelProvider 来得到一个 ViewModel 实例
 - 通过和 LifecycleOwner 绑定的方式来监听 LiveData 数据的变化从而做出各种响应
@@ -55,7 +42,13 @@ class MyViewModel : ViewModel() {
 }
 ```
 
-下面就通过提问的方式来拆解 ViewModel 的各个知识点，一步步介绍其实现逻辑
+下面就来通过提问的方式来拆解 ViewModel 的各个知识点，一步步介绍其实现原理，基于以下版本来进行讲解
+
+```kotlin
+compileSdkVersion 30
+implementation 'androidx.appcompat:appcompat:1.3.0-beta01'
+implementation "androidx.lifecycle:lifecycle-viewmodel:2.3.0"
+```
 
 # 一、如何初始化
 
