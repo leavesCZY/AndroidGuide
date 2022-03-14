@@ -6,7 +6,7 @@
 
 <p align="center">第一时间看最新文章</p>
 
-<div align=center><img src ="https://upload-images.jianshu.io/upload_images/2552605-57915be42c4f6a82.jpg"/></div>
+<div align=center><img src ="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image"/></div>
 
 
 - 精讲
@@ -47,7 +47,7 @@
   * [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   * [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
   * [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
-
+  * [ASM 字节码插桩：监控大图加载](https://juejin.cn/post/7074970389188706318)
 
 - Jetpack
   * [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
