@@ -107,8 +107,6 @@ class LegalBitmapTransform(private val config: LegalBitmapConfig) : BaseTransfor
 
         private const val ImageViewClass = "android/widget/ImageView"
 
-        private const val AppCompatImageViewClass = "androidx/appcompat/widget/AppCompatImageView"
-
     }
 
     override fun modifyClass(byteArray: ByteArray): ByteArray {
@@ -116,7 +114,7 @@ class LegalBitmapTransform(private val config: LegalBitmapConfig) : BaseTransfor
         val className = classReader.className
         val superName = classReader.superName
         Log.log("className: $className superName: $superName")
-        return if ((superName == ImageViewClass && className != config.formatMonitorImageViewClass) || className == AppCompatImageViewClass) {
+        return if (className != config.formatMonitorImageViewClass && superName == ImageViewClass) {
             val classWriter = ClassWriter(classReader, ClassWriter.COMPUTE_MAXS)
             val classVisitor = object : ClassVisitor(Opcodes.ASM6, classWriter) {
                 override fun visit(
