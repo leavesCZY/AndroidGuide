@@ -61,6 +61,7 @@
 
 
 - Jetpack Compose
+  * [分享一个用 Jetpack Compose 实现的 IM App](https://juejin.cn/post/7098747961537986597)
   * [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)
   * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
   * [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
@@ -72,7 +73,7 @@
 - Flutter
   * [Dart 入门教程](https://juejin.cn/post/6844903937342963719)
   * [FlutterDo - 入门实例教程](https://github.com/leavesCZY/flutter_do)
-  * [Flutter 实战，贝塞尔曲线画一个波浪 Widget](https://juejin.cn/post/6844903981790019592)
+  * [Flutter 实战：用贝塞尔曲线画一个波浪球](https://juejin.cn/post/7098329401707724814)
 
 
 - 系统源码

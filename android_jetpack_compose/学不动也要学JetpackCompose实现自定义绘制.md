@@ -9,7 +9,7 @@
 分别是：
 
 - Kotlin 语言实现的 View 版本：[一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
-- Dart 语言实现的 Flutter 版本：[Flutter 实战 - 用贝塞尔曲线画一个带文本的波浪球 Widget](https://juejin.cn/post/6844903981790019592)
+- Dart 语言实现的 Flutter 版本：[Flutter 实战：用贝塞尔曲线画一个波浪球](https://juejin.cn/post/7098329401707724814)
 
 现如今 Jetpack Compose 也逐渐流行起来了，能实现自定义控件也是对一名应用开发者最基本的要求，本篇文章就再来介绍下如何用 Jetpack Compose 实现相同效果，最终的效果图：
 
