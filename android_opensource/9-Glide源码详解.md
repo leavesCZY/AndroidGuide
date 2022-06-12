@@ -19,9 +19,9 @@ dependencies {
 
 在开始看 Glide 源码前，需要先对 Glide 有一些基本的了解
 
-Glide 的缓存机制分为**内存缓存**和**磁盘缓存**两级。默认情况下，Glide 会自动对加载的图片进行缓存，缓存途径就分为内存缓存和磁盘缓存两种，缓存逻辑均采用 LruCache 算法。在默认情况下，Glide 对于一张网络图片的取值路径按顺序如下所示：
+Glide 的缓存机制分为 **内存缓存** 和 **磁盘缓存** 两级。默认情况下，Glide 会自动对加载的图片进行缓存，缓存途径就分为内存缓存和磁盘缓存两种，缓存逻辑均采用 LruCache 算法。在默认情况下，Glide 对于一张网络图片的取值路径按顺序如下所示：
 
-1. 当启动一个加载图片的请求时，会先检查 ActiveResources 中是否有符合条件的图片，如果存在则直接取值，否则就执行下一步。ActiveResources 用于在内存中存储当前**正在使用**的图片资源（例如，某个 ImageView 正在展示这张图片），ActiveResources 通过弱引用来持有该图片的引用
+1. 当启动一个加载图片的请求时，会先检查 ActiveResources 中是否有符合条件的图片，如果存在则直接取值，否则就执行下一步。ActiveResources 用于在内存中存储当前 **正在使用** 的图片资源（例如，某个 ImageView 正在展示这张图片），ActiveResources 通过弱引用来持有该图片的引用
 2. 检查 MemoryCache 中是否有符合条件的图片，如果存在则直接取值，否则就执行下一步。MemoryCache 使用了 Lru 算法，用于在内存中缓存曾使用过但目前非使用状态的图片资源
 3. 检查 DiskCache 中是否有符合条件的图片，如果存在则进行解码取值，否则就执行下一步。DiskCache 也使用了 Lru 算法，用于在本地磁盘中缓存曾经加载过的图片资源
 4. 联网请求图片。当加载到图片后，会将图片缓存到磁盘和内存中，即保存到 DiskCache 、ActiveResources、MemoryCache 中，以便后续复用
@@ -237,7 +237,7 @@ public class RequestManagerRetriever implements Handler.Callback {
 Glide.with(FragmentActivity).load(url).into(ImageView)
 ```
 
-当调用 `Glide.with(FragmentActivity)` 时，最终是会中转调用到 RequestManagerRetriever 的 `get(FragmentActivity)` 方法，在内部调用 `supportFragmentGet`方法完成 SupportRequestManagerFragment 的注入，并最终返回一个 RequestManager 对象，RequestManager 中就存储了通过该 FragmentActivity 启动的所有图片加载任务 
+当调用 `Glide.with(FragmentActivity)` 时，最终是会中转调用到 RequestManagerRetriever 的 `get(FragmentActivity)` 方法，在内部调用 `supportFragmentGet` 方法完成 SupportRequestManagerFragment 的注入，并最终返回一个 RequestManager 对象，RequestManager 中就存储了通过该 FragmentActivity 启动的所有图片加载任务 
 
 ```java
 public class RequestManagerRetriever implements Handler.Callback {
@@ -278,7 +278,7 @@ public class RequestManagerRetriever implements Handler.Callback {
 }
 ```
 
-所以说，当我们调用 `Glide.with(FragmentActivity)`方法时，此时就已经完成了 SupportRequestManagerFragment 的注入
+所以说，当我们调用 `Glide.with(FragmentActivity)` 方法时，此时就已经完成了 SupportRequestManagerFragment 的注入
 
 而 RequestManagerRetriever 一共包含几种入参类型的 get 方法重载
 
@@ -298,7 +298,7 @@ public class RequestManagerRetriever implements Handler.Callback {
 
 > RequestManagerFragment 的功能和 SupportRequestManagerFragment 相同，但目前已经是废弃状态，此处就不再赘述
 
-例如，`get(@NonNull Context context)`就会根据调用者所在线程以及 Context 所属类型来判断如何注入 SupportRequestManagerFragment，从而得到不同的 RequestManager。如果最终没有注入 SupportRequestManagerFragment，那么使用的 RequestManager 对象就属于全局唯一的 Application 级别的 RequestManager 
+例如，`get(@NonNull Context context)` 就会根据调用者所在线程以及 Context 所属类型来判断如何注入 SupportRequestManagerFragment，从而得到不同的 RequestManager。如果最终没有注入 SupportRequestManagerFragment，那么使用的 RequestManager 对象就属于全局唯一的 Application 级别的 RequestManager 
 
 ```java
   /** The top application level RequestManager. */
@@ -359,7 +359,7 @@ public class RequestManagerRetriever implements Handler.Callback {
 
 前文介绍了 Glide 是如何实现监听 Activity 的生命周期变化的，那么，Glide 是如何发起加载图片的任务的呢？
 
-上面提到了，当我们调用了 `Glide.with(FragmentActivity)`时，就会完成 SupportRequestManagerFragment 的注入操作。且对于同一个 Activity 实例，在其单次生命周期过程中只会注入一次。从 `supportFragmentGet` 方法也可以看到，每个 SupportRequestManagerFragment 都会包含一个 RequestManager 实例
+上面提到了，当我们调用了 `Glide.with(FragmentActivity)` 时，就会完成 SupportRequestManagerFragment 的注入操作。且对于同一个 Activity 实例，在其单次生命周期过程中只会注入一次。从 `supportFragmentGet` 方法也可以看到，每个 SupportRequestManagerFragment 都会包含一个 RequestManager 实例
 
 ```java
 public class RequestManagerRetriever implements Handler.Callback {
@@ -507,7 +507,7 @@ public class RequestTracker {
 }
 ```
 
-当 SupportRequestManagerFragment  走到 `onStop()` 状态时，就会中转调用到 RequestTracker，将 isPaused 置为 true。此外，当 SupportRequestManagerFragment 执行到 `onDestroy()` 时，就意味着 Activity 已经被 finish 了，此时就会回调通知到 RequestManager 的 `onDestroy()`方法，在这里完成任务的清理以及解除各种注册事件
+当 SupportRequestManagerFragment  走到 `onStop()` 状态时，就会中转调用到 RequestTracker，将 isPaused 置为 true。此外，当 SupportRequestManagerFragment 执行到 `onDestroy()` 时，就意味着 Activity 已经被 finish 了，此时就会回调通知到 RequestManager 的 `onDestroy()` 方法，在这里完成任务的清理以及解除各种注册事件
 
 ```java
 @Override
@@ -527,7 +527,7 @@ public synchronized void onDestroy() {
 
 # 五、加载图片的具体流程
 
-Request 是一个接口，代表的是每个图片加载请求，其包含有几个实现类，这里以 SingleRequest 为例。SingleRequest 的`begin()` 方法会先对当前的任务状态进行校验，防止重复加载，然后去获取**目标宽高**或者 **ImageView 的宽高**，之后还会判断是否需要先展示占位符
+Request 是一个接口，代表的是每个图片加载请求，其包含有几个实现类，这里以 SingleRequest 为例。SingleRequest 的 `begin()` 方法会先对当前的任务状态进行校验，防止重复加载，然后去获取 **目标宽高** 或者 **ImageView 的宽高**，之后还会判断是否需要先展示占位符
 
 ```java
   public final class SingleRequest<R> implements Request, SizeReadyCallback, ResourceCallback {
@@ -589,7 +589,7 @@ Request 是一个接口，代表的是每个图片加载请求，其包含有几
 
 可以看到，以上逻辑还没有涉及到具体的加载图片的逻辑，因为这个过程还需要在获取到目标宽高后才能进行。如果外部有传入具体的宽高值，那么就以外部值为准，否则就以 target（例如 ImageView）的宽高大小为准。只有在获取到宽高后才会真正开始加载，这都是为了实现按需加载，避免内存浪费
 
-所以，重点还是要看 `onSizeReady`方法。其内部会将当前的所有配置信息（图片地址，宽高、优先级、是否允许使用缓存等等）都转交给 Engine 的 `load` 方法，由其来完成图片的加载
+所以，重点还是要看 `onSizeReady` 方法。其内部会将当前的所有配置信息（图片地址，宽高、优先级、是否允许使用缓存等等）都转交给 Engine 的 `load` 方法，由其来完成图片的加载
 
 ```java
   private volatile Engine engine;  
@@ -740,7 +740,7 @@ public <R> LoadStatus load(
   }
 ```
 
-对于一个加载网络图片的请求来说，`waitForExistingOrStartNewJob` 方法就对应着通过网络请求加载图片或者是加载本地磁盘文件的过程，如果目标图片还未下载过则去进行网络请求，如果之前已经缓存到了本地的话则去进行磁盘加载。`loadFromMemory`方法则对应着尝试在内存中寻找目标图片的过程，因为目标图片可能之前已经加载到内存中了，此方法就用来尝试复用内存中的图片资源
+对于一个加载网络图片的请求来说，`waitForExistingOrStartNewJob` 方法就对应着通过网络请求加载图片或者是加载本地磁盘文件的过程，如果目标图片还未下载过则去进行网络请求，如果之前已经缓存到了本地的话则去进行磁盘加载。`loadFromMemory` 方法则对应着尝试在内存中寻找目标图片的过程，因为目标图片可能之前已经加载到内存中了，此方法就用来尝试复用内存中的图片资源
 
 这里就以加载一张网络图片为例，先后介绍**从网络请求到磁盘缓存，再到内存缓存**这整个过程
 
@@ -887,7 +887,7 @@ public class HttpUrlFetcher implements DataFetcher<InputStream> {
 
 ## 2、磁盘缓存
 
-再回过头看 Engine 类的 `waitForExistingOrStartNewJob`方法。当判断到当前内存缓存中没有目标图片时，就会启动 EngineJob 和 DecodeJob 进行磁盘文件加载或者联网请求加载
+再回过头看 Engine 类的 `waitForExistingOrStartNewJob` 方法。当判断到当前内存缓存中没有目标图片时，就会启动 EngineJob 和 DecodeJob 进行磁盘文件加载或者联网请求加载
 
 ```java
 private <R> LoadStatus waitForExistingOrStartNewJob(
@@ -1038,7 +1038,7 @@ public boolean startNext() {
 
 DataCacheGenerator 代表的是从本地磁盘缓存中取到目标图片的情况，而请求网络图片并将该图片写入到本地磁盘的逻辑还要看 SourceGenerator
 
-SourceGenerator 在通过 HttpUrlFetcher 成功加载到图片后就会调用到 `onDataReadyInternal` 方法。如果本次请求不允许进行磁盘缓存，就会直接回调 DecodeJob 的 `onDataFetcherReady` 方法完成整个流程，这个过程就和 DataCacheGenerator 一致。而如果允许进行磁盘缓存，那么就会调用到 `reschedule()`方法重新触发 `startNext()` 方法，在 `cacheData` 方法中完成磁盘文件的写入，在写入成功后就会构造一个 DataCacheGenerator，由 DataCacheGenerator 再来从磁盘中取值
+SourceGenerator 在通过 HttpUrlFetcher 成功加载到图片后就会调用到 `onDataReadyInternal` 方法。如果本次请求不允许进行磁盘缓存，就会直接回调 DecodeJob 的 `onDataFetcherReady` 方法完成整个流程，这个过程就和 DataCacheGenerator 一致。而如果允许进行磁盘缓存，那么就会调用到 `reschedule()` 方法重新触发 `startNext()` 方法，在 `cacheData` 方法中完成磁盘文件的写入，在写入成功后就会构造一个 DataCacheGenerator，由 DataCacheGenerator 再来从磁盘中取值
 
 ```java
   void onDataReadyInternal(LoadData<?> loadData, Object data) {
@@ -1202,7 +1202,7 @@ SourceGenerator 在通过 HttpUrlFetcher 成功加载到图片后就会调用到
 
 ActiveResources 是通过弱引用的方式来保存当前所有正在被使用的图片资源。我们知道，如果一个对象只具有弱引用而不再被强引用，那么当发生 GC 时，弱引用中持有的引用就会被直接置空，同时弱引用对象本身就会被存入关联的 ReferenceQueue 中
 
-当有一张新图片加载成功且被使用了，且当前允许内存缓存，那么该图片资源就会通过 `activate`方法保存到 `activeEngineResources` 中。当一张图片资源的引用计数 `acquired` 变为 0 时，说明该资源当前已经不再被外部使用了，此时就会通过 `deactivate`方法将其从 `activeEngineResources` 中移除，消除对资源的引用，如果当前允许内存缓存的话则还会将该资源存入到 MemoryCache 中
+当有一张新图片加载成功且被使用了，且当前允许内存缓存，那么该图片资源就会通过 `activate`方法保存到 `activeEngineResources` 中。当一张图片资源的引用计数 `acquired` 变为 0 时，说明该资源当前已经不再被外部使用了，此时就会通过 `deactivate` 方法将其从 `activeEngineResources` 中移除，消除对资源的引用，如果当前允许内存缓存的话则还会将该资源存入到 MemoryCache 中
 
 ```java
 final class ActiveResources {
@@ -1287,14 +1287,14 @@ public class LruResourceCache extends LruCache<Key, Resource<?>> implements Memo
 
 1. ActiveResources 通过弱引用来保存当前处于使用状态的图片资源，当一张图片被加载成功且还处于使用状态时 ActiveResources 就会一直持有着对其的引用，当图片不再被使用时就会从 ActiveResources 中移除并存入到 MemoryCache 中
 2. MemoryCache 使用了 Lrc 算法在内存中缓存图片资源，仅用于缓存当前并非处于使用状态的图片资源。当缓存在 MemoryCache 中的图片被外部复用时，该图片就会从 MemoryCache 中移除并再次存入 ActiveResources 中
-3. ActiveResources 中保存的图片是当前处于强引用状态的资源，正常来说即使系统当前可用内存不足，系统即使抛出 OOM 也不会回收强引用，所以 Glide 的内存缓存先从 ActiveResources 取值就不会增大当前的已用内存。而系统内存大小是有限的，MemoryCache 使用 Lrc 算法就是为了尽量节省内存且尽量让最大概率还会被重用的图片可以被保留下来
+3. MemoryCache 中保存的图片是当前处于强引用状态的资源，正常来说即使系统当前可用内存不足，系统即使抛出 OOM 也不会回收强引用，所以 Glide 的内存缓存先从 ActiveResources 取值就不会增大当前的已用内存。而系统内存大小是有限的，MemoryCache 使用 Lrc 算法就是为了尽量节省内存且尽量让最大概率还会被重用的图片可以被保留下来
 4. Glide 将内存缓存分为 ActiveResources 和 MemoryCache 两级，而不是全都放到 MemoryCache 中，就避免了误将当前正处于活跃状态的图片资源给移除队列。且 ActiveResources 内部也一直在循环判断保存的图片资源是否已经不再被外部使用了，从而可以及时更新 MemoryCache，提高了 MemoryCache 的利用率和准确度
 
 # 六、内存清理机制
 
 Glide 的内存缓存机制是为了尽量复用图片资源，避免频繁地进行磁盘读写和内存读写，memoryCache、bitmapPool 和 arrayPool 的存在都是为了这个目的，但另一方面内存缓存也造成了有一部分内存空间一直被占用着，可能会造成系统的可用内存空间不足。当我们的应用退到后台时，如果之后系统的可用内存空间不足，那么系统就会按照优先级高低来清理掉一些后台进程，以便为前台进程腾出内存空间，为了提高应用在后台时的优先级，我们就需要主动降低我们的内存占用
 
-所幸的是 Glide 也考虑到了这种情况，提供了缓存内存的自动清理机制。Glide 类的 `initializeGlide`方法就默认向 Application 注册了一个 ComponentCallbacks，用于接收系统下发的内存状态变化的事件通知
+所幸的是 Glide 也考虑到了这种情况，提供了缓存内存的自动清理机制。Glide 类的 `initializeGlide` 方法就默认向 Application 注册了一个 ComponentCallbacks，用于接收系统下发的内存状态变化的事件通知
 
 ```java
 @GuardedBy("Glide.class")
@@ -1523,7 +1523,7 @@ public final class OkHttpLibraryGlideModule extends LibraryGlideModule {
 }
 ```
 
-我们也可以将 `okhttp3-integration`中的代码复制出来，在自定义的 AppGlideModule 类中传入自己实现的 OkHttpUrlLoader
+我们也可以将 `okhttp3-integration` 中的代码复制出来，在自定义的 AppGlideModule 类中传入自己实现的 OkHttpUrlLoader
 
 ```kotlin
 @GlideModule
