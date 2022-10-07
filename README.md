@@ -2,9 +2,9 @@
 
 <p align="center">🎁🎁🎁 这是一份给 Android Developer 的进阶不完整指南，喜欢写又长又臭的文章，希望对你有所帮助 🤣🤣🤣</p>
 
-<p align="center">原创不易，欢迎关注公众号：<b>字节数组</b></p>
+<p align="center">原创不易，欢迎关注公众号，第一时间看最新文章</p>
 
-<p align="center">第一时间看最新文章</p>
+# <p align="center">字节数组</p>
 
 <div align=center><img src ="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image"/></div>
 
@@ -39,6 +39,8 @@
   * [Coil 和 Glide 的 Bitmap 缓存复用机制](https://juejin.cn/post/6956090846470995975)  
   * [探究 Bitmap 的优化手段](https://juejin.cn/post/6952429810207424526)
   * [聊聊 Context 的一些知识点](https://juejin.cn/post/6966223613057826852)
+  * [通过 Android 设备的 Wifi Direct，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiP2P)
+  * [通过 Android 设备的 Wifi 个人热点，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiFileTransfer)  
   * [一步步封装实现自己的网络请求框架 3.0](https://juejin.cn/post/6932650811642085389)
   * [一文读懂 Android 主流屏幕适配方案](https://juejin.cn/post/6999445137491230728)
   * [一文读懂 Activity 的启动模式](https://juejin.cn/post/6952886121328345101)
