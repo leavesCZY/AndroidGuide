@@ -14,6 +14,7 @@
   * [Jetpack Compose 实现一个图片选择框架](https://juejin.cn/post/7108420791502372895)
   * [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)
   * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
+  * [用 Jetpack Compose 写一个 BottomSheetDialog](https://juejin.cn/post/7151792921698631717)  
   * [分享一个用 Jetpack Compose 实现的 IM App](https://juejin.cn/post/7098747961537986597)  
   * [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
   * [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
@@ -28,6 +29,7 @@
 
 
 - 字节码插桩
+  * [从 Lambda 表达式到字节码插桩](https://juejin.cn/post/7151798531672506398)
   * [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   * [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
   * [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
