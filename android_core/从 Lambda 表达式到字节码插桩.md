@@ -1,3 +1,7 @@
+> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
+>
+> 希望对你有所帮助 🤣🤣
+
 字节码插桩是如今 Android 开发中非常普遍的一种技术手段，其应用范围非常广泛，涉及各种业务强关联或者和业务无关的领域，例如：无痕埋点、隐私合规检测、耗时方法统计、性能检测、双击防抖等
 
 我之前就写过几篇文章，介绍了几种通过 ASM 实现字节码插桩的案例
@@ -41,31 +45,6 @@ javac Lambda.java
 ![](https://upload-images.jianshu.io/upload_images/2552605-2bd1a425d4b54ac3.png#crop=0&crop=0&crop=1&crop=1&id=CzjBI&originHeight=819&originWidth=1169&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
 `Lambda$1.class` 可以很明确地就看出其实现了 Runnable 接口，是编译器自动生成的实现类。从 `Lambda.class` 文件也可以明确看出，`lambda` 方法中 new 的对象指向的也是 `Lambda$1`。所以说，对于代码中的匿名内部类，编译器会自动为其生成一个实现类，包含了其原有的内部逻辑：`System._out_.println("Hello World!")`，并将原有的匿名内部类自动替换为该具体的实现类
-
-需要注意，由于上述例子中的 Runnable 对象并没有引用到任何外部的实例对象，因此 `Lambda$1.class` 并不包含构造参数。而如果 Runnable 对象引用到了外部的实例对象的话，Lambda 类的类实例将成为 `Lambda$1.class` 的构造参数，`Lambda$1.class` 再通过该实例来调用目标方法
-
-例如，以下的 Runnable 对象就引用到了外部的实例方法 `print()`，因此 `Lambda$1.class` 就需要一个 Lambda 对象作为构造参数，`run` 方法再通过该对象来调用 `print()` 方法
-
-```java
-public class Lambda {
-
-    private void lambda() {
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                print();
-            }
-        };
-    }
-
-    private void print() {
-        System.out.println("Hello World!");
-    }
-
-}
-```
-
-![](https://upload-images.jianshu.io/upload_images/2552605-856fe30993dae1dc.png#crop=0&crop=0&crop=1&crop=1&id=htu6e&originHeight=420&originWidth=949&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
 # Lambda 表达式
 

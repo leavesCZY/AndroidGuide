@@ -13,13 +13,13 @@
   * [Jetpack Compose 实现完美屏幕适配](https://juejin.cn/post/7113953940282015758)
   * [Jetpack Compose 实现一个图片选择框架](https://juejin.cn/post/7108420791502372895)
   * [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)
-  * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
-  * [用 Jetpack Compose 写一个 BottomSheetDialog](https://juejin.cn/post/7151792921698631717)  
+  * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381) 
   * [分享一个用 Jetpack Compose 实现的 IM App](https://juejin.cn/post/7098747961537986597)  
   * [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
   * [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
   * [学不动也要学，Jetpack Compose 玩一把俄罗斯方块](https://juejin.cn/post/6974585048762679310)
   * [学不动也要学，Jetpack Compose 实现自定义绘制](https://juejin.cn/post/6996568363581308959)
+  * [用 Jetpack Compose 写一个 BottomSheetDialog](https://juejin.cn/post/7151792921698631717)   
 
 
 - Flutter
