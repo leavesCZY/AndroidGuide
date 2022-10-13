@@ -42,7 +42,7 @@ javac Lambda.java
 
 最终会生成两个 class 文件：`Lambda$1.class`、`Lambda.class`
 
-![](https://upload-images.jianshu.io/upload_images/2552605-2bd1a425d4b54ac3.png#crop=0&crop=0&crop=1&crop=1&id=CzjBI&originHeight=819&originWidth=1169&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/a6bc74a94ad941f4ba7aa223102f0a36~tplv-k3u1fbpfcp-zoom-1.image)
 
 `Lambda$1.class` 可以很明确地就看出其实现了 Runnable 接口，是编译器自动生成的实现类。从 `Lambda.class` 文件也可以明确看出，`lambda` 方法中 new 的对象指向的也是 `Lambda$1`。所以说，对于代码中的匿名内部类，编译器会自动为其生成一个实现类，包含了其原有的内部逻辑：`System._out_.println("Hello World!")`，并将原有的匿名内部类自动替换为该具体的实现类
 
@@ -62,7 +62,7 @@ public class Lambda {
 
 最终只会生成一个 class 文件：`Lambda.class`
 
-![](https://upload-images.jianshu.io/upload_images/2552605-eb7e5a4789448a36.png#crop=0&crop=0&crop=1&crop=1&id=TISax&originHeight=458&originWidth=907&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/54d1898879c64aacbfa23f9e8df0dd70~tplv-k3u1fbpfcp-zoom-1.image)
 
 前后两份字节码文件主要的差异点在于：
 
@@ -87,7 +87,7 @@ public class Lambda {
 
 而不管怎么说，在编译过后，Lambda 表达式所对应的 **对象类型、要调用的方法的签名信息、要执行的代码块** 等信息依然是要被保存在字节码中的。进一步查看 `Lambda.class` 的详细字节码信息，看这些信息是存储在哪里
 
-![](https://upload-images.jianshu.io/upload_images/2552605-0719e4f467c9caf3.png#crop=0&crop=0&crop=1&crop=1&id=GL2wY&originHeight=1986&originWidth=1792&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c0f9795ebce8462c9865ecd9f95d329f~tplv-k3u1fbpfcp-zoom-1.image)
 
 可以看到，第十八行的 invokedynamic 指令就包含了 Runnable 接口和 run 方法完整的签名信息：`run:()Ljava/lang/Runnable`，同时指向了第四十一行的 BootstapMethods 区域， 当中会通过 invokestatic 指令去调用 LambdaMetafactory 的静态方法 `metafactory()`，通过该方法在内存中来生成关联的接口实现类
 
@@ -148,7 +148,7 @@ public class Lambda {
 }
 ```
 
-![](https://upload-images.jianshu.io/upload_images/2552605-895d5b833e9f8d3d.png#crop=0&crop=0&crop=1&crop=1&id=agoBU&originHeight=1226&originWidth=1704&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/e97859df45cb47b9afec0d3750470837~tplv-k3u1fbpfcp-zoom-1.image)
 
 # Android Lambda
 
@@ -158,7 +158,7 @@ public class Lambda {
 
 为了能够支持 Java 8，目前 AGP 是通过在 D8/R8 将 class 文件编译成 dex 文件的过程中，对字节码进行转换来实现的，这个转换过程称为 desugar，也即 **脱糖**
 
-![](https://upload-images.jianshu.io/upload_images/2552605-a36e4e14f9e62964.png#crop=0&crop=0&crop=1&crop=1&id=S8s19&originHeight=559&originWidth=1085&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
+![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/0c797e40ed1b495eb699cece97cb81c7~tplv-k3u1fbpfcp-zoom-1.image)
 
 desugar 操作就用于将某些 Android 系统目前还不支持的语法糖还原为简单的 **基础语法结构** 。例如，上述的 Runnable Lambda 表达式经过 desugar 之后，就会被转换为具体的实现类，并将生成的实现类直接写入到 dex 文件中，就如同普通的匿名内部类一样，因此也就不存在兼容性问题了，从而保证了 Lambda 表达式也能够在 Android 低版本系统上正常运行
 
@@ -344,4 +344,6 @@ private fun hookMethod(modeNode: MethodNode) {
 
 # 结尾
 
-本文相关的代码都上传到了 Github：[ASM_Transform](https://github.com/leavesCZY/ASM_Transform)，包含了几个完整的字节码插桩实践案例，读者可以一起参照
+本文相关的代码都上传到了 Github：[ASM_Transform](https://github.com/leavesCZY/ASM_Transform)
+
+包含了几个完整的字节码插桩实践案例，读者可以一起参照

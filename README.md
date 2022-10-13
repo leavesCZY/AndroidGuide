@@ -13,7 +13,7 @@
   * [Jetpack Compose 实现完美屏幕适配](https://juejin.cn/post/7113953940282015758)
   * [Jetpack Compose 实现一个图片选择框架](https://juejin.cn/post/7108420791502372895)
   * [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)
-  * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381) 
+  * [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)  
   * [分享一个用 Jetpack Compose 实现的 IM App](https://juejin.cn/post/7098747961537986597)  
   * [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
   * [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
@@ -29,7 +29,7 @@
 
 
 - 字节码插桩
-  * [从 Lambda 表达式到字节码插桩](https://juejin.cn/post/7151798531672506398)
+  * [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
   * [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   * [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
   * [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
@@ -37,13 +37,6 @@
 
 
 - 精讲
-  * [Android WebView H5 秒开方案总结](https://juejin.cn/post/7016883220025180191)
-  * [Coil 和 Glide 的 Bitmap 缓存复用机制](https://juejin.cn/post/6956090846470995975)  
-  * [探究 Bitmap 的优化手段](https://juejin.cn/post/6952429810207424526)
-  * [聊聊 Context 的一些知识点](https://juejin.cn/post/6966223613057826852)
-  * [通过 Android 设备的 Wifi Direct，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiP2P)
-  * [通过 Android 设备的 Wifi 个人热点，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiFileTransfer)  
-  * [一步步封装实现自己的网络请求框架 3.0](https://juejin.cn/post/6932650811642085389)
   * [一文读懂 Android 主流屏幕适配方案](https://juejin.cn/post/6999445137491230728)
   * [一文读懂 Activity 的启动模式](https://juejin.cn/post/6952886121328345101)
   * [一文读懂 Fragment 的方方面面](https://juejin.cn/post/7006970844542926855)
@@ -53,6 +46,13 @@
   * [一文快速入门 Dagger2](https://github.com/leavesCZY/Dagger2Samples)
   * [一文快速入门 DataBinding](https://github.com/leavesCZY/DataBindingSamples)
   * [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
+  * [一步步封装实现自己的网络请求框架 3.0](https://juejin.cn/post/6932650811642085389)
+  * [Android WebView H5 秒开方案总结](https://juejin.cn/post/7016883220025180191)
+  * [Coil 和 Glide 的 Bitmap 缓存复用机制](https://juejin.cn/post/6956090846470995975)  
+  * [探究 Bitmap 的优化手段](https://juejin.cn/post/6952429810207424526)
+  * [聊聊 Context 的一些知识点](https://juejin.cn/post/6966223613057826852)  
+  * [通过 Android 设备的 Wifi Direct，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiP2P)
+  * [通过 Android 设备的 Wifi 个人热点，实现 Android 手机之间传输任意文件](https://github.com/leavesCZY/WifiFileTransfer)  
 
 
 - Kotlin
