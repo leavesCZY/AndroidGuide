@@ -600,6 +600,6 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.leavesCZY:Matisse:0.0.1'
+    implementation 'com.github.leavesCZY:Matisse:latestVersion'
 }
 ```
