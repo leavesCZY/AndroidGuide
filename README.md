@@ -16,22 +16,25 @@
 - 杂谈
   - [Android 13 媒体权限适配指南](https://juejin.cn/post/7159999910748618766)
   - [Android WebView H5 秒开方案总结](https://juejin.cn/post/7016883220025180191)
+  - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)  
   - [两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438)
   - [Gson 和 Kotlin Data Class 的避坑指南](https://juejin.cn/post/6908391430977224718)
+  - [探究 Kotlin 的隐藏性能开销与避坑指南](https://juejin.cn/post/7010367024916660237)  
   - [Coil 和 Glide 的 Bitmap 缓存复用机制](https://juejin.cn/post/6956090846470995975)
-  - [探究 Kotlin 的隐藏性能开销与避坑指南](https://juejin.cn/post/7010367024916660237)
   - [探究 Bitmap 的优化手段](https://juejin.cn/post/6952429810207424526)
   - [聊聊 Context 的一些知识点](https://juejin.cn/post/6966223613057826852)
-  - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
+
+
+- 一文系列  
   - [一文读懂 Android 主流屏幕适配方案](https://juejin.cn/post/6999445137491230728)
   - [一文读懂 Activity 的启动模式](https://juejin.cn/post/6952886121328345101)
   - [一文读懂 Fragment 的方方面面](https://juejin.cn/post/7006970844542926855)
   - [一文读懂 Java 和 Kotlin 的泛型难点](https://juejin.cn/post/6935322686943920159)
   - [一文读懂 Handler 机制](https://juejin.cn/post/6901682664617705485)
   - [一文读懂 SharedPreferences 的缺陷及一点点思考](https://juejin.cn/post/6932277268110639112)
-  - [一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
   - [一文读懂 View 事件分发机制](https://juejin.cn/post/6931914294980411406)
   - [一文读懂 View & Window 机制](https://juejin.cn/post/6942303848996274213)
+  - [一文读懂 View 的 Measure、Layout、Draw 流程](https://juejin.cn/post/6939540905581887502)
   - [一文读懂 View Post 的原理及缺陷](https://juejin.cn/post/6939763855216082974)
   - [一文快速入门 Kotlin 协程](https://juejin.cn/post/6908271959381901325)
   - [一文快速入门 ConstraintLayout](https://juejin.cn/post/6911710012750430215)
@@ -40,7 +43,6 @@
   - [一文快速入门 Dagger2](https://github.com/leavesCZY/Dagger2Samples)
   - [一文快速入门 DataBinding](https://github.com/leavesCZY/DataBindingSamples)
   - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
-  - [一步步封装实现自己的网络请求框架 3.0](https://juejin.cn/post/6932650811642085389)
 
 
 - Jetpack Compose
