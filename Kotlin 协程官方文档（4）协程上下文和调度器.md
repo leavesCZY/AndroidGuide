@@ -337,7 +337,7 @@ I'm working in thread DefaultDispatcher-worker-1 @test#2
 
 # 十、协程作用域
 
-让我们把关于作用域、子元素和 Job 的知识点放在一起。假设我们的应用程序有一个具有生命周期的对象，但该对象不是协程。例如，我们正在编写一个Android应用程序，并在Android Activity中启动各种协程，以执行异步操作来获取和更新数据、指定动画等。当 Actovoty 销毁时，必须取消所有协程以避免内存泄漏。当然，我们可以手动操作上下文和 Job 来绑定 Activity 和协程的生命周期。但是，kotlinx.coroutines 提供了一个抽象封装：CoroutineScope。你应该已经对协程作用域很熟悉了，因为所有的协程构造器都被声明为它的扩展函数
+让我们把关于作用域、子元素和 Job 的知识点放在一起。假设我们的应用程序有一个具有生命周期的对象，但该对象不是协程。例如，我们正在编写一个Android应用程序，并在Android Activity中启动各种协程，以执行异步操作来获取和更新数据、指定动画等。当 Activity 销毁时，必须取消所有协程以避免内存泄漏。当然，我们可以手动操作上下文和 Job 来绑定 Activity 和协程的生命周期。但是，kotlinx.coroutines 提供了一个抽象封装：CoroutineScope。你应该已经对协程作用域很熟悉了，因为所有的协程构造器都被声明为它的扩展函数
 
 我们通过创建与 Activity 生命周期相关联的协程作用域的实例来管理协程的生命周期。CoroutineScope 的实例可以通过 CoroutineScope() 或 MainScope() 的工厂函数来构建。前者创建通用作用域，后者创建 UI 应用程序的作用域并使用 Dispatchers.Main 作为默认的调度器
 
