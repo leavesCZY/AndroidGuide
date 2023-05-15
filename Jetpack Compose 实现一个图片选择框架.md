@@ -1,16 +1,17 @@
 > 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
+>  
 > 希望对你有所帮助 🤣🤣
 
-知乎的 [Matisse](https://github.com/zhihu/Matisse) 应该蛮多 Android 开发者有了解过或者是曾经使用过，这是知乎在 2017 年开源的一个 Android 端图片选择框架，其颜值在现在看来也还是挺不错的
 
-![](https://upload-images.jianshu.io/upload_images/2552605-9504d5d974f9c21e.png)
+知乎的 [Matisse](https://github.com/zhihu/Matisse) 应该有蛮多的 Android 开发者有了解过或者是曾经使用过，这是知乎在 2017 年开源的一个 Android 端图片选择框架，其颜值在现在看来也还是挺不错的
 
-可惜近几年知乎官方已经不再对 Matisse 进行维护更新了，上一次提交记录还停留在 2019 年，累积了 400 个 issues 一直没人解答，很多高版本系统的兼容性问题和内部 bug 也一直得不到解决。我反编译了知乎的 App，发现其内部还保留着 Matisse 的相关代码，所以知乎应该不是完全废弃了 Matisse，而只是不再开源了
+![](https://upload-images.jianshu.io/upload_images/2552605-9504d5d974f9c21e.png#id=FnSsV&originHeight=507&originWidth=826&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
-我公司的项目也使用到了 Matisse，随着 Android 系统的更新，时不时地就会有用户来反馈问题，无奈我也只能 fork 了源码自己来维护。一直这么小修小补终究不太合适，而且如果不进行完全重写的话，Matisse 的一些交互体验问题也没法得到彻底解决，而这些问题在知乎目前的官方 App 上也一样存在，以修改个人头像时打开的图片选择页面为例：
+可惜近几年知乎官方已经不再对 Matisse 进行维护更新了，上一次提交记录还停留在 2019 年，累积了四百多个 issues 一直没人解答，很多高版本系统的兼容性问题和内部 bug 也一直得不到解决。我反编译了知乎 App，发现其内部还保留着 Matisse 的相关代码，所以知乎应该不是完全废弃了 Matisse，而只是不再开源后续更新了
 
-![](https://upload-images.jianshu.io/upload_images/2552605-69332d4499ae215b.gif)
+我公司的项目也使用到了 Matisse，随着 Android 系统的更新，时不时地就会有用户来反馈问题，无奈我也只能 fork 了源码自己来维护。一直这么小修小补终究不太合适，而且如果不进行完全重写的话，Matisse 的一些交互体验问题也没法得到彻底解决，而这些问题在目前的知乎 App 上也一样存在，以修改个人头像时打开的图片选择页面为例：
+
+![](https://upload-images.jianshu.io/upload_images/2552605-69332d4499ae215b.gif#id=GMNgn&originHeight=893&originWidth=427&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
 我发现的问题有三个：
 
@@ -20,33 +21,32 @@
 
 由于以上问题，也让我有了彻底放弃 Matisse，自己来实现一个新的图片选择框架的打算，也实现得差不多了，最终的效果如下所示
 
-![](https://upload-images.jianshu.io/upload_images/2552605-9d0462278817fde6.png)
+![](https://upload-images.jianshu.io/upload_images/2552605-8772ec10193468d5.png#id=oM7Nh&originHeight=598&originWidth=882&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)
 
-除了支持 Matisse 有的基本功能外，此框架的 特点 / 优势 还有：
+此框架的特点 & 优势有：
 
-- 完全用 Kotlin 实现，拒绝 Java
-- UI 层完全用 Jetpack Compose 实现，拒绝原生 View 体系
-- 支持更加精细地自定义主题，默认提供了 日间 和 夜间 两种主题
-- 支持精准筛选图片类型，只会显示想要的图片类型
-- 同时支持 FileProvider 和 MediaStore 两种拍照策略
-- 获取到的图片信息更加丰富，一共包含 uri、displayName、mimeType、width、height、orientation、size、path、bucketId、bucketDisplayName 等十个属性值
-- 已适配到 Android 12 系统，解决了几个系统兼容性问题，下文会提到
+- 适配到 Android 13
+- 解决了多个系统兼容性问题，下文会提到
+- 完全用 Kotlin & Jetpack Compose 实现
+- 支持精准筛选图片类型并获取图片的详细信息
+- 支持精细自定义主题，默认提供日夜间两套主题
+- 支持直接启动拍照流程，一共包含四种拍照策略，可以自由选择是否要申请权限
 
 此框架也有一些劣势：
 
-- 预览图片时不支持手势缩放。一开始我有尝试用 Jetpack Compose 来实现图片手势缩放，但效果不太理想，我又不想引入 View 体系中的三方库，所以此版本暂不支持图片手势缩放
+- 预览图片时不支持手势缩放。一开始我有尝试用 Jetpack Compose 来实现图片手势缩放，但效果不太理想，而我又不想引入 View 体系中的三方库，所以此版本暂不支持图片手势缩放
 - 框架内部采用的图片加载库是 Coil，且不支持替换。由于目前支持 Jetpack Compose 的图片加载库基本只能选择 Coil 了，因此没有提供替换图片加载库的入口
 - 图片列表的滑动性能要低于原生的 RecyclerView，debug 版本尤为明显。此问题目前无解，只能等 Google 官方后续的优化了
 
 代码我也开源到了 Github，懒得想名字，再加上一开始的设计思路也来自于 Matisse，因此就取了一样的名字，也叫 [Matisse](https://github.com/leavesCZY/Matisse)。下文如果没有特别说明，Matisse 指的就是此 Jetpack Compose 版本的图片选择框架了
 
-用 Jetpack Compose 来实现 UI 相比原生的 View 体系实在要简单很多，在这一块除了滑动性能之外我也没遇到其它问题。因此，本文的内容和 Jetpack Compose 无关，主要是讲 Matisse 的一些实现细节和遇到的系统兼容性问题
+在 UI 层面上，用 Jetpack Compose 来实现相比原生的 View 体系实在要简单很多，在这一块除了滑动性能之外我也没遇到其它问题。因此，本文的内容和 Jetpack Compose 无关，主要是讲 Matisse 的一些实现细节和遇到的系统兼容性问题
 
 # 获取图片
 
-实现一个图片选择框架的第一步自然就是要获取到相册内的所有图片了，因此需要申请 READ_EXTERNAL_STORAGE 权限，此外还需要依赖系统的 MediaStore API 来读取所有图片
+实现一个图片选择框架的第一步自然就是要获取到相册内的所有图片了，因此需要申请 READ_EXTERNAL_STORAGE 或者 READ_MEDIA_IMAGES 权限，此外还需要依赖系统的 MediaStore API
 
-MediaStore 相当于一个文件系统数据库，记录了当前设备中所有文件的索引，我们可以通过它来快速查找设备中特定类型的文件。Matisse 使用的是 `MediaStore.Image`，在操作上就类似于查询数据库，通过声明需要的数据库字段 projection 和排序规则 sortOrder，得到相应的数据库游标 cursor，通过 cursor 遍历查询出每一个字段值
+MediaStore 相当于一个文件系统数据库，记录了当前设备中所有文件的索引，我们可以通过它来快速查找设备中特定类型的文件。Matisse 使用的是 MediaStore.Image，在操作上就类似于查询数据库，通过声明需要的数据库字段 projection 和排序规则 sortOrder，得到相应的数据库游标 cursor，通过 cursor 遍历查询出每一个字段值
 
 ```kotlin
 val projection = arrayOf(
@@ -62,57 +62,63 @@ val projection = arrayOf(
     MediaStore.Images.Media.BUCKET_DISPLAY_NAME,
 )
 val sortOrder = "${MediaStore.Images.Media.DATE_MODIFIED} DESC"
-val mediaResourcesList = mutableListOf<MediaResources>()
-val mediaCursor = context.contentResolver.query(
-    MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-    projection,
-    selection,
-    selectionArgs,
-    sortOrder,
-) ?: return@withContext null
-mediaCursor.use { cursor ->
-    while (cursor.moveToNext()) {
-        val id = cursor.getLong(MediaStore.Images.Media._ID)
-        val displayName =
-            cursor.getString(MediaStore.Images.Media.DISPLAY_NAME)
-        val mimeType = cursor.getString(MediaStore.Images.Media.MIME_TYPE)
-        val width = cursor.getInt(MediaStore.Images.Media.WIDTH)
-        val height = cursor.getInt(MediaStore.Images.Media.HEIGHT)
-        val size = cursor.getLong(MediaStore.Images.Media.SIZE)
-        val orientation = cursor.getInt(MediaStore.Images.Media.ORIENTATION)
-        val data = cursor.getString(MediaStore.Images.Media.DATA)
-        val bucketId = cursor.getString(MediaStore.Images.Media.BUCKET_ID)
-        val bucketDisplayName =
-            cursor.getString(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
-        val contentUri =
-            ContentUris.withAppendedId(
+val mediaResourceList = mutableListOf<MediaResource>()
+try {
+    val mediaCursor = context.contentResolver.query(
+        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+        projection,
+        selection,
+        selectionArgs,
+        sortOrder,
+    ) ?: return@withContext null
+    mediaCursor.use { cursor ->
+        while (cursor.moveToNext()) {
+            val data = cursor.getString(MediaStore.Images.Media.DATA)
+            if (data.isBlank() || !File(data).exists()) {
+                continue
+            }
+            val id = cursor.getLong(MediaStore.Images.Media._ID)
+            val displayName = cursor.getString(MediaStore.Images.Media.DISPLAY_NAME)
+            val mimeType = cursor.getString(MediaStore.Images.Media.MIME_TYPE)
+            val width = cursor.getInt(MediaStore.Images.Media.WIDTH)
+            val height = cursor.getInt(MediaStore.Images.Media.HEIGHT)
+            val size = cursor.getLong(MediaStore.Images.Media.SIZE)
+            val orientation = cursor.getInt(MediaStore.Images.Media.ORIENTATION)
+            val bucketId = cursor.getString(MediaStore.Images.Media.BUCKET_ID)
+            val bucketDisplayName =
+                cursor.getString(MediaStore.Images.Media.BUCKET_DISPLAY_NAME)
+            val contentUri = ContentUris.withAppendedId(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
                 id
             )
-        val mediaResources = MediaResources(
-            uri = contentUri,
-            displayName = displayName,
-            mimeType = mimeType,
-            width = width,
-            height = height,
-            orientation = orientation,
-            path = data,
-            size = size,
-            bucketId = bucketId,
-            bucketDisplayName = bucketDisplayName,
-        )
-        mediaResourcesList.add(mediaResources)
+            val mediaResource = MediaResource(
+                id = id,
+                uri = contentUri,
+                displayName = displayName,
+                mimeType = mimeType,
+                width = width,
+                height = height,
+                orientation = orientation,
+                path = data,
+                size = size,
+                bucketId = bucketId,
+                bucketDisplayName = bucketDisplayName,
+            )
+            mediaResourceList.add(mediaResource)
+        }
     }
-    return@withContext mediaResourcesList
+} catch (e: Throwable) {
+    e.printStackTrace()
 }
+return@withContext mediaResourceList
 ```
 
 每一张图片都存放于特定的相册文件夹内，因此可以通过 bucketId 来对每一张图片进行归类，从而得到 Matisse 中的下拉菜单
 
 ```kotlin
-suspend fun groupByBucket(resources: List<MediaResources>): List<MediaBucket> {
+suspend fun groupByBucket(resources: List<MediaResource>): List<MediaBucket> {
     return withContext(context = Dispatchers.IO) {
-        val resourcesMap = linkedMapOf<String, MutableList<MediaResources>>()
+        val resourcesMap = linkedMapOf<String, MutableList<MediaResource>>()
         resources.forEach { res ->
             val bucketId = res.bucketId
             val list = resourcesMap[bucketId]
@@ -130,11 +136,11 @@ suspend fun groupByBucket(resources: List<MediaResources>): List<MediaBucket> {
                 val bucketDisplayName = resourcesList[0].bucketDisplayName
                 allMediaBucketResource.add(
                     MediaBucket(
-                        bucketId = bucketId,
-                        bucketDisplayName = bucketDisplayName,
-                        bucketDisplayIcon = resourcesList[0].uri,
+                        id = bucketId,
+                        displayName = bucketDisplayName,
+                        displayIcon = resourcesList[0].uri,
                         resources = resourcesList,
-                        displayResources = resourcesList
+                        supportCapture = false
                     )
                 )
             }
@@ -146,7 +152,7 @@ suspend fun groupByBucket(resources: List<MediaResources>): List<MediaBucket> {
 
 # 拍照策略
 
-一般的应用对于拍照功能不会有太多的自定义需求，因此大多是通过直接调起系统相机来实现拍照，优点是实现简单，且不用申请 CAMERA 权限
+一般情况下，应用对于拍照功能都不会有太多的自定义需求，因此大多是通过直接调起系统相机来实现拍照，优点是实现简单，且不用申请 CAMERA 权限
 
 实现代码大致如下所示，最终图片就会保存在 imageUri 指向的文件中
 
@@ -177,7 +183,7 @@ class MatisseActivity : ComponentActivity() {
 
 以上代码属于通用流程，当判断到完成拍照后，将以上的 imageUri 返回即可
 
-但生成 imageUri 却有着很多学问：不同的生成规则对应着不同的权限，甚至同种方式在不同系统版本上对权限的要求也不一样，对用户的感知也不一样。此外，如果用户在相机页面取消拍照的话，此时 imageUri 指向的图片文件就没有用了，我们还需要主动删除该文件
+但生成 imageUri 却有着很多学问：不同的生成规则对应着不同的权限，甚至同种方式在不同系统版本上对权限的要求也不一样，对用户的感知也不一样。此外，如果用户又取消了拍照的话，此时 imageUri 指向的图片文件就没有用了，我们还需要主动删除该文件
 
 Matisse 通过 CaptureStrategy 接口来抽象以上逻辑
 
@@ -185,7 +191,7 @@ Matisse 通过 CaptureStrategy 接口来抽象以上逻辑
 /**
  * 拍照策略
  */
-interface CaptureStrategy {
+interface CaptureStrategy : Parcelable {
 
     /**
      * 是否启用拍照功能
@@ -205,7 +211,7 @@ interface CaptureStrategy {
     /**
      * 获取拍照结果
      */
-    suspend fun loadResources(context: Context, imageUri: Uri): MediaResources?
+    suspend fun loadResource(context: Context, imageUri: Uri): MediaResource?
 
     /**
      * 当用户取消拍照时调用
@@ -216,26 +222,30 @@ interface CaptureStrategy {
      * 生成图片文件名
      */
     fun createImageName(): String {
-        return UUID.randomUUID().toString() + ".jpg"
+        val uuid = UUID.randomUUID().toString()
+        val randomName = uuid.substring(0, 8)
+        return "$randomName.jpg"
     }
 
 }
 ```
 
-Matisse 实现了三种拍照策略供开发者选择：
+Matisse 实现了四种拍照策略供引用方使用：
 
 - NothingCaptureStrategy
 - FileProviderCaptureStrategy
 - MediaStoreCaptureStrategy
+- SmartCaptureStrategy
 
 ## NothingCaptureStrategy
 
-NothingCaptureStrategy 代表的是不开启拍照功能，也是 Matisse 默认的拍照策略
+NothingCaptureStrategy 代表的是不开启拍照功能，也是 Matisse 的默认策略
 
 ```kotlin
 /**
- *  什么也不做，即不开启拍照功能
+ *  不开启拍照功能
  */
+@Parcelize
 object NothingCaptureStrategy : CaptureStrategy {
 
     override fun isEnabled(): Boolean {
@@ -250,7 +260,7 @@ object NothingCaptureStrategy : CaptureStrategy {
         return null
     }
 
-    override suspend fun loadResources(context: Context, imageUri: Uri): MediaResources? {
+    override suspend fun loadResource(context: Context, imageUri: Uri): MediaResource? {
         return null
     }
 
@@ -265,24 +275,25 @@ object NothingCaptureStrategy : CaptureStrategy {
 
 顾名思义，此策略通过 FileProvider 来生成所需要的 imageUri
 
-从 Android 7.0 开始，系统禁止应用通过  `file://URI` 来访问其他应用的私有目录文件，要在应用间共享私有文件，必须通过 `content://URI` 并授予 URI 临时访问权限来实现，否则将直接抛出异常。而将 File 转换为 `content://URI` 的操作就需要依靠 FileProvider 来实现了。Matisse 传递给系统相机的 imageUri 也需要满足此规则
+从 Android 7.0 开始，系统禁止应用通过  `file://URI` 来访问其他应用的私有目录文件，要在应用间共享私有文件，必须通过 `content://URI` 并授予 URI 临时访问权限来实现，否则将直接抛出异常。而将 File 转换为 `content://URI` 的操作就需要依靠 FileProvider 来实现了。Matisse 传递给系统相机的 imageUri 也需要满足此要求
 
 FileProviderCaptureStrategy 采用的策略就是：
 
 - 在 ExternalFilesDir 的 Pictures 目录中创建一个图片临时文件用于存储拍照结果，通过 FileProvider 得到该文件对应的 `content://URI` ，从而得到待写入的 imageUri
-- 假如用户最终取消拍照，则直接删除创建的临时文件
 - 假如用户最终完成拍照，则通过 BitmapFactory 获取图片的详细信息
+- 假如用户最终取消拍照，则直接删除创建的临时文件
 - 由于图片是保存在应用自身的私有目录中，因此不需要申请任何权限，也正因为是私有目录，所以图片不会出现在系统相册中
 
 ```kotlin
 /**
  *  通过 FileProvider 来生成拍照所需要的 ImageUri
- *  无需申请权限
- *  所拍的照片不会保存在系统相册里
+ *  无需申请权限，所拍的照片不会保存在系统相册里
  *  外部必须配置 FileProvider，并在此处传入 authority
  */
+@Parcelize
 class FileProviderCaptureStrategy(private val authority: String) : CaptureStrategy {
 
+    @IgnoredOnParcel
     private val uriFileMap = mutableMapOf<Uri, File>()
 
     override fun isEnabled(): Boolean {
@@ -295,36 +306,39 @@ class FileProviderCaptureStrategy(private val authority: String) : CaptureStrate
 
     override suspend fun createImageUri(context: Context): Uri? {
         return withContext(context = Dispatchers.IO) {
-            return@withContext try {
-                val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-                val tempFile = File.createTempFile(
-                    createImageName(),
-                    "",
-                    storageDir
-                )
-                val uri = FileProvider.getUriForFile(
-                    context,
-                    authority,
-                    tempFile
-                )
-                uriFileMap[uri] = tempFile
-                return@withContext uri
+            try {
+                val tempFile = createTempFile(context = context)
+                if (tempFile != null) {
+                    val uri = FileProvider.getUriForFile(context, authority, tempFile)
+                    uriFileMap[uri] = tempFile
+                    return@withContext uri
+                }
             } catch (e: Throwable) {
                 e.printStackTrace()
-                null
             }
+            return@withContext null
         }
     }
 
-    override suspend fun loadResources(context: Context, imageUri: Uri): MediaResources {
+    private fun createTempFile(context: Context): File? {
+        val storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+        val file = File(storageDir, createImageName())
+        if (file.createNewFile()) {
+            return file
+        }
+        return null
+    }
+
+    override suspend fun loadResource(context: Context, imageUri: Uri): MediaResource {
         return withContext(context = Dispatchers.IO) {
             val imageFile = uriFileMap[imageUri]!!
-            uriFileMap.remove(imageUri)
+            uriFileMap.remove(key = imageUri)
             val imageFilePath = imageFile.absolutePath
             val option = BitmapFactory.Options()
             option.inJustDecodeBounds = true
             BitmapFactory.decodeFile(imageFilePath, option)
-            return@withContext MediaResources(
+            return@withContext MediaResource(
+                id = 0,
                 uri = imageUri,
                 displayName = imageFile.name,
                 mimeType = option.outMimeType ?: "",
@@ -341,11 +355,11 @@ class FileProviderCaptureStrategy(private val authority: String) : CaptureStrate
 
     override suspend fun onTakePictureCanceled(context: Context, imageUri: Uri) {
         withContext(context = Dispatchers.IO) {
-            val imageFile = uriFileMap[imageUri]!!
-            uriFileMap.remove(imageUri)
-            if (imageFile.exists()) {
+            val imageFile = uriFileMap[imageUri]
+            if (imageFile != null && imageFile.exists()) {
                 imageFile.delete()
             }
+            uriFileMap.remove(key = imageUri)
         }
     }
 
@@ -386,9 +400,9 @@ class FileProviderCaptureStrategy(private val authority: String) : CaptureStrate
 MediaStoreCaptureStrategy 采用的策略就是：
 
 - 在大于等于 10 的系统版本中，不申请 WRITE_EXTERNAL_STORAGE 权限，其它系统版本则进行申请
-- 通过 MediaStore 向系统预创建一张图片，从而得到待写入的 imageUri
-- 假如用户最终取消拍照，则通过 MediaStore 删除 imageUri 指向的脏数据
+- 通过 MediaStore 在系统相册中预创建一张图片，从而得到待写入的 imageUri
 - 假如用户最终完成拍照，则通过 MediaStore 去查询 imageUri 对应图片的详细信息
+- 假如用户最终取消拍照，则通过 MediaStore 删除 imageUri 指向的脏数据
 - 由于图片一开始就保存在 MediaStore 中，因此图片会显示在系统相册中
 
 ```kotlin
@@ -397,6 +411,7 @@ MediaStoreCaptureStrategy 采用的策略就是：
  *  根据系统版本决定是否需要申请 WRITE_EXTERNAL_STORAGE 权限
  *  所拍的照片会保存在系统相册里
  */
+@Parcelize
 class MediaStoreCaptureStrategy : CaptureStrategy {
 
     override fun isEnabled(): Boolean {
@@ -417,11 +432,8 @@ class MediaStoreCaptureStrategy : CaptureStrategy {
         return MediaProvider.createImage(context = context, fileName = createImageName())
     }
 
-    override suspend fun loadResources(context: Context, imageUri: Uri): MediaResources? {
-        return MediaProvider.loadResources(
-            context = context,
-            uri = imageUri
-        )
+    override suspend fun loadResource(context: Context, imageUri: Uri): MediaResource? {
+        return MediaProvider.loadResources(context = context, uri = imageUri)
     }
 
     override suspend fun onTakePictureCanceled(context: Context, imageUri: Uri) {
@@ -431,20 +443,72 @@ class MediaStoreCaptureStrategy : CaptureStrategy {
 }
 ```
 
+## SmartCaptureStrategy
+
+此策略同时包含 FileProviderCaptureStrategy 和 MediaStoreCaptureStrategy，因此外部也需要像 FileProviderCaptureStrategy 一样配置 FileProvider，通过 authorities 来实例化 SmartCaptureStrategy
+
+- 当系统版本小于 Android 10 时，执行 FileProviderCaptureStrategy 策略
+- 当系统版本大于等于 Android 10 时，执行 MediaStoreCaptureStrategy 策略
+
+此策略既无需申请权限，又可以在 Android 10 开始之后的系统版本将拍照所得照片存入到相册中，同时平衡了 “权限” 和 “用户体验”
+
+```kotlin
+/**
+ * 根据系统版本智能选择拍照策略
+ * 既避免需要申请权限，又可以在系统允许的情况下将拍照所得照片存入到系统相册中
+ * 当系统版本小于 Android 10 时，执行 FileProviderCaptureStrategy 策略
+ * 当系统版本大于等于 Android 10 时，执行 MediaStoreCaptureStrategy 策略
+ */
+@Parcelize
+@Suppress("CanBeParameter")
+class SmartCaptureStrategy(private val authority: String) : CaptureStrategy {
+
+    @IgnoredOnParcel
+    private val proxy = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        MediaStoreCaptureStrategy()
+    } else {
+        FileProviderCaptureStrategy(authority = authority)
+    }
+
+    override fun isEnabled(): Boolean {
+        return proxy.isEnabled()
+    }
+
+    override fun shouldRequestWriteExternalStoragePermission(context: Context): Boolean {
+        return proxy.shouldRequestWriteExternalStoragePermission(context = context)
+    }
+
+    override suspend fun createImageUri(context: Context): Uri? {
+        return proxy.createImageUri(context = context)
+    }
+
+    override suspend fun loadResource(context: Context, imageUri: Uri): MediaResource? {
+        return proxy.loadResource(context = context, imageUri = imageUri)
+    }
+
+    override suspend fun onTakePictureCanceled(context: Context, imageUri: Uri) {
+        proxy.onTakePictureCanceled(context = context, imageUri = imageUri)
+    }
+
+}
+```
+
 ## 总结
 
-所以说，除了 NothingCaptureStrategy 代表不开启拍照功能外，其他两种策略所需要的权限和图片存储的位置都不一样，对用户的感知也不一样
+所以说，除了 NothingCaptureStrategy 代表不开启拍照功能外，其他三种策略所需要的权限和图片存储的位置都不一样，对用户的感知也不一样
 
-| 拍照策略                    | 所需权限                                                     | 配置项                    | 对用户是否可见                             |
-| --------------------------- | ------------------------------------------------------------ | ------------------------- | ------------------------------------------ |
-| NothingCaptureStrategy      |                                                              |                           |                                            |
-| FileProviderCaptureStrategy | 无                                                           | 外部需要配置 FileProvider | 否，图片存储在应用私有目录内，对用户不可见 |
-| MediaStoreCaptureStrategy   | Android 10 之前需要 WRITE_EXTERNAL_STORAGE 权限，Android 10 开始不需要权限 | 无                        | 是，图片存储在系统相册内，对用户可见       |
+| 拍照策略 | 需要的权限 | 配置项 | 图片对用户是否可见 |
+| --- | --- | --- | --- |
+| NothingCaptureStrategy |  |  |  |
+| FileProviderCaptureStrategy | 无 | 需要配置 FileProvider | 否，图片存储在应用私有目录内，对用户不可见 |
+| MediaStoreCaptureStrategy | Android 10 之前需要 WRITE_EXTERNAL_STORAGE 权限，Android 10 开始不需要权限 | 无 | 是，图片存储在系统相册内，对用户可见 |
+| SmartCaptureStrategy | 无 | 需要配置 FileProvider | 在 Android 10 之前的系统版本不可见，和 FileProviderCaptureStrategy 一样。在 Android 10 开始之后的系统版本可见，和 MediaStoreCaptureStrategy 一样 |
 
-开发者根据自己的实际情况来决定选择哪一种策略：
 
-- 如果应用本身就需要申请 WRITE_EXTERNAL_STORAGE 权限的话，选 MediaStoreCaptureStrategy，拍照后的图片保存在系统相册中也比较符合用户的认知
-- 如果应用本身就不需要申请 WRITE_EXTERNAL_STORAGE 权限的话，选 FileProviderCaptureStrategy，为了相册问题而多申请一个敏感权限得不偿失
+开发者根据自己的实际情况来选择拍照策略：
+
+- 如果应用本身就需要申请 WRITE_EXTERNAL_STORAGE 权限的话，选 MediaStoreCaptureStrategy，拍摄的图片会保存在系统相册中也比较符合用户的认知
+- 如果应用本身就不需要申请 WRITE_EXTERNAL_STORAGE 权限的话，选 FileProviderCaptureStrategy 或者 SmartCaptureStrategy，为了相册问题而多申请一个敏感权限得不偿失
 
 # 拍照权限
 
@@ -463,17 +527,13 @@ Android 系统对于 CAMERA 权限有着比较奇怪的要求：
 
 ```kotlin
 private fun requestCameraPermissionIfNeed() {
+    val cameraPermission = Manifest.permission.CAMERA
     if (PermissionUtils.containsPermission(
             context = this,
-            permission = Manifest.permission.CAMERA
-        )
-        &&
-        !PermissionUtils.checkSelfPermission(
-            context = this,
-            permission = Manifest.permission.CAMERA
-        )
+            permission = cameraPermission
+        ) && !PermissionUtils.checkSelfPermission(context = this, permission = cameraPermission)
     ) {
-        requestCameraPermission.launch(Manifest.permission.CAMERA)
+        requestCameraPermissionLauncher.launch(cameraPermission)
     } else {
         takePicture()
     }
@@ -482,7 +542,7 @@ private fun requestCameraPermissionIfNeed() {
 internal object PermissionUtils {
 
     /**
-     * 检查是否已授权指定权限
+     * 判断是否拥有指定权限
      */
     fun checkSelfPermission(context: Context, permission: String): Boolean {
         return ActivityCompat.checkSelfPermission(
@@ -492,11 +552,11 @@ internal object PermissionUtils {
     }
 
     /**
-     * 检查应用的 Manifest 文件是否声明了指定权限
+     * 检查应用是否声明了指定权限
      */
     fun containsPermission(context: Context, permission: String): Boolean {
-        val packageManager: PackageManager = context.packageManager
         try {
+            val packageManager: PackageManager = context.packageManager
             val packageInfo = packageManager.getPackageInfo(
                 context.packageName,
                 PackageManager.GET_PERMISSIONS
@@ -516,7 +576,7 @@ internal object PermissionUtils {
 
 # 取消拍照导致的脏数据
 
-在文章开头给出来的知乎官方 App 示例中可以看到，Pictures 目录明明显示有三张图片，但点击进去又发现目录是空的。这是由于 MediaStore 中存在脏数据导致的
+在文章开头给出来的知乎 App 示例图片中可以看到，Pictures 目录明明显示有三张图片，但点击进去又发现目录是空的。这是由于 MediaStore 中存在脏数据导致的
 
 当应用通过 MediaStoreCaptureStrategy 来启动相机时，已经先向 MediaStore 插入一条图片数据了，但如果用户此时又取消了拍照，就会导致 MediaStore 中存在一条脏数据：该数据有 id、uri、path、displayName 等信息，但对应的图片文件实际上并不存在。知乎 App 应该是一开始在归类图片目录的时候没有检查图片是否真的存在，等到要加载图片的时候才发现图片不可用
 
@@ -542,15 +602,18 @@ Matisse 在启动系统相机的时候也是如此，会先通过 `resolveActivi
 
 ```kotlin
 private fun takePicture() {
-    lifecycleScope.launch {
-        val imageUri = captureStrategy.createImageUri(context = this@MatisseActivity)
-        tempImageUri = imageUri
-        if (imageUri != null) {
-            val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (captureIntent.resolveActivity(packageManager) != null) {
+    lifecycleScope.launch(context = Dispatchers.Main.immediate) {
+        tempImageUriForTakePicture = null
+        val captureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        if (captureIntent.resolveActivity(packageManager) != null) {
+            val imageUri = captureStrategy.createImageUri(context = applicationContext)
+            if (imageUri != null) {
+                tempImageUriForTakePicture = imageUri
                 takePictureLauncher.launch(imageUri)
+                return@launch
             }
         }
+        canceled()
     }
 }
 ```
@@ -559,7 +622,7 @@ private fun takePicture() {
 
 如果应用的目标平台是 Android 11 或更高版本，那么当应用通过 `queryIntentActivities()、getPackageInfo()、getInstalledApplications()` 等方法查询设备上已安装的其它应用相关信息时，系统会默认对返回结果进行过滤。也就是说，通过这些方法查询到的应用信息会少于设备上真实安装的应用数。`resolveActivity` 方法也受到此影响，经测试，在 Android 11 和 Android 12 的模拟器上，resolveActivity 方法均会返回 null，但在一台 Android 12 的真机上返回值则不为 null，因为不同设备会根据自己的实际情况来决定哪些实现 Android 核心功能的系统服务对所有应用均可见
 
-Matisse 的解决方案是：在 Manifest 文件中通过 `queries` 主动声明 IMAGE_CAPTURE，从而提高对此 action 的可见性 
+Matisse 的解决方案是：在 Manifest 文件中通过 `queries` 主动声明 IMAGE_CAPTURE，从而提高对此 action 的可见性
 
 ```kotlin
 <queries>
@@ -582,13 +645,13 @@ val filePath: String = xxx
 imageView.load(File(filePath).readBytes())
 ```
 
-而到了 Android 11 后，Google 可能觉得这种限制对于应用来说过于严格，因此又取消了限制，允许应用继续通过 File API 来读写共享文件，系统会自动将 File API 重定向为 MediaStore API  =_=
+而到了 Android 11 后，Google 可能觉得这种限制对于应用来说过于严格，因此又取消了限制，允许应用继续通过 File API 来读写共享文件，系统会自动将 File API 重定向为 MediaStore API，稍稍有点无语……
 
 因此，虽然 Matisse 的返回值中包含了图片的绝对路径 path，但如果外部开启了分区存储特性的话，在 Android 10 设备上是不能直接通过 File API 来读写共享文件的，在其它系统版本上则可以继续使用
 
 # Github
 
-以上就是 Matisse 的一些实现细节和遇到的系统兼容性问题，更多实现细节请看 Github：[Matisse](https://github.com/leavesCZY/Matisse) 
+以上就是 Matisse 的一些实现细节和遇到的系统兼容性问题，更多实现细节请看 Github：[Matisse](https://github.com/leavesCZY/Matisse)
 
 Matisse 同时也发布到了 Jitpack，方便开发者直接远程依赖使用：
 

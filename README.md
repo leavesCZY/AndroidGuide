@@ -18,7 +18,7 @@
 
 
 - 开源库
-  - [Matisse : 一个用 Jetpack Compose 实现的图片选择框架](https://github.com/leavesCZY/Matisse)
+  - [Matisse : Jetpack Compose 实现一个图片选择框架](https://github.com/leavesCZY/Matisse)
   - [compose_chat : Jetpack Compose 最佳实践，用 Jetpack Compose 写一个 IM APP](https://github.com/leavesCZY/compose_chat)  
   - [compose_tetris : 不止 Android，Compose Multiplatform 实现 Android + Desktop 俄罗斯方块](https://github.com/leavesCZY/compose_tetris)
   - [ASM_Transform : 字节码插桩实战](https://github.com/leavesCZY/ASM_Transform)
