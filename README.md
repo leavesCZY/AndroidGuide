@@ -14,10 +14,11 @@
 
 <p align="center"></p>
 
-<div align=center><img src ="https://user-images.githubusercontent.com/30774063/232224779-9c1cbd5d-d7e3-42a3-908f-172501ef4f1d.jpg"/></div>
+<div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/72143122-c21d-4de3-8fc0-d3a0b17c0a60"/></div>
 
 
 - Android
+  - [推荐几个开源项目，也许对你有所帮助](https://juejin.cn/post/7256386855720976443)
   - [Android 13 媒体权限适配指南](https://juejin.cn/post/7159999910748618766)
   - [Android WebView H5 秒开方案总结](https://juejin.cn/post/7016883220025180191)
   - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
