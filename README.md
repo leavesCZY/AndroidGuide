@@ -55,12 +55,13 @@
   - [学不动也要学，Jetpack Compose 实现自定义绘制](https://juejin.cn/post/6996568363581308959)
 
 - 字节码插桩
-  - [ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
-  - [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
   - [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   - [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
   - [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
   - [ASM 字节码插桩：监控大图加载](https://juejin.cn/post/7074970389188706318)
+  - [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
+  - [ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
+  - [Android 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
 
 - Kotlin
   - [两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438)
