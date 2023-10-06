@@ -1,20 +1,20 @@
 # <p align="center"> AndroidGuide </p>
 
-<p align="center">🎁🎁🎁 这是一份给 Android Developer 的进阶学习笔记，希望对你有所帮助 🤣🤣🤣</p>
+<p align="center">Android Developer 进阶学习笔记，希望对你有所帮助 😃😃😃</p>
 
 <p align="center">欢迎关注公众号，第一时间看最新文章</p>
 
 # <p align="center"><a href=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image>字节数组</a></p>
 
-<div align=center><img src ="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image"/></div>
+<div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/47451bed-95f6-40bd-813e-11abba638722"/></div>
 
 <p align="center"></p>
 
-<p align="center">原创不易，欢迎打赏 🤣🤣🤣</p>
+<p align="center">原创不易，欢迎打赏 😆😆😆</p>
 
 <p align="center"></p>
 
-<div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/72143122-c21d-4de3-8fc0-d3a0b17c0a60"/></div>
+<div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/46981435-9ae0-4f7b-8063-f9dd33c67f5b"/></div>
 
 
 - Android
@@ -45,11 +45,11 @@
   - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
 
 - Jetpack Compose
-  - [Jetpack Compose 实现完美屏幕适配](https://juejin.cn/post/7113953940282015758)
-  - [Jetpack Compose 写一个图片选择框架](https://juejin.cn/post/7108420791502372895)
-  - [Jetpack Compose 写一个 BottomSheetDialog](https://juejin.cn/post/7151792921698631717)
   - [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)  
   - [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
+  - [Jetpack Compose 实现完美屏幕适配](https://juejin.cn/post/7113953940282015758)  
+  - [Jetpack Compose 写一个图片选择框架](https://juejin.cn/post/7108420791502372895)
+  - [Jetpack Compose 写一个 BottomSheetDialog](https://juejin.cn/post/7151792921698631717)
   - [学不动也要学，Jetpack Compose 写一个 IM APP（一）](https://juejin.cn/post/6991429231821684773)
   - [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
   - [学不动也要学，Jetpack Compose 写一个俄罗斯方块](https://juejin.cn/post/6974585048762679310)
