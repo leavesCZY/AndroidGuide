@@ -4,7 +4,7 @@
 
 <p align="center">欢迎关注公众号，第一时间看最新文章</p>
 
-# <p align="center"><a href=https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image>字节数组</a></p>
+# <p align="center"><a href=https://github.com/leavesCZY/AndroidGuide/assets/30774063/47451bed-95f6-40bd-813e-11abba638722>字节数组</a></p>
 
 <div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/47451bed-95f6-40bd-813e-11abba638722"/></div>
 
