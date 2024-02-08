@@ -16,17 +16,19 @@
 
 <div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/48974bd7-c602-427f-a4bc-3fdb0718d550"/></div>
 
+
 - 个人开源库
   - [Trace：一个 Android 字节码插桩库](https://github.com/leavesCZY/Trace)
   - [Matisse：一个用 Jetpack Compose 实现的 Android 图片/视频 选择框架](https://github.com/leavesCZY/Matisse)
   - [Monitor：一个适用于 OkHttp / Retrofit 的可视化抓包工具](https://github.com/leavesCZY/Monitor)
   - [compose_chat：Jetpack Compose 最佳实践，用 Jetpack Compose 写一个 IM APP](https://github.com/leavesCZY/compose_chat)
   - [compose_tetris：不止 Android，用 Compose Multiplatform 实现一个 Android + Desktop 平台的俄罗斯方块](https://github.com/leavesCZY/compose_tetris)
-  - [KVHolder：一个基于 Kotlin 语法对 MMKV 进行封装的 key-value 存储库，简化了 MMKV 的使用步骤](https://github.com/leavesCZY/KVHolder)
   - [asm-samples：Android 字节码插桩实战](https://github.com/leavesCZY/asm-samples)
+  - [KVHolder：一个基于 Kotlin 语法对 MMKV 进行封装的 key-value 存储库，简化了 MMKV 的使用步骤](https://github.com/leavesCZY/KVHolder)  
   - [RobustWebView：Android WebView H5 秒开方案总结](https://github.com/leavesCZY/RobustWebView)
-  - [SmallestWidthGenerator：一文读懂 Android 主流屏幕适配方案](https://github.com/leavesCZY/SmallestWidthGenerator)
+  - [SmallestWidthGenerator：基于 SmallestWidth 屏幕适配方案生成 dimens 文件](https://github.com/leavesCZY/SmallestWidthGenerator)
   - [EventLiveData：Jetpack LiveData 功能扩展](https://github.com/leavesCZY/EventLiveData)
+
 - Android
   - [App 出海实践：Google Play 结算系统](https://juejin.cn/post/7271991667245744165)
   - [推荐几个开源项目，也许对你有所帮助](https://juejin.cn/post/7256386855720976443)
@@ -53,6 +55,7 @@
   - [一文快速入门 Dagger2](https://github.com/leavesCZY/Dagger2Samples)
   - [一文快速入门 DataBinding](https://github.com/leavesCZY/DataBindingSamples)
   - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
+
 - 字节码插桩
   - [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   - [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
@@ -61,6 +64,7 @@
   - [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
   - [ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
   - [Android 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
+
 - Jetpack 源码解析
   - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
   - [从源码看 Jetpack（一）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
@@ -70,6 +74,7 @@
   - [从源码看 Jetpack（五）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
   - [从源码看 Jetpack（六）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
   - [从源码看 Jetpack（七）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
+
 - Jetpack Compose
   - [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)  
   - [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
@@ -80,6 +85,7 @@
   - [学不动也要学，Jetpack Compose 写一个 IM APP（二）](https://juejin.cn/post/7028397244894330917)
   - [学不动也要学，Jetpack Compose 写一个俄罗斯方块](https://juejin.cn/post/6974585048762679310)
   - [学不动也要学，Jetpack Compose 实现自定义绘制](https://juejin.cn/post/6996568363581308959)
+
 - Kotlin
   - [两万六千字带你 Kotlin 入门](https://juejin.cn/post/6880602489297895438)
   - [一文快速入门 Kotlin 协程](https://juejin.cn/post/6908271959381901325)  
@@ -95,6 +101,7 @@
   - [【译】kotlin 协程官方文档（七）- 异常处理](https://juejin.cn/post/6844904103080886285)
   - [【译】kotlin 协程官方文档（八）- 共享可变状态和并发性](https://juejin.cn/post/6844904104053964808)
   - [【译】kotlin 协程官方文档（九）- 选择表达式](https://juejin.cn/post/6844904106788667400)
+
 - 开源库源码解析
   - [Android 主流开源库源码分析（一）- EventBus 源码详解](https://juejin.cn/post/6881265680465788936)
   - [Android 主流开源库源码分析（二）- EventBus 自己实现一个](https://juejin.cn/post/6881808026647396366)
@@ -109,10 +116,12 @@
   - [Android 主流开源库源码分析（十一）- OkHttp 源码详解](https://juejin.cn/post/6895369745445748749)
   - [Android 主流开源库源码分析（十二）- OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
   - [Android 主流开源库源码分析（十三）- 可能是全网第一篇 Coil 源码分析文章](https://juejin.cn/post/6897872882051842061)
+
 - 集合框架源码解析
   - [Java & Android 集合框架须知须会（一）](https://juejin.cn/post/6901317365561032712)
   - [Java & Android 集合框架须知须会（二）](https://juejin.cn/post/6931007634028003341)
   - [Java & Android 集合框架须知须会（三）](https://juejin.cn/post/6931563785245163534)
+
 - 多线程编程
   - [Java 多线程编程（一）- 什么是多线程](https://juejin.cn/post/6899452217528025095)
   - [Java 多线程编程（二）- 怎么实现多线程同步](https://juejin.cn/post/6900428838497419278)
