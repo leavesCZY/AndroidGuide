@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在 2019 年的 Google/IO 大会上，亮相了一个全新的 Android 原生 UI 开发框架 Jetpack Compose。与 IOS 的 SwiftUI 一样，Jetpack Compose 也是一个声明式的 UI  框架，随着 Android 和 IOS 两大移动平台相继推出了自己平台专属的声明式 UI 框架，标志着整个行业已开始转向声明性界面模型，该模型大大简化了与构建和更新界面关联的工程设计
 
 经过两年多的打磨，到了 2021 年七月底，Google 正式发布了 Jetpack Compose 的 1.0 版本，这是 Compose 的稳定版本，可供开发者在生产环境中使用

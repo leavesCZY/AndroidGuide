@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 历经两年的打磨，在 2021 年七月底的时候，Google 终于发布了 Jetpack Compose 的正式版本。我对 Jetpack Compose 的很多特性都很感兴趣，也觉得其很可能会成为以后 Android 原生应用开发时的首选技术方案，所以在正式版发布之前就开始了一次实战演练，花了两个月时间断断续续写了一个完全用 Jetpack Compose 实现的 IM APP，实现了基本的聊天功能，同时也写了一篇文章对其进行介绍：[学不动也要学，Jetpack Compose 写一个 IM APP](https://juejin.cn/post/6991429231821684773) 
 
 在文章中，我以 [compose_chat](https://github.com/leavesCZY/compose_chat) 为例，详细地介绍了 Jetpack Compose 的很多重要概念和基础特性，包括：

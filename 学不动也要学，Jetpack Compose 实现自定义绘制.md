@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 我曾经分别在不同平台上实现了同一种自定义效果
 
 <img src="https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/8562d4c1f32e4eeaab4471e0aa01a64c~tplv-k3u1fbpfcp-watermark.image" style="zoom:80%;" /><img src="https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/aa19f7beedf3483da85bf8948c7c043d~tplv-k3u1fbpfcp-watermark.image" style="zoom:80%;" />

@@ -1,8 +1,4 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
-> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣🤣
 
 [LeakCanary](https://github.com/square/leakcanary/) 是由 [Square](https://github.com/square) 公司开源的用于 Android 的内存泄漏检测工具，可以帮助开发者发现内存泄露情况并且找出泄露源头，有助于减少 `OutOfMemoryError` 情况的发生。在目前的应用开发中也算作是性能优化的一个重要实现途径，很多面试官在考察性能优化时都会问到 LeakCanary 的实现原理
 

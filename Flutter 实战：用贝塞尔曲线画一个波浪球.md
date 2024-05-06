@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 当 flutter 的现有组件无法满足产品要求的 UI 效果时，我们就需要通过自绘组件的方式来进行实现了。本篇文章就来介绍如何用 flutter 自定义实现一个带文本的波浪球，效果如下所示：
 
 ![](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/c4a23268ff864004a6dda427b8d4f0a7~tplv-k3u1fbpfcp-zoom-1.image)

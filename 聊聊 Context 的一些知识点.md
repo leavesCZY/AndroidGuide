@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 Context 在我们的日常开发中经常会使用到，在代码层次上指的是**一个抽象类**，在概念上指的是**上下文环境**，在功能上则起到了**访问系统服务及系统资源的作用**。Activity、Service 和 Application 都间接地继承于 Context
 
 Context 是一个抽象类，像我们平时经常使用的 `startActivity、sendBroadcast、getSharedPreferences`等方法都是由其来定义的，Context 的大体继承关系如下图所示

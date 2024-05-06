@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 最近的项目需要实现一个 Android 手机之间无网络传输文件的功能，就研究了下 Wifi P2P（Wifi点对点) 这么一个功能，最后也实现了通过 Wifi 隔空传输文件 的功能，这里我也来整理下代码，分享给大家
 
 Wifi P2P 是在 Android 4.0 以及更高版本系统中加入的功能，通过 Wifi P2P 可以在不连接网络的情况下，直接与配对的设备进行数据交换。相对于蓝牙，Wifi P2P 的搜索速度和传输速度更快，传输距离更远

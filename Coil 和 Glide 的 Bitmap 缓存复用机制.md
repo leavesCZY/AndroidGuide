@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 Android 开发者最熟悉的图片加载框架应该是 Glide 和 Picasso 这两个了，最近两年也出现了一个后起之秀：Coil
 
 [Coil](https://github.com/coil-kt/coil) 是一个新兴的 Android 图片加载库，Coil 的名字由来：**Co**routine，**I**mage 和 **L**oader 得到 Coil，其特点有：

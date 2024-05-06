@@ -1,8 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->  
-> 希望对你有所帮助 🤣🤣
-
-
 知乎的 [Matisse](https://github.com/zhihu/Matisse) 应该有蛮多的 Android 开发者有了解过或者是曾经使用过，这是知乎在 2017 年开源的一个 Android 端图片选择框架，其颜值在现在看来也还是挺不错的
 
 ![](https://upload-images.jianshu.io/upload_images/2552605-9504d5d974f9c21e.png#id=FnSsV&originHeight=507&originWidth=826&originalType=binary&ratio=1&rotation=0&showTitle=false&status=done&style=none&title=)

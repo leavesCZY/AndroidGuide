@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在 2019 年 Google I/O 大会上，Google 宣布了今后 Android 开发将优先使用 Kotlin ，即 Kotlin-first，随之在 Android 开发界兴起了一阵全民学习 Kotlin 的热潮。之后 Google 也推出了一系列用 Kotlin 实现的 ktx 扩展库，例如 `activity-ktx`、`fragment-ktx`、`core-ktx`等，提供了各种方便的扩展方法用于简化开发者的工作，Kotlin 协程目前也是官方在 Android 上进行异步编程的推荐解决方案
 
 Google 推荐优先使用 Kotlin，也宣称不会放弃 Java，但目前各种 ktx 扩展库还是需要由 Kotlin 代码进行使用才能最大化地享受到其便利性，Java 代码来调用显得有点不伦不类。作为 Jetpack 主要组件之一的 Paging 3.x 版本目前也已经完全用 Kotlin 实现，为 Kotlin 协程提供了一流的支持。刚出正式版本不久的 Jetpack Compose 也只支持 Kotlin，Java 无缘声明式 UI

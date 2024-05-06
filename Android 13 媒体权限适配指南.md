@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在 Android 系统最近的几个大版本里，更新方向有很大一部分都集中在了隐私安全这一方面，每个版本都会新增隐私安全限制，或者是对之前的隐私项进行进一步的升级
 
 - Android 10。分区存储、限制访问不可重置的硬件标识符、限制对剪贴板数据的访问权限

@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣🤣
-
 # 一、Trace
 
 在最近的一年多时间里，我先后写过六篇关于 Android 字节码插桩的文章，一共对应四个功能点

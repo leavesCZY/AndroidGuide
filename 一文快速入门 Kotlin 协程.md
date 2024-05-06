@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在今年的三月份，我因为需要为项目搭建一个新的网络请求框架开始接触 Kotlin 协程。那时我司项目中同时存在着两种网络请求方式，采用的技术栈各不相同，Java、Kotlin、RxJava、LiveData 各种混搭，技术栈的不统一长远来看肯定是会造成很多不便的，所以就打算封装一个新的网络请求框架来作为项目的统一规范（前面的人估计也是这么想的，所以就造成了同个项目中的网络请求方式越来越多 😂😂），那么就需要考虑采用什么技术栈来实现了
 
 采用 Kotlin 语言来实现必不可少，都这年头了还用 Java 也说不过去。Retrofit 也必不可少，而目前 Retrofit 也已经支持 Kotlin 协程了，Google 官方推出的 Jetpack 协程扩展库也越来越多，就最终决定弃用 RxJava 拥抱 Kotlin 协程，将协程作为技术栈之一

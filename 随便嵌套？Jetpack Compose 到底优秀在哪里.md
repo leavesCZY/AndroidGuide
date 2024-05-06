@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 单纯看官方的介绍或者是网络上的文章，开发者也许已经对 Jetpack Compose 有这么一个印象了：**使用 Jetpack Compose 时我们可以深层次地嵌套布局而不用担心会影响性能**。这是 Google 在介绍 Jetpack Compose 时经常拿来和原生 View 体系进行比较的一个特性，也是介绍其优势时的一个着重点，本文就来介绍这一方面的相关知识点，涉及到的内容有：
 
 - 原生 View 体系下，我们一直强调 **要减少布局的嵌套层次**，那这么做的意义是什么呢

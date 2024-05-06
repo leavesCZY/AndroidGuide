@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 你的童年是否有**俄罗斯方块**呢 🤣🤣 本文就来介绍如何通过 Jetpack Compose 实现一个俄罗斯方块 ~~
 
 先看下效果图，功能还是挺完善的

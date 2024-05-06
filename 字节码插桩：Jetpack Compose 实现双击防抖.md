@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 Android 开发者们对 Jetpack Compose 应该已经很熟悉了吧？我在项目中也已经大规模应用了 Jetpack Compose，极大地解放了开发者的心智负担
 
 最近我想要来为项目做一些能够提升 **应用性能** 或者是 **用户体验** 的优化项，想了想就敲定了一个目标：通过字节码插桩的方式，来为项目中所有和 Jetpack Compose 关联的业务实现全局的双击防抖功能

@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 # 一、概述
 
 在 RxJava 中，一个实现了 `Observer` 接口的对象可以订阅一个 `Observable` 类的实例。订阅者对 `Observable` 发射的任何数据或数据序列作出响应。这种模式简化了并发操作，因为它不需要阻塞等待 `Observable` 发射数据，而是创建了一个处于待命状态的观察者哨兵，哨兵在未来某个时刻响应 `Observable` 的通知。RxJava 提供了一套异步编程的 API，并且支持链式调用，所以使用 RxJava 编写的代码的逻辑会非常简洁

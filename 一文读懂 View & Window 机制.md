@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 Android 系统中，Window 在代码层次上是一个抽象类，在概念上表示的是一个窗口。Android 中所有的视图都是通过 Window 来呈现的，例如 Activity、Dialog 和 Toast 等，它们实际上都是挂载在 Window 上的。大部分情况下应用层开发者很少需要来和 Window 打交道，Activity 已经隐藏了 Window 的具体实现逻辑了，但我觉得来了解 Window 机制的一个比较大的好处是**可以加深我们对 View 绘制流程以及事件分发机制的了解**，这两个操作就涉及到我们的日常开发了，实现自定义 View 和解决 View 的滑动冲突时都需要我们掌握这方面的知识点，而这两个操作和 Window 机制有很大的关联。视图树只有被挂载到 Window 后才会触发视图树的绘制流程，之后视图树才有机会接收到用户的触摸事件。也就是说，视图树被挂载到了 Window 上是 Activity 和 Dialog 能够展示到屏幕上且和用户做交互的前置条件
 
 本文就以 Activity 为例子，展开讲解 Activity 是如何挂载到 Window 上的，基于 Android API 30 进行分析，希望对你有所帮助 🤣🤣

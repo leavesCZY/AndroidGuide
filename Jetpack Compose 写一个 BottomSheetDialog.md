@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 BottomSheetDialog 是 Android Material 库中提供的一个弹窗类，其特点就是会从屏幕底部弹出，支持拖拽回弹效果，以及拖拽关闭弹窗，在 Android 应用开发中广泛应用
 
 Jetpack Compose 也提供了一个同样的弹窗效果，即 Compose Material 库中的 BottomSheetScaffold，其将整体页面分为了 `content`  和 `sheetContent` 两个区域，`content` 代表的是常驻状态的主屏幕布局，`sheetContent` 代表的是想从底部弹出的布局

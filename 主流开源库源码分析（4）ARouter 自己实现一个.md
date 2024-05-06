@@ -1,8 +1,4 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
-> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣
+> 对于 Android Developer 来说，很多开源库都是属于**开发必备**的知识点，从使用方式到实现原理再到源码解析，这些都需要我们有一定程度的了解和运用能力。所以我打算来写一系列关于开源库**源码解析**和**实战演练**的文章，初定的目标是 **EventBus、ARouter、LeakCanary、Retrofit、Glide、OkHttp、Coil** 等七个知名开源库，希望对你有所帮助 🤣🤣🤣
 
 上一篇文章中对 ARouter 的源码进行了一次全面解析，原理懂得了，那么就也需要进行一次实战才行。对于一个优秀的第三方库，开发者除了要学会如何使用外，更有难度的用法就是去了解实现原理、懂得如何改造甚至自己实现。本文就来自己动手实现一个路由框架，自己实现的目的不在于做到和 ARouter 一样功能完善，而只是一个练手项目，目的是在于加深对 ARouter 的原理理解，所以自己的自定义实现就叫 EasyRouter 吧 😂😂
 

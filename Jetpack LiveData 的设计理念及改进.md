@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 # 一、架构指南
 
 在日常的开发中，我们经常会讲到 MVC、MVP、MVVM 等多种开发模式，这其实都是**应用架构**的不同呈现方式，你目前又是使用的什么应用架构呢？

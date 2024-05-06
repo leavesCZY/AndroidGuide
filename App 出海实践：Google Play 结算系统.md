@@ -1,8 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->  
-> 希望对你有所帮助 🤣🤣🤣
-
-
 现如今，App 出海热度不减，是很多公司和个人开发者选择的一个市场方向。App 为了实现盈利，除了接入广告这种最常见的变现方式外，就是通过提供各类虚拟商品或者是会员服务来吸引用户付费了，此时 Google Play 结算系统（Google Play's billing system）就是 Android 端应用必须使用到的一个支付渠道了
 
 Google 对 Google Play 结算系统的简介：Google Play's billing system is a service that enables you to sell digital products and content in your Android app, whether you want to monetize through one-time purchases or offer subscriptions to your services. Google Play offers a full set of APIs for integration with both your Android app and your server backend that unlock the familiarity and safety of Google Play purchases for your users.

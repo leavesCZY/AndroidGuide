@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在 Google 刚正式发布 Jetpack Compose 1.0 release 版本的时候，我花了一个多月的时间进行了一次实战演练，用 Jetpack Compose 实现了一个 IM App，提供了完备的聊天功能，并在 Github 开源了：[compose_chat](https://github.com/leavesCZY/compose_chat)
 
 ![](https://p1-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/7085f204d3b8487ca7d6aedc50ab66c5~tplv-k3u1fbpfcp-watermark.image?)

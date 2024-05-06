@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 很多开发者都了解这么一个知识点：在 Activity 的 `onCreate` 方法里我们无法直接获取到 View 的宽高信息，但通过 `View.post(Runnable)`这种方式就可以，那背后的具体原因你是否有了解过呢？
 
 读者可以尝试以下操作。可以发现，除了通过 `View.post(Runnable)`这种方式可以获得 View 的真实宽高外，其它方式取得的值都是 0

@@ -1,7 +1,3 @@
-> 公众号：[字节数组](https://p3-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/adbc507fc3704fd8955aae739a433db2~tplv-k3u1fbpfcp-zoom-1.image)
->
-> 希望对你有所帮助 🤣🤣
-
 在 2021 年的七月份，Google 发布了 Jetpack Compose 的 1.0 正式版本，这是一个适用于 Android 平台的声明式 UI 开发框架，可供开发者在生产环境中使用。到了十二月份，JetBrains 也随之发布了适用于多个平台的声明式 UI 开发框架 Compose Multiplatform 的 1.0 正式版本，意味着此时也适用于商业项目了
 
 既然 Compose Multiplatform 发布了正式版，我也想着来做一次实践，之前我曾经用 Jetpack Compose 写了一个 **俄罗斯方块** 小游戏：[学不动也要学，Jetpack Compose 玩一把俄罗斯方块](https://juejin.cn/post/6974585048762679310)，由于整个应用的逻辑和 UI 都是完全用 Kotlin 和 Jetpack Compose 实现的，因此很简单地就通过 Compose Multiplatform 将其移植到了 Windows 平台：[compose_tetris](https://github.com/leavesCZY/compose_tetris)
