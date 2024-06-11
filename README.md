@@ -18,11 +18,12 @@
 
 
 - 个人开源库
-  - [Trace：一个 Android 字节码插桩库](https://github.com/leavesCZY/Trace)
   - [Matisse：一个用 Jetpack Compose 实现的 Android 图片/视频 选择框架](https://github.com/leavesCZY/Matisse)
-  - [Monitor：一个适用于 OkHttp / Retrofit 的可视化抓包工具](https://github.com/leavesCZY/Monitor)
+  - [compose-multiplatform-xlog-decode：Compose Multiplatform 写一个跨平台的 xlog 解析工具](https://github.com/leavesCZY/compose-multiplatform-xlog-decode)
+  - [compose-multiplatform-tetris：Compose Multiplatform 实现一个 Android + windows + macOS + linux 俄罗斯方块](https://github.com/leavesCZY/compose-multiplatform-tetris)
   - [compose_chat：Jetpack Compose 最佳实践，用 Jetpack Compose 写一个 IM APP](https://github.com/leavesCZY/compose_chat)
-  - [compose_tetris：不止 Android，用 Compose Multiplatform 实现一个 Android + Desktop 平台的俄罗斯方块](https://github.com/leavesCZY/compose_tetris)
+  - [Trace：一个 Android 字节码插桩库](https://github.com/leavesCZY/Trace)
+  - [Monitor：一个适用于 OkHttp / Retrofit 的可视化抓包工具](https://github.com/leavesCZY/Monitor)
   - [asm-samples：Android 字节码插桩实战](https://github.com/leavesCZY/asm-samples)
   - [KVHolder：一个基于 Kotlin 语法对 MMKV 进行封装的 key-value 存储库，简化了 MMKV 的使用步骤](https://github.com/leavesCZY/KVHolder)  
   - [RobustWebView：Android WebView H5 秒开方案总结](https://github.com/leavesCZY/RobustWebView)
@@ -76,6 +77,7 @@
   - [从源码看 Jetpack（七）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
 
 - Jetpack Compose
+  - [Compose Multiplatform 写一个跨平台的 xlog 解析工具](https://juejin.cn/post/7378452954221084682)
   - [不止 Android，Compose Multiplatform 初探](https://juejin.cn/post/7062533562460799013)  
   - [随便嵌套？Jetpack Compose 到底优秀在哪里](https://juejin.cn/post/7070158120831418381)
   - [Jetpack Compose 实现完美屏幕适配](https://juejin.cn/post/7113953940282015758)  
