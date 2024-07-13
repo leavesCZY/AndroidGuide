@@ -8,24 +8,16 @@
 
 <div align=center><img src ="https://github.com/leavesCZY/leavesCZY/assets/30774063/c6310f5d-5047-45ed-86ba-0ab5685e40fc"/></div>
 
-<p align="center"></p>
-
-<p align="center">原创不易，讨口饭吃 😆😆😆</p>
-
-<p align="center"></p>
-
-<div align=center><img src ="https://github.com/leavesCZY/AndroidGuide/assets/30774063/48974bd7-c602-427f-a4bc-3fdb0718d550"/></div>
-
 
 - 个人开源库
-  - [Matisse：一个用 Jetpack Compose 实现的 Android 图片/视频 选择框架](https://github.com/leavesCZY/Matisse)
-  - [compose-multiplatform-xlog-decode：Compose Multiplatform 写一个跨平台的 xlog 解析工具](https://github.com/leavesCZY/compose-multiplatform-xlog-decode)
-  - [compose-multiplatform-tetris：Compose Multiplatform 实现一个 Android + windows + macOS + linux 俄罗斯方块](https://github.com/leavesCZY/compose-multiplatform-tetris)
+  - [Matisse：一个用 Jetpack Compose 实现的 Android 图片视频选择框架](https://github.com/leavesCZY/Matisse)
+  - [compose-multiplatform-xlog-decode：一个跨平台的 xlog 解析工具](https://github.com/leavesCZY/compose-multiplatform-xlog-decode)
+  - [compose-multiplatform-tetris：一个跨平台的俄罗斯方块小游戏](https://github.com/leavesCZY/compose-multiplatform-tetris)
   - [compose_chat：Jetpack Compose 最佳实践，用 Jetpack Compose 写一个 IM APP](https://github.com/leavesCZY/compose_chat)
   - [Track：一个 Android 字节码插桩库](https://github.com/leavesCZY/Track)
-  - [Monitor：一个适用于 OkHttp / Retrofit 的可视化抓包工具](https://github.com/leavesCZY/Monitor)
   - [asm-samples：Android 字节码插桩实战](https://github.com/leavesCZY/asm-samples)
-  - [KVHolder：一个基于 Kotlin 语法对 MMKV 进行封装的 key-value 存储库，简化了 MMKV 的使用步骤](https://github.com/leavesCZY/KVHolder)  
+  - [Monitor：一个适用于 OkHttp / Retrofit 的可视化抓包工具](https://github.com/leavesCZY/Monitor)  
+  - [KVHolder：一个基于 Kotlin 语法对 MMKV 进行封装的 key-value 存储库](https://github.com/leavesCZY/KVHolder)  
   - [RobustWebView：Android WebView H5 秒开方案总结](https://github.com/leavesCZY/RobustWebView)
   - [SmallestWidthGenerator：基于 SmallestWidth 屏幕适配方案生成 dimens 文件](https://github.com/leavesCZY/SmallestWidthGenerator)
   - [EventLiveData：Jetpack LiveData 功能扩展](https://github.com/leavesCZY/EventLiveData)
@@ -58,13 +50,13 @@
   - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
 
 - 字节码插桩
+  - [Android 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
   - [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
   - [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
   - [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
   - [ASM 字节码插桩：监控大图加载](https://juejin.cn/post/7074970389188706318)
   - [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
   - [ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
-  - [Android 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
 
 - Jetpack 源码解析
   - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
@@ -130,3 +122,12 @@
   - [Java 多线程编程（三）- 线程活性故障有哪些](https://juejin.cn/post/6900458045197778952)
   - [Java 多线程编程（四）- 锁的分类有这么多](https://juejin.cn/post/6900958860454920205)
   - [Java 多线程编程（五）- 超详细的 ThreadPoolExecutor 源码解析](https://juejin.cn/post/6901317365561032712)
+
+
+<p align="center"></p>
+
+<p align="center">原创不易，能请我一杯肥仔水吗 😆😆😆</p>
+
+<p align="center"></p>
+
+<div align=center><img src ="https://github.com/user-attachments/assets/bf188a5e-8a9d-4476-9023-efc892adbf56"/></div>
