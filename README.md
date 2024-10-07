@@ -50,13 +50,14 @@
   - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
 
 - 字节码插桩
+  - [Android ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
+  - [Android ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7044339202997092383)
+  - [Android ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
+  - [Android ASM 字节码插桩：监控大图加载](https://juejin.cn/post/7074970389188706318)
+  - [Android ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
+  - [Android ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
+  - [Android ASM 字节码插桩：替换字节码指令](https://juejin.cn/post/7422658245933875252)
   - [Android 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
-  - [ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
-  - [ASM 字节码插桩：进行线程整治](https://juejin.cn/post/7043999874076901406)
-  - [ASM 字节码插桩：助力隐私合规](https://juejin.cn/post/7046207125785149448)
-  - [ASM 字节码插桩：监控大图加载](https://juejin.cn/post/7074970389188706318)
-  - [ASM 字节码插桩：从 Lambda 表达式讲起](https://juejin.cn/post/7151798531672506398)
-  - [ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
 
 - Jetpack 源码解析
   - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
