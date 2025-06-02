@@ -8,6 +8,13 @@
 
 <div align=center><img src ="https://github.com/leavesCZY/leavesCZY/assets/30774063/c6310f5d-5047-45ed-86ba-0ab5685e40fc"/></div>
 
+<p align="center"></p>
+
+<p align="center">原创不易，能请我一杯肥仔水吗 😆😆😆</p>
+
+<p align="center"></p>
+
+<div align=center><img src ="https://github.com/user-attachments/assets/bf188a5e-8a9d-4476-9023-efc892adbf56"/></div>
 
 - 个人开源库
   - [Matisse：一个用 Jetpack Compose 实现的 Android 图片视频选择框架](https://github.com/leavesCZY/Matisse)
@@ -44,10 +51,9 @@
   - [一文快速入门 Kotlin 协程](https://juejin.cn/post/6908271959381901325)
   - [一文快速入门 ConstraintLayout](https://juejin.cn/post/6911710012750430215)
   - [一文快速入门 Gson](https://juejin.cn/post/6844903577098387464)
-  - [一文快速入门 RxJava2](https://github.com/leavesCZY/AndroidGuide/blob/master/android_core/一文快速入门RxJava2.md)
+  - [一文快速入门 RxJava2](https://github.com/leavesCZY/AndroidGuide/blob/master/%E4%B8%80%E6%96%87%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8%20RxJava%202.md)
   - [一文快速入门 Dagger2](https://github.com/leavesCZY/Dagger2Samples)
   - [一文快速入门 DataBinding](https://github.com/leavesCZY/DataBindingSamples)
-  - [一文快速入门 APT](https://juejin.cn/post/6844903753108160525)
 
 - 字节码插桩
   - [Android ASM 字节码插桩：实现双击防抖](https://juejin.cn/post/7042328862872567838)
@@ -58,16 +64,6 @@
   - [Android ASM 字节码插桩：Jetpack Compose 实现双击防抖](https://juejin.cn/post/7158061389503250445)
   - [Android ASM 字节码插桩：替换字节码指令](https://juejin.cn/post/7422658245933875252)
   - [Android ASM 字节码插桩库，也许有你需要的](https://juejin.cn/post/7261599630826635320)
-
-- Jetpack 源码解析
-  - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
-  - [从源码看 Jetpack（一）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
-  - [从源码看 Jetpack（二）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
-  - [从源码看 Jetpack（三）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
-  - [从源码看 Jetpack（四）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
-  - [从源码看 Jetpack（五）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
-  - [从源码看 Jetpack（六）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
-  - [从源码看 Jetpack（七）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
 
 - Jetpack Compose
   - [Compose Multiplatform 写一个跨平台的 xlog 解析工具](https://juejin.cn/post/7378452954221084682)
@@ -112,8 +108,18 @@
   - [Android 主流开源库源码分析（十二）- OkHttp / Retrofit 开发调试利器](https://juejin.cn/post/6895740949025177607)
   - [Android 主流开源库源码分析（十三）- 可能是全网第一篇 Coil 源码分析文章](https://juejin.cn/post/6897872882051842061)
 
+- Jetpack 源码解析
+  - [Jetpack LiveData 的设计理念及改进](https://juejin.cn/post/6903096576734920717)
+  - [从源码看 Jetpack（一）- Lifecycle 源码详解](https://juejin.cn/post/6847902220755992589)
+  - [从源码看 Jetpack（二）- Lifecycle 衍生物源码详解](https://juejin.cn/post/6847902220760203277)
+  - [从源码看 Jetpack（三）- LiveData 源码详解](https://juejin.cn/post/6847902222345633806)
+  - [从源码看 Jetpack（四）- LiveData 衍生物源码详解](https://juejin.cn/post/6847902222353858567)
+  - [从源码看 Jetpack（五）- Startup 源码详解](https://juejin.cn/post/6847902224069165070)
+  - [从源码看 Jetpack（六）- ViewModel 源码详解](https://juejin.cn/post/6873356946896846856)
+  - [从源码看 Jetpack（七）- SavedStateHandle 源码详解](https://juejin.cn/post/6874136956347875342)
+
 - 集合框架源码解析
-  - [Java & Android 集合框架须知须会（一）](https://juejin.cn/post/6901317365561032712)
+  - [Java & Android 集合框架须知须会（一）](https://juejin.cn/post/6930632285301669895)
   - [Java & Android 集合框架须知须会（二）](https://juejin.cn/post/6931007634028003341)
   - [Java & Android 集合框架须知须会（三）](https://juejin.cn/post/6931563785245163534)
 
@@ -123,12 +129,3 @@
   - [Java 多线程编程（三）- 线程活性故障有哪些](https://juejin.cn/post/6900458045197778952)
   - [Java 多线程编程（四）- 锁的分类有这么多](https://juejin.cn/post/6900958860454920205)
   - [Java 多线程编程（五）- 超详细的 ThreadPoolExecutor 源码解析](https://juejin.cn/post/6901317365561032712)
-
-
-<p align="center"></p>
-
-<p align="center">原创不易，能请我一杯肥仔水吗 😆😆😆</p>
-
-<p align="center"></p>
-
-<div align=center><img src ="https://github.com/user-attachments/assets/bf188a5e-8a9d-4476-9023-efc892adbf56"/></div>

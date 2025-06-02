@@ -647,17 +647,3 @@ imageView.load(File(filePath).readBytes())
 # Github
 
 以上就是 Matisse 的一些实现细节和遇到的系统兼容性问题，更多实现细节请看 Github：[Matisse](https://github.com/leavesCZY/Matisse)
-
-Matisse 同时也发布到了 Jitpack，方便开发者直接远程依赖使用：
-
-```kotlin
-allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
-}
-
-dependencies {
-    implementation 'com.github.leavesCZY:Matisse:latestVersion'
-}
-```

@@ -586,6 +586,6 @@ private val extraHookPoints = listOf(
 
 # 结尾
 
-最后也给出完整的源码：[ASM_Transform](https://github.com/leavesCZY/ASM_Transform)
+最后也给出完整的源码：[asm-samples](https://github.com/leavesCZY/asm-samples)
 
 这应该会是一个比较好的让读者入门字节码插桩的案例，读者根据项目实际情况进行简单修改后也可以把该双击防抖功能引入到自己项目中
