@@ -18,6 +18,8 @@
   - [RobustWebView：Android WebView H5 秒开方案总结](https://github.com/leavesCZY/RobustWebView)
   - [SmallestWidthGenerator：基于 SmallestWidth 屏幕适配方案生成 dimens 文件](https://github.com/leavesCZY/SmallestWidthGenerator)
   - [EventLiveData：Jetpack LiveData 功能扩展](https://github.com/leavesCZY/EventLiveData)
+  - [通过 Android 设备的 Wifi 个人热点，实现 Android 手机之间传输文件](https://github.com/leavesCZY/WifiFileTransfer)
+  - [通过 Android 设备的 Wifi Direct，实现 Android 手机之间传输文件](https://github.com/leavesCZY/WifiP2P)
 
 - Android
   - [App 出海实践：Google Play 结算系统](https://juejin.cn/post/7271991667245744165)
