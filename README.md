@@ -1,20 +1,10 @@
 # <p align="center"> AndroidGuide </p>
 
-<p align="center">Android Developer 进阶学习笔记，希望对你有所帮助 😃😃😃</p>
+<br>
 
-<p align="center">欢迎关注公众号，第一时间看最新文章</p>
+<p align="center">Android Developer 进阶学习笔记，希望对你有所帮助</p>
 
-# <p align="center"><a href=https://github.com/leavesCZY/leavesCZY/assets/30774063/c6310f5d-5047-45ed-86ba-0ab5685e40fc>字节数组</a></p>
-
-<div align=center><img src ="https://github.com/leavesCZY/leavesCZY/assets/30774063/c6310f5d-5047-45ed-86ba-0ab5685e40fc"/></div>
-
-<p align="center"></p>
-
-<p align="center">原创不易，能请我一杯肥仔水吗 😆😆😆</p>
-
-<p align="center"></p>
-
-<div align=center><img src ="https://github.com/user-attachments/assets/bf188a5e-8a9d-4476-9023-efc892adbf56"/></div>
+<br>
 
 - 个人开源库
   - [Matisse：一个用 Jetpack Compose 实现的 Android 图片视频选择框架](https://github.com/leavesCZY/Matisse)
@@ -129,3 +119,18 @@
   - [Java 多线程编程（三）- 线程活性故障有哪些](https://juejin.cn/post/6900458045197778952)
   - [Java 多线程编程（四）- 锁的分类有这么多](https://juejin.cn/post/6900958860454920205)
   - [Java 多线程编程（五）- 超详细的 ThreadPoolExecutor 源码解析](https://juejin.cn/post/6901317365561032712)
+
+<br>
+<br>
+
+<div align=center><img src ="https://github.com/user-attachments/assets/18b8d2f7-d344-4ef5-a65f-7464c1f489e4"/></div>
+
+<p align="center">欢迎关注公众号，第一时间看最新文章</p>
+
+<br>
+
+<div align=center><img src ="https://github.com/user-attachments/assets/bf188a5e-8a9d-4476-9023-efc892adbf56"/></div>
+
+<p align="center">原创不易，能请我一杯肥仔水吗 😆😆😆</p>
+
+<br>
